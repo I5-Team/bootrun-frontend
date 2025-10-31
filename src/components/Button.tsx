@@ -1,113 +1,96 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { theme } from '../styles/theme'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'outline'
+
 type ButtonSize = 'sm' | 'md' | 'lg'
 
-export type ButtonProps = {
-  // 버튼 라벨
+type ButtonProps = {
   children: React.ReactNode
-  // 스타일 변형(채움/아웃라인/고스트)
   variant?: ButtonVariant
-  // 버튼 높이 프리셋
   size?: ButtonSize
-  // 폭 100% 여부
   fullWidth?: boolean
-  // 비활성화 여부
   disabled?: boolean
-  // 아이콘 경로 (assets의 svg/png 등)
   iconSrc?: string
-  // 아이콘 위치
-  iconPosition?: 'left' | 'right'
-  // 아이콘 표시 폭(px)
-  iconWidth?: number
-  // 클릭 핸들러
+
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick']
-  // 버튼 타입
   type?: 'button' | 'submit' | 'reset'
 }
 
-// 시안 기준: radius 10px, 폰트 14/20, weight 500
-const BaseButton = styled.button<{
+const buttonPadding: Record<ButtonSize, {padding: string}> = {
+  lg: { padding: "1.4rem 2rem"},
+  md: { padding: "1.1rem 2rem"},
+  sm: { padding: "1rem 1.6rem"},
+}
+
+const StyledBaseButton = styled.button<{
   $variant: ButtonVariant
   $size: ButtonSize
   $fullWidth?: boolean
 }>`
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${theme.spacing.sm};
-  width: ${(p: { $fullWidth?: boolean }) => (p.$fullWidth ? '100%' : 'auto')};
-  height: ${(p: { $size: ButtonSize }) => theme.size[p.$size]};
-  padding: 0 ${theme.spacing.xl};
-  border-radius: ${theme.radius.md};
-  font-size: ${theme.typography.body14.size};
-  line-height: ${theme.typography.body14.lineHeight};
-  font-weight: ${theme.typography.body14.weightMedium};
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  gap: 0.8rem;
+
+  width: ${(p) => (p.$fullWidth ? '100%' : 'fit-content')};
+  padding: ${(p) => buttonPadding[p.$size].padding};
+  border-radius: ${({ theme }) => theme.radius.md};
   border: 1px solid transparent;
 
-  ${(p: { $variant: ButtonVariant }) =>
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  line-height: 100%;
+  font-weight: 400;
+
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+  ${(p) =>
     p.$variant === 'primary' &&
     css`
-      background: ${theme.colors.primary300};
-      color: ${theme.colors.white};
-      &:hover:not(:disabled) {
-        opacity: 0.92;
-      }
-      &:active:not(:disabled) {
-        opacity: 0.85;
-      }
-    `}
+      background-color: ${({ theme }) => theme.colors.primary300};
+      color: ${({ theme }) => theme.colors.white};
 
-  ${(p: { $variant: ButtonVariant }) =>
-    p.$variant === 'secondary' &&
-    css`
-      background: ${theme.colors.white};
-      color: ${theme.colors.surface};
-      border-color: ${theme.colors.gray200};
-      &:hover:not(:disabled) {
-        background: #f7f8f9;
-      }
+      &:hover:not(:disabled),
       &:active:not(:disabled) {
-        background: #eff1f3;
+        background-color: ${({theme}) => theme.colors.primaryDark};
+        border-color: ${({theme}) => theme.colors.gray200}
       }
-    `}
+  `}
 
-  ${(p: { $variant: ButtonVariant }) =>
-    p.$variant === 'ghost' &&
+  ${(p) =>
+    p.$variant === 'outline' &&
     css`
-      background: transparent;
-      color: ${theme.colors.surface};
-      &:hover:not(:disabled) {
-        background: rgba(0, 0, 0, 0.04);
-      }
-      &:active:not(:disabled) {
-        background: rgba(0, 0, 0, 0.08);
+      background-color: ${({ theme }) => theme.colors.white};
+      color: ${({ theme }) => theme.colors.surface};
+      border: 1px solid ${({ theme }) => theme.colors.gray200};
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled)  {
+        background-color: ${({ theme }) => theme.colors.gray200};
       }
     `}
 
   &:disabled {
-    background: ${theme.colors.gray200};
-    color: ${theme.colors.gray300};
-    border-color: ${theme.colors.gray200};
+    background: ${({ theme }) => theme.colors.gray200};
+    color: ${({ theme }) => theme.colors.gray300};
     cursor: not-allowed;
-    opacity: 1;
   }
 `
 
-const Icon = styled.img<{ $pos: 'left' | 'right'; $width: number }>`
-  width: ${(p: { $width: number }) => `${p.$width}px`};
-  height: ${(p: { $width: number }) => `${p.$width}px`};
+const StyledIcon = styled.img`
+  width: auto;
+  height: 1.75rem;
+  fill: ${({theme}) => theme.colors.white};
   object-fit: contain;
-  ${(p: { $pos: 'left' | 'right' }) => (p.$pos === 'left' ? 'order: 0;' : 'order: 2;')}
 `
-
-const Label = styled.span`
-  order: 1;
+const StyledLabel = styled.span`
+  height: 1.8rem;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const Button: React.FC<ButtonProps> = ({
@@ -117,13 +100,11 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth,
   disabled,
   iconSrc,
-  iconPosition = 'left',
-  iconWidth = 20,
   onClick,
   type = 'button',
 }: ButtonProps) => {
   return (
-    <BaseButton
+    <StyledBaseButton
       type={type}
       onClick={onClick}
       disabled={disabled}
@@ -132,15 +113,12 @@ export const Button: React.FC<ButtonProps> = ({
       $fullWidth={fullWidth}
       data-node-id="4017:button-component"
     >
-      {/* 아이콘은 옵션 */}
-      {iconSrc && iconPosition === 'left' && (
-        <Icon src={iconSrc} alt="" aria-hidden $pos="left" $width={iconWidth} />
-      )}
-      <Label>{children}</Label>
-      {iconSrc && iconPosition === 'right' && (
-        <Icon src={iconSrc} alt="" aria-hidden $pos="right" $width={iconWidth} />
-      )}
-    </BaseButton>
+      {iconSrc && <StyledIcon src={iconSrc} alt="" />}
+      
+      <StyledLabel>{children}</StyledLabel>
+
+     
+    </StyledBaseButton>
   )
 }
 

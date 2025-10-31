@@ -16,7 +16,11 @@ export const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
     height: 100%;
-    
+  }
+
+  button, input, a {
+    all: unset;
+    box-sizing: border-box;
   }
 
   body {

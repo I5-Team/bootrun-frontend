@@ -15,7 +15,7 @@ const colors = {
   white: '#FFFFFF',
   alert: '#FF3440',
 
-  shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)'
+  shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)',
 } as const;
 
 const deviceSizes = {
@@ -55,14 +55,6 @@ const mobileFontSize = {
   caption: '1.2rem',
 }
 
-const button = {
-  size: {
-    sm: '3.6rem',
-    md: '4.2rem',
-    lg: '4.8rem',
-  },
-}
-
 
 const theme: DefaultTheme = {
   colors,
@@ -70,7 +62,6 @@ const theme: DefaultTheme = {
   radius,
   fontSize,
   mobileFontSize,
-  button,
 } as const;
 
 export type ColorTypes = typeof colors;
@@ -78,6 +69,5 @@ export type DeviceTypes = typeof devices;
 export type RadiusTypes = typeof radius;
 export type FontSizeTypes = typeof fontSize;
 export type MobileFontSizeTypes = typeof mobileFontSize;
-export type ButtonTypes = typeof button;
 
 export default theme;
