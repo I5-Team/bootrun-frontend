@@ -1,31 +1,83 @@
-import { colors } from './colors';
+import type { DefaultTheme } from "styled-components";
 
-export const theme = {
-  colors,
-  radius: {
-    md: '10px',
-  },
-  size: {
-    sm: '36px',
-    md: '42px',
-    lg: '48px',
-  },
-  spacing: {
-    xs: '8px',
-    sm: '10px',
-    md: '12px',
-    lg: '16px',
-    xl: '20px',
-  },
-  typography: {
-    // Pretendard 14/20 Medium, SemiBold 기준
-    body14: {
-      size: '14px',
-      lineHeight: '20px',
-      weightMedium: 500,
-      weightSemiBold: 600,
-    },
-  },
+const colors = {
+  primary100: '#DEE8FF',
+  primary200: '#B5CEFF',
+  primary300: '#2E6FF2',
+  primaryDark: '#2861d2',
+
+  gray100: '#F3F5FA',
+  gray200: '#D9DBE0',
+  gray300: '#8D9299',
+  gray400: '#47494D',
+
+  surface: '#121314',
+  white: '#FFFFFF',
+  alert: '#FF3440',
+
+  shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)'
 } as const;
 
-export type AppTheme = typeof theme;
+const deviceSizes = {
+  desktop: '1280px',
+  tablet: '768px',
+  mobile: '390px',
+} as const;
+
+const devices = {
+  desktop: `screen and (max-width: ${deviceSizes.desktop})`,
+  tablet: `screen and (max-width: ${deviceSizes.tablet})`,
+  mobile: `screen and (max-width: ${deviceSizes.mobile})`,
+} as const;
+
+const radius = {
+  xs: '0.6rem',
+  sm: '0.8rem',
+  md: '1rem',
+  lg: '2rem'
+} as const;
+
+const fontSize = {
+  xxl: '4rem',
+  xl: '3.2rem',
+  lg: '2.4rem',
+  md: '1.6rem',
+  sm: '1.4rem',
+  caption: '1.2rem',
+}
+
+const mobileFontSize = {
+  xxl: '3.2rem',
+  xl: '1.8rem',
+  lg: '1.6rem',
+  md: '1.4rem',
+  sm: '1.2rem',
+  caption: '1.2rem',
+}
+
+const button = {
+  size: {
+    sm: '3.6rem',
+    md: '4.2rem',
+    lg: '4.8rem',
+  },
+}
+
+
+const theme: DefaultTheme = {
+  colors,
+  devices,
+  radius,
+  fontSize,
+  mobileFontSize,
+  button,
+} as const;
+
+export type ColorTypes = typeof colors;
+export type DeviceTypes = typeof devices;
+export type RadiusTypes = typeof radius;
+export type FontSizeTypes = typeof fontSize;
+export type MobileFontSizeTypes = typeof mobileFontSize;
+export type ButtonTypes = typeof button;
+
+export default theme;
