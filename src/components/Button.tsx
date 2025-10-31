@@ -11,8 +11,7 @@ type ButtonProps = {
   size?: ButtonSize
   fullWidth?: boolean
   disabled?: boolean
-  iconSrc?: string
-
+  iconSvg?: React.ReactNode
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick']
   type?: 'button' | 'submit' | 'reset'
 }
@@ -28,6 +27,7 @@ const StyledBaseButton = styled.button<{
   $size: ButtonSize
   $fullWidth?: boolean
 }>`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@ const StyledBaseButton = styled.button<{
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   line-height: 100%;
-  font-weight: 400;
+  font-weight: 500;
 
   white-space: nowrap;
   cursor: pointer;
@@ -78,12 +78,16 @@ const StyledBaseButton = styled.button<{
     cursor: not-allowed;
   }
 `
-
-const StyledIcon = styled.img`
+const StyledIcon = styled.span<{$variant: ButtonVariant}>`
   width: auto;
   height: 1.75rem;
-  fill: ${({theme}) => theme.colors.white};
   object-fit: contain;
+
+  & svg, path {
+    width: 100%;
+    height: 100%;
+    fill: ${({$variant, theme}) => $variant === "outline" ? theme.colors.gray300 : 'currentColor'};
+  }
 `
 const StyledLabel = styled.span`
   height: 1.8rem;
@@ -99,7 +103,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   fullWidth,
   disabled,
-  iconSrc,
+  iconSvg,
   onClick,
   type = 'button',
 }: ButtonProps) => {
@@ -113,7 +117,7 @@ export const Button: React.FC<ButtonProps> = ({
       $fullWidth={fullWidth}
       data-node-id="4017:button-component"
     >
-      {iconSrc && <StyledIcon src={iconSrc} alt="" />}
+      {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
       
       <StyledLabel>{children}</StyledLabel>
 

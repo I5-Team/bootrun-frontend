@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { Button } from '../components/Button';
 
-// 자산 경로: 프로젝트 내 아이콘 예시를 사용
-// import { ReactComponent as IconReset } from '../assets/icons/icon-reset.svg';
-// import { ReactComponent as IconYoutube }  from '../assets/icons/icon-play.svg';
-// import { ReactComponent as IconShare } from '../assets/icons/icon-share.svg';
-import IconYoutube from "../assets/icons/icon-play.svg";
+// SVG Icon > Component로 불러옴 : IconReset -> <IconReset />
+import IconReset from "../assets/icons/icon-reset.svg?react";
+import IconPlay from "../assets/icons/icon-play.svg?react";
+import IconShare from "../assets/icons/icon-share.svg?react";
+import IconGithub from "../assets/icons/icon-oatuth-github.svg?react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ export default function ButtonGallery() {
           <Button variant="primary" size="sm">
             sm 버튼 (태그)
           </Button>
-          <Button variant="primary" iconSrc={IconYoutube}>
+          <Button variant="primary" iconSvg={<IconReset/>}>
             아이콘이 있는 버튼
           </Button>
         </Group>
@@ -68,7 +68,7 @@ export default function ButtonGallery() {
           <Button variant="outline" size="sm">
             sm 버튼
           </Button>
-          <Button variant="outline" iconSrc={IconYoutube}>
+          <Button variant="outline" iconSvg={<IconPlay/>}>
             아이콘이 있는 버튼
           </Button>
         </Group>
@@ -79,8 +79,18 @@ export default function ButtonGallery() {
           <Button variant="primary" size="lg" fullWidth>
             fullWidth 버튼
           </Button>
-          <Button variant="outline" size="lg" fullWidth iconSrc={IconYoutube}>
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconReset/>}>
             아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconPlay/>}>
+            아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconShare/>}>
+            아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth>
+            <IconGithub style={{position: "absolute", left: "1.2rem"}}/>
+            Github 계정으로 로그인
           </Button>
         </Group>
       </Wrapper>
