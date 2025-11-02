@@ -9,7 +9,9 @@ import {
   StyledSearchBtn,
   StyledActionBtn
 } from "./Header.style.ts";
+
 import Button from "../Button.tsx";
+import Profile from "../Profile.tsx";
 
 import logo from "../../assets/logos/logo-typo.svg";
 import SvgSearch from "../../assets/icons/icon-search.svg?react";
@@ -66,6 +68,19 @@ const MenuOpenBtn = () => {
     )
 }
 
+const UserActions = () => {
+    let isLoggedIn = false;
+    return (
+        <>
+            {isLoggedIn ?
+                <Profile size={4.2}/>
+                : 
+                <Button>로그인</Button>
+            } 
+        </>    
+    )
+}
+
 const ActionLists = () => {
     const theme = useTheme();
     const [isUnderDesktop, setIsUnderDesktop] = useState(false);
@@ -94,7 +109,7 @@ const ActionLists = () => {
                 <>
                     <NavList/>
                     <SearchForm/>
-                   <Button>로그인</Button>
+                   <UserActions/>
                 </>
             }
 
