@@ -2,16 +2,21 @@ import {
   StyledHeader,
   StyledHeaderInner,
   StyledLogo,
-  StyledActions,
+  StyledActionList,
   StyledNavList,
   StyledSearchForm,
   StyledSearchInput,
-  StyledSearchBtn
+  StyledSearchBtn,
+  StyledActionBtn
 } from "./Header.style.ts";
 import Button from "../Button.tsx";
 
 import logo from "../../assets/logos/logo-typo.svg";
 import SvgSearch from "../../assets/icons/icon-search.svg?react";
+import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
+
+import { useTheme } from "styled-components";
+import { useEffect, useState } from "react";
 
 const HeaderLogo = () => {
     // 라우터 작업시 Link로 수정
@@ -45,13 +50,55 @@ const SearchForm = () => {
     )
 }
 
-const ActionLists = () => {
+const SearchOpenBtn = () => {
     return (
-        <StyledActions>
-            <NavList/>
-            <SearchForm/>
-            <Button>로그인</Button>
-        </StyledActions>
+        <StyledActionBtn>
+            <SvgSearch/>
+        </StyledActionBtn>
+    )
+}
+
+const MenuOpenBtn = () => {
+    return (
+        <StyledActionBtn>
+            <SvgHamberger/>
+        </StyledActionBtn>
+    )
+}
+
+const ActionLists = () => {
+    const theme = useTheme();
+    const [isUnderDesktop, setIsUnderDesktop] = useState(false);
+    
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(theme.devices.tablet);
+        setIsUnderDesktop(mediaQuery.matches);
+
+        const handleMediaChange = (e: MediaQueryListEvent) => setIsUnderDesktop(e.matches);
+
+        mediaQuery.addEventListener("change", handleMediaChange);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleMediaChange);
+        }
+    }, [theme.devices.tablet]);
+
+    return (
+        <StyledActionList>
+            {isUnderDesktop ?
+                <>
+                    <SearchOpenBtn/>
+                    <MenuOpenBtn/>
+                </>
+            : 
+                <>
+                    <NavList/>
+                    <SearchForm/>
+                   <Button>로그인</Button>
+                </>
+            }
+
+        </StyledActionList>
     )
 }
 
