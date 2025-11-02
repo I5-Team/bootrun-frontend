@@ -1,17 +1,16 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../components/Button';
 
-// 자산 경로: 프로젝트 내 아이콘 예시를 사용
-import iconReset from '../assets/icons/icon-reset.svg';
-import iconYoutube from '../assets/icons/icon-play.svg';
-import iconShare from '../assets/icons/icon-share.svg';
+// SVG Icon > Component로 불러옴 : IconReset -> <IconReset />
+import IconReset from "../assets/icons/icon-reset.svg?react";
+import IconPlay from "../assets/icons/icon-play.svg?react";
+import IconShare from "../assets/icons/icon-share.svg?react";
+import IconGithub from "../assets/icons/icon-oatuth-github.svg?react";
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-  padding: 24px;
+  display: flex;
+  gap: 20px;
+  width: 100%;
 `;
 
 const Group = styled.div`
@@ -21,6 +20,7 @@ const Group = styled.div`
   padding: 16px;
   border: 1px solid #eee;
   border-radius: 8px;
+  width: 30vw;
 `;
 
 const Title = styled.h3`
@@ -37,54 +37,60 @@ export default function ButtonGallery() {
         <Group>
           <Title>Primary</Title>
           <Button variant="primary" disabled>
-            로그인
+            비활성화
           </Button>
           <Button variant="primary" size="lg">
-            로그인
+            lg 버튼
           </Button>
-          <Button variant="primary" iconSrc={iconYoutube} iconPosition="left">
-            학습하기
+          <Button variant="primary" size="md">
+            md 버튼
           </Button>
-          <Button variant="primary" iconSrc={iconYoutube} iconPosition="right">
-            학습하기
+          <Button variant="primary" size="sm">
+            sm 버튼 (태그)
           </Button>
-          <Button variant="primary" disabled>
-            비활성화
-          </Button>
-        </Group>
-
-        <Group>
-          <Title>Secondary</Title>
-          <Button variant="secondary">강의 상세</Button>
-          <Button variant="secondary" size="lg">
-            강의 상세
-          </Button>
-          <Button variant="secondary" iconSrc={iconReset} iconPosition="left">
-            필터 초기화
-          </Button>
-          <Button variant="secondary" iconSrc={iconShare} iconPosition="right">
-            공유하기
-          </Button>
-          <Button variant="secondary" disabled>
-            비활성화
+          <Button variant="primary" iconSvg={<IconReset/>}>
+            아이콘이 있는 버튼
           </Button>
         </Group>
 
         <Group>
-          <Title>Ghost</Title>
-          <Button variant="ghost">텍스트 버튼</Button>
-          <Button variant="ghost" iconSrc={iconShare} iconPosition="left">
-            공유하기
+          <Title>outline</Title>
+          <Button variant="outline">강의 상세</Button>
+          <Button variant="outline" disabled>
+            비활성화
+          </Button>
+          <Button variant="outline" size="lg">
+            lg 버튼
+          </Button>
+          <Button variant="outline" size="md">
+            md 버튼
+          </Button>
+          <Button variant="outline" size="sm">
+            sm 버튼
+          </Button>
+          <Button variant="outline" iconSvg={<IconPlay/>}>
+            아이콘이 있는 버튼
           </Button>
         </Group>
+
 
         <Group>
           <Title>Full width</Title>
           <Button variant="primary" size="lg" fullWidth>
-            수강 신청하기
+            fullWidth 버튼
           </Button>
-          <Button variant="secondary" size="lg" fullWidth iconSrc={iconYoutube}>
-            유튜브로 보기
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconReset/>}>
+            아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconPlay/>}>
+            아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth iconSvg={<IconShare/>}>
+            아이콘이 있는 fullWidth 버튼
+          </Button>
+          <Button variant="outline" size="lg" fullWidth>
+            <IconGithub style={{position: "absolute", left: "1.2rem"}}/>
+            Github 계정으로 로그인
           </Button>
         </Group>
       </Wrapper>
