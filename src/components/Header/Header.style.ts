@@ -1,17 +1,13 @@
 import styled from "styled-components";
-import Button from "./Button";
 
-import logo from "../assets/logos/logo-typo.svg";
-import SvgSearch from "../assets/icons/icon-search.svg?react";
-
-const StyledHeader = styled.header`
+export const StyledHeader = styled.header`
     width: 100%;
     height: 7rem;
     padding: 0 1.6rem;
     border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
 `;
 
-const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
+export const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
     max-width: ${({ theme }) => theme.breakpoints.desktop};
     height: 100%;
     margin: 0 auto;
@@ -21,18 +17,18 @@ const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
     align-items: center;
 `;
 
-const StyledLogo = styled.img`
+export const StyledLogo = styled.img`
     width: 12.4rem;
 `;
 
-const StyledActions = styled.div`
+export const StyledActions = styled.div`
     display: flex;
     justify-content: end;
     align-items: center;
     gap: 0 2rem;
 `;
 
-const StyledNavList = styled.ul`
+export const StyledNavList = styled.ul`
     display: flex;
     justify-content: end;
     align-items: center;
@@ -41,7 +37,7 @@ const StyledNavList = styled.ul`
     margin-right: 2rem;
 `;
 
-const StyledSearchForm = styled.form`
+export const StyledSearchForm = styled.form`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -60,7 +56,7 @@ const StyledSearchForm = styled.form`
     }
 `;
 
-const StyledSearchInput = styled.input.attrs({ type: 'search' })`
+export const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     flex: 1;
     height: 100%;
     font-size: ${({ theme }) => theme.fontSize.md};
@@ -88,7 +84,7 @@ const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     }
 `;
 
-const StyledSearchBtn = styled.button`
+export const StyledSearchBtn = styled.button`
     width: 2.4rem;
     aspect-ratio: 1 / 1;
     padding: 0.15rem;
@@ -111,62 +107,3 @@ const StyledSearchBtn = styled.button`
         }
     }
 `;
-
-const HeaderLogo = () => {
-    // 라우터 작업시 Link로 수정
-    return(
-        <div>
-            <h1 className="sr-only">bootRun</h1>
-            <StyledLogo src={logo} alt="" />
-        </div>
-    )
-}
-
-const NavList = () => {
-    // 라우터 작업시 Link 추가
-    return (
-        <StyledNavList>
-            <li>부트런 소개</li> 
-            <li>수강생 이야기</li>
-        </StyledNavList>
-    )
-}
-
-const SearchForm = () => {
-    return (
-        <StyledSearchForm>
-            <label htmlFor="search" className="sr-only">검색</label>
-            <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledSearchBtn type="submit">
-                <SvgSearch/>
-            </StyledSearchBtn>
-        </StyledSearchForm>
-    )
-}
-
-const ActionLists = () => {
-    return (
-        <StyledActions>
-            <NavList/>
-            <SearchForm/>
-            <Button>로그인</Button>
-        </StyledActions>
-    )
-}
-
-export default function Header() {
-    // 회원가입 페이지에서는 로고만 보이게 처리
-    const isSignupPage = false;
-    return (
-        <>
-            <StyledHeader>
-                <StyledHeaderInner $isSignup={isSignupPage}>
-                    <HeaderLogo/>
-                    {!isSignupPage &&
-                        <ActionLists/>
-                    } 
-                </StyledHeaderInner>
-            </StyledHeader>
-        </>
-    );
-}
