@@ -18,16 +18,16 @@ const colors = {
   shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)',
 } as const;
 
-const deviceSizes = {
-  desktop: '1280px',
+const breakpoints = {
+  desktop: '1190px',
   tablet: '768px',
   mobile: '390px',
 } as const;
 
 const devices = {
-  desktop: `screen and (max-width: ${deviceSizes.desktop})`,
-  tablet: `screen and (max-width: ${deviceSizes.tablet})`,
-  mobile: `screen and (max-width: ${deviceSizes.mobile})`,
+  desktop: `screen and (max-width: ${breakpoints.desktop})`,
+  tablet: `screen and (max-width: ${breakpoints.tablet})`,
+  mobile: `screen and (max-width: ${breakpoints.mobile})`,
 } as const;
 
 const radius = {
@@ -62,6 +62,7 @@ const theme: DefaultTheme = {
   radius,
   fontSize,
   mobileFontSize,
+  breakpoints,
 } as const;
 
 export type ColorTypes = typeof colors;
@@ -69,5 +70,7 @@ export type DeviceTypes = typeof devices;
 export type RadiusTypes = typeof radius;
 export type FontSizeTypes = typeof fontSize;
 export type MobileFontSizeTypes = typeof mobileFontSize;
+export type BreakpointsTypes = typeof breakpoints;
+
 
 export default theme;

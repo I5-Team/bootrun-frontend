@@ -1,5 +1,5 @@
 import 'styled-components';
-import type { ColorTypes, DeviceTypes, FontSizeTypes, MobileFontSizeTypes, RadiusTypes } from '../styles/theme';
+import type { BreakpointsTypes, ColorTypes, DeviceTypes, FontSizeTypes, MobileFontSizeTypes, RadiusTypes } from '../styles/theme';
 
 declare module 'styled-components' {
   export interface DefaultTheme{
@@ -8,5 +8,6 @@ declare module 'styled-components' {
     radius: RadiusTypes;
     fontSize: FontSizeTypes;
     mobileFontSize: MobileFontSizeTypes;
+    breakpoints: BreakpointsTypes;
   }
 }
