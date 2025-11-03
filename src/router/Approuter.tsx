@@ -29,7 +29,7 @@ import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRouter() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/bootrun-frontend">
             <Routes>
                 {/* 비인증용 페이지 */}
                 <Route element={<AuthLayout/>}>
