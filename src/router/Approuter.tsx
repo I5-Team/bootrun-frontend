@@ -26,7 +26,7 @@ import LectureRoomPage from "../pages/Lecture/LectureRoomPage";
 * 3. 관리자 사용자: 관리자 대시보드, 강의 관리, 결제 관리, 사용자 관리 등 (MainLayout)
 */
 
-export default function Approuter() {
+export default function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
