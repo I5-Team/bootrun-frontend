@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { InputLogin } from '../components/InputLogin';
+import { InputProfile } from '../components/InputProfile';
 
 const Container = styled.div`
   width: 100%;
@@ -117,6 +118,14 @@ export const InputGallery: React.FC = () => {
   const [value4, setValue4] = useState('');
   const [value5, setValue5] = useState('');
 
+  // InputProfile 상태
+  const [profileName, setProfileName] = useState('');
+  const [profileGender, setProfileGender] = useState('');
+  const [profileBirthdate, setProfileBirthdate] = useState('');
+  const [profileEmail, setProfileEmail] = useState('paul-lab@naver.com');
+  const [profileJob, setProfileJob] = useState('');
+  const [profileErrorName, setProfileErrorName] = useState('');
+
   return (
     <Container>
       <Title>Input Components Gallery</Title>
@@ -124,8 +133,8 @@ export const InputGallery: React.FC = () => {
       <Section>
         <SectionTitle>1. 기본 Input 상태</SectionTitle>
         <Description>
-          Input 컴포넌트의 기본 상태입니다. 클릭하지 않은 상태에서는 흰색 배경과 회색 하단 보더(gray200)를
-          가집니다.
+          Input 컴포넌트의 기본 상태입니다. 클릭하지 않은 상태에서는 흰색 배경과 회색 하단
+          보더(gray200)를 가집니다.
         </Description>
         <ExampleGrid>
           <ExampleCard>
@@ -164,8 +173,8 @@ export const InputGallery: React.FC = () => {
       <Section>
         <SectionTitle>2. 포커스 및 입력 상태</SectionTitle>
         <Description>
-          Input에 포커스되거나 값이 입력되면 배경색이 gray100으로 변경되고, 포커스 시 하단 보더가 primary300
-          (파란색)으로 변경됩니다.
+          Input에 포커스되거나 값이 입력되면 배경색이 gray100으로 변경되고, 포커스 시 하단 보더가
+          primary300 (파란색)으로 변경됩니다.
         </Description>
         <ExampleGrid>
           <ExampleCard>
@@ -236,7 +245,9 @@ export const InputGallery: React.FC = () => {
 
           <ExampleCard>
             <ExampleTitle>비밀번호 Input</ExampleTitle>
-            <ExampleDescription>type="password"를 사용한 비밀번호 입력 필드입니다.</ExampleDescription>
+            <ExampleDescription>
+              type="password"를 사용한 비밀번호 입력 필드입니다.
+            </ExampleDescription>
             <CodeBlock>
               <code>{`<InputLogin
   type="password"
@@ -281,7 +292,8 @@ export const InputGallery: React.FC = () => {
       <Section>
         <SectionTitle>4. 에러 상태</SectionTitle>
         <Description>
-          에러 상태에서는 하단 보더가 alert 컬러(빨간색)로 변경되며, 에러 메시지를 표시할 수 있습니다.
+          에러 상태에서는 하단 보더가 alert 컬러(빨간색)로 변경되며, 에러 메시지를 표시할 수
+          있습니다.
         </Description>
         <ExampleGrid>
           <ExampleCard>
@@ -308,7 +320,9 @@ export const InputGallery: React.FC = () => {
 
           <ExampleCard>
             <ExampleTitle>에러 메시지 포함</ExampleTitle>
-            <ExampleDescription>error prop에 문자열을 전달하여 에러 메시지를 표시합니다.</ExampleDescription>
+            <ExampleDescription>
+              error prop에 문자열을 전달하여 에러 메시지를 표시합니다.
+            </ExampleDescription>
             <CodeBlock>
               <code>{`<InputLogin
   error="올바른 이메일 형식이 아닙니다"
@@ -333,8 +347,8 @@ export const InputGallery: React.FC = () => {
       <Section>
         <SectionTitle>5. 비활성화 상태</SectionTitle>
         <Description>
-          disabled 상태에서는 배경색이 gray100으로 변경되고, 텍스트 색상이 gray300으로 변경되며, 사용자
-          입력이 불가능합니다.
+          disabled 상태에서는 배경색이 gray100으로 변경되고, 텍스트 색상이 gray300으로 변경되며,
+          사용자 입력이 불가능합니다.
         </Description>
         <ExampleGrid>
           <ExampleCard>
@@ -374,12 +388,14 @@ export const InputGallery: React.FC = () => {
       </Section>
 
       <Section>
-        <SectionTitle>6. 실제 사용 예시</SectionTitle>
+        <SectionTitle>6. 실제 사용 예시 (InputLogin)</SectionTitle>
         <Description>실제 로그인 폼에서 사용되는 예시입니다.</Description>
         <ExampleGrid>
           <ExampleCard>
             <ExampleTitle>로그인 폼 예시</ExampleTitle>
-            <ExampleDescription>이메일과 비밀번호 입력 필드를 포함한 로그인 폼입니다.</ExampleDescription>
+            <ExampleDescription>
+              이메일과 비밀번호 입력 필드를 포함한 로그인 폼입니다.
+            </ExampleDescription>
             <CodeBlock>
               <code>{`const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
@@ -408,6 +424,305 @@ const [password, setPassword] = useState('');
                 fullWidth
               />
               <InputLogin type="password" placeholder="비밀번호" fullWidth />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>7. InputProfile - 기본 사용</SectionTitle>
+        <Description>
+          InputProfile은 프로필 입력 화면을 위한 컴포넌트입니다. 레이블이 포함되어 있으며, 전체
+          테두리가 있는 박스형 디자인입니다.
+        </Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>텍스트 입력 (이름)</ExampleTitle>
+            <ExampleDescription>
+              type="text"를 사용한 기본 텍스트 입력 필드입니다.
+              <br />
+              레이블이 포함되어 있습니다.
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="이름"
+  type="text"
+  placeholder="이름을 입력하세요"
+  value={name}
+  onChange={setName}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="이름"
+                type="text"
+                placeholder="이름을 입력하세요"
+                value={profileName}
+                onChange={setProfileName}
+              />
+            </InputContainer>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>읽기 전용 (이메일)</ExampleTitle>
+            <ExampleDescription>
+              readOnly prop을 사용하여 수정 불가능한 필드를 만듭니다.
+              <br />
+              배경: gray100 (#F3F5FA)
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="이메일"
+  type="text"
+  value="paul-lab@naver.com"
+  readOnly
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="이메일"
+                type="text"
+                value={profileEmail}
+                onChange={setProfileEmail}
+                readOnly
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>8. InputProfile - 드롭다운 선택</SectionTitle>
+        <Description>
+          type="select"를 사용하여 드롭다운 메뉴를 만들 수 있습니다. 옵션을 클릭하면 값이
+          선택됩니다.
+        </Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>성별 선택</ExampleTitle>
+            <ExampleDescription>
+              options prop에 배열을 전달하여 선택 가능한 옵션을 설정합니다.
+              <br />
+              선택된 항목은 primary100 배경색으로 표시됩니다.
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="성별"
+  type="select"
+  placeholder="선택"
+  options={['남성', '여성', '기타']}
+  value={gender}
+  onChange={setGender}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="성별"
+                type="select"
+                placeholder="선택"
+                options={['남성', '여성', '기타']}
+                value={profileGender}
+                onChange={setProfileGender}
+              />
+            </InputContainer>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>직업 선택</ExampleTitle>
+            <ExampleDescription>다양한 옵션을 가진 드롭다운 예시입니다.</ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="직업"
+  type="select"
+  placeholder="직업을 선택하세요"
+  options={['개발자', '디자이너', '기획자', '마케터', '학생', '기타']}
+  value={job}
+  onChange={setJob}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="직업"
+                type="select"
+                placeholder="직업을 선택하세요"
+                options={['개발자', '디자이너', '기획자', '마케터', '학생', '기타']}
+                value={profileJob}
+                onChange={setProfileJob}
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>9. InputProfile - 날짜 선택</SectionTitle>
+        <Description>type="date"를 사용하여 날짜 입력 필드를 만들 수 있습니다.</Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>생년월일 선택</ExampleTitle>
+            <ExampleDescription>날짜 선택 필드에는 달력 아이콘이 표시됩니다.</ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="생년월일"
+  type="date"
+  placeholder="----년 --월 --일"
+  value={birthdate}
+  onChange={setBirthdate}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="생년월일"
+                type="date"
+                placeholder="----년 --월 --일"
+                value={profileBirthdate}
+                onChange={setProfileBirthdate}
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>10. InputProfile - 에러 상태</SectionTitle>
+        <Description>
+          InputLogin과 마찬가지로 에러 상태를 표시할 수 있습니다. 테두리가 빨간색으로 변경되고 에러
+          메시지를 표시합니다.
+        </Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>에러 메시지 포함</ExampleTitle>
+            <ExampleDescription>
+              error prop에 문자열을 전달하여 에러 메시지를 표시합니다.
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="이름"
+  type="text"
+  placeholder="이름을 입력하세요"
+  value={name}
+  onChange={setName}
+  error="이름은 2글자 이상이어야 합니다"
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="이름"
+                type="text"
+                placeholder="이름을 입력하세요"
+                value={profileErrorName}
+                onChange={setProfileErrorName}
+                error="이름은 2글자 이상이어야 합니다"
+              />
+            </InputContainer>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>비활성화 상태</ExampleTitle>
+            <ExampleDescription>
+              disabled prop을 사용하여 비활성화 상태를 만듭니다.
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="직업"
+  type="select"
+  placeholder="직업을 선택하세요"
+  options={['개발자', '디자이너']}
+  disabled
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="직업"
+                type="select"
+                placeholder="직업을 선택하세요"
+                options={['개발자', '디자이너']}
+                disabled
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>11. 실제 사용 예시 (프로필 폼)</SectionTitle>
+        <Description>실제 프로필 입력 폼에서 사용되는 예시입니다.</Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>프로필 입력 폼</ExampleTitle>
+            <ExampleDescription>
+              다양한 InputProfile 컴포넌트를 조합한 프로필 입력 폼입니다.
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`// 읽기 전용 이메일
+<InputProfile
+  label="이메일"
+  type="text"
+  value="paul-lab@naver.com"
+  readOnly
+/>
+
+// 텍스트 입력
+<InputProfile
+  label="이름"
+  type="text"
+  placeholder="이름을 입력하세요"
+  value={name}
+  onChange={setName}
+/>
+
+// 날짜 선택
+<InputProfile
+  label="생년월일"
+  type="date"
+  placeholder="----년 --월 --일"
+  value={birthdate}
+  onChange={setBirthdate}
+/>
+
+// 드롭다운 선택
+<InputProfile
+  label="성별"
+  type="select"
+  placeholder="선택"
+  options={['남성', '여성', '기타']}
+  value={gender}
+  onChange={setGender}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="이메일"
+                type="text"
+                value="paul-lab@naver.com"
+                readOnly
+                fullWidth
+              />
+              <InputProfile
+                label="이름"
+                type="text"
+                placeholder="이름을 입력하세요"
+                value={profileName}
+                onChange={setProfileName}
+                fullWidth
+              />
+              <InputProfile
+                label="생년월일"
+                type="date"
+                placeholder="----년 --월 --일"
+                value={profileBirthdate}
+                onChange={setProfileBirthdate}
+                fullWidth
+              />
+              <InputProfile
+                label="성별"
+                type="select"
+                placeholder="선택"
+                options={['남성', '여성', '기타']}
+                value={profileGender}
+                onChange={setProfileGender}
+                fullWidth
+              />
             </InputContainer>
           </ExampleCard>
         </ExampleGrid>
