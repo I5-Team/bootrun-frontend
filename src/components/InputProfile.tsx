@@ -15,6 +15,9 @@ import CalendarIconSvg from '../assets/icons/icon-calendar.svg';
  * @param fullWidth - 전체 너비 사용 여부
  * @param type - 입력 타입: 'text' (일반 입력), 'select' (드롭다운), 'date' (날짜 선택)
  * @param readOnly - 읽기 전용 상태 여부 (이메일 등)
+ * @param id - input 요소의 고유 ID (label과 연결용)
+ * @param ariaLabel - 레이블이 없을 때 사용할 접근성 레이블
+ * @param ariaDescribedBy - 추가 설명을 제공하는 요소의 ID
  */
 export interface InputProfileProps {
   label?: string;
@@ -28,6 +31,9 @@ export interface InputProfileProps {
   type?: 'text' | 'select' | 'date';
   readOnly?: boolean;
   className?: string;
+  id?: string;
+  ariaLabel?: string;
+  ariaDescribedBy?: string;
 }
 
 /**
@@ -275,12 +281,21 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
       type = 'text',
       readOnly = false,
       className,
+      id,
+      ariaLabel,
+      ariaDescribedBy,
     },
     ref
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // 고유 ID 생성 (label과 input 연결용) - Hook은 항상 최상위에서 호출
+    const generatedId = React.useId();
+    const inputId = id || `input-${generatedId}`;
+    const errorId = `${inputId}-error`;
+    const descriptionId = ariaDescribedBy || (error && typeof error === 'string' ? errorId : undefined);
 
     // 외부 클릭 감지하여 드롭다운 닫기
     useEffect(() => {
@@ -336,7 +351,7 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
 
     return (
       <InputWrapper ref={ref} $fullWidth={fullWidth} className={className}>
-        {label && <Label>{label}</Label>}
+        {label && <Label htmlFor={inputId}>{label}</Label>}
         <div ref={containerRef} style={{ position: 'relative' }}>
           <InputContainer
             $isFocused={isFocused}
@@ -347,6 +362,7 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
           >
             {type === 'text' ? (
               <StyledInput
+                id={inputId}
                 type="text"
                 value={value}
                 placeholder={placeholder}
@@ -357,19 +373,41 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
                 readOnly={readOnly}
                 $disabled={disabled}
                 $readOnly={readOnly}
+                aria-label={!label ? ariaLabel : undefined}
+                aria-describedby={descriptionId}
+                aria-invalid={error ? true : undefined}
               />
             ) : type === 'select' ? (
               <>
-                <DropdownValue $placeholder={!value} $disabled={disabled}>
+                <DropdownValue
+                  id={inputId}
+                  role="combobox"
+                  aria-expanded={isOpen}
+                  aria-haspopup="listbox"
+                  aria-controls={`${inputId}-listbox`}
+                  aria-label={!label ? ariaLabel || placeholder : undefined}
+                  aria-describedby={descriptionId}
+                  aria-invalid={error ? true : undefined}
+                  tabIndex={disabled ? -1 : 0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleToggleDropdown();
+                    }
+                  }}
+                  $placeholder={!value}
+                  $disabled={disabled}
+                >
                   {value || placeholder}
                 </DropdownValue>
                 <IconContainer $isOpen={isOpen}>
-                  <ArrowIcon src={ArrowDownIcon} alt="dropdown arrow" $isOpen={isOpen} />
+                  <ArrowIcon src={ArrowDownIcon} alt="" $isOpen={isOpen} />
                 </IconContainer>
               </>
             ) : (
               <>
                 <StyledInput
+                  id={inputId}
                   type="text"
                   value={value}
                   placeholder={placeholder}
@@ -380,9 +418,12 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
                   readOnly={readOnly}
                   $disabled={disabled}
                   $readOnly={readOnly}
+                  aria-label={!label ? ariaLabel || '날짜 선택' : undefined}
+                  aria-describedby={descriptionId}
+                  aria-invalid={error ? true : undefined}
                 />
                 <IconContainer>
-                  <CalendarIcon src={CalendarIconSvg} alt="calendar icon" />
+                  <CalendarIcon src={CalendarIconSvg} alt="" />
                 </IconContainer>
               </>
             )}
@@ -390,12 +431,21 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
 
           {type === 'select' && (
             <OptionsContainer $isOpen={isOpen}>
-              <OptionsList>
+              <OptionsList id={`${inputId}-listbox`} role="listbox" aria-label={label || ariaLabel}>
                 {options.map((option, index) => (
                   <OptionItem
                     key={index}
+                    role="option"
+                    aria-selected={value === option}
                     $isSelected={value === option}
                     onClick={() => handleSelectOption(option)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectOption(option);
+                      }
+                    }}
+                    tabIndex={0}
                   >
                     {option}
                   </OptionItem>
@@ -404,7 +454,7 @@ export const InputProfile = React.forwardRef<HTMLDivElement, InputProfileProps>(
             </OptionsContainer>
           )}
         </div>
-        {error && typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
+        {error && typeof error === 'string' && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
       </InputWrapper>
     );
   }
