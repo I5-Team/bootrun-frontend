@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
 export const StyledHeader = styled.header`
+    flex-shrink: 0;
     width: 100%;
     height: 7rem;
-    padding: 0 1.6rem;
     border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    background-color: ${({ theme }) => theme.colors.white};
+
+    position: sticky;
+    top: 0;
+    z-index: 10000;
 
     @media ${({ theme }) => theme.devices.tablet} {
         height: 5.6rem;
@@ -13,8 +18,9 @@ export const StyledHeader = styled.header`
 
 export const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
     max-width: ${({ theme }) => theme.breakpoints.desktop};
-    height: 100%;
+    width: calc(100% - 3.2rem);
     margin: 0 auto;
+    height: 100%;
 
     display: flex;
     justify-content: ${({ $isSignup }) => $isSignup ? "center" : "space-between"};

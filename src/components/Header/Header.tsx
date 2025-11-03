@@ -8,7 +8,7 @@ import {
   StyledSearchInput,
   StyledSearchBtn,
   StyledActionBtn
-} from "./Header.style.ts";
+} from "./Header.styled.ts";
 
 import Button from "../Button.tsx";
 import Profile from "../Profile.tsx";
@@ -110,7 +110,7 @@ const ActionLists = () => {
 export default function Header() {
     const location = useLocation();
     const isSignupPage = location.pathname === ROUTES.SIGNUP;
-    const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
+    // const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
 
     return (
         <>

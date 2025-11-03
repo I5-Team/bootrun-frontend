@@ -37,7 +37,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.SIGNUP} element={<SignUpPage/>} />
                     {/* 인증 사용자용 페이지 */}
                 </Route>
-                    <Route element={<MainLayout/>}>
+                <Route element={<MainLayout/>}>
                     <Route path={ROUTES.HOME} element={<ButtonGallery />} />
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
