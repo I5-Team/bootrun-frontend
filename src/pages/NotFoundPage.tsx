@@ -1,8 +1,68 @@
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  Container,
+  Header,
+  LogoWrapper,
+  LogoImage,
+  ContentWrapper,
+  ImageWrapper,
+  ErrorImage,
+  TextAndButtonWrapper,
+  TextWrapper,
+  Title,
+  Description,
+  ButtonWrapper,
+} from './NotFoundPage.style';
+import Button from '../components/Button';
+import logoTypo from '../assets/logos/logo-typo.svg';
+import errorImage from '../assets/images/bg-404.png';
+
 export default function NotFoundPage() {
-    return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1>404 - 페이지를 찾을 수 없습니다</h1>
-            <p>죄송합니다. 요청하신 페이지를 찾을 수 없습니다.</p>
-        </div>
-    );
+  const navigate = useNavigate();
+
+  //메인으로 이동
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
+  //이전 페이지 이동
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  return (
+    <Container>
+      <Header>
+        <LogoWrapper>
+          <Link to="/">
+            <LogoImage src={logoTypo} alt="bootrun" />
+          </Link>
+        </LogoWrapper>
+      </Header>
+
+      <ContentWrapper>
+        <ImageWrapper>
+          <ErrorImage src={errorImage} alt="404 Error" />
+        </ImageWrapper>
+
+        <TextAndButtonWrapper>
+          <TextWrapper>
+            <Title>페이지를 찾을 수 없습니다.</Title>
+            <Description>
+              앗, 이 페이지는 없는 것 같아요. 주소를 다시 확인하거나 메인 페이지로 돌아가주세요.
+            </Description>
+          </TextWrapper>
+
+          <ButtonWrapper>
+            <Button variant="primary" size="md" onClick={handleGoHome}>
+              메인으로
+            </Button>
+            <Button variant="outline" size="md" onClick={handleGoBack}>
+              이전 페이지
+            </Button>
+          </ButtonWrapper>
+        </TextAndButtonWrapper>
+      </ContentWrapper>
+    </Container>
+  );
 }
