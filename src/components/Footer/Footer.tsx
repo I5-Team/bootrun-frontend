@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyledAddress, StyledAddressOpen, StyledColumnGroup, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinksList } from "./Footer.styled";
+import { StyledAddress, StyledAddressOpen, StyledColumnGroup, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinkItem, StyledLinksList } from "./Footer.styled";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
 import SvgHome from "../../assets/icons/icon-sns-home.svg?react";
@@ -36,12 +36,44 @@ const Address = () => {
 const Links = () => {
     return (
         <StyledLinksList>
-            <li><SvgHome/></li>
-            <li><SvgInflearn/></li>
-            <li><SvgYoutube/></li>
-            <li><SvgBlog/></li>
-            <li><SvgInstagram/></li>
-            <li><SvgDiscord/></li>
+            <StyledLinkItem>
+                <a 
+                    href="/" 
+                    aria-label="홈으로 이동"
+                ><SvgHome/></a>
+            </StyledLinkItem>
+            <StyledLinkItem>
+                <a 
+                    href="https://www.inflearn.com/" target="_blank"
+                    aria-label="인프런으로 이동"
+                ><SvgInflearn/></a>
+            </StyledLinkItem>
+            <StyledLinkItem>
+                <a 
+                    href="https://www.youtube.com/"
+                    target="_blank" 
+                    aria-label="유튜브로 이동"
+                ><SvgYoutube/></a>
+            </StyledLinkItem>
+            <StyledLinkItem>
+                <a 
+                    href="https://section.blog.naver.com/" target="_blank" 
+                    aria-label="블로그로 이동"
+                ><SvgBlog/></a>
+            </StyledLinkItem>
+            <StyledLinkItem>
+                <a 
+                    href="https://www.instagram.com/" target="_blank" 
+                    aria-label="인스타그램으로 이동"
+                ><SvgInstagram/></a>
+            </StyledLinkItem>
+            <StyledLinkItem>
+                <a 
+                    href="https://discord.com/" 
+                    target="_blank" 
+                    aria-label="디스코드로 이동"
+                ><SvgDiscord/></a>
+            </StyledLinkItem>
         </StyledLinksList>
     )
 }

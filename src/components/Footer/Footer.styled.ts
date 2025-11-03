@@ -94,8 +94,10 @@ export const StyledAddress = styled.address`
 export const StyledLinksList = styled.ul`
     display: inline-flex;
     gap: 0.8rem;
+`;
 
-    li {
+export const StyledLinkItem = styled.li`
+    a {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -104,21 +106,22 @@ export const StyledLinksList = styled.ul`
         height: 3.6rem;
         background-color: ${({ theme }) => theme.colors.gray300};
         border-radius: 50%;
-
-        svg {
-            width: 48%;
-            height: 50%;
-            path {
-                fill: ${({ theme }) => theme.colors.gray200};
-            }
-        }
-
-        &:hover {
-            svg path {
-                fill: ${({ theme }) => theme.colors.white};
-            }
-        }   
     }
+
+    svg {
+        width: 48%;
+        height: 50%;
+        path {
+            fill: ${({ theme }) => theme.colors.gray200};
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        svg path {
+            fill: ${({ theme }) => theme.colors.white};
+        }
+    }   
 `;
 
 export const StyledAddressOpen = styled.div<{ $isOpen: boolean }>`

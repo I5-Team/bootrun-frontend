@@ -14,6 +14,7 @@ const colors = {
   surface: '#121314',
   white: '#FFFFFF',
   alert: '#FF3440',
+  focus: '#8B38FF',
 
   shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)',
 } as const;
