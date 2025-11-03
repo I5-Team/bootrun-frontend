@@ -22,6 +22,10 @@ export const GlobalStyle = createGlobalStyle`
   button, input, a {
     all: unset;
     box-sizing: border-box;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   button, a {
