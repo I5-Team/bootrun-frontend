@@ -24,6 +24,13 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  button, a {
+    &:focus-visible {
+      outline-offset: 0.1rem;
+      outline: 0.2rem solid ${({ theme }) => theme.colors.focus};
+    }
+  }
+
   body {
     font-family: 'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
     color: #121314;
@@ -45,5 +52,4 @@ export const GlobalStyle = createGlobalStyle`
     width: 1px;
     height: 1px;
   }
-  
 `;
