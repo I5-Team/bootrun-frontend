@@ -39,7 +39,7 @@ export const StyledHeaderInnerLogo = styled(StyledHeaderInner)`
 `;
 
 export const StyledHeaderInnerLecture = styled(StyledHeaderInner)`
-    max-width: calc(100% - 4rem);
+    max-width: calc(100% - clamp(3.2rem, 3vw, 4rem));
     justify-content: space-between;
 `;
 
