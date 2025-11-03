@@ -9,8 +9,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Header/>
-      <ButtonGallery/>
+      <Header />
+      <ButtonGallery />
       <InputGallery />
     </ThemeProvider>
   );
