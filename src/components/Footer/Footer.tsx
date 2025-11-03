@@ -1,4 +1,6 @@
-import { StyledAddress, StyledColumnGroup, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinksList } from "./Footer.styled";
+import { useState } from "react";
+import { StyledAddress, StyledAddressOpen, StyledColumnGroup, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinksList } from "./Footer.styled";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 import SvgHome from "../../assets/icons/icon-sns-home.svg?react";
 import SvgInflearn from "../../assets/icons/icon-sns-inflearn.svg?react";
@@ -7,6 +9,8 @@ import SvgBlog from "../../assets/icons/icon-sns-blog.svg?react";
 import SvgInstagram from "../../assets/icons/icon-sns-instagram.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 import SvgLogo from "../../assets/logos/logo-typo.svg?react";
+import SvgArrowDown from "../../assets/icons/icon-arrow-down.svg?react";
+
 
 const LogoCopyright = () => {
     return (
@@ -42,18 +46,34 @@ const Links = () => {
     )
 }
 
-export default function Footer() {
+const AddressAccordion = () => {
+    const [isAddressOpen, setIsAddressOpen] = useState(false);
+
     return (
         <>
-            <StyledFooter>
-                <StyledInnerFooter>
+            <StyledAddressOpen $isOpen={isAddressOpen} onClick={() => setIsAddressOpen(prev => !prev)}>
+                (주)부트런 사업자 정보
+                <SvgArrowDown/>
+            </StyledAddressOpen>
+            { isAddressOpen && 
+            <Address/>
+            }
+        </>
+    )
+}
+
+export default function Footer() {
+    const { isMobile } = useMediaQuery();
+
+    return (
+        <StyledFooter>
+            <StyledInnerFooter>
                     <StyledColumnGroup>
                         <LogoCopyright/>
-                        <Address/>
+                        { isMobile ? <Links/> : <Address/> }
                     </StyledColumnGroup>
-                    <Links/>
-                </StyledInnerFooter>
-            </StyledFooter>
-        </>
+                    { isMobile ? <AddressAccordion/> : <Links/> }
+            </StyledInnerFooter>
+        </StyledFooter>
     );
 }
