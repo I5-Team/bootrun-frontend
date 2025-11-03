@@ -43,9 +43,9 @@ const NavList = () => {
 const SearchForm = () => {
     return (
         <StyledSearchForm>
-            <label htmlFor="search" className="sr-only">검색</label>
+            <label htmlFor="search" className="sr-only">검색어 입력</label>
             <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledSearchBtn type="submit">
+            <StyledSearchBtn type="submit" aria-label="검색 실행">
                 <SvgSearch/>
             </StyledSearchBtn>
         </StyledSearchForm>
@@ -54,7 +54,7 @@ const SearchForm = () => {
 
 const SearchOpenBtn = () => {
     return (
-        <StyledActionBtn>
+        <StyledActionBtn aria-label="검색창 열기">
             <SvgSearch/>
         </StyledActionBtn>
     )
@@ -62,7 +62,7 @@ const SearchOpenBtn = () => {
 
 const MenuOpenBtn = () => {
     return (
-        <StyledActionBtn>
+        <StyledActionBtn aria-label="메뉴 열기">
             <SvgHamberger/>
         </StyledActionBtn>
     )
