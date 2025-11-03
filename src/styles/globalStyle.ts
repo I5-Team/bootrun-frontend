@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   
   body {
     font-size: 1.6rem;
+    color: ${({ theme }) => theme.colors.surface}
   }
   
 
@@ -34,4 +35,15 @@ export const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
   }
+
+  /*  */
+  .sr-only {
+    position: absolute;
+    overflow: hidden;   
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+  }
+  
 `;

@@ -14,6 +14,7 @@ type ButtonProps = {
   iconSvg?: React.ReactNode
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick']
   type?: 'button' | 'submit' | 'reset'
+  ariaLabel?: string
 }
 
 const buttonPadding: Record<ButtonSize, {padding: string}> = {
@@ -106,6 +107,7 @@ export const Button: React.FC<ButtonProps> = ({
   iconSvg,
   onClick,
   type = 'button',
+  ariaLabel,
 }: ButtonProps) => {
   return (
     <StyledBaseButton
@@ -115,7 +117,7 @@ export const Button: React.FC<ButtonProps> = ({
       $variant={variant}
       $size={size}
       $fullWidth={fullWidth}
-      data-node-id="4017:button-component"
+      aria-label={ariaLabel}
     >
       {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
       
