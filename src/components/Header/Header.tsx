@@ -7,7 +7,8 @@ import {
   StyledSearchForm,
   StyledSearchInput,
   StyledSearchBtn,
-  StyledActionBtn
+  StyledHeaderInnerLecture,
+  StyledHeaderInnerLogo
 } from "./Header.styled.ts";
 
 import Button from "../Button.tsx";
@@ -16,14 +17,19 @@ import Profile from "../Profile.tsx";
 import logo from "../../assets/logos/logo-typo.svg";
 import SvgSearch from "../../assets/icons/icon-search.svg?react";
 import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
+import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
+import SvgMemo from "../../assets/icons/icon-memo.svg?react";
+import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
+import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
+import ButtonIcon from "../ButtonIcon.tsx";
 
 const HeaderLogo = () => {
     return(
-        <Link to={ROUTES.HOME}>
+        <Link to={ROUTES.HOME} aria-label="부트런 홈으로 이동">
             <h1 className="sr-only">bootRun</h1>
             <StyledLogo src={logo} alt="" />
         </Link>
@@ -53,17 +59,17 @@ const SearchForm = () => {
 
 const SearchOpenBtn = () => {
     return (
-        <StyledActionBtn aria-label="검색창 열기">
+        <ButtonIcon ariaLabel="검색창 열기">
             <SvgSearch/>
-        </StyledActionBtn>
+        </ButtonIcon>
     )
 }
 
 const MenuOpenBtn = () => {
     return (
-        <StyledActionBtn aria-label="메뉴 열기">
+        <ButtonIcon ariaLabel="메뉴 열기">
             <SvgHamberger/>
-        </StyledActionBtn>
+        </ButtonIcon>
     )
 }
 
@@ -107,20 +113,92 @@ const ActionLists = () => {
     )
 }
 
+// lectureRoom
+const DownloadBtn = () => {
+    const hasAlert = true;
+
+    return (
+        <ButtonIcon ariaLabel="다운로드" variant="light" hasAlert={hasAlert}>
+            <SvgDownload/>
+        </ButtonIcon>
+    )
+}
+
+const MemoBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="메모" variant="light">
+            <SvgMemo/>
+        </ButtonIcon>
+    )
+}
+
+const HomeBackBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="홈으로 돌아가기" variant="light">
+            <SvgHomeBack/>
+        </ButtonIcon>
+    )
+}
+
+const DiscordBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="디스코드 참여하기" variant="discord">
+            <SvgDiscord/>
+        </ButtonIcon>
+    )
+}
+
+// render components
+const DefaultHeader = () => {
+
+    return (
+        <StyledHeaderInner>
+            <HeaderLogo/>
+            <ActionLists/>
+        </StyledHeaderInner>
+    )
+}
+
+const OnlyLogoHeader = () => {
+    return (
+        <StyledHeaderInnerLogo>
+            <HeaderLogo/>
+        </StyledHeaderInnerLogo>    
+    )
+}
+
+const LectureRoomHeader = () => {
+    return (
+        <StyledHeaderInnerLecture>
+            <HeaderLogo/>
+            <StyledActionList>
+                <DownloadBtn/>
+                <MemoBtn/>
+                <HomeBackBtn/>
+                <DiscordBtn/>                        
+                <Link to={ROUTES.PROFILE}><Profile/></Link>
+            </StyledActionList>
+        </StyledHeaderInnerLecture>
+    )
+}
+
+
 export default function Header() {
     const location = useLocation();
     const isSignupPage = location.pathname === ROUTES.SIGNUP;
-    // const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
-
+    const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
+    const isErrorPage = location.pathname === "*";
+    
+    const renderHeader = () => {
+    if (isSignupPage) return <OnlyLogoHeader />;
+    if (isErrorPage) return <DefaultHeader/>;
+    if (isLectureRoomPage) return <LectureRoomHeader />;
+    return <DefaultHeader />;
+};
     return (
         <>
             <StyledHeader>
-                <StyledHeaderInner $isSignup={isSignupPage}>
-                    <HeaderLogo/>
-                    {!isSignupPage &&
-                        <ActionLists/>
-                    } 
-                </StyledHeaderInner>
+                {renderHeader()}
             </StyledHeader>
         </>
     );

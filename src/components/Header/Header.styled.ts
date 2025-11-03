@@ -1,7 +1,13 @@
 import styled from "styled-components";
 
+// header
 export const StyledHeader = styled.header`
     flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 100%;
     height: 7rem;
     border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
@@ -16,6 +22,7 @@ export const StyledHeader = styled.header`
     }
 `;
 
+// headerInner
 export const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
     max-width: ${({ theme }) => theme.breakpoints.desktop};
     width: calc(100% - 3.2rem);
@@ -23,10 +30,19 @@ export const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
     height: 100%;
 
     display: flex;
-    justify-content: ${({ $isSignup }) => $isSignup ? "center" : "space-between"};
+    justify-content: space-between;
     align-items: center;
 `;
 
+export const StyledHeaderInnerLogo = styled(StyledHeaderInner)`
+    justify-content: center;
+`;
+
+export const StyledHeaderInnerLecture = styled(StyledHeaderInner)`
+    justify-content: space-between;
+`;
+
+// logo
 export const StyledLogo = styled.img`
     width: 12.4rem;
     vertical-align: bottom;
@@ -36,13 +52,7 @@ export const StyledLogo = styled.img`
     }
 `;
 
-export const StyledActionList = styled.div`
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    gap: 0 clamp(1.2rem, 1vw, 2rem);
-`;
-
+// list
 export const StyledNavList = styled.ul`
     display: flex;
     justify-content: end;
@@ -56,6 +66,15 @@ export const StyledNavList = styled.ul`
     }
 `;
 
+export const StyledActionList = styled.div`
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 0 clamp(1.2rem, 1vw, 2rem);
+`;
+
+
+// search - form / input / button
 export const StyledSearchForm = styled.form`
     display: flex;
     justify-content: space-between;
@@ -108,8 +127,12 @@ export const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     }
 `;
 
-const StyledBtnWithSVG = styled.button`
+export const StyledSearchBtn = styled.button`
+    flex-shrink: 0;
+    width: 2.4rem;
+    padding: 0.15rem;
     aspect-ratio: 1 / 1;
+
     svg {
             width: 100%;
             height: 100%;
@@ -127,25 +150,4 @@ const StyledBtnWithSVG = styled.button`
                 fill: ${({ theme }) => theme.colors.primary300}
             }
         }
-`;
-
-export const StyledSearchBtn = styled(StyledBtnWithSVG)`
-    flex-shrink: 0;
-    width: 2.4rem;
-    padding: 0.15rem;
-`;
-
-export const StyledActionBtn = styled(StyledBtnWithSVG)`
-    width: auto;
-    border-radius: ${({ theme }) => theme.radius.md};
-    padding: 0.7rem;
-
-    svg {
-        width: 2.4rem;
-        height: 2.4rem;
-    }
-
-    &:hover {
-        background-color: ${({ theme }) => theme.colors.primary100};
-    }
 `;
