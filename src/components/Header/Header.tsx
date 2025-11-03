@@ -27,7 +27,6 @@ import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
-import ProgressBar from "../ProgressBar.tsx";
 
 const HeaderLogo = () => {
     return(
