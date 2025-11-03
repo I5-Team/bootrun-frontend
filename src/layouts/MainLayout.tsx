@@ -4,7 +4,7 @@ import DevNavigator from '../components/DevNavigator';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
-export default function MainLayout({ isAuthPage }: { isAuthPage?: boolean }) {
+export default function MainLayout({ hasFooter }: { hasFooter?: boolean }) {
     return (
         <Wrapper>
             <Header/>
@@ -12,7 +12,7 @@ export default function MainLayout({ isAuthPage }: { isAuthPage?: boolean }) {
                 <Outlet />
             </MainContainer>
             <DevNavigator/>      {/* 개발용 네비게이션 버튼 추가 */}
-            {!isAuthPage && <Footer/>}
+            {hasFooter && <Footer/>}
         </Wrapper>
     );
 }

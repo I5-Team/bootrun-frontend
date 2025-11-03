@@ -17,6 +17,7 @@ import PaymentResultPage from "../pages/Lecture/PaymentResultPage";
 import MyLecturePage from "../pages/Lecture/MyLecturePage";
 import LectureRoomPage from "../pages/Lecture/LectureRoomPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import ErrorLayout from "../layouts/ErrorLayout";
 
 
 
@@ -56,7 +57,9 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
                 </Route>
                 {/* 404 페이지 */}
-                <Route path="*" element={<NotFoundPage />} />
+                <Route element={<ErrorLayout/>}>
+                    <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     )

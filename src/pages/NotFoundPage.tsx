@@ -1,10 +1,6 @@
 import { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-  Container,
-  Header,
-  LogoWrapper,
-  LogoImage,
   ContentWrapper,
   ImageWrapper,
   ErrorImage,
@@ -15,7 +11,6 @@ import {
   ButtonWrapper,
 } from './NotFoundPage.styled';
 import Button from '../components/Button';
-import logoTypo from '../assets/logos/logo-typo.svg';
 import errorImage from '../assets/images/bg-404.png';
 
 export default function NotFoundPage() {
@@ -41,15 +36,6 @@ export default function NotFoundPage() {
   };
 
   return (
-    <Container>
-      <Header>
-        <LogoWrapper>
-          <Link to="/" aria-label="부트런 홈으로 이동">
-            <LogoImage src={logoTypo} alt="bootrun" />
-          </Link>
-        </LogoWrapper>
-      </Header>
-
       <ContentWrapper role="main" id="main-content" tabIndex={-1} aria-labelledby="not-found-title">
         <ImageWrapper>
           <ErrorImage src={errorImage} alt="" role="presentation" aria-hidden="true" />
@@ -73,6 +59,5 @@ export default function NotFoundPage() {
           </ButtonWrapper>
         </TextAndButtonWrapper>
       </ContentWrapper>
-    </Container>
   );
 }

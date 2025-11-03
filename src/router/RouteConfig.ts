@@ -15,5 +15,5 @@ export const ROUTES = {
     ADMIN_LECTURE_MANAGE: '/admin/lectures',    // 관리자 강의 관리
     ADMIN_PAYMENT_MANAGE: '/admin/payments',    // 관리자 결제 관리   
     ADMIN_USER_MANAGE: '/admin/users',        // 관리자 사용자 관리
-    NOT_FOUND: '*',                           // 404 페이지
+    NOT_FOUND: '/*',                           // 404 페이지
 }

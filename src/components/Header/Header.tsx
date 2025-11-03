@@ -187,11 +187,10 @@ export default function Header() {
     const location = useLocation();
     const isSignupPage = location.pathname === ROUTES.SIGNUP;
     const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
-    const isErrorPage = location.pathname === "*";
+    const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
     
     const renderHeader = () => {
-    if (isSignupPage) return <OnlyLogoHeader />;
-    if (isErrorPage) return <DefaultHeader/>;
+    if (isSignupPage || isErrorPage) return <OnlyLogoHeader />;
     if (isLectureRoomPage) return <LectureRoomHeader />;
     return <DefaultHeader />;
 };
