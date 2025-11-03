@@ -126,6 +126,12 @@ export const InputGallery: React.FC = () => {
   const [profileJob, setProfileJob] = useState('');
   const [profileErrorName, setProfileErrorName] = useState('');
 
+  // 웹 접근성 예시 상태
+  const [ariaEmail, setAriaEmail] = useState('');
+  const [ariaPassword, setAriaPassword] = useState('');
+  const [ariaName, setAriaName] = useState('');
+  const [ariaGender, setAriaGender] = useState('');
+
   return (
     <Container>
       <Title>Input Components Gallery</Title>
@@ -724,6 +730,250 @@ const [password, setPassword] = useState('');
                 fullWidth
               />
             </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>12. 웹 접근성 (ARIA) - InputLogin</SectionTitle>
+        <Description>
+          웹 접근성을 위한 ARIA 속성 사용 예시입니다. ariaLabel을 사용하여 스크린 리더 사용자에게
+          명확한 정보를 제공합니다.
+        </Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>ariaLabel 사용</ExampleTitle>
+            <ExampleDescription>
+              시각적 레이블이 없을 때 ariaLabel로 스크린 리더에게 정보 전달
+              <br />
+              스크린 리더: "이메일 주소, 편집창"
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputLogin
+  type="email"
+  placeholder="이메일"
+  ariaLabel="이메일 주소"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+/>`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputLogin
+                type="email"
+                placeholder="이메일"
+                ariaLabel="이메일 주소"
+                value={ariaEmail}
+                onChange={(e) => setAriaEmail(e.target.value)}
+              />
+            </InputContainer>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>에러 상태의 접근성</ExampleTitle>
+            <ExampleDescription>
+              에러 발생 시 aria-invalid="true"와 aria-describedby로 에러 메시지 연결
+              <br />
+              스크린 리더: "비밀번호, 잘못됨, 비밀번호는 8자 이상이어야 합니다"
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputLogin
+  type="password"
+  placeholder="비밀번호"
+  ariaLabel="비밀번호 입력"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  error="비밀번호는 8자 이상이어야 합니다"
+/>
+
+// 자동으로 적용되는 ARIA 속성:
+// - aria-invalid="true"
+// - aria-describedby="input-id-error"`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputLogin
+                type="password"
+                placeholder="비밀번호"
+                ariaLabel="비밀번호 입력"
+                value={ariaPassword}
+                onChange={(e) => setAriaPassword(e.target.value)}
+                error="비밀번호는 8자 이상이어야 합니다"
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>13. 웹 접근성 (ARIA) - InputProfile</SectionTitle>
+        <Description>
+          InputProfile 컴포넌트의 웹 접근성 기능입니다. label과 input이 자동으로 연결되며,
+          추가적인 ARIA 속성을 사용할 수 있습니다.
+        </Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>label과 input 자동 연결</ExampleTitle>
+            <ExampleDescription>
+              label prop을 사용하면 자동으로 htmlFor와 id가 연결됩니다.
+              <br />
+              스크린 리더: "이름, 편집창, 이름을 입력하세요"
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="이름"
+  type="text"
+  placeholder="이름을 입력하세요"
+  value={name}
+  onChange={setName}
+/>
+
+// 자동으로 생성되는 HTML:
+// <label htmlFor="input-:r1:">이름</label>
+// <input id="input-:r1:" ... />`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="이름"
+                type="text"
+                placeholder="이름을 입력하세요"
+                value={ariaName}
+                onChange={setAriaName}
+              />
+            </InputContainer>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>드롭다운 접근성</ExampleTitle>
+            <ExampleDescription>
+              드롭다운은 role="combobox"와 aria-expanded로 상태를 전달합니다.
+              <br />
+              키보드 조작: Tab (포커스), Enter/Space (열기/닫기), Enter (선택)
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`<InputProfile
+  label="성별"
+  type="select"
+  placeholder="선택"
+  options={['남성', '여성', '기타']}
+  value={gender}
+  onChange={setGender}
+/>
+
+// 자동으로 적용되는 ARIA 속성:
+// - role="combobox"
+// - aria-expanded={isOpen}
+// - aria-haspopup="listbox"
+// - aria-controls="input-id-listbox"
+// - tabIndex={0}
+//
+// 옵션 리스트:
+// - role="listbox"
+// - 각 옵션: role="option", aria-selected={true/false}`}</code>
+            </CodeBlock>
+            <InputContainer>
+              <InputProfile
+                label="성별"
+                type="select"
+                placeholder="선택"
+                options={['남성', '여성', '기타']}
+                value={ariaGender}
+                onChange={setAriaGender}
+              />
+            </InputContainer>
+          </ExampleCard>
+        </ExampleGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>14. ARIA 속성 요약</SectionTitle>
+        <Description>두 컴포넌트에 적용된 ARIA 속성들의 역할을 정리합니다.</Description>
+        <ExampleGrid>
+          <ExampleCard>
+            <ExampleTitle>InputLogin ARIA 속성</ExampleTitle>
+            <ExampleDescription>
+              <strong>✅ aria-label</strong>: 시각적 레이블이 없을 때 스크린 리더용 레이블
+              <br />
+              <strong>✅ aria-describedby</strong>: 에러 메시지와 input 연결 (에러 설명 자동 읽힘)
+              <br />
+              <strong>✅ aria-invalid</strong>: 에러 상태 표시 (스크린 리더가 "잘못됨" 알림)
+              <br />
+              <strong>✅ id 자동 생성</strong>: React.useId()로 고유 ID 생성
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`// Props
+ariaLabel?: string
+
+// 사용 예시
+<InputLogin
+  ariaLabel="이메일 주소"
+  error="올바른 형식이 아닙니다"
+/>
+
+// 렌더링 결과
+<input
+  id="input-:r1:"
+  aria-label="이메일 주소"
+  aria-describedby="input-:r1:-error"
+  aria-invalid="true"
+/>
+<span id="input-:r1:-error">올바른 형식이 아닙니다</span>`}</code>
+            </CodeBlock>
+          </ExampleCard>
+
+          <ExampleCard>
+            <ExampleTitle>InputProfile ARIA 속성</ExampleTitle>
+            <ExampleDescription>
+              <strong>✅ htmlFor + id 연결</strong>: label 클릭 시 input 포커스
+              <br />
+              <strong>✅ aria-label</strong>: 레이블 없을 때 사용 (선택적)
+              <br />
+              <strong>✅ aria-describedby</strong>: 에러 메시지 연결
+              <br />
+              <strong>✅ aria-invalid</strong>: 에러 상태 표시
+              <br />
+              <strong>✅ role="combobox"</strong>: 드롭다운 역할 명시
+              <br />
+              <strong>✅ aria-expanded</strong>: 드롭다운 열림/닫힘 상태
+              <br />
+              <strong>✅ role="listbox"</strong>: 옵션 목록 역할
+              <br />
+              <strong>✅ aria-selected</strong>: 선택된 옵션 표시
+            </ExampleDescription>
+            <CodeBlock>
+              <code>{`// Props
+id?: string
+ariaLabel?: string
+ariaDescribedBy?: string
+
+// 텍스트 입력 예시
+<InputProfile
+  label="이름"
+  error="2글자 이상 입력하세요"
+/>
+
+// 드롭다운 예시
+<InputProfile
+  label="직업"
+  type="select"
+  options={['개발자', '디자이너']}
+/>
+
+// 렌더링 결과 (드롭다운)
+<label htmlFor="input-:r2:">직업</label>
+<div
+  id="input-:r2:"
+  role="combobox"
+  aria-expanded="true"
+  aria-haspopup="listbox"
+  aria-controls="input-:r2:-listbox"
+  tabIndex="0"
+>
+  선택
+</div>
+<div id="input-:r2:-listbox" role="listbox">
+  <div role="option" aria-selected="false">개발자</div>
+  <div role="option" aria-selected="false">디자이너</div>
+</div>`}</code>
+            </CodeBlock>
           </ExampleCard>
         </ExampleGrid>
       </Section>
