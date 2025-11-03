@@ -4,7 +4,7 @@ import DevNavigator from '../components/DevNavigator';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
-export default function MainLayout({ hasFooter }: { hasFooter?: boolean }) {
+export default function MainLayout({ hasFooter = true }: { hasFooter?: boolean }) {
     return (
         <Wrapper>
             <Header/>
