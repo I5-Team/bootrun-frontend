@@ -5,10 +5,12 @@ import styled from 'styled-components';
  * InputLogin 컴포넌트의 Props 인터페이스
  * @param error - 에러 상태 표시 (boolean) 또는 에러 메시지 (string)
  * @param fullWidth - 전체 너비 사용 여부
+ * @param ariaLabel - 레이블이 없을 때 사용할 접근성 레이블
  */
 export interface InputLoginProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean | string;
   fullWidth?: boolean;
+  ariaLabel?: string;
 }
 
 /**
@@ -100,11 +102,16 @@ const ErrorMessage = styled.span`
  * - 제어/비제어 컴포넌트 모두 지원
  */
 export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
-  ({ error, fullWidth, className, value, defaultValue, ...props }, ref) => {
+  ({ error, fullWidth, className, value, defaultValue, ariaLabel, ...props }, ref) => {
     // 포커스 상태 관리
     const [isFocused, setIsFocused] = useState(false);
     // 비제어 컴포넌트를 위한 내부 상태 관리
     const [internalValue, setInternalValue] = useState(defaultValue || '');
+
+    // 고유 ID 생성 (에러 메시지와 연결용) - Hook은 항상 최상위에서 호출
+    const generatedId = React.useId();
+    const inputId = props.id || `input-${generatedId}`;
+    const errorId = `${inputId}-error`;
 
     // value가 제공되면 제어 컴포넌트, 아니면 비제어 컴포넌트
     const currentValue = value !== undefined ? value : internalValue;
@@ -137,6 +144,7 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
       <InputWrapper $fullWidth={fullWidth} className={className}>
         <StyledInput
           ref={ref}
+          id={inputId}
           $error={error}
           $hasValue={hasValue}
           $isFocused={isFocused}
@@ -144,10 +152,13 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
+          aria-label={ariaLabel}
+          aria-describedby={error && typeof error === 'string' ? errorId : undefined}
+          aria-invalid={error ? true : undefined}
           {...props}
         />
         {/* error가 문자열일 때만 에러 메시지 표시 */}
-        {error && typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
+        {error && typeof error === 'string' && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
       </InputWrapper>
     );
   }
