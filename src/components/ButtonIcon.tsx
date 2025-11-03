@@ -15,8 +15,14 @@ const StyledButtonIcon = styled.button<{
     $hasAlert: boolean;
 }>`
     width: auto;
+    width: 4.2rem;
+    height: 4.2rem;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
     border-radius: ${({ theme }) => theme.radius.md};
-    padding: 0.7rem;
     aspect-ratio: 1 / 1;
     position: relative;
 

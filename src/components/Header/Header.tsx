@@ -6,9 +6,9 @@ import {
   StyledNavList,
   StyledSearchForm,
   StyledSearchInput,
-  StyledSearchBtn,
   StyledHeaderInnerLecture,
-  StyledHeaderInnerLogo
+  StyledHeaderInnerLogo,
+  StyledIconBtn,
 } from "./Header.styled.ts";
 
 import Button from "../Button.tsx";
@@ -21,6 +21,7 @@ import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
 import SvgMemo from "../../assets/icons/icon-memo.svg?react";
 import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
+import SvgChapter from "../../assets/icons/icon-chapter.svg?react";
 
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
@@ -50,9 +51,9 @@ const SearchForm = () => {
         <StyledSearchForm>
             <label htmlFor="search" className="sr-only">검색어 입력</label>
             <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledSearchBtn type="submit" aria-label="검색 실행">
+            <StyledIconBtn type="submit" aria-label="검색 실행">
                 <SvgSearch/>
-            </StyledSearchBtn>
+            </StyledIconBtn>
         </StyledSearchForm>
     )
 }
@@ -148,6 +149,14 @@ const DiscordBtn = () => {
     )
 }
 
+const ChapterBtn = () => {
+    return (
+        <StyledIconBtn>
+            <SvgChapter/>
+        </StyledIconBtn>
+    )
+}
+
 // render components
 const DefaultHeader = () => {
 
@@ -168,9 +177,11 @@ const OnlyLogoHeader = () => {
 }
 
 const LectureRoomHeader = () => {
+    const { isMobile } = useMediaQuery();
+    
     return (
         <StyledHeaderInnerLecture>
-            <HeaderLogo/>
+            {isMobile ? <ChapterBtn/> : <HeaderLogo/>}
             <StyledActionList>
                 <DownloadBtn/>
                 <MemoBtn/>

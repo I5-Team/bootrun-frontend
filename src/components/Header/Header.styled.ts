@@ -39,6 +39,7 @@ export const StyledHeaderInnerLogo = styled(StyledHeaderInner)`
 `;
 
 export const StyledHeaderInnerLecture = styled(StyledHeaderInner)`
+    max-width: calc(100% - 4rem);
     justify-content: space-between;
 `;
 
@@ -67,6 +68,7 @@ export const StyledNavList = styled.ul`
 `;
 
 export const StyledActionList = styled.div`
+    height: 100%;
     display: flex;
     justify-content: end;
     align-items: center;
@@ -127,7 +129,7 @@ export const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     }
 `;
 
-export const StyledSearchBtn = styled.button`
+export const StyledIconBtn = styled.button`
     flex-shrink: 0;
     width: 2.4rem;
     padding: 0.15rem;
