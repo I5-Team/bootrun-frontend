@@ -35,6 +35,7 @@ const StyledBaseButton = styled.button<{
   gap: 0.8rem;
 
   width: ${(p) => (p.$fullWidth ? '100%' : 'fit-content')};
+  min-width: fit-content;
   padding: ${(p) => buttonPadding[p.$size].padding};
   border-radius: ${({ theme }) => theme.radius.md};
   border: 1px solid transparent;
@@ -56,7 +57,6 @@ const StyledBaseButton = styled.button<{
       &:hover:not(:disabled),
       &:active:not(:disabled) {
         background-color: ${({theme}) => theme.colors.primaryDark};
-        border-color: ${({theme}) => theme.colors.gray200}
       }
   `}
 
