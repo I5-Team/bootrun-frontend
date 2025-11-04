@@ -6,9 +6,10 @@ import {
   StyledNavList,
   StyledSearchForm,
   StyledSearchInput,
-  StyledSearchBtn,
-  StyledActionBtn
-} from "./Header.style.ts";
+  StyledHeaderInnerLecture,
+  StyledHeaderInnerLogo,
+  StyledIconBtn,
+} from "./Header.styled.ts";
 
 import Button from "../Button.tsx";
 import Profile from "../Profile.tsx";
@@ -16,26 +17,31 @@ import Profile from "../Profile.tsx";
 import logo from "../../assets/logos/logo-typo.svg";
 import SvgSearch from "../../assets/icons/icon-search.svg?react";
 import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
+import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
+import SvgMemo from "../../assets/icons/icon-memo.svg?react";
+import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
+import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
+import SvgChapter from "../../assets/icons/icon-chapter.svg?react";
 
-import { useTheme } from "styled-components";
-import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ROUTES } from "../../router/RouteConfig.ts";
+import useMediaQuery from "../../hooks/useMediaQuery.ts";
+import ButtonIcon from "../ButtonIcon.tsx";
 
 const HeaderLogo = () => {
-    // 라우터 작업시 Link로 수정
     return(
-        <div>
+        <Link to={ROUTES.HOME} aria-label="부트런 홈으로 이동">
             <h1 className="sr-only">bootRun</h1>
             <StyledLogo src={logo} alt="" />
-        </div>
+        </Link>
     )
 }
 
 const NavList = () => {
-    // 라우터 작업시 Link 추가
     return (
         <StyledNavList>
-            <li>부트런 소개</li> 
-            <li>수강생 이야기</li>
+            <li><Link to="*">부트런 소개</Link></li> 
+            <li><Link to="*">수강생 이야기</Link></li>
         </StyledNavList>
     )
 }
@@ -45,62 +51,53 @@ const SearchForm = () => {
         <StyledSearchForm>
             <label htmlFor="search" className="sr-only">검색어 입력</label>
             <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledSearchBtn type="submit" aria-label="검색 실행">
+            <StyledIconBtn type="submit" aria-label="검색 실행">
                 <SvgSearch/>
-            </StyledSearchBtn>
+            </StyledIconBtn>
         </StyledSearchForm>
     )
 }
 
 const SearchOpenBtn = () => {
     return (
-        <StyledActionBtn aria-label="검색창 열기">
+        <ButtonIcon ariaLabel="검색창 열기">
             <SvgSearch/>
-        </StyledActionBtn>
+        </ButtonIcon>
     )
 }
 
 const MenuOpenBtn = () => {
     return (
-        <StyledActionBtn aria-label="메뉴 열기">
+        <ButtonIcon ariaLabel="메뉴 열기">
             <SvgHamberger/>
-        </StyledActionBtn>
+        </ButtonIcon>
     )
 }
 
 const UserActions = () => {
     let isLoggedIn = false;
+
     return (
         <>
             {isLoggedIn ?
-                <Profile size={4.2}/>
+                <Link to={ROUTES.PROFILE}>
+                    <Profile size={4.2}/>
+                </Link>
                 : 
-                <Button>로그인</Button>
+                <Link to={ROUTES.LOGIN}>
+                    <Button>로그인</Button>
+                </Link>
             } 
         </>    
     )
 }
 
 const ActionLists = () => {
-    const theme = useTheme();
-    const [isUnderDesktop, setIsUnderDesktop] = useState(false);
-    
-    useEffect(() => {
-        const mediaQuery = window.matchMedia(theme.devices.tablet);
-        setIsUnderDesktop(mediaQuery.matches);
-
-        const handleMediaChange = (e: MediaQueryListEvent) => setIsUnderDesktop(e.matches);
-
-        mediaQuery.addEventListener("change", handleMediaChange);
-
-        return () => {
-            mediaQuery.removeEventListener("change", handleMediaChange);
-        }
-    }, [theme.devices.tablet]);
+    const { isTablet } = useMediaQuery();
 
     return (
         <StyledActionList>
-            {isUnderDesktop ?
+            {isTablet ?
                 <>
                     <SearchOpenBtn/>
                     <MenuOpenBtn/>
@@ -117,19 +114,101 @@ const ActionLists = () => {
     )
 }
 
-export default function Header() {
-    // 회원가입 페이지에서는 로고만 보이게 처리
-    const isSignupPage = false;
+// lectureRoom
+const DownloadBtn = () => {
+    const hasAlert = true;
+
     return (
-        <>
-            <StyledHeader>
-                <StyledHeaderInner $isSignup={isSignupPage}>
-                    <HeaderLogo/>
-                    {!isSignupPage &&
-                        <ActionLists/>
-                    } 
-                </StyledHeaderInner>
-            </StyledHeader>
-        </>
+        <ButtonIcon ariaLabel="다운로드" variant="light" hasAlert={hasAlert}>
+            <SvgDownload/>
+        </ButtonIcon>
+    )
+}
+
+const MemoBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="메모" variant="light">
+            <SvgMemo/>
+        </ButtonIcon>
+    )
+}
+
+const HomeBackBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="홈으로 돌아가기" variant="light">
+            <SvgHomeBack/>
+        </ButtonIcon>
+    )
+}
+
+const DiscordBtn = () => {
+    return (
+        <ButtonIcon ariaLabel="디스코드 참여하기" variant="discord">
+            <SvgDiscord/>
+        </ButtonIcon>
+    )
+}
+
+const ChapterBtn = () => {
+    return (
+        <StyledIconBtn>
+            <SvgChapter/>
+        </StyledIconBtn>
+    )
+}
+
+// render components
+const DefaultHeader = () => {
+
+    return (
+        <StyledHeaderInner>
+            <HeaderLogo/>
+            <ActionLists/>
+        </StyledHeaderInner>
+    )
+}
+
+const OnlyLogoHeader = () => {
+    return (
+        <StyledHeaderInnerLogo>
+            <HeaderLogo/>
+        </StyledHeaderInnerLogo>    
+    )
+}
+
+const LectureRoomHeader = () => {
+    const { isMobile } = useMediaQuery();
+    
+    return (
+        <StyledHeaderInnerLecture>
+            {isMobile ? <ChapterBtn/> : <HeaderLogo/>}
+            <StyledActionList>
+                <DownloadBtn/>
+                <MemoBtn/>
+                <HomeBackBtn/>
+                <DiscordBtn/>                        
+                <Link to={ROUTES.PROFILE}><Profile/></Link>
+            </StyledActionList>
+        </StyledHeaderInnerLecture>
+        
+    )
+}
+
+export default function Header() {
+    const location = useLocation();
+    const isLoginPage = location.pathname === ROUTES.LOGIN;
+    const isSignupPage = location.pathname === ROUTES.SIGNUP;
+    const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
+    const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
+    
+    const renderHeader = () => {
+    if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
+    if (isLectureRoomPage) return <LectureRoomHeader />;
+    return <DefaultHeader />;
+};
+    return (
+        <StyledHeader>
+            {renderHeader()}
+        </StyledHeader>
     );
 }

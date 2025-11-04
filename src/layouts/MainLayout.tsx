@@ -1,42 +1,49 @@
-import { Outlet } from "react-router-dom";
-import Header from "../components/Header/Header";
-import DevNavigator from "../components/DevNavigator";
+import styled from 'styled-components';
+import { Outlet } from 'react-router-dom';
+import DevNavigator from '../components/DevNavigator';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 
-export default function MainLayout() {
+export default function MainLayout({ hasFooter = true }: { hasFooter?: boolean }) {
     return (
-        <LayoutWarpper>
-            <MainSection>
-                <Header />
-                <ContentArea>
+        <Wrapper>
+            <Header/>
+            <MainContainer>
                 <Outlet />
-                </ContentArea>
-                <DevNavigator/>      {/* 개발용 네비게이션 버튼 추가 */}
-            </MainSection>
-        </LayoutWarpper>
+            </MainContainer>
+            <DevNavigator/>      {/* 개발용 네비게이션 버튼 추가 */}
+            {hasFooter && <Footer/>}
+        </Wrapper>
     );
 }
 
+const StyledWrapper = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+`;
 
-const LayoutWarpper = ({ children }: { children: React.ReactNode }) => {
+const StyledMainContainer = styled.main`
+    flex: 1;
+    max-width: ${({ theme }) => theme.breakpoints.desktop};
+    width: calc(100% - 3.2rem);
+    margin: 0 auto;
+`;
+
+const Wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <StyledWrapper>
             {children}
-        </div>
+        </StyledWrapper>
     );
 }
 
-const MainSection = ({ children }: { children: React.ReactNode }) => {
+const MainContainer = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+       <StyledMainContainer>
             {children}
-        </div>
-    );
-}
-
-const ContentArea = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <div style={{ flex: 1, padding: '16px 24px', overflowY: 'auto' }}>
-            {children}
-        </div>
+        </StyledMainContainer>
     );
 }

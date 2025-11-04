@@ -12,50 +12,6 @@ const bounce = keyframes`
   }
 `;
 
-export const Container = styled.div`
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background-color: ${({ theme }) => theme.colors.white};
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Header = styled.header`
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 192rem;
-  height: 7rem;
-  background-color: ${({ theme }) => theme.colors.white};
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    height: 5.6rem;
-  }
-`;
-
-export const LogoWrapper = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const LogoImage = styled.img`
-  width: 12.4rem;
-  vertical-align: bottom;
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    width: 10rem;
-  }
-`;
-
 export const ContentWrapper = styled.div`
   position: absolute;
   left: 50%;

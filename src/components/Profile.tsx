@@ -12,6 +12,7 @@ const StyledProfileImg = styled.img<{ size: number }>`
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    vertical-align: bottom;
 `;
 
 export default function Profile({ src, size = 4.2 }: ProfileProps) { 

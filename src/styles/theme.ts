@@ -22,7 +22,7 @@ const colors = {
 const breakpoints = {
   desktop: '1190px',
   tablet: '768px',
-  mobile: '390px',
+  mobile: '478px',
 } as const;
 
 const devices = {
