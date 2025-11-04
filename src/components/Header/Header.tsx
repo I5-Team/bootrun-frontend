@@ -196,12 +196,13 @@ const LectureRoomHeader = () => {
 
 export default function Header() {
     const location = useLocation();
+    const isLoginPage = location.pathname === ROUTES.LOGIN;
     const isSignupPage = location.pathname === ROUTES.SIGNUP;
     const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
     const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
     
     const renderHeader = () => {
-    if (isSignupPage || isErrorPage) return <OnlyLogoHeader />;
+    if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
     if (isLectureRoomPage) return <LectureRoomHeader />;
     return <DefaultHeader />;
 };
