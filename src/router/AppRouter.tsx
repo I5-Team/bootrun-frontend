@@ -18,6 +18,7 @@ import MyLecturePage from "../pages/Lecture/MyLecturePage";
 import LectureRoomPage from "../pages/Lecture/LectureRoomPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import ErrorLayout from "../layouts/ErrorLayout";
+import MainPage from "../pages/MainPage";
 
 
 
@@ -39,7 +40,7 @@ export default function AppRouter() {
                     {/* 인증 사용자용 페이지 */}
                 </Route>
                 <Route element={<MainLayout/>}>
-                    <Route path={ROUTES.HOME} element={<ButtonGallery />} />
+                    <Route path={ROUTES.HOME} element={<MainPage />} />
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
                     <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />  
