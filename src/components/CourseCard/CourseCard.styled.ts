@@ -5,7 +5,6 @@ export const CardContainer = styled.article`
   flex-direction: column;
   gap: 2rem;
   width: 100%;
-  max-width: 38rem;
   min-width: 0;
 
   @media ${({ theme }) => theme.devices.tablet} {
@@ -59,7 +58,8 @@ export const LikeButton = styled.button`
 
 export const TagList = styled.ul`
   display: flex;
-  gap: 1.2rem;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 1vw, 1.2rem);
 
   li {
     min-width: 0;
@@ -77,7 +77,7 @@ export const ContentWrapper = styled.div`
 export const Title = styled.h3`
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: 600;
-  line-height: 3.2rem;
+  line-height: 1.4;
   color: ${({ theme }) => theme.colors.surface};
   margin: 0;
   width: 100%;
@@ -92,9 +92,7 @@ export const Title = styled.h3`
   text-overflow: ellipsis;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
-    line-height: 2.4rem;
-    height: 4.8rem;
+    font-size: ${({ theme }) => theme.mobileFontSize.xl};
   }
 `;
 
