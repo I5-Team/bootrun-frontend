@@ -1,6 +1,6 @@
 import sampleCourses from "../assets/data/sampleCourses.json"
 import sampleCategories from "../assets/data/sampleCategories.json";
-import CourseCard from "../components/CourseCard";
+import CourseCard from "../components/CourseCard/CourseCard";
 import styled from "styled-components";
 import Button from "../components/Button";
 import Profile from "../components/Profile";

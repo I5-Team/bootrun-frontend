@@ -11,7 +11,7 @@ export default function MainLayout({ hasFooter = true }: { hasFooter?: boolean }
             <MainContainer>
                 <Outlet />
             </MainContainer>
-            {/* <DevNavigator/>      개발용 네비게이션 버튼 추가 */}
+            <DevNavigator/>      {/* 개발용 네비게이션 버튼 추가 */}
             {hasFooter && <Footer/>}
         </Wrapper>
     );

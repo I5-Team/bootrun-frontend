@@ -1,22 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
-import Tag from './Tag';
-import IconHeart from '../assets/icons/icon-heart.svg?react';
-import Profile from './Profile';
 
-type CourseCardProps = {
-  thumbnail: string;
-  tags: Array<{ label: string; variant?: 'dark' | 'primary' }>;
-  title: string;
-  teacherName: string;
-  teacherRole: string;
-  teacherImage: string;
-  description: string;
-  price: number;
-  onLike?: () => void;
-};
-
-const CardContainer = styled.article`
+export const CardContainer = styled.article`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -29,7 +13,8 @@ const CardContainer = styled.article`
   }
 `;
 
-const ThumbnailWrapper = styled.div`
+// CardHeader
+export const ThumbnailWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 380 / 200;
@@ -38,27 +23,24 @@ const ThumbnailWrapper = styled.div`
   overflow: hidden;
 `;
 
-const ThumbnailImage = styled.img`
+export const ThumbnailImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
 `;
 
-const LikeButton = styled.button`
+export const LikeButton = styled.button`
   position: absolute;
-  top: clamp(1rem, 6%, 1.6rem);
+  top: clamp(1.2rem, 6%, 1.6rem);
   right: clamp(0.8rem, 4%, 1.4rem);
-  width: clamp(2.4rem, 8%, 2.8rem);
+  width: clamp(2.4rem, 6%, 2.8rem);
   height: auto;
   
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
 
   & svg {
     width: 100%;
@@ -67,7 +49,7 @@ const LikeButton = styled.button`
 
   & path {
     stroke: ${({ theme }) => theme.colors.white};
-    fill: transparent;
+    fill: ${({ theme }) => theme.colors.gray100}80;
   }
 
   &:hover path {
@@ -75,16 +57,16 @@ const LikeButton = styled.button`
   }
 `;
 
-const TagList = styled.ul`
+export const TagList = styled.ul`
   display: flex;
   gap: 1.2rem;
+
+  li {
+    min-width: 0;
+  }
 `;
 
-const TagItem = styled.li`
-  min-width: 0;
-`;
-
-const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -92,7 +74,7 @@ const ContentWrapper = styled.div`
   min-width: 0;
 `;
 
-const Title = styled.h3`
+export const Title = styled.h3`
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: 600;
   line-height: 3.2rem;
@@ -116,7 +98,8 @@ const Title = styled.h3`
   }
 `;
 
-const TeacherSection = styled.div`
+// CardContent
+export const TeacherSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -124,14 +107,14 @@ const TeacherSection = styled.div`
   min-width: 0;
 `;
 
-const TeacherInfo = styled.div`
+export const TeacherInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 1.2rem;
   min-width: 0;
 `;
 
-const TeacherDetails = styled.div`
+export const TeacherDetails = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -140,7 +123,7 @@ const TeacherDetails = styled.div`
   overflow: hidden;
 `;
 
-const TeacherName = styled.p`
+export const TeacherName = styled.p`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.surface};
@@ -152,7 +135,7 @@ const TeacherName = styled.p`
   }
 `;
 
-const TeacherRole = styled.p`
+export const TeacherRole = styled.p`
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 400;
   color: ${({ theme }) => theme.colors.gray300};
@@ -167,7 +150,7 @@ const TeacherRole = styled.p`
   }
 `;
 
-const DescriptionBox = styled.div`
+export const DescriptionBox = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.gray100};
   padding: 2rem;
@@ -212,7 +195,7 @@ const DescriptionBox = styled.div`
   }
 `;
 
-const Price = styled.div`
+export const Price = styled.div`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   line-height: 2.2rem;
@@ -223,60 +206,24 @@ const Price = styled.div`
   }
 `;
 
-export const CourseCard: React.FC<CourseCardProps> = ({
-  thumbnail,
-  tags,
-  title,
-  teacherName,
-  teacherRole,
-  teacherImage,
-  description,
-  price,
-  onLike,
-}) => {
-  const formatPrice = (price: number) => {
-    return `₩${price.toLocaleString()}`;
-  };
+// CardContentMyLecture
+export const LectureContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+`
+export const ProgressWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 
-  return (
-    <CardContainer>
-      <ThumbnailWrapper>
-        <ThumbnailImage src={thumbnail} alt="" />
-        <LikeButton onClick={onLike} aria-label="강의 좋아요 추가" type="button">
-          <IconHeart />
-        </LikeButton>
-      </ThumbnailWrapper>
-
-      <TagList role="list" aria-label="강의 태그">
-        {tags.map((tag, index) => (
-          <TagItem key={index}>
-            <Tag variant={tag.variant}>{tag.label}</Tag>
-          </TagItem>
-        ))}
-      </TagList>
-
-      <ContentWrapper>
-        <Title>{title}</Title>
-
-        <TeacherSection>
-          <TeacherInfo>
-            <Profile size={4.6} src={teacherImage} alt={`${teacherName} 강사 프로필`}/>
-            <TeacherDetails>
-              <span className="sr-only">강사</span>
-              <TeacherName>{teacherName}</TeacherName>
-              <TeacherRole aria-label="강사 소속">{teacherRole}</TeacherRole>
-            </TeacherDetails>
-          </TeacherInfo>
-
-          <DescriptionBox role="blockquote" aria-label="강의 소개">
-            <p>{description}</p>
-          </DescriptionBox>
-        </TeacherSection>
-
-        <Price aria-label="강의 가격">{formatPrice(price)}</Price>
-      </ContentWrapper>
-    </CardContainer>
-  );
-};
-
-export default CourseCard;
+    span {
+    color: ${({ theme }) => theme.colors.gray400};
+    }
+`
+export const ButtonList = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1.2rem;
+`;
