@@ -5,7 +5,7 @@ import { mockReviewData } from '../../../data/mockData';
 import type { ReviewData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from './HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
 
-const ReviewSection = React.forwardRef<HTMLElement>((props, ref) => {
+const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<ReviewData>(mockReviewData, 1200);
 
   return (
@@ -13,9 +13,9 @@ const ReviewSection = React.forwardRef<HTMLElement>((props, ref) => {
       <S.SectionHeader>
         <S.SectionTitle>수강생 후기</S.SectionTitle>
         {data && (
-           <S.SectionSubtitle>
-             ★ {data.averageRating.toFixed(1)} ({data.totalReviews}개 후기)
-           </S.SectionSubtitle>
+        <S.SectionSubtitle>
+          {data.averageRating.toFixed(1)} ({data.totalReviews}개 후기)
+        </S.SectionSubtitle>
         )}
       </S.SectionHeader>
       

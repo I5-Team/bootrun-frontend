@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 
-const LectureIntroSection = React.forwardRef<HTMLElement>((props, ref) => {
+const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
   return (
     <S.Section ref={ref} id="description">
       <S.TitleHeader>
