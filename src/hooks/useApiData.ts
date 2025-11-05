@@ -20,7 +20,7 @@ export const useApiData = <T,>(mockData: T, delay: number = 500) => {
     };
 
     fetchData();
-  }, [mockData, delay]);
+  }, [delay]);
 
   return { data, loading, error };
 };
