@@ -8,9 +8,11 @@ import SvgDesign from "../assets/icons/icon-category-Design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledBannerWrapper, StyledBannerArticle, StyledCategoryList } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper } from "./MainPage.styled";
 import FilterCardList, { type CourseType } from "../components/FilterCardList";
 import { ProfileCard } from "../components/ProfileCard";
+import Banner from "../components/Banner";
+import useMediaQuery from "../hooks/useMediaQuery";
 
 
 const CategoryBtn = ({ icon, title }: { icon: React.ReactNode, title: string }) => {
@@ -54,22 +56,15 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
 }
 
 export default function MainPage() {
+    const { isTablet } = useMediaQuery();
 
     return (
         <>
-            <StyledBannerWrapper>
-                <StyledBannerArticle>
-                    <h2 className="sr-only">메인 배너</h2>
-                    <span>수강생 모집중</span>
-                    <p>견고한 파이썬 <br/> 부스트 커뮤니티 1기</p>
-                    <p>
-                        위니브와 함께하는 파이썬 완전 정복 온라인 강의가 출시되었습니다.<br/>
-                        <span>얼리버드 20% 할인 혜택을 놓치지 마세요!</span>
-                    </p>
-                </StyledBannerArticle>
-                <ProfileCard/>
-            </StyledBannerWrapper>
-            
+            <StyledHeroWrapper>
+                <Banner/>
+                {!isTablet && <ProfileCard/>}
+            </StyledHeroWrapper>
+
             <StyledCategoryList>
                 <CategoryBtn icon={<SvgAll/>} title="전체 보기"/>
                 <CategoryBtn icon={<SvgFE/>} title="프론트엔드" />

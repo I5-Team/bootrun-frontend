@@ -1,23 +1,19 @@
 import styled from "styled-components";
 
-// banner
-export const StyledBannerWrapper = styled.div`
+// 
+export const StyledHeroWrapper = styled.div`
+    width: 100%;
     height: 33rem;
     display: flex;
     justify-content: space-between;
     align-items: start;
     gap: 2rem;
     margin-top: 4rem;
-`;
 
-export const StyledBannerArticle = styled.article`
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    min-width: 50%;
-    background-color: #B6F187;
-    border-radius: ${({ theme }) => theme.radius.md};
-    padding: 5.2rem;
+    @media ${({ theme }) => theme.devices.mobile} {
+        height: auto;
+        aspect-ratio: 358 / 200;
+    }
 `;
 
 // categoryList
