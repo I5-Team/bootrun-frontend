@@ -20,7 +20,7 @@ const removeWhitespace = (value: string): string => {
  */
 const sanitizeEmail = (value: string): string => {
   // 공백만 제거
-  return value.replace(/\s/g, '');
+  return value.replace(/\s/g, '').toLowerCase();
 };
 
 // 이메일 유효성 검증 함수
@@ -126,7 +126,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showEmailHelp, setShowEmailHelp] = useState(false);
 
-  // 이메일 변경 핸들러
+  // 이메일 처리 핸들러
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // 공백만 제거 (한글은 입력 허용, 유효성 검사에서 에러 처리)
@@ -156,7 +156,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     }
   };
 
-  // 비밀번호 변경 핸들러
+  // 비밀번호 처리 핸들러
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // 공백 입력 제거
