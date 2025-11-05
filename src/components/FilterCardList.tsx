@@ -1,5 +1,6 @@
 import sampleCourses from "../assets/data/sampleCourses.json";
 import CourseCard from "../components/CourseCard/CourseCard";
+import useMediaQuery from "../hooks/useMediaQuery";
 import  { StyledCardGrid } from "../pages/MainPage.styled";
 import { ROUTES } from "../router/RouteConfig";
 import { Link } from "react-router-dom";
@@ -39,6 +40,9 @@ export type CourseFilter = {
 }
 
 const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseFilter) => {
+    const { isLaptop } = useMediaQuery();
+    const cardCount = isLaptop ? 4 : 3;
+
     const courseList = sampleCourses as CourseData[];
 
     const courseTypeLabel : Record<CourseType, string> = {
@@ -75,6 +79,7 @@ const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseF
         <StyledCardGrid>
             { filteredList
             .sort((a, b) => b.created_at.localeCompare(a.created_at))
+            .slice(0, cardCount)
             .map((course) => (
                 <Link
                     key={course.id}
