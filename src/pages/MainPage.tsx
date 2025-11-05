@@ -30,7 +30,7 @@ const SectionHead = ({ title }: { title:string }) => {
     return (
         <StyledSectionHead>
             <h2>{title}</h2>
-            <Link to={ROUTES.LECTURE_LIST}>
+            <Link to={ROUTES.LECTURE_LIST} aria-label={`${title} 강의 리스트 더보기`}>
                 <StyledShowMore>
                     더 보기
                     <SvgArrowRight/>
@@ -65,7 +65,7 @@ export default function MainPage() {
                 {!isTablet && <ProfileCard/>}
             </StyledHeroWrapper>
 
-            <StyledCategoryList>
+            <StyledCategoryList role="group" aria-label="카테고리별 강의 보러가기:">
                 <CategoryBtn icon={<SvgAll/>} title="전체 보기"/>
                 <CategoryBtn icon={<SvgFE/>} title="프론트엔드" />
                 <CategoryBtn icon={<SvgBE/>} title="백엔드" />

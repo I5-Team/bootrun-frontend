@@ -2,6 +2,8 @@ import sampleCourses from "../assets/data/sampleCourses.json"
 import sampleCategories from "../assets/data/sampleCategories.json";
 import CourseCard from "../components/CourseCard/CourseCard";
 import  { StyledCardGrid } from "../pages/MainPage.styled";
+import { ROUTES } from "../router/RouteConfig";
+import { Link } from "react-router-dom";
 
 export type Difficulties = "beginner" | "intermediate" | "advanced";
 
@@ -68,23 +70,25 @@ const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseF
         <StyledCardGrid>
             { filteredList
             // .slice(0, 3)
-            .map((course, id) => (
-                <CourseCard
-                    key={id}
-                    thumbnail={course.thumbnail_url}
-                    tags={[
-                        {'label': course.course_type, 'variant': 'dark'}, 
-                        {'label': categories.find(c => c.id === course.category_id)?.display_name || "기타"}, 
-                        {'label': difficultyName[course.difficulty as Difficulties]},
-                    ]}
-                    title={course.title}
-                    teacherName={course.instructor_name}
-                    teacherRole={course.instructor_bio}
-                    teacherImage={course.instructor_image}
-                    description={course.description}
-                    price={course.price}
-                    onLike={() => console.log(course.title)}
-                />
+            .map((course) => (
+                <Link to={`${ROUTES.LECTURE_LIST}/${course.id}`} aria-label={`${course.title} 강의 상세 보기`}>
+                    <CourseCard
+                        key={course.id}
+                        thumbnail={course.thumbnail_url}
+                        tags={[
+                            {'label': course.course_type, 'variant': 'dark'}, 
+                            {'label': categories.find(c => c.id === course.category_id)?.display_name || "기타"}, 
+                            {'label': difficultyName[course.difficulty as Difficulties]},
+                        ]}
+                        title={course.title}
+                        teacherName={course.instructor_name}
+                        teacherRole={course.instructor_bio}
+                        teacherImage={course.instructor_image}
+                        description={course.description}
+                        price={course.price}
+                        onLike={() => console.log(course.title)}
+                    />
+                </Link>
             ))
             }
         </StyledCardGrid>
