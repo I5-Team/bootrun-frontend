@@ -64,7 +64,7 @@ const S = {
     scroll-margin-top: 100px;`, 
   SectionHeader: styled.div`
     .lineBreak { display: block; }
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
