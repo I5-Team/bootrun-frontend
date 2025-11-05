@@ -69,7 +69,7 @@ const S = {
     align-items: center;
     gap: 12px;
   `,
-SectionTitle: styled.h2`
+  SectionTitle: styled.h2`
     font-weight: 700;
     font-size: 32px;
     color: #121314;
