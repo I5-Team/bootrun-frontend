@@ -3,8 +3,8 @@ export const ROUTES = {
     LOGIN: '/login',                            // 로그인 페이지
     SIGNUP: '/signup',                          // 회원가입 페이지
     LECTURE_LIST: '/lectures',                  // 강의 목록 페이지
-    LECTURE_DETAIL: '/lecture/:id',            // 강의 상세 페이지
-    LECTURE_PAYMENT: '/lecturerou/:id/payment',   // 강의 결제 페이지
+    LECTURE_DETAIL: '/lectures/:id',            // 강의 상세 페이지
+    LECTURE_PAYMENT: '/lectures/:id/payment',   // 강의 결제 페이지
     LECTURE_PAYMENT_RESULT: '/lectures/:id/payment/result', // 강의 결제 완료 페이지
     MY_LECTURES: '/my/lectures',              // 내 강의 페이지
     LECTURE_ROOM: '/lectures/:id/room',        // 강의실 페이지

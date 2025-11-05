@@ -43,16 +43,16 @@ export default function DevNavigator() {
 
 const Container = styled.div`
   position: fixed;
-  right: 8px;
-  bottom: 16px;
+right: 0.8rem;
+  bottom: 1.6rem;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.4rem; /* 4px */
   background: rgba(0, 0, 0, 0.3);
-  padding: 4px;
-  border-radius: 8px;
+  padding: 0.4rem; /* 4px */
+  border-radius: ${({ theme }) => theme.radius.md}; /* 8px */
   z-index: 9999;
-  max-height: calc(100vh - 96px);
+  max-height: calc(100vh - 9.6rem); /* 96px */
   overflow-y: auto;
   overscroll-behavior: contain;
 `;
