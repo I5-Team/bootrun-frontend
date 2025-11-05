@@ -21,12 +21,14 @@ const colors = {
 
 const breakpoints = {
   desktop: '1190px',
+  laptop: '992px',
   tablet: '768px',
   mobile: '478px',
 } as const;
 
 const devices = {
   desktop: `screen and (max-width: ${breakpoints.desktop})`,
+  laptop: `screen and (max-width: ${breakpoints.laptop})`,
   tablet: `screen and (max-width: ${breakpoints.tablet})`,
   mobile: `screen and (max-width: ${breakpoints.mobile})`,
 } as const;
