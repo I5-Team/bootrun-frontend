@@ -70,7 +70,7 @@ const S = {
     gap: 40px;
     scroll-margin-top: 100px;
   `,
-SectionHeader: styled.div`
+  SectionHeader: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
