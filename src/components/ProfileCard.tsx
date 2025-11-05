@@ -111,7 +111,7 @@ export const ProfileCard = () => {
         navigate(ROUTES.LOGIN);
     }
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const isLoggedIn = false;
     const userInfo = {
         profile_image : 'https://picsum.photos/id/237/200/200',
         nickname: 'S부트런짱2',
