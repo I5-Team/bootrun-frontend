@@ -214,7 +214,10 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
 
   // 인증코드 변경 핸들러
   const handleVerificationCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVerificationCode(e.target.value);
+    const value = e.target.value;
+
+    const sanitizedValue = removeWhitespace(value);
+    setVerificationCode(sanitizedValue);
   };
 
   // 이메일 인증 요청
