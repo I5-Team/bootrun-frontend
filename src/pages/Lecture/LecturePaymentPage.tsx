@@ -8,13 +8,25 @@ import CheckRectDefault from '../../assets/icons/icon-check-rect-default.svg?rea
 import tossIcon from '../../assets/icons/icon-payment-toss.avif';
 
 export interface Coupon {
-  id: string;
+  // 기본 정보
+  id: number;
+  courseId: number | null;
+  code: string;
   name: string;
   description: string;
-  discount?: number;
+
+  // 할인 정보
   discountRate?: number;
-  maxDiscount?: number;
-  minPrice?: number;
+  discountAmount?: number;
+
+  validFrom: string;
+  validUntil: string;
+  maxUsage?: number;
+  usedCount?: number;
+  isActive: boolean;
+
+  // 메타 정보
+  createdAt: string;
 }
 
 interface LectureData {
@@ -35,9 +47,9 @@ export default function LecturePaymentPage() {
   // TODO: API 연동 시 실제 데이터로 대체
   const lectureData: LectureData = {
     id: '1',
-    title: '견고한 파이썬 부스트 커뮤니티 1기 (디스코드 커뮤니티)',
+    title: 'Blender로 두더지를 만들며 전문가에게 배우는 3D 모델링 기초',
     instructor: '김민주',
-    category: '부스트 커뮤니티',
+    category: '디자인 클래스',
     price: 50000,
     thumbnailUrl: thumbPython2,
   };
@@ -45,25 +57,42 @@ export default function LecturePaymentPage() {
   // TODO: API 연동 시 실제 쿠폰 데이터로 대체
   const availableCoupons: Coupon[] = [
     {
-      id: '1',
+      id: 1,
+      courseId: null, // 전체 강의 사용 가능
+      code: 'WELCOME10',
       name: '10% 할인 쿠폰',
       description: '전 강의 10% 할인',
       discountRate: 10,
-      maxDiscount: 20000,
+      validFrom: '2025-01-01T00:00:00Z',
+      validUntil: '2025-12-31T23:59:59Z',
+      maxUsage: 100,
+      usedCount: 23,
+      isActive: true,
+      createdAt: '2025-01-01T00:00:00Z',
     },
     {
-      id: '2',
+      id: 2,
+      courseId: null,
+      code: 'SAVE5000',
       name: '5,000원 할인 쿠폰',
       description: '5만원 이상 구매 시',
-      discount: 5000,
-      minPrice: 50000,
+      discountAmount: 5000,
+      validFrom: '2025-01-01T00:00:00Z',
+      validUntil: '2025-06-30T23:59:59Z',
+      isActive: true,
+      createdAt: '2025-01-01T00:00:00Z',
     },
     {
-      id: '3',
+      id: 3,
+      courseId: null,
+      code: 'SAVE15000',
       name: '15,000원 할인 쿠폰',
       description: '15만원 이상 구매 시',
-      discount: 15000,
-      minPrice: 150000,
+      discountAmount: 15000,
+      validFrom: '2025-01-01T00:00:00Z',
+      validUntil: '2025-06-30T23:59:59Z',
+      isActive: false, // 비활성화된 쿠폰 예시
+      createdAt: '2025-01-01T00:00:00Z',
     },
   ];
 
