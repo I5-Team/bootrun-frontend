@@ -1,8 +1,8 @@
 export default function ProfilePage() {
     return (
         <div>
-            <h1>Profile Page</h1>
-            <p>This is the user's profile page.</p>
+            <h2>프로필 페이지</h2>
+            <p>여기에 프로필 관련 내용을 표시합니다.</p>
         </div>
     );
 }

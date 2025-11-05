@@ -18,12 +18,14 @@ export default function DevNavigator() {
     { label: '결제 완료', path: ROUTES.LECTURE_PAYMENT_RESULT },
     { label: '내 강의', path: ROUTES.MY_LECTURES },
     { label: '강의실', path: ROUTES.LECTURE_ROOM },
-    { label: '프로필', path: ROUTES.PROFILE },
     { label: '관리자 대시보드', path: ROUTES.ADMIN_DASHBOARD },
-    { label: '관리자 강의 관리', path: ROUTES.ADMIN_LECTURE_MANAGE },
-    { label: '관리자 결제 관리', path: ROUTES.ADMIN_PAYMENT_MANAGE },
-    { label: '관리자 사용자 관리', path: ROUTES.ADMIN_USER_MANAGE },
+    { label: '관리자 강의관리', path: ROUTES.ADMIN_LECTURE_MANAGE },
+    { label: '관리자 결제관리', path: ROUTES.ADMIN_PAYMENT_MANAGE },
+    { label: '관리자 사용자관리', path: ROUTES.ADMIN_USER_MANAGE },
     { label: '404 페이지', path: ROUTES.NOT_FOUND },
+    { label: '마이페이지', path: ROUTES.MYPAGE },
+    { label: '마이 - 주문내역', path: ROUTES.MYPAGE_ORDERS },
+    { label: '마이 - 계정정보', path: ROUTES.MYPAGE_ACCOUNT },
 
   ];
 
@@ -41,13 +43,16 @@ export default function DevNavigator() {
 
 const Container = styled.div`
   position: fixed;
-  right: 16px;
+  right: 8px;
   bottom: 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 8px;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
   border-radius: 8px;
   z-index: 9999;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 `;
