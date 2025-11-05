@@ -14,9 +14,20 @@ const removeWhitespace = (value: string): string => {
   return value.replace(/\s/g, '');
 };
 
+/**
+ * 이메일 입력값에서 공백만 제거
+ * (한글은 입력을 허용하되, 유효성 검사에서 에러 처리)
+ */
+const sanitizeEmail = (value: string): string => {
+  // 공백만 제거
+  return value.replace(/\s/g, '');
+};
+
 // 이메일 유효성 검증 함수
 export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // 영문 대소문자, 숫자, 특수문자(., -, _, +, %)만 허용
+  // 한글 및 기타 문자는 허용하지 않음
+  const emailRegex = /^[a-zA-Z0-9._+%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   // test() 메서드는 정규표현식 패턴과 문자열이 일치하는지 검사
   // 일치하면 true, 일치하지 않으면 false를 반환
@@ -118,8 +129,8 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   // 이메일 변경 핸들러
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // 공백 입력 제거
-    const sanitizedValue = removeWhitespace(value);
+    // 공백만 제거 (한글은 입력 허용, 유효성 검사에서 에러 처리)
+    const sanitizedValue = sanitizeEmail(value);
     setEmail(sanitizedValue);
 
     // 이메일을 수정하면 인증 상태 리셋
