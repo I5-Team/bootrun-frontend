@@ -1,7 +1,3 @@
-
-import Button from "../components/Button";
-import Profile from "../components/Profile";
-
 import SvgArrowRight from "../assets/icons/icon-arrow-right.svg?react";
 import SvgAll from "../assets/icons/icon-category-all.svg?react";
 import SvgFE from "../assets/icons/icon-category-FE.svg?react";
@@ -12,8 +8,9 @@ import SvgDesign from "../assets/icons/icon-category-Design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledBannerWrapper, StyledBannerArticle, StyledPofileCard, StyledCategoryList } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledBannerWrapper, StyledBannerArticle, StyledCategoryList } from "./MainPage.styled";
 import FilterCardList, { type CourseType } from "../components/FilterCardList";
+import { ProfileCard } from "../components/ProfileCard";
 
 
 const CategoryBtn = ({ icon, title }: { icon: React.ReactNode, title: string }) => {
@@ -40,9 +37,6 @@ const SectionHead = ({ title }: { title:string }) => {
         </StyledSectionHead>
     )
 }
-
-
-
 
 const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     const titleByType : Record<CourseType, string> = {
@@ -73,12 +67,7 @@ export default function MainPage() {
                         <span>얼리버드 20% 할인 혜택을 놓치지 마세요!</span>
                     </p>
                 </StyledBannerArticle>
-                <StyledPofileCard>
-                    <Profile size={10}/>
-                    <p>호기심 많은 개발자님</p>
-                    <p>부트런에 로그인 후<br/>커뮤니티와 함께 성장하세요.</p>
-                    <Button fullWidth>로그인</Button>
-                </StyledPofileCard>
+                <ProfileCard/>
             </StyledBannerWrapper>
             
             <StyledCategoryList>

@@ -20,22 +20,6 @@ export const StyledBannerArticle = styled.article`
     padding: 5.2rem;
 `;
 
-// profileCard
-export const StyledPofileCard = styled.article`
-    width: 29rem;
-    height: 100%;
-    padding: 4rem 3.2rem;
-    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    border-radius: ${({ theme }) => theme.radius.md};
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 1.6rem;
-    text-align: center;
-`;
-
 // categoryList
 export const StyledCategoryList = styled.div`
     width: 80%;
