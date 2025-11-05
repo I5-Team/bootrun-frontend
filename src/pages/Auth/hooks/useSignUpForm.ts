@@ -6,6 +6,14 @@
  */
 import { useState, useEffect } from 'react';
 
+/**
+ * 입력값에서 공백을 제거하는 유틸 함수
+ * 공백 문자를 입력하려고 하면 빈 문자열로 변환
+ */
+const removeWhitespace = (value: string): string => {
+  return value.replace(/\s/g, '');
+};
+
 // 이메일 유효성 검증 함수
 export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -110,7 +118,9 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   // 이메일 변경 핸들러
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setEmail(value);
+    // 공백 입력 제거
+    const sanitizedValue = removeWhitespace(value);
+    setEmail(sanitizedValue);
 
     // 이메일을 수정하면 인증 상태 리셋
     if (isEmailSent || isEmailVerified) {
@@ -120,9 +130,10 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       setShowEmailHelp(false);
     }
 
-    if (value && !validateEmail(value)) {
+    // 유효성 검증
+    if (sanitizedValue && !validateEmail(sanitizedValue)) {
       setEmailError('올바른 이메일 형식이 아닙니다.');
-    } else if (value) {
+    } else if (sanitizedValue) {
       // TODO: API 호출 - 이메일 중복 확인
       // 임시로 이메일이 가입되어 있는 경우의 예시
       // if (이메일이 이미 가입되어 있음) {
@@ -137,9 +148,12 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   // 비밀번호 변경 핸들러
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setPassword(value);
+    // 공백 입력 제거
+    const sanitizedValue = removeWhitespace(value);
+    setPassword(sanitizedValue);
 
-    if (value && !validatePassword(value)) {
+    // 유효성 검증
+    if (sanitizedValue && !validatePassword(sanitizedValue)) {
       setPasswordError('8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해야 합니다.');
     } else {
       setPasswordError(false);
@@ -158,9 +172,12 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   // 비밀번호 확인 변경 핸들러
   const handlePasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setPasswordConfirm(value);
+    // 공백 입력 제거
+    const sanitizedValue = removeWhitespace(value);
+    setPasswordConfirm(sanitizedValue);
 
-    if (value && value !== password) {
+    // 유효성 검증
+    if (sanitizedValue && sanitizedValue !== password) {
       setPasswordConfirmError('비밀번호가 일치하지 않습니다.');
     } else {
       setPasswordConfirmError(false);
@@ -170,11 +187,14 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   // 이름 변경 핸들러
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setName(value);
+    // 공백 입력 제거
+    const sanitizedValue = removeWhitespace(value);
+    setName(sanitizedValue);
 
-    if (value && value.length < 2) {
+    // 유효성 검증
+    if (sanitizedValue && sanitizedValue.length < 2) {
       setNameError('이름은 2자 이상 입력해주세요.');
-    } else if (value && !validateName(value)) {
+    } else if (sanitizedValue && !validateName(sanitizedValue)) {
       setNameError('이름은 한글 단어 혹은 영문만 입력 가능합니다. (예: 홍길동, Kim)');
     } else {
       setNameError(false);
