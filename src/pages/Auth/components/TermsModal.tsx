@@ -3,7 +3,7 @@
  * - 이용약관 및 개인정보취급방침 표시
  * - 스크롤 감지 및 확인 버튼 활성화 로직
  */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../components/Button';
 
@@ -154,6 +154,8 @@ interface TermsModalProps {
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   /** 스크롤 끝까지 읽었는지 여부 */
   scrolledToBottom: boolean;
+  /** 스크롤이 필요 없을 때 자동으로 활성화하는 콜백 */
+  onCheckScrollNeeded?: () => void;
 }
 
 /**
@@ -161,6 +163,7 @@ interface TermsModalProps {
  *
  * 이용약관과 개인정보취급방침을 표시하는 모달입니다.
  * 사용자가 약관을 끝까지 읽어야만 확인 버튼이 활성화됩니다.
+ * 컨텐츠가 스크롤 없이 한 페이지에 모두 표시되는 경우 자동으로 버튼이 활성화됩니다.
  */
 export const TermsModal: React.FC<TermsModalProps> = ({
   title,
@@ -170,7 +173,28 @@ export const TermsModal: React.FC<TermsModalProps> = ({
   onConfirm,
   onScroll,
   scrolledToBottom,
+  onCheckScrollNeeded,
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 모달이 열릴 때 스크롤이 필요한지 체크
+  useEffect(() => {
+    if (isOpen && contentRef.current && onCheckScrollNeeded) {
+      // DOM이 렌더링된 후 체크하기 위해 setTimeout 사용
+      const timer = setTimeout(() => {
+        if (contentRef.current) {
+          const { scrollHeight, clientHeight } = contentRef.current;
+          // 스크롤이 필요 없는 경우 (컨텐츠 높이가 보이는 영역보다 작거나 같음)
+          if (scrollHeight <= clientHeight) {
+            onCheckScrollNeeded();
+          }
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, content, onCheckScrollNeeded]);
+
   if (!isOpen) return null;
 
   return (
@@ -183,7 +207,11 @@ export const TermsModal: React.FC<TermsModalProps> = ({
           </CloseButton>
         </ModalHeader>
 
-        <TermsContent onScroll={onScroll} dangerouslySetInnerHTML={{ __html: content }} />
+        <TermsContent
+          ref={contentRef}
+          onScroll={onScroll}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
 
         <ModalFooter>
           <Button onClick={onConfirm} disabled={!scrolledToBottom} fullWidth>

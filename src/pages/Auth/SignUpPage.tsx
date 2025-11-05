@@ -75,6 +75,8 @@ const SignUpPage = () => {
     handleConfirmPrivacy,
     handleTermsScroll,
     handlePrivacyScroll,
+    handleCheckTermsScrollNeeded,
+    handleCheckPrivacyScrollNeeded,
     setShowTermsModal,
     setShowPrivacyModal,
     setTermsError,
@@ -246,6 +248,7 @@ const SignUpPage = () => {
         onConfirm={handleConfirmTerms}
         onScroll={handleTermsScroll}
         scrolledToBottom={termsScrolledToBottom}
+        onCheckScrollNeeded={handleCheckTermsScrollNeeded}
       />
 
       {/* 개인정보취급방침 모달 */}
@@ -257,6 +260,7 @@ const SignUpPage = () => {
         onConfirm={handleConfirmPrivacy}
         onScroll={handlePrivacyScroll}
         scrolledToBottom={privacyScrolledToBottom}
+        onCheckScrollNeeded={handleCheckPrivacyScrollNeeded}
       />
     </PageContainer>
   );

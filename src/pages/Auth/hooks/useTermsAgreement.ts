@@ -24,6 +24,8 @@ interface UseTermsAgreementReturn {
   handleConfirmPrivacy: () => void;
   handleTermsScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   handlePrivacyScroll: (e: React.UIEvent<HTMLDivElement>) => void;
+  handleCheckTermsScrollNeeded: () => void;
+  handleCheckPrivacyScrollNeeded: () => void;
   setShowTermsModal: (show: boolean) => void;
   setShowPrivacyModal: (show: boolean) => void;
   setTermsError: (error: boolean) => void;
@@ -129,6 +131,16 @@ export const useTermsAgreement = (): UseTermsAgreementReturn => {
     setPrivacyScrolledToBottom(scrolledToBottom);
   };
 
+  // 이용약관 모달에서 스크롤이 필요 없는 경우 자동으로 활성화
+  const handleCheckTermsScrollNeeded = () => {
+    setTermsScrolledToBottom(true);
+  };
+
+  // 개인정보처리방침 모달에서 스크롤이 필요 없는 경우 자동으로 활성화
+  const handleCheckPrivacyScrollNeeded = () => {
+    setPrivacyScrolledToBottom(true);
+  };
+
   return {
     agreedToTerms,
     termsError,
@@ -143,6 +155,8 @@ export const useTermsAgreement = (): UseTermsAgreementReturn => {
     handleConfirmPrivacy,
     handleTermsScroll,
     handlePrivacyScroll,
+    handleCheckTermsScrollNeeded,
+    handleCheckPrivacyScrollNeeded,
     setShowTermsModal,
     setShowPrivacyModal,
     setTermsError,
