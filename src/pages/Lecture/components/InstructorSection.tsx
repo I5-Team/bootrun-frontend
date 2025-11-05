@@ -56,8 +56,8 @@ const InstructorSection = React.forwardRef<HTMLElement>((props, ref) => {
 });
 
 const S = {
-  Section: styled.section`    
-  display: flex;
+  Section: styled.section`
+    display: flex;
     flex-direction: column;
     gap: 40px;
     width: 100%;
