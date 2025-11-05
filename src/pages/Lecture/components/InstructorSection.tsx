@@ -1,4 +1,3 @@
-// src/components/InstructorSection.tsx
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
@@ -6,7 +5,7 @@ import { mockInstructorData } from '../../../data/mockData';
 import type { Instructor } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from './HelperComponents';
 
-const InstructorSection = React.forwardRef<HTMLElement>((props, ref) => {
+const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<Instructor>(mockInstructorData, 800);
 
   return (

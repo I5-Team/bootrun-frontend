@@ -7,7 +7,7 @@ import type { FaqData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from './HelperComponents';
 import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
 
-const FAQSection = React.forwardRef<HTMLElement>((props, ref) => {
+const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<FaqData>(mockFaqData, 1000);
   const [openItemId, setOpenItemId] = useState<number | null>(null);
 

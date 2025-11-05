@@ -8,7 +8,7 @@ import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
 
 
 
-const CurriculumSection = React.forwardRef<HTMLElement>((props, ref) => {
+const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<CurriculumData>(mockCurriculumData, 700);
   // 1주차(id: 1)만 기본으로 열도록 설정
   const [openChapterId, setOpenChapterId] = useState<number | null>(1);
