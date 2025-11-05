@@ -1,17 +1,23 @@
-import sampleCourses from "../assets/data/sampleCourses.json"
-import sampleCategories from "../assets/data/sampleCategories.json";
+import sampleCourses from "../assets/data/sampleCourses.json";
 import CourseCard from "../components/CourseCard/CourseCard";
 import  { StyledCardGrid } from "../pages/MainPage.styled";
 import { ROUTES } from "../router/RouteConfig";
 import { Link } from "react-router-dom";
 
-export type Difficulties = "beginner" | "intermediate" | "advanced";
+export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
-export type CourseType = '부스트 커뮤니티' | 'VOD' | 'KDC';
+export type CategoryType = 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'design' | 'other';
+
+export type PriceType = 'free' | 'paid' | 'national_support';
+ 
+export type difficultyType = "beginner" | "intermediate" | "advanced";
 
 export type CourseData = {
     "id": number,
-    "category_id": number,
+    "category_type": CategoryType,
+    "course_type": CourseType,
+    "price_type": PriceType,
+    "difficulty": difficultyType,
     "title": string,
     "description": string,
     "thumbnail_url": string,
@@ -19,49 +25,48 @@ export type CourseData = {
     "instructor_bio": string,
     "instructor_image": string,
     "price": number,
-    "difficulty": Difficulties,
     "faq"?: string,
     "enrollment_count"?: number,
     "is_published": boolean,
     "created_at": string,
     "updated_at": string,
-    "course_type": CourseType, // 임의로 추가
 }
-
 export type CourseFilter = {
-    courseType?: string,
-    category?: string, 
-    difficulty?: string, 
-    priceType?: '무료' | '유료' | '국비지원',
+    courseType?: CourseType,
+    category?: CategoryType,
+    difficulty?: difficultyType,
+    priceType?: PriceType
 }
-
-
 
 const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseFilter) => {
     const courseList = sampleCourses as CourseData[];
-    const categories = sampleCategories;
 
-    const difficultyName : Record<Difficulties, string> = {
+    const courseTypeLabel : Record<CourseType, string> = {
+        boost_community : '부스트 커뮤니티',
+        vod : 'VOD',
+        kdc : 'KDC', 
+    }
+
+    const categoryLabel : Record<CategoryType, string> = {
+        frontend : '프론트엔드',
+        backend : '백엔드',
+        data_analysis : '데이터 분석', 
+        ai: 'AI',
+        design: '디자인', 
+        other: '기타',
+    }
+
+    const difficultyLabel : Record<difficultyType, string> = {
         beginner : '초급',
         intermediate : '중급',
         advanced : '실무', 
     }
 
     const filteredList = courseList.filter(course => { 
-        const targetCategory = category
-            ? categories.find(c => c.display_name === category)
-            : undefined;
-
-        const matchDifficulty = !difficulty || course.difficulty === difficulty;
         const matchCourseType = !courseType || course.course_type === courseType;
-        const matchCategory = !category || (targetCategory && course.category_id === targetCategory.id);
-        let matchPrice = true;
-
-        if (priceType) {
-            if (priceType === "무료") matchPrice = course.price === 0;
-            else if (priceType === "유료") matchPrice = course.price > 0;
-            else if (priceType === "국비지원") matchPrice = course.course_type === "KDC";
-        }
+        const matchCategory = !category || course.category_type === category;
+        const matchDifficulty = !difficulty || course.difficulty === difficulty;
+        const matchPrice = !priceType || course.price_type === priceType;
 
         return matchDifficulty && matchCourseType && matchCategory && matchPrice;
     })
@@ -69,16 +74,19 @@ const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseF
     return (
         <StyledCardGrid>
             { filteredList
-            // .slice(0, 3)
+            .sort((a, b) => b.created_at.localeCompare(a.created_at))
             .map((course) => (
-                <Link to={`${ROUTES.LECTURE_LIST}/${course.id}`} aria-label={`${course.title} 강의 상세 보기`}>
+                <Link
+                    key={course.id}
+                    to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
+                    aria-label={`${course.title} 강의 상세 보기`}
+                    >
                     <CourseCard
-                        key={course.id}
                         thumbnail={course.thumbnail_url}
                         tags={[
-                            {'label': course.course_type, 'variant': 'dark'}, 
-                            {'label': categories.find(c => c.id === course.category_id)?.display_name || "기타"}, 
-                            {'label': difficultyName[course.difficulty as Difficulties]},
+                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                            {'label': categoryLabel[course.category_type] || "기타"}, 
+                            {'label': difficultyLabel[course.difficulty]},
                         ]}
                         title={course.title}
                         teacherName={course.instructor_name}

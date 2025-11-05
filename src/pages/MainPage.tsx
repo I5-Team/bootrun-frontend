@@ -42,9 +42,9 @@ const SectionHead = ({ title }: { title:string }) => {
 
 const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     const titleByType : Record<CourseType, string> = {
-        '부스트 커뮤니티' : "부스트 커뮤니티에서 소통하며 학습",
-        'VOD' : "VOD로 원하는 시간에 자유롭게 학습",
-        'KDC' : "KDC를 통해 실무 역량으로 도약"
+        'boost_community' : "부스트 커뮤니티에서 소통하며 학습",
+        'vod' : "VOD로 원하는 시간에 자유롭게 학습",
+        'kdc' : "KDC를 통해 실무 역량으로 도약"
     }
 
     return (
@@ -75,9 +75,9 @@ export default function MainPage() {
                 <CategoryBtn icon={<SvgMore/>} title="기타" />
             </StyledCategoryList>
 
-            <SectionByType courseType="부스트 커뮤니티"/>
-            <SectionByType courseType="VOD"/>
-            <SectionByType courseType="KDC"/>
+            <SectionByType courseType="boost_community"/>
+            <SectionByType courseType="vod"/>
+            <SectionByType courseType="kdc"/>
         </>
     );
 }
