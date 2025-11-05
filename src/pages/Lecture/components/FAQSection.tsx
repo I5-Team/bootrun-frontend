@@ -64,7 +64,7 @@ const FAQSection = React.forwardRef<HTMLElement>((props, ref) => {
 
 
 const S = {
-Section: styled.section`
+  Section: styled.section`
     display: flex;
     flex-direction: column;
     gap: 40px;
