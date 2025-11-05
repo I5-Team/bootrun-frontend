@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockReviewData } from '../../../data/mockData';
 import type { ReviewData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
 
 const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<ReviewData>(mockReviewData, 1200);

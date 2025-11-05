@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockFaqData } from '../../../data/mockData';
 import type { FaqData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
 
 const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {

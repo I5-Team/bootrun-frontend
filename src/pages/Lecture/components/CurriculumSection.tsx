@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockCurriculumData } from '../../../data/mockData';
 import type { CurriculumData } from '../../../types/LectureType';
-import { ErrorMessage, LoadingSpinner } from './HelperComponents';
+import { ErrorMessage, LoadingSpinner } from '../../../components/HelperComponents';
 import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
 
 

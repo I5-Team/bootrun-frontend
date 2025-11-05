@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockInstructorData } from '../../../data/mockData';
 import type { Instructor } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<Instructor>(mockInstructorData, 800);

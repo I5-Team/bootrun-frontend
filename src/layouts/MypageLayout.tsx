@@ -28,48 +28,36 @@ const MyPageLayout: React.FC = () => {
 const S = {
   MyPageContainer: styled.div`
     display: flex;
-    gap: 40px;
-    padding: 40px 0;
-    max-width: 1190px;
+    gap: 4rem; /* 40px */
+    padding: 4rem 0; /* 40px */
+    max-width: 1190px; /* (가정) */
     margin: 0 auto;
   `,
   Nav: styled.nav`
-    width: 200px;
+    width: 20rem; /* 200px */
     flex-shrink: 0;
-    padding: 16px 8px 16px 8px;
-    border : 1px solid #E1E4E8;
-    border-radius: 16px;
   `,
   NavList: styled.ul`
-
-
-border-radius: 10px;
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0.4rem; /* 4px */
 
     a {
       text-decoration: none;
-      font-size: 1.6rem;
+      font-size: 1.6rem; /* 16px */
       font-weight: 500;
-      color: ${({ theme }) => theme.colors.surface};
-      padding: 12px 16px;
+      color: ${({ theme }) => theme.colors.gray300}; // (테마 가정)
+      padding: 1.6rem; /* 16px */
       display: block;
-      border-radius: 6px;
+      border-radius: 0.6rem; /* 6px */
 
-      /* react-router-dom의 NavLink가 활성화 시 active 클래스 적용 */
       &.active {
         font-weight: 700;
-        background-color: #DEE8FF;
+        color: ${({ theme }) => theme.colors.surface}; // (테마 가정)
+        background-color: ${({ theme }) => theme.colors.gray100}; // (테마 가정)
       }
 
       &:hover:not(.active) {
@@ -80,7 +68,7 @@ flex-grow: 0;
   ContentArea: styled.main`
     flex-grow: 1;
     width: 100%;
-    min-width: 0; /* flex 아이템이 줄어들지 않도록 */
+    min-width: 0;
   `,
 };
 
