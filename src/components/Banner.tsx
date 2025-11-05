@@ -41,9 +41,16 @@ const StyledBannerSwiper = styled.article`
         height: 100%;
     }
 
+    .swiper-pagination {
+        bottom: 1.6rem;
+    }
+
     .swiper-pagination-bullet {
+        width: 1rem;
+        height: 1rem;
         background: ${({ theme }) => theme.colors.white};
         opacity: 0.8;
+        margin: 0 0.6rem !important;
     }
 
     .swiper-pagination-bullet-active {
