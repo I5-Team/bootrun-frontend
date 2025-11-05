@@ -1,6 +1,6 @@
 /**
  * 회원가입 페이지 컴포넌트
- * - 이메일 인증, 비밀번호, 이름 입력 폼
+ * - 이메일 인증, 비밀번호, 닉네임 입력 폼
  * - 약관 동의 체크박스
  * - 회원가입 버튼
  */
@@ -31,7 +31,7 @@ const SignUpPage = () => {
     email: false,
     password: false,
     passwordConfirm: false,
-    name: false,
+    nickName: false,
   });
 
   // focus 상태 업데이트 함수
@@ -50,7 +50,7 @@ const SignUpPage = () => {
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,
-    handleNameChange,
+    handleNickNameChange,
     handleVerificationCodeChange,
     handleEmailVerification,
     handleVerificationCodeSubmit,
@@ -195,26 +195,26 @@ const SignUpPage = () => {
               />
             </InputWrapper>
 
-            {/* 이름 입력 */}
+            {/* 닉네임 입력 */}
             <InputWrapper>
               <InputLabel
-                htmlFor="name"
-                $hasError={!!errorState.name}
-                $isFocused={focusState.name && !errorState.name}
+                htmlFor="nickName"
+                $hasError={!!errorState.nickName}
+                $isFocused={focusState.nickName && !errorState.nickName}
               >
-                이름
+                닉네임
               </InputLabel>
               <InputLogin
-                id="name"
+                id="nickName"
                 type="text"
                 placeholder=""
-                value={formState.name}
-                onChange={handleNameChange}
-                onFocus={() => handleFocus('name')}
-                onBlur={() => handleBlur('name')}
-                error={errorState.name}
+                value={formState.nickName}
+                onChange={handleNickNameChange}
+                onFocus={() => handleFocus('nickName')}
+                onBlur={() => handleBlur('nickName')}
+                error={errorState.nickName}
                 fullWidth
-                ariaLabel="이름을 입력하세요"
+                ariaLabel="닉네임을 입력하세요"
               />
             </InputWrapper>
           </InputGroup>

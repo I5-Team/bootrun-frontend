@@ -1,6 +1,6 @@
 /**
  * 회원가입 폼 로직을 관리하는 커스텀 훅
- * - 폼 필드 상태 관리 (이메일, 비밀번호, 이름, 인증코드)
+ * - 폼 필드 상태 관리 (이메일, 비밀번호, 닉네임, 인증코드)
  * - 유효성 검증 및 에러 상태 관리
  * - 이메일 인증 상태 관리
  */
@@ -40,13 +40,13 @@ export const validatePassword = (password: string): boolean => {
   return passwordRegex.test(password);
 };
 
-// 이름 유효성 검증 함수 (한글 완성형 또는 영문만 허용, 2~20자)
+// 닉네임 유효성 검증 함수 (한글 완성형 또는 영문만 허용, 2~20자)
 // 한글 자모(ㅇ, ㅏ 등)는 완성형이 아니므로 제외
-export const validateName = (name: string): boolean => {
+export const validateNickName = (nickName: string): boolean => {
   // 한글 완성형(가-힣) 또는 영문 대소문자(a-z, A-Z)만 허용
   // 공백, 숫자, 특수문자, 한글 자모는 제외
-  const nameRegex = /^[가-힣a-zA-Z]{2,20}$/;
-  return nameRegex.test(name);
+  const nickNameRegex = /^[가-힣a-zA-Z]{2,20}$/;
+  return nickNameRegex.test(nickName);
 };
 
 // 폼 필드 상태 타입
@@ -55,7 +55,7 @@ interface FormState {
   verificationCode: string;
   password: string;
   passwordConfirm: string;
-  name: string;
+  nickName: string;
 }
 
 // 에러 상태 타입
@@ -63,7 +63,7 @@ interface ErrorState {
   email: string | boolean;
   password: string | boolean;
   passwordConfirm: string | boolean;
-  name: string | boolean;
+  nickName: string | boolean;
 }
 
 // 이메일 인증 상태 타입
@@ -84,7 +84,7 @@ interface UseSignUpFormReturn {
   handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordConfirmChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNickNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVerificationCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleEmailVerification: () => void;
   handleVerificationCodeSubmit: () => void;
@@ -102,7 +102,7 @@ interface UseSignUpFormReturn {
  * 회원가입 폼 로직을 관리하는 커스텀 훅
  *
  * 이 훅은 다음을 관리합니다:
- * - 폼 필드 값 (이메일, 비밀번호, 비밀번호 확인, 이름, 인증코드)
+ * - 폼 필드 값 (이메일, 비밀번호, 비밀번호 확인, 닉네임, 인증코드)
  * - 각 필드의 유효성 검증 및 에러 상태
  * - 이메일 인증 상태 관리
  * - 회원가입 버튼 활성화 조건 확인
@@ -113,13 +113,13 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   const [verificationCode, setVerificationCode] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [name, setName] = useState('');
+  const [nickName, setNickName] = useState('');
 
   // 유효성 검증 상태
   const [emailError, setEmailError] = useState<string | boolean>(false);
   const [passwordError, setPasswordError] = useState<string | boolean>(false);
   const [passwordConfirmError, setPasswordConfirmError] = useState<string | boolean>(false);
-  const [nameError, setNameError] = useState<string | boolean>(false);
+  const [nickNameError, setNickNameError] = useState<string | boolean>(false);
 
   // 인증 상태
   const [isEmailSent, setIsEmailSent] = useState(false);
@@ -195,20 +195,20 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     }
   };
 
-  // 이름 변경 핸들러
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 닉네임 변경 핸들러
+  const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // 공백 입력 제거
     const sanitizedValue = removeWhitespace(value);
-    setName(sanitizedValue);
+    setNickName(sanitizedValue);
 
     // 유효성 검증
     if (sanitizedValue && sanitizedValue.length < 2) {
-      setNameError('이름은 2자 이상 입력해주세요.');
-    } else if (sanitizedValue && !validateName(sanitizedValue)) {
-      setNameError('이름은 한글 단어 혹은 영문만 입력 가능합니다. (예: 홍길동, Kim)');
+      setNickNameError('닉네임은 2자 이상 입력해주세요.');
+    } else if (sanitizedValue && !validateNickName(sanitizedValue)) {
+      setNickNameError('닉네임은 한글 단어 혹은 영문만 입력 가능합니다. (예: 홍길동, Kim)');
     } else {
-      setNameError(false);
+      setNickNameError(false);
     }
   };
 
@@ -247,17 +247,17 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     isEmailVerified &&
     !!password &&
     !!passwordConfirm &&
-    !!name &&
+    !!nickName &&
     !passwordError &&
     !passwordConfirmError &&
-    !nameError;
+    !nickNameError;
 
   // 회원가입 처리
   const handleSignUp = () => {
     if (!isSignUpEnabled) return;
 
     // TODO: API 호출 - 회원가입
-    console.log('회원가입:', { email, password, name });
+    console.log('회원가입:', { email, password, nickName });
   };
 
   return {
@@ -266,13 +266,13 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       verificationCode,
       password,
       passwordConfirm,
-      name,
+      nickName,
     },
     errorState: {
       email: emailError,
       password: passwordError,
       passwordConfirm: passwordConfirmError,
-      name: nameError,
+      nickName: nickNameError,
     },
     emailVerification: {
       isEmailSent,
@@ -282,7 +282,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,
-    handleNameChange,
+    handleNickNameChange,
     handleVerificationCodeChange,
     handleEmailVerification,
     handleVerificationCodeSubmit,
