@@ -66,6 +66,9 @@ export const Card = styled.div`
   border-radius: ${({ theme }) => theme.radius.md};
   padding: 2.4rem;
 
+  @media ${({ theme }) => theme.devices.tablet} {
+    padding: 2.2rem 1.8rem;
+  }
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 2rem 1.6rem;
   }
@@ -76,8 +79,16 @@ export const LectureCard = styled(Card)`
   gap: 3rem;
   align-items: stretch;
 
-  @media ${({ theme }) => theme.devices.mobile} {
+  @media ${({ theme }) => theme.devices.desktop} {
+    gap: 2.2rem;
+  }
+
+  @media ${({ theme }) => theme.devices.tablet} {
     flex-direction: column;
+    gap: 2rem;
+  }
+
+  @media ${({ theme }) => theme.devices.mobile} {
     gap: 1.2rem;
   }
 `;
@@ -93,7 +104,7 @@ export const LectureThumbnail = styled.div<{ $thumbnailUrl?: string }>`
   overflow: hidden;
   aspect-ratio: 16/9;
 
-  @media ${({ theme }) => theme.devices.mobile} {
+  @media ${({ theme }) => theme.devices.tablet} {
     width: 100%;
   }
 `;
