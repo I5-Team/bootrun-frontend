@@ -27,21 +27,20 @@ const InputWrapper = styled.div<{ $fullWidth?: boolean }>`
 
 /**
  * 실제 입력 필드 컴포넌트
- * - 배경색: 포커스/값 있을 때 gray100, 없을 때 white
+ * - 배경색: 포커스일 때 gray100, 아닐 때 white
  * - 하단 테두리: 에러(red) > 포커스(primary) > 기본(gray)
  * - 모바일 환경에서 폰트 크기 자동 조절
  */
 const StyledInput = styled.input<{
   $error?: boolean | string;
-  $hasValue?: boolean;
   $isFocused?: boolean;
 }>`
   width: 100%;
   height: 4.2rem;
   padding: 1rem 0.8rem;
-  // 포커스되거나 값이 입력되었을 때 배경색 변경
-  background-color: ${({ $isFocused, $hasValue, theme }) =>
-    $isFocused || $hasValue ? theme.colors.gray100 : theme.colors.white};
+  // 포커스일 때만 배경색 변경
+  background-color: ${({ $isFocused, theme }) =>
+    $isFocused ? theme.colors.gray100 : theme.colors.white};
   border: none;
   // 에러 > 포커스 > 기본 순서로 테두리 색상 결정
   border-bottom: 0.2rem solid
@@ -97,7 +96,7 @@ const ErrorMessage = styled.span`
 
 /**
  * 로그인용 입력창 컴포넌트
- * - 포커스/값 상태에 따른 배경색 변경
+ * - 포커스 상태에 따른 배경색 변경
  * - 에러 메시지 표시 기능
  * - 제어/비제어 컴포넌트 모두 지원
  */
@@ -115,8 +114,6 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
 
     // value가 제공되면 제어 컴포넌트, 아니면 비제어 컴포넌트
     const currentValue = value !== undefined ? value : internalValue;
-    // 값이 입력되었는지 확인 (빈 문자열 체크 포함)
-    const hasValue = Boolean(currentValue);
 
     // 포커스 시 상태 업데이트 및 부모의 onFocus 이벤트 호출
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -146,7 +143,6 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
           ref={ref}
           id={inputId}
           $error={error}
-          $hasValue={hasValue}
           $isFocused={isFocused}
           value={currentValue}
           onFocus={handleFocus}
