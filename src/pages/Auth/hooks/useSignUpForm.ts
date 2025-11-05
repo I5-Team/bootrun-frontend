@@ -34,18 +34,18 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-// 비밀번호 유효성 검증 함수 (8~16자, 영문 대/소문자, 숫자, 특수문자)
+// 비밀번호 유효성 검증 함수 (8~32자, 영문 대/소문자, 숫자, 특수문자, 공백 제외)
 export const validatePassword = (password: string): boolean => {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
   return passwordRegex.test(password);
 };
 
-// 닉네임 유효성 검증 함수 (한글 완성형 또는 영문만 허용, 2~20자)
+// 닉네임 유효성 검증 함수 (한글 완성형 또는 영문만 허용, 2~18자)
 // 한글 자모(ㅇ, ㅏ 등)는 완성형이 아니므로 제외
 export const validateNickName = (nickName: string): boolean => {
   // 한글 완성형(가-힣) 또는 영문 대소문자(a-z, A-Z)만 허용
   // 공백, 숫자, 특수문자, 한글 자모는 제외
-  const nickNameRegex = /^[가-힣a-zA-Z]{2,20}$/;
+  const nickNameRegex = /^[가-힣a-zA-Z]{2,18}$/;
   return nickNameRegex.test(nickName);
 };
 
@@ -165,7 +165,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
 
     // 유효성 검증
     if (sanitizedValue && !validatePassword(sanitizedValue)) {
-      setPasswordError('8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해야 합니다.');
+      setPasswordError('8~32자의 영문 대/소문자, 숫자, 특수문자를 사용해야 합니다.');
     } else {
       setPasswordError(false);
     }
