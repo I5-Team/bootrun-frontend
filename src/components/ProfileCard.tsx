@@ -3,7 +3,6 @@ import Button from "../components/Button";
 import Profile from "../components/Profile";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { useState } from "react";
 
 import SvgPlay from "../assets/icons/icon-play.svg?react";
 import SvgMyPage from "../assets/icons/icon-mypage.svg?react";
@@ -111,7 +110,7 @@ export const ProfileCard = () => {
         navigate(ROUTES.LOGIN);
     }
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const isLoggedIn = false;
     const userInfo = {
         profile_image : 'https://picsum.photos/id/237/200/200',
         nickname: 'S부트런짱2',
