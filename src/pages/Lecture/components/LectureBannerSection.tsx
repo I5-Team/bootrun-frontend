@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
-import { mockBannerData } from '../../../data/mockData';
+import { mockBannerData } from '../../../data/mockLectureData';
 import type { BannerData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 
