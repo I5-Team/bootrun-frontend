@@ -22,17 +22,13 @@ export const calculateCouponDiscount = (coupon: Coupon, lecturePrice: number): n
 };
 
 /**
- * 쿠폰의 사용 가능 여부를 검증합니다.
+ * 쿠폰이 목록에 표시되어야 하는지 검증합니다.
+ * (기한, 활성화 여부, 사용 횟수, 강의 ID 체크)
  * @param coupon - 쿠폰 정보
- * @param lecturePrice - 강의 가격
  * @param lectureId - 강의 ID (선택적)
- * @returns 사용 가능 여부
+ * @returns 표시 가능 여부
  */
-export const isCouponAvailable = (
-  coupon: Coupon,
-  lecturePrice: number,
-  lectureId?: number
-): boolean => {
+export const isCouponVisible = (coupon: Coupon, lectureId?: number): boolean => {
   // 1. 활성화 여부 체크
   if (!coupon.isActive) {
     return false;
@@ -62,6 +58,29 @@ export const isCouponAvailable = (
   }
 
   return true;
+};
+
+/**
+ * 쿠폰의 사용 가능 여부를 검증합니다.
+ * (표시 가능 여부 + 할인 금액이 0원 이상인지 체크)
+ * @param coupon - 쿠폰 정보
+ * @param lecturePrice - 강의 가격
+ * @param lectureId - 강의 ID (선택적)
+ * @returns 사용 가능 여부
+ */
+export const isCouponAvailable = (
+  coupon: Coupon,
+  lecturePrice: number,
+  lectureId?: number
+): boolean => {
+  // 1. 표시 가능 여부 체크
+  if (!isCouponVisible(coupon, lectureId)) {
+    return false;
+  }
+
+  // 2. 할인 금액이 0원 이상인지 체크
+  const discount = calculateCouponDiscount(coupon, lecturePrice);
+  return discount > 0;
 };
 
 /**
