@@ -1,6 +1,5 @@
 import sampleCourses from "../assets/data/sampleCourses.json";
 import CourseCard from "../components/CourseCard/CourseCard";
-import useMediaQuery from "../hooks/useMediaQuery";
 import  { StyledCardGrid } from "../pages/MainPage.styled";
 import { ROUTES } from "../router/RouteConfig";
 import { Link } from "react-router-dom";
@@ -32,54 +31,65 @@ export type CourseData = {
     "created_at": string,
     "updated_at": string,
 }
+
 export type CourseFilter = {
-    courseType?: CourseType,
-    category?: CategoryType,
-    difficulty?: difficultyType,
-    priceType?: PriceType
+    courseTypeOpt?: CourseType,
+    categoryOpt?: CategoryType,
+    difficultyOpt?: difficultyType,
+    priceTypeOpt?: PriceType,
+    sortOpt?: 'DATE_ASC' | 'DATE_DESC',
+    cardCount?: number,
 }
 
-const FilterCardList = ({ courseType, category, difficulty, priceType }: CourseFilter) => {
-    const { isLaptop } = useMediaQuery();
-    const cardCount = isLaptop ? 4 : 3;
+const courseTypeLabel : Record<CourseType, string> = {
+    boost_community : '부스트 커뮤니티',
+    vod : 'VOD',
+    kdc : 'KDC', 
+}
 
+const categoryLabel : Record<CategoryType, string> = {
+    frontend : '프론트엔드',
+    backend : '백엔드',
+    data_analysis : '데이터 분석', 
+    ai: 'AI',
+    design: '디자인', 
+    other: '기타',
+}
+
+const difficultyLabel : Record<difficultyType, string> = {
+    beginner : '초급',
+    intermediate : '중급',
+    advanced : '실무', 
+}
+
+export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, priceTypeOpt, sortOpt, cardCount }: CourseFilter) => {
     const courseList = sampleCourses as CourseData[];
 
-    const courseTypeLabel : Record<CourseType, string> = {
-        boost_community : '부스트 커뮤니티',
-        vod : 'VOD',
-        kdc : 'KDC', 
-    }
-
-    const categoryLabel : Record<CategoryType, string> = {
-        frontend : '프론트엔드',
-        backend : '백엔드',
-        data_analysis : '데이터 분석', 
-        ai: 'AI',
-        design: '디자인', 
-        other: '기타',
-    }
-
-    const difficultyLabel : Record<difficultyType, string> = {
-        beginner : '초급',
-        intermediate : '중급',
-        advanced : '실무', 
-    }
-
-    const filteredList = courseList.filter(course => { 
-        const matchCourseType = !courseType || course.course_type === courseType;
-        const matchCategory = !category || course.category_type === category;
-        const matchDifficulty = !difficulty || course.difficulty === difficulty;
-        const matchPrice = !priceType || course.price_type === priceType;
+    const filteredList = [...courseList].filter(course => { 
+        const matchCourseType = !courseTypeOpt || course.course_type === courseTypeOpt;
+        const matchCategory = !categoryOpt || course.category_type === categoryOpt;
+        const matchDifficulty = !difficultyOpt || course.difficulty === difficultyOpt;
+        const matchPrice = !priceTypeOpt || course.price_type === priceTypeOpt;
 
         return matchDifficulty && matchCourseType && matchCategory && matchPrice;
     })
 
+    const sortedCourseList = [...filteredList].sort((a, b) => {
+        if (sortOpt === "DATE_ASC") {
+            return a.created_at.localeCompare(b.created_at);
+        } else {
+            return b.created_at.localeCompare(a.created_at);
+        }
+    })
+
+    const refinedCourseList = cardCount
+        ? sortedCourseList.slice(0, cardCount)
+        : sortedCourseList;
+
+
     return (
         <StyledCardGrid>
-            { filteredList
-            .sort((a, b) => b.created_at.localeCompare(a.created_at))
-            .slice(0, cardCount)
+            { refinedCourseList
             .map((course) => (
                 <Link
                     key={course.id}
