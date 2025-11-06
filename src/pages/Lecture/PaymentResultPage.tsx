@@ -29,7 +29,7 @@ export default function PaymentResultPage() {
   return (
     <S.Container>
       <S.ResultContent role={isSuccess ? 'status' : 'alert'}>
-        <S.IconWrapper>
+        <S.IconWrapper $isSuccess={isSuccess}>
           <img src={isSuccess ? SuccessIcon : ErrorIcon} alt="" aria-hidden="true" />
         </S.IconWrapper>
 
