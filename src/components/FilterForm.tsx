@@ -90,7 +90,6 @@ const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
             const newOptions = checked
                 ? [...currentOptions, value]
                 : currentOptions.filter(optValue => optValue !== value);
-            
             return {...prev, [name]: newOptions};
         })
     }
@@ -99,7 +98,9 @@ const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
         const params = new URLSearchParams();
 
         Object.keys(selectedOptions).forEach(key => {
-            params.set(key, selectedOptions[key].join('&'));
+            selectedOptions[key].forEach(value => {
+                params.append(key, value);
+            })
         })
         
         setSearchParams(params);
@@ -121,7 +122,8 @@ const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
                                         name={item.queryName}
                                         value={option.value}
                                         type="checkbox"
-                                        onChange={(e) => handleCheck(e)}
+                                        onChange={handleCheck}
+                                        checked={selectedOptions[item.queryName]?.includes(option.value) || false}
                                         />
                                     <span>{option.label}</span>
                                 </label>

@@ -66,17 +66,22 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
     const [searchParams] = useSearchParams();
 
     // query params
-    const courseTypeParam = searchParams.get('courseType') as CourseType | null;
-    const categoryParam = searchParams.get('category') as CategoryType | null;
-    const difficultyParam = searchParams.get('difficulty') as DifficultyType | null;
-    const priceTypeParam = searchParams.get('priceType') as PriceType | null;
+    const courseTypeParam = searchParams.getAll('courseType') as CourseType[];
+    const categoryParam = searchParams.getAll('category') as CategoryType[];
+    const difficultyParam = searchParams.getAll('difficulty') as DifficultyType[];
+    const priceTypeParam = searchParams.getAll('priceType') as PriceType[];
     const keywordParam = searchParams.get('keyword') || '';
 
-    const courseTypeFilter = courseTypeOpt || courseTypeParam;
-    const categoryFilter = categoryOpt || categoryParam;
-    const difficultyFilter = difficultyOpt || difficultyParam;
-    const priceTypeFilter = priceTypeOpt || priceTypeParam;
-    const keywordFilter = keywordParam.toLowerCase().split(/\s+/);
+    const courseTypeFilter 
+        = courseTypeOpt || courseTypeParam.length > 0 ? courseTypeParam : null;
+    const categoryFilter 
+        = categoryOpt || categoryParam.length > 0 ? categoryParam : null;
+    const difficultyFilter 
+        = difficultyOpt || difficultyParam.length > 0 ? difficultyParam : null;
+    const priceTypeFilter 
+        = priceTypeOpt || priceTypeParam.length > 0 ? priceTypeParam : null;
+    const keywordFilter 
+        = keywordParam.toLowerCase().split(/\s+/).filter(Boolean);
 
     // refine
     const courseList = sampleCourses as CourseData[];
@@ -86,7 +91,7 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
         const matchDifficulty = !difficultyFilter || difficultyFilter.includes(course.difficulty);
         const matchPrice = !priceTypeFilter || priceTypeFilter.includes(course.price_type);
         const MatchKeyword = 
-            !keywordParam || 
+            keywordFilter.length === 0 || 
             keywordFilter.every(keyword => 
                 [course.title, course.instructor_name].some(content =>
                     content.toLowerCase().includes(keyword)
