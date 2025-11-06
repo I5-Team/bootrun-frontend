@@ -119,96 +119,126 @@ export default function LecturePaymentPage() {
       <S.PageContainer>
         <S.ContentWrapper>
           <S.LeftSection>
-            <S.SectionTitle>강의 구매</S.SectionTitle>
+            <S.SectionTitle as="h1">강의 구매</S.SectionTitle>
             <S.LectureCard>
               <S.LectureThumbnail
                 $thumbnailUrl={lectureData.thumbnailUrl}
-                aria-label="강의 썸네일"
                 role="img"
+                aria-label={`${lectureData.title} 강의 썸네일`}
               />
               <S.LectureInfo>
-                <S.CategoryBadge>{lectureData.category}</S.CategoryBadge>
+                <S.CategoryBadge aria-label={`카테고리: ${lectureData.category}`}>
+                  {lectureData.category}
+                </S.CategoryBadge>
                 <S.LectureTitle>{lectureData.title}</S.LectureTitle>
-                <S.LectureInstructor>{lectureData.instructor}</S.LectureInstructor>
-                <S.LecturePrice>{formatPrice(lectureData.price)}</S.LecturePrice>
+                <S.LectureInstructor aria-label={`강사: ${lectureData.instructor}`}>
+                  {lectureData.instructor}
+                </S.LectureInstructor>
+                <S.LecturePrice aria-label={`강의 가격: ${formatPrice(lectureData.price)}`}>
+                  {formatPrice(lectureData.price)}
+                </S.LecturePrice>
               </S.LectureInfo>
             </S.LectureCard>
           </S.LeftSection>
 
           <S.RightSection>
-            <S.SectionTitle>최종 결제 정보</S.SectionTitle>
+            <S.SectionTitle as="h2">최종 결제 정보</S.SectionTitle>
 
             {/* 결제 정보 카드 */}
-            <S.PaymentCard>
+            <S.PaymentCard role="region" aria-label="결제 금액 정보">
               <S.PriceSection>
                 <S.PriceRow>
                   <S.PriceLabel>상품 금액</S.PriceLabel>
-                  <S.PriceValue>{formatPrice(lectureData.price)}</S.PriceValue>
+                  <S.PriceValue aria-label={`상품 금액 ${formatPrice(lectureData.price)}`}>
+                    {formatPrice(lectureData.price)}
+                  </S.PriceValue>
                 </S.PriceRow>
 
                 {/* 쿠폰 섹션 */}
                 <div>
                   <S.CouponRow>
-                    <S.CouponLabel>쿠폰</S.CouponLabel>
+                    <S.CouponLabel id="coupon-label">쿠폰</S.CouponLabel>
                     <S.CouponButton
                       onClick={() => setIsCouponModalOpen(true)}
-                      aria-label="쿠폰 선택"
+                      aria-label={`쿠폰 선택, 사용 가능한 쿠폰 ${availableCoupons.length}개`}
+                      aria-describedby="coupon-label"
                     >
                       사용 가능 {availableCoupons.length}
                     </S.CouponButton>
                   </S.CouponRow>
                   {selectedCoupon && (
-                    <S.SelectedCouponInfo>
+                    <S.SelectedCouponInfo role="status" aria-live="polite">
                       <S.SelectedCouponText>
                         {selectedCoupon.name} 적용 (-{formatPrice(discount)})
                       </S.SelectedCouponText>
-                      <S.RemoveCouponButton onClick={handleRemoveCoupon}>취소</S.RemoveCouponButton>
+                      <S.RemoveCouponButton
+                        onClick={handleRemoveCoupon}
+                        aria-label={`${selectedCoupon.name} 쿠폰 적용 취소`}
+                      >
+                        취소
+                      </S.RemoveCouponButton>
                     </S.SelectedCouponInfo>
                   )}
                 </div>
 
                 <S.PriceRow>
                   <S.PriceLabel>할인 금액</S.PriceLabel>
-                  <S.PriceValue>{discount === 0 ? '-' : `-${formatPrice(discount)}`}</S.PriceValue>
+                  <S.PriceValue
+                    aria-label={`할인 금액 ${discount === 0 ? '없음' : formatPrice(discount)}`}
+                  >
+                    {discount === 0 ? '-' : `-${formatPrice(discount)}`}
+                  </S.PriceValue>
                 </S.PriceRow>
               </S.PriceSection>
 
-              <S.Divider />
+              <S.Divider role="separator" aria-hidden="true" />
 
               <S.TotalPriceRow>
                 <S.TotalLabel>총 결제 금액</S.TotalLabel>
-                <S.TotalPrice>{formatPrice(totalPrice)}</S.TotalPrice>
+                <S.TotalPrice aria-label={`총 결제 금액 ${formatPrice(totalPrice)}`}>
+                  {formatPrice(totalPrice)}
+                </S.TotalPrice>
               </S.TotalPriceRow>
             </S.PaymentCard>
 
             {/* 결제 수단 및 결제 실행 카드 */}
-            <S.SectionTitle>결제 수단</S.SectionTitle>
-            <S.Card>
-              <S.PaymentMethodSection>
+            <S.SectionTitle as="h2">결제 수단</S.SectionTitle>
+            <S.Card role="region" aria-label="결제 수단 선택 및 결제 실행">
+              <S.PaymentMethodSection role="radiogroup" aria-label="결제 수단">
                 <S.PaymentMethodOption
                   $selected={selectedPaymentMethod === 'tosspay'}
                   onClick={() =>
                     setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay')
                   }
+                  role="radio"
+                  aria-checked={selectedPaymentMethod === 'tosspay'}
+                  aria-label="토스페이로 결제"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      e.preventDefault();
+                      setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay');
+                    }
+                  }}
                 >
-                  <S.PaymentMethodIcon src={tossIcon} alt="토스페이" />
+                  <S.PaymentMethodIcon src={tossIcon} alt="" aria-hidden="true" />
                   토스페이
                 </S.PaymentMethodOption>
               </S.PaymentMethodSection>
 
-              <S.PaymentDivider />
+              <S.PaymentDivider role="separator" aria-hidden="true" />
 
               <S.CheckboxWrapper>
                 <S.HiddenCheckbox
                   id="agreement"
                   checked={isAgreed}
                   onChange={(e) => setIsAgreed(e.target.checked)}
-                  aria-label="주문 내용 확인 및 정보 제공 동의"
+                  aria-describedby="agreement-label"
                 />
-                <S.CustomCheckbox $checked={isAgreed}>
+                <S.CustomCheckbox $checked={isAgreed} aria-hidden="true">
                   {isAgreed ? <CheckRectActive /> : <CheckRectDefault />}
                 </S.CustomCheckbox>
-                <S.CheckboxLabel htmlFor="agreement">
+                <S.CheckboxLabel htmlFor="agreement" id="agreement-label">
                   주문 내용을 확인하였으며, 정보 제공에 동의합니다.
                 </S.CheckboxLabel>
               </S.CheckboxWrapper>
@@ -220,7 +250,7 @@ export default function LecturePaymentPage() {
                   variant="primary"
                   disabled={!isAgreed || !selectedPaymentMethod}
                   onClick={handlePayment}
-                  ariaLabel="결제하기"
+                  ariaLabel={`총 ${formatPrice(totalPrice)} 결제하기${!isAgreed ? ', 동의 필요' : ''}${!selectedPaymentMethod ? ', 결제 수단 선택 필요' : ''}`}
                 >
                   <span style={{ fontWeight: 600 }}>결제하기</span>
                 </Button>
