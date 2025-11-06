@@ -2,7 +2,7 @@ import sampleCourses from "../assets/data/sampleCourses.json";
 import CourseCard from "../components/CourseCard/CourseCard";
 import  { StyledCardGrid } from "../pages/MainPage.styled";
 import { ROUTES } from "../router/RouteConfig";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
@@ -10,14 +10,14 @@ export type CategoryType = 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'de
 
 export type PriceType = 'free' | 'paid' | 'national_support';
  
-export type difficultyType = "beginner" | "intermediate" | "advanced";
+export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
 export type CourseData = {
     "id": number,
     "category_type": CategoryType,
     "course_type": CourseType,
     "price_type": PriceType,
-    "difficulty": difficultyType,
+    "difficulty": DifficultyType,
     "title": string,
     "description": string,
     "thumbnail_url": string,
@@ -35,7 +35,7 @@ export type CourseData = {
 export type CourseFilter = {
     courseTypeOpt?: CourseType,
     categoryOpt?: CategoryType,
-    difficultyOpt?: difficultyType,
+    difficultyOpt?: DifficultyType,
     priceTypeOpt?: PriceType,
     sortOpt?: 'DATE_ASC' | 'DATE_DESC',
     cardCount?: number,
@@ -56,22 +56,44 @@ const categoryLabel : Record<CategoryType, string> = {
     other: '기타',
 }
 
-const difficultyLabel : Record<difficultyType, string> = {
+const difficultyLabel : Record<DifficultyType, string> = {
     beginner : '초급',
     intermediate : '중급',
     advanced : '실무', 
 }
 
 export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, priceTypeOpt, sortOpt, cardCount }: CourseFilter) => {
+    const [searchParams] = useSearchParams();
+
+    // query params
+    const courseTypeParam = searchParams.get('courseType') as CourseType | null;
+    const categoryParam = searchParams.get('category') as CategoryType | null;
+    const difficultyParam = searchParams.get('difficulty') as DifficultyType | null;
+    const priceTypeParam = searchParams.get('priceType') as PriceType | null;
+    const keywordParam = searchParams.get('keyword') || '';
+
+    const courseTypeFilter = courseTypeOpt || courseTypeParam;
+    const categoryFilter = categoryOpt || categoryParam;
+    const difficultyFilter = difficultyOpt || difficultyParam;
+    const priceTypeFilter = priceTypeOpt || priceTypeParam;
+    const keywordFilter = keywordParam.toLowerCase().split(/\s+/);
+
+    // refine
     const courseList = sampleCourses as CourseData[];
-
     const filteredList = [...courseList].filter(course => { 
-        const matchCourseType = !courseTypeOpt || course.course_type === courseTypeOpt;
-        const matchCategory = !categoryOpt || course.category_type === categoryOpt;
-        const matchDifficulty = !difficultyOpt || course.difficulty === difficultyOpt;
-        const matchPrice = !priceTypeOpt || course.price_type === priceTypeOpt;
+        const matchCourseType = !courseTypeFilter || courseTypeFilter.includes(course.course_type);
+        const matchCategory = !categoryFilter || categoryFilter.includes(course.category_type);
+        const matchDifficulty = !difficultyFilter || difficultyFilter.includes(course.difficulty);
+        const matchPrice = !priceTypeFilter || priceTypeFilter.includes(course.price_type);
+        const MatchKeyword = 
+            !keywordParam || 
+            keywordFilter.every(keyword => 
+                [course.title, course.instructor_name].some(content =>
+                    content.toLowerCase().includes(keyword)
+                )
+            );
 
-        return matchDifficulty && matchCourseType && matchCategory && matchPrice;
+        return matchDifficulty && matchCourseType && matchCategory && matchPrice && MatchKeyword;
     })
 
     const sortedCourseList = [...filteredList].sort((a, b) => {
