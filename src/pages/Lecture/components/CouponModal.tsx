@@ -2,7 +2,12 @@ import { useState } from 'react';
 import Button from '../../../components/Button';
 import * as S from './CouponModal.styled';
 import type { Coupon } from '../LecturePaymentPage';
-import { calculateCouponDiscount, isCouponAvailable, formatPrice } from '../../../utils/couponUtils';
+import {
+  calculateCouponDiscount,
+  isCouponAvailable,
+  isCouponVisible,
+  formatPrice,
+} from '../../../utils/couponUtils';
 
 interface CouponModalProps {
   isOpen: boolean;
@@ -52,40 +57,42 @@ export default function CouponModal({
         </S.ModalHeader>
 
         <S.CouponList>
-          {coupons.map((coupon) => {
-            const discountAmount = calculateCouponDiscount(coupon, lecturePrice);
-            const available = isCouponAvailable(coupon, lecturePrice) && discountAmount > 0;
-            const isSelected = tempSelectedCoupon?.id === coupon.id;
+          {coupons
+            .filter((coupon) => isCouponVisible(coupon))
+            .map((coupon) => {
+              const discountAmount = calculateCouponDiscount(coupon, lecturePrice);
+              const available = isCouponAvailable(coupon, lecturePrice);
+              const isSelected = tempSelectedCoupon?.id === coupon.id;
 
-            return (
-              <S.CouponItem
-                key={coupon.id}
-                $selected={isSelected}
-                $available={available}
-                onClick={() => handleCouponClick(coupon)}
-              >
-                <S.RadioWrapper>
-                  <S.RadioInput
-                    type="radio"
-                    name="coupon"
-                    checked={isSelected}
-                    onChange={() => {}}
-                    disabled={!available}
-                  />
-                </S.RadioWrapper>
-                <S.CouponContent>
-                  <S.CouponName $available={available}>{coupon.name}</S.CouponName>
-                  <S.CouponDescription $available={available}>
-                    {coupon.description}
-                  </S.CouponDescription>
-                  {!available && <S.CouponWarning>사용 불가능한 쿠폰입니다</S.CouponWarning>}
-                </S.CouponContent>
-                <S.DiscountAmount $available={available}>
-                  {discountAmount === 0 ? formatPrice(0) : `-${formatPrice(discountAmount)}`}
-                </S.DiscountAmount>
-              </S.CouponItem>
-            );
-          })}
+              return (
+                <S.CouponItem
+                  key={coupon.id}
+                  $selected={isSelected}
+                  $available={available}
+                  onClick={() => handleCouponClick(coupon)}
+                >
+                  <S.RadioWrapper>
+                    <S.RadioInput
+                      type="radio"
+                      name="coupon"
+                      checked={isSelected}
+                      onChange={() => {}}
+                      disabled={!available}
+                    />
+                  </S.RadioWrapper>
+                  <S.CouponContent>
+                    <S.CouponName $available={available}>{coupon.name}</S.CouponName>
+                    <S.CouponDescription $available={available}>
+                      {coupon.description}
+                    </S.CouponDescription>
+                    {!available && <S.CouponWarning>사용 불가능한 쿠폰입니다</S.CouponWarning>}
+                  </S.CouponContent>
+                  <S.DiscountAmount $available={available}>
+                    {discountAmount === 0 ? formatPrice(0) : `-${formatPrice(discountAmount)}`}
+                  </S.DiscountAmount>
+                </S.CouponItem>
+              );
+            })}
         </S.CouponList>
 
         <S.ModalFooter>
