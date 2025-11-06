@@ -52,16 +52,17 @@ export default function CouponModal({
         </S.ModalHeader>
 
         <S.CouponList>
-          {coupons.map((coupon) => {
-            const available = isCouponAvailable(coupon, lecturePrice);
-            const discountAmount = calculateCouponDiscount(coupon, lecturePrice);
-            const isSelected = tempSelectedCoupon?.id === coupon.id;
+          {coupons
+            .filter((coupon) => isCouponAvailable(coupon, lecturePrice))
+            .map((coupon) => {
+              const discountAmount = calculateCouponDiscount(coupon, lecturePrice);
+              const isSelected = tempSelectedCoupon?.id === coupon.id;
 
-            return (
+              return (
               <S.CouponItem
                 key={coupon.id}
                 $selected={isSelected}
-                $available={available}
+                $available={true}
                 onClick={() => handleCouponClick(coupon)}
               >
                 <S.RadioWrapper>
@@ -70,21 +71,16 @@ export default function CouponModal({
                     name="coupon"
                     checked={isSelected}
                     onChange={() => {}}
-                    disabled={!available}
+                    disabled={false}
                   />
                 </S.RadioWrapper>
                 <S.CouponContent>
-                  <S.CouponName $available={available}>{coupon.name}</S.CouponName>
-                  <S.CouponDescription $available={available}>
+                  <S.CouponName $available={true}>{coupon.name}</S.CouponName>
+                  <S.CouponDescription $available={true}>
                     {coupon.description}
                   </S.CouponDescription>
-                  {!available && (
-                    <S.CouponWarning>
-                      사용 불가능한 쿠폰입니다
-                    </S.CouponWarning>
-                  )}
                 </S.CouponContent>
-                <S.DiscountAmount $available={available}>
+                <S.DiscountAmount $available={true}>
                   -{formatPrice(discountAmount)}
                 </S.DiscountAmount>
               </S.CouponItem>
