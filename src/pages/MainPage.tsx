@@ -4,7 +4,7 @@ import SvgFE from "../assets/icons/icon-category-FE.svg?react";
 import SvgBE from "../assets/icons/icon-category-BE.svg?react";
 import SvgDA from "../assets/icons/icon-category-DA.svg?react";
 import SvgAI from "../assets/icons/icon-category-AI.svg?react";
-import SvgDesign from "../assets/icons/icon-category-Design.svg?react";
+import SvgDesign from "../assets/icons/icon-category-design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
