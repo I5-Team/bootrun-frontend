@@ -114,6 +114,16 @@ export const CouponItem = styled.div<{ $selected: boolean; $available: boolean }
     ${({ $available, theme }) => $available && `border-color: ${theme.colors.primary300};`}
   }
 
+  &:focus {
+    outline: 0.2rem solid ${({ theme }) => theme.colors.primary300};
+    outline-offset: 0.2rem;
+  }
+
+  &:focus-visible {
+    outline: 0.2rem solid ${({ theme }) => theme.colors.primary300};
+    outline-offset: 0.2rem;
+  }
+
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 1.4rem;
   }
