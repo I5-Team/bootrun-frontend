@@ -1,4 +1,35 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+// 성공 아이콘 애니메이션: 확대 + 바운스
+const successAnimation = keyframes`
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
+// 실패 아이콘 애니메이션: 좌우 흔들림
+const errorAnimation = keyframes`
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-8deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(8deg);
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -18,7 +49,7 @@ export const ResultContent = styled.div`
   max-width: 56.3rem;
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled.div<{ $isSuccess?: boolean }>`
   width: 10rem;
   height: 10rem;
 
@@ -26,6 +57,7 @@ export const IconWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
+    animation: ${({ $isSuccess }) => ($isSuccess ? successAnimation : errorAnimation)} 0.8s ease-out;
   }
 
   @media ${({ theme }) => theme.devices.tablet} {
