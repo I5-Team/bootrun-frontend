@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockCardData } from '../../../data/mockData';
 import type { CardData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 

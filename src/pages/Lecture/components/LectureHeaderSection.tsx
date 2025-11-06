@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockHeaderData } from '../../../data/mockData';
 import type { LectureHeaderData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 
 const LectureHeaderSection: React.FC = () => {
   const { data, loading, error } = useApiData<LectureHeaderData>(mockHeaderData, 300);

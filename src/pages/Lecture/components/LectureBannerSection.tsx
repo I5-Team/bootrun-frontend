@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockBannerData } from '../../../data/mockData';
 import type { BannerData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from './HelperComponents';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 
 const LectureBannerSection: React.FC = () => {
   // 1. API가 개발되면 mockBannerData를 API 호출 함수(e.g., fetchBanner)로 교체합니다.
