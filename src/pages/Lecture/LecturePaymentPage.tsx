@@ -1,8 +1,274 @@
+import { useState } from 'react';
+import Button from '../../components/Button';
+import CouponModal from './components/CouponModal';
+import * as S from './LecturePaymentPage.styled';
+import thumbPython2 from '../../assets/images/thumb-python2.png';
+import CheckRectActive from '../../assets/icons/icon-check-rect-active.svg?react';
+import CheckRectDefault from '../../assets/icons/icon-check-rect-default.svg?react';
+import tossIcon from '../../assets/icons/icon-payment-toss.avif';
+import { calculateCouponDiscount, formatPrice } from '../../utils/couponUtils';
+
+export interface Coupon {
+  // 기본 정보
+  id: number;
+  courseId: number | null;
+  code: string;
+  name: string;
+  description: string;
+
+  // 할인 정보
+  discountRate?: number;
+  discountAmount?: number;
+
+  validFrom: string;
+  validUntil: string;
+  maxUsage?: number;
+  usedCount?: number;
+  isActive: boolean;
+
+  // 메타 정보
+  createdAt: string;
+}
+
+interface LectureData {
+  id: string;
+  title: string;
+  instructor: string;
+  category: string;
+  price: number;
+  thumbnailUrl?: string;
+}
+
 export default function LecturePaymentPage() {
-    return (
-        <div>
-            <h1>Lecture Payment Page</h1>
-            <p>This is the lecture payment page.</p>
-        </div>
-    );
+  const [isAgreed, setIsAgreed] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+
+  // TODO: API 연동 시 실제 데이터로 대체
+  const lectureData: LectureData = {
+    id: '1',
+    title: 'Blender로 두더지를 만들며 전문가에게 배우는 3D 모델링 기초',
+    instructor: '김민주',
+    category: '디자인 클래스',
+    price: 50000,
+    thumbnailUrl: thumbPython2,
+  };
+
+  // TODO: API 연동 시 실제 쿠폰 데이터로 대체
+  const availableCoupons: Coupon[] = [
+    {
+      id: 1,
+      courseId: null,
+      code: 'WELCOME10',
+      name: '10% 할인 쿠폰',
+      description: '전 강의 10% 할인',
+      discountRate: 10,
+      validFrom: '2025-01-01T00:00:00Z',
+      validUntil: '2025-12-31T23:59:59Z',
+      maxUsage: 100,
+      usedCount: 23,
+      isActive: true,
+      createdAt: '2025-01-01T00:00:00Z',
+    },
+    {
+      id: 2,
+      courseId: null,
+      code: 'SAVE3000',
+      name: '3,000원 할인 쿠폰',
+      description: '3만원 이상 구매 시 사용 가능',
+      discountAmount: 3000,
+      validFrom: '2025-01-01T00:00:00Z',
+      validUntil: '2025-12-31T23:59:59Z',
+      isActive: true,
+      createdAt: '2025-01-01T00:00:00Z',
+    },
+  ];
+
+  const calculateDiscount = (): number => {
+    if (!selectedCoupon) return 0;
+    return calculateCouponDiscount(selectedCoupon, lectureData.price);
+  };
+
+  const discount = calculateDiscount();
+  const totalPrice = lectureData.price - discount;
+
+  const handlePayment = () => {
+    // TODO: API 연동 시 결제 로직 구현
+    if (!isAgreed) {
+      alert('주문 내용 확인 및 정보 제공 동의가 필요합니다.');
+      return;
+    }
+    if (!selectedPaymentMethod) {
+      alert('결제 수단을 선택해주세요.');
+      return;
+    }
+    console.log('결제 진행:', {
+      coupon: selectedCoupon,
+      totalPrice,
+      paymentMethod: selectedPaymentMethod,
+    });
+  };
+
+  const handleRemoveCoupon = () => {
+    setSelectedCoupon(null);
+  };
+
+  return (
+    <>
+      <S.PageContainer>
+        <S.ContentWrapper>
+          <S.LeftSection>
+            <S.SectionTitle as="h1">강의 구매</S.SectionTitle>
+            <S.LectureCard>
+              <S.LectureThumbnail
+                $thumbnailUrl={lectureData.thumbnailUrl}
+                role="img"
+                aria-label={`${lectureData.title} 강의 썸네일`}
+              />
+              <S.LectureInfo>
+                <S.CategoryBadge aria-label={`카테고리: ${lectureData.category}`}>
+                  {lectureData.category}
+                </S.CategoryBadge>
+                <S.LectureTitle>{lectureData.title}</S.LectureTitle>
+                <S.LectureInstructor aria-label={`강사: ${lectureData.instructor}`}>
+                  {lectureData.instructor}
+                </S.LectureInstructor>
+                <S.LecturePrice aria-label={`강의 가격: ${formatPrice(lectureData.price)}`}>
+                  {formatPrice(lectureData.price)}
+                </S.LecturePrice>
+              </S.LectureInfo>
+            </S.LectureCard>
+          </S.LeftSection>
+
+          <S.RightSection>
+            <S.SectionTitle as="h2">최종 결제 정보</S.SectionTitle>
+
+            {/* 결제 정보 카드 */}
+            <S.PaymentCard role="region" aria-label="결제 금액 정보">
+              <S.PriceSection>
+                <S.PriceRow>
+                  <S.PriceLabel>상품 금액</S.PriceLabel>
+                  <S.PriceValue aria-label={`상품 금액 ${formatPrice(lectureData.price)}`}>
+                    {formatPrice(lectureData.price)}
+                  </S.PriceValue>
+                </S.PriceRow>
+
+                {/* 쿠폰 섹션 */}
+                <div>
+                  <S.CouponRow>
+                    <S.CouponLabel id="coupon-label">쿠폰</S.CouponLabel>
+                    <S.CouponButton
+                      onClick={() => setIsCouponModalOpen(true)}
+                      aria-label={`쿠폰 선택, 사용 가능한 쿠폰 ${availableCoupons.length}개`}
+                      aria-describedby="coupon-label"
+                    >
+                      사용 가능 {availableCoupons.length}
+                    </S.CouponButton>
+                  </S.CouponRow>
+                  {selectedCoupon && (
+                    <S.SelectedCouponInfo role="status" aria-live="polite">
+                      <S.SelectedCouponText>
+                        {selectedCoupon.name} 적용 (-{formatPrice(discount)})
+                      </S.SelectedCouponText>
+                      <S.RemoveCouponButton
+                        onClick={handleRemoveCoupon}
+                        aria-label={`${selectedCoupon.name} 쿠폰 적용 취소`}
+                      >
+                        취소
+                      </S.RemoveCouponButton>
+                    </S.SelectedCouponInfo>
+                  )}
+                </div>
+
+                <S.PriceRow>
+                  <S.PriceLabel>할인 금액</S.PriceLabel>
+                  <S.PriceValue
+                    aria-label={`할인 금액 ${discount === 0 ? '없음' : formatPrice(discount)}`}
+                  >
+                    {discount === 0 ? '-' : `-${formatPrice(discount)}`}
+                  </S.PriceValue>
+                </S.PriceRow>
+              </S.PriceSection>
+
+              <S.Divider role="separator" aria-hidden="true" />
+
+              <S.TotalPriceRow>
+                <S.TotalLabel>총 결제 금액</S.TotalLabel>
+                <S.TotalPrice aria-label={`총 결제 금액 ${formatPrice(totalPrice)}`}>
+                  {formatPrice(totalPrice)}
+                </S.TotalPrice>
+              </S.TotalPriceRow>
+            </S.PaymentCard>
+
+            {/* 결제 수단 및 결제 실행 카드 */}
+            <S.SectionTitle as="h2">결제 수단</S.SectionTitle>
+            <S.Card role="region" aria-label="결제 수단 선택 및 결제 실행">
+              <S.PaymentMethodSection role="radiogroup" aria-label="결제 수단">
+                <S.PaymentMethodOption
+                  $selected={selectedPaymentMethod === 'tosspay'}
+                  onClick={() =>
+                    setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay')
+                  }
+                  role="radio"
+                  aria-checked={selectedPaymentMethod === 'tosspay'}
+                  aria-label="토스페이로 결제"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      e.preventDefault();
+                      setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay');
+                    }
+                  }}
+                >
+                  <S.PaymentMethodIcon src={tossIcon} alt="" aria-hidden="true" />
+                  토스페이
+                </S.PaymentMethodOption>
+              </S.PaymentMethodSection>
+
+              <S.PaymentDivider role="separator" aria-hidden="true" />
+
+              <S.CheckboxWrapper>
+                <S.HiddenCheckbox
+                  id="agreement"
+                  checked={isAgreed}
+                  onChange={(e) => setIsAgreed(e.target.checked)}
+                  aria-describedby="agreement-label"
+                />
+                <S.CustomCheckbox $checked={isAgreed} aria-hidden="true">
+                  {isAgreed ? <CheckRectActive /> : <CheckRectDefault />}
+                </S.CustomCheckbox>
+                <S.CheckboxLabel htmlFor="agreement" id="agreement-label">
+                  주문 내용을 확인하였으며, 정보 제공에 동의합니다.
+                </S.CheckboxLabel>
+              </S.CheckboxWrapper>
+
+              <S.ButtonWrapper>
+                <Button
+                  fullWidth
+                  size="lg"
+                  variant="primary"
+                  disabled={!isAgreed || !selectedPaymentMethod}
+                  onClick={handlePayment}
+                  ariaLabel={`총 ${formatPrice(totalPrice)} 결제하기${!isAgreed ? ', 동의 필요' : ''}${!selectedPaymentMethod ? ', 결제 수단 선택 필요' : ''}`}
+                >
+                  <span style={{ fontWeight: 600 }}>결제하기</span>
+                </Button>
+              </S.ButtonWrapper>
+            </S.Card>
+          </S.RightSection>
+        </S.ContentWrapper>
+      </S.PageContainer>
+
+      {/* 쿠폰 선택 모달 */}
+      <CouponModal
+        isOpen={isCouponModalOpen}
+        onClose={() => setIsCouponModalOpen(false)}
+        coupons={availableCoupons}
+        selectedCoupon={selectedCoupon}
+        onSelectCoupon={setSelectedCoupon}
+        lecturePrice={lectureData.price}
+      />
+    </>
+  );
 }
