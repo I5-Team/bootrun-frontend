@@ -4,6 +4,7 @@ import userProfileDefault from "../assets/images/profile-user-default.png"
 type ProfileProps = {
     src?: string;
     size?: number // rem
+    alt?: string
 }
 
 const StyledProfileImg = styled.img<{ size: number }>`
@@ -15,13 +16,13 @@ const StyledProfileImg = styled.img<{ size: number }>`
     vertical-align: bottom;
 `;
 
-export default function Profile({ src, size = 4.2 }: ProfileProps) { 
+export default function Profile({ src, size = 4.2, alt = "프로필" }: ProfileProps) { 
     return (
         <>
             <StyledProfileImg 
                 src={src || userProfileDefault} 
                 size={size}
-                alt="프로필"
+                alt={ alt }
             />
         </>
     );

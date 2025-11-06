@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ROUTES } from "./RouteConfig";
 import LoginPage from "../pages/Auth/LoginPage";
-import ButtonGallery from "../pages/ButtonGallery";
 import LectureListPage from "../pages/Lecture/LectureListPage";
 import SignUpPage from "../pages/Auth/SignUpPage";
 import AuthLayout from "../layouts/AuthLayout";
@@ -18,6 +17,10 @@ import MyLecturePage from "../pages/Lecture/MyLecturePage";
 import LectureRoomPage from "../pages/Lecture/LectureRoomPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import ErrorLayout from "../layouts/ErrorLayout";
+import MainPage from "../pages/MainPage";
+import MyPageLayout from "../layouts/MypageLayout";
+import OrderHistorySection from "../pages/MyPage/OrderHistorySection";
+import AccountSection from "../pages/MyPage/AccountSection";
 
 
 
@@ -39,7 +42,7 @@ export default function AppRouter() {
                     {/* 인증 사용자용 페이지 */}
                 </Route>
                 <Route element={<MainLayout/>}>
-                    <Route path={ROUTES.HOME} element={<ButtonGallery />} />
+                    <Route path={ROUTES.HOME} element={<MainPage />} />
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
                     <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />  
@@ -48,13 +51,19 @@ export default function AppRouter() {
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
                     <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
                     <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
-                    <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                    {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
 
                     {/* 관리자용 페이지 개발 후에는 일바 */}
                     <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
                     <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
                     <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
                     <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
+
+                    <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}> {/* (ROUTES.MYPAGE = "/mypage" 라고 가정) */}
+                        <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
+                        <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} /> {/* /mypage/orders */}
+                        <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} /> {/* /mypage/account */}
+                    </Route>
                 </Route>
                 {/* 404 페이지 */}
                 <Route element={<ErrorLayout/>}>
