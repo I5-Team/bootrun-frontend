@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 type FilterFormProps = {
@@ -8,9 +8,8 @@ type FilterFormProps = {
     options: {label: string, value: string}[];
 }
 
-type FormQuerys = {
-    key: string,
-    value: string,
+type QueryParams = {
+    [key:string]: string[];
 }
 
 const StyledFilterForm = styled.form`
@@ -80,29 +79,31 @@ const StyledFilterItem = styled.li`
 `;
 
 const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
-    // URL 쿼리 스트링 변경
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    // const [selectedOptions, setSelectedOptions] = useState<FormQuerys[]>([]);
+    const [, setSearchParams] = useSearchParams();
+    const [selectedOptions, setSelectedOptions] = useState<QueryParams>({});
 
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value, checked} = e.target;
-        if (checked) {
-            setSearchParams(prev => ({...prev, [name]: value}));
-        } else {
-            setSearchParams({});
-        }
+
+        setSelectedOptions(prev => {
+            const currentOptions = prev[name] || [];
+            const newOptions = checked
+                ? [...currentOptions, value]
+                : currentOptions.filter(optValue => optValue !== value);
+            
+            return {...prev, [name]: newOptions};
+        })
     }
 
     useEffect(() => {
-        console.log(searchParams);
-        setSearchParams({});
-    }, []);
+        const params = new URLSearchParams();
 
-    // useEffect(() => {
-    //     setSearchParams({ category: "frontend"});
-    //     console.log(selectedOptions);
-    // }, [selectedOptions]);
+        Object.keys(selectedOptions).forEach(key => {
+            params.set(key, selectedOptions[key].join('&'));
+        })
+        
+        setSearchParams(params);
+    }, [selectedOptions]);
 
     return (
         <StyledFilterForm>
