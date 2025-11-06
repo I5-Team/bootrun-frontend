@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Button from '../../../components/Button';
 import * as S from './CouponModal.styled';
 import type { Coupon } from '../LecturePaymentPage';
+import { calculateCouponDiscount, isCouponAvailable, formatPrice } from '../../../utils/couponUtils';
 
 interface CouponModalProps {
   isOpen: boolean;
@@ -24,29 +25,8 @@ export default function CouponModal({
 
   if (!isOpen) return null;
 
-  const calculateDiscount = (coupon: Coupon): number => {
-    if (coupon.discount) {
-      return coupon.discount;
-    }
-    if (coupon.discountRate) {
-      const calculatedDiscount = Math.floor(lecturePrice * (coupon.discountRate / 100));
-      if (coupon.maxDiscount) {
-        return Math.min(calculatedDiscount, coupon.maxDiscount);
-      }
-      return calculatedDiscount;
-    }
-    return 0;
-  };
-
-  const isAvailable = (coupon: Coupon): boolean => {
-    if (coupon.minPrice && lecturePrice < coupon.minPrice) {
-      return false;
-    }
-    return true;
-  };
-
   const handleCouponClick = (coupon: Coupon) => {
-    if (!isAvailable(coupon)) return;
+    if (!isCouponAvailable(coupon, lecturePrice)) return;
 
     // 이미 선택된 쿠폰을 다시 클릭하면 선택 취소
     if (tempSelectedCoupon?.id === coupon.id) {
@@ -61,10 +41,6 @@ export default function CouponModal({
     onClose();
   };
 
-  const formatPrice = (price: number) => {
-    return price.toLocaleString('ko-KR') + '원';
-  };
-
   return (
     <S.Overlay onClick={onClose}>
       <S.ModalContainer onClick={(e) => e.stopPropagation()}>
@@ -77,8 +53,8 @@ export default function CouponModal({
 
         <S.CouponList>
           {coupons.map((coupon) => {
-            const available = isAvailable(coupon);
-            const discountAmount = calculateDiscount(coupon);
+            const available = isCouponAvailable(coupon, lecturePrice);
+            const discountAmount = calculateCouponDiscount(coupon, lecturePrice);
             const isSelected = tempSelectedCoupon?.id === coupon.id;
 
             return (
@@ -102,9 +78,9 @@ export default function CouponModal({
                   <S.CouponDescription $available={available}>
                     {coupon.description}
                   </S.CouponDescription>
-                  {!available && coupon.minPrice && (
+                  {!available && (
                     <S.CouponWarning>
-                      {formatPrice(coupon.minPrice)} 이상 구매 시 사용 가능
+                      사용 불가능한 쿠폰입니다
                     </S.CouponWarning>
                   )}
                 </S.CouponContent>
