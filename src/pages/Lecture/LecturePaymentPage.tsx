@@ -6,6 +6,7 @@ import thumbPython2 from '../../assets/images/thumb-python2.png';
 import CheckRectActive from '../../assets/icons/icon-check-rect-active.svg?react';
 import CheckRectDefault from '../../assets/icons/icon-check-rect-default.svg?react';
 import tossIcon from '../../assets/icons/icon-payment-toss.avif';
+import { calculateCouponDiscount, formatPrice } from '../../utils/couponUtils';
 
 export interface Coupon {
   // 기본 정보
@@ -58,7 +59,7 @@ export default function LecturePaymentPage() {
   const availableCoupons: Coupon[] = [
     {
       id: 1,
-      courseId: null, // 전체 강의 사용 가능
+      courseId: null,
       code: 'WELCOME10',
       name: '10% 할인 쿠폰',
       description: '전 강의 10% 할인',
@@ -73,53 +74,24 @@ export default function LecturePaymentPage() {
     {
       id: 2,
       courseId: null,
-      code: 'SAVE5000',
-      name: '5,000원 할인 쿠폰',
-      description: '5만원 이상 구매 시',
-      discountAmount: 5000,
+      code: 'SAVE3000',
+      name: '3,000원 할인 쿠폰',
+      description: '3만원 이상 구매 시 사용 가능',
+      discountAmount: 3000,
       validFrom: '2025-01-01T00:00:00Z',
-      validUntil: '2025-06-30T23:59:59Z',
+      validUntil: '2025-12-31T23:59:59Z',
       isActive: true,
-      createdAt: '2025-01-01T00:00:00Z',
-    },
-    {
-      id: 3,
-      courseId: null,
-      code: 'SAVE15000',
-      name: '15,000원 할인 쿠폰',
-      description: '15만원 이상 구매 시',
-      discountAmount: 15000,
-      validFrom: '2025-01-01T00:00:00Z',
-      validUntil: '2025-06-30T23:59:59Z',
-      isActive: false, // 비활성화된 쿠폰 예시
       createdAt: '2025-01-01T00:00:00Z',
     },
   ];
 
   const calculateDiscount = (): number => {
     if (!selectedCoupon) return 0;
-
-    if (selectedCoupon.discount) {
-      return selectedCoupon.discount;
-    }
-    if (selectedCoupon.discountRate) {
-      const calculatedDiscount = Math.floor(
-        lectureData.price * (selectedCoupon.discountRate / 100)
-      );
-      if (selectedCoupon.maxDiscount) {
-        return Math.min(calculatedDiscount, selectedCoupon.maxDiscount);
-      }
-      return calculatedDiscount;
-    }
-    return 0;
+    return calculateCouponDiscount(selectedCoupon, lectureData.price);
   };
 
   const discount = calculateDiscount();
   const totalPrice = lectureData.price - discount;
-
-  const formatPrice = (price: number) => {
-    return price.toLocaleString('ko-KR') + '원';
-  };
 
   const handlePayment = () => {
     // TODO: API 연동 시 결제 로직 구현
