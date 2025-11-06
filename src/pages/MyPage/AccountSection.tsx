@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
-import { mockAccountData } from '../../data/mockData';
+import { mockAccountData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 
 const AccountSection: React.FC = () => {

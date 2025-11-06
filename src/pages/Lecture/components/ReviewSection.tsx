@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
-import { mockReviewData } from '../../../data/mockData';
+import { mockReviewData } from '../../../data/mockLectureData';
 import type { ReviewData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
 

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
-import { mockOrderData } from '../../data/mockData';
+import { mockOrderData } from '../../data/mockMyPageData';
 import type { OrderData, OrderItem } from '../../types/ProfileType';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 

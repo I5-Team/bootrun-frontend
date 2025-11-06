@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
-import { mockInstructorData } from '../../../data/mockData';
+import { mockInstructorData } from '../../../data/mockLectureData';
 import type { Instructor } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 

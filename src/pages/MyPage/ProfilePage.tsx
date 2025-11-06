@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
-import { mockProfileData } from '../../data/mockData';
+import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import CalendarIconSvg from '../../assets/icons/icon-calendar.svg';
 

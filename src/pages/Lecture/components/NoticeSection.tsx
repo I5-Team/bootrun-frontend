@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
-import { mockNoticeData } from '../../../data/mockData';
+import { mockNoticeData } from '../../../data/mockLectureData';
 import type { NoticeData } from '../../../types/LectureType';
 
 const NoticeSection: React.FC = () => {
