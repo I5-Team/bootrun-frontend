@@ -70,6 +70,7 @@ const StyledFilterItem = styled.li`
     
     label {
         cursor: pointer;
+        position: relative;
     }
 
     span {
@@ -77,7 +78,10 @@ const StyledFilterItem = styled.li`
     }
 
     input[type="checkbox"] {
-        display: none;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
     }
 
     input[type="checkbox"]:checked + span {
@@ -138,7 +142,7 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
     };
     
     return (
-        <StyledTagWrapper>
+        <StyledTagWrapper aria-label="필터링 조건 태그 목록">
             <Button variant="outline" iconSvg={<SvgReset/>} onClick={handleReset}>
                 필터 초기화
             </Button>
@@ -207,7 +211,7 @@ const FilterForm = ({ filterData, hasTags = true }: {
 
     return (
         <>
-            <StyledFilterForm>
+            <StyledFilterForm aria-label="필터링 선택 폼">
                 {filterData.map(item => (
                     <StyledFieldset key={item.label}>
                         <legend className="sr-only">{item.label}</legend>
