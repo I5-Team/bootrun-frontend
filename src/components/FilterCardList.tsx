@@ -173,7 +173,7 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
 
 
     return (
-        <>
+        <div className="card-list">
             {refinedCourseList.length === 0 
             ? 
             <NoResultPage/>
@@ -208,7 +208,7 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
             }
             
 
-        </>
+        </div>
     )
 }
 

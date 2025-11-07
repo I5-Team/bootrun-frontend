@@ -14,6 +14,12 @@ const StyledTitle = styled.h2`
     }
 `;
 
+const StyledContent = styled.div`
+    .card-list {
+        margin-top: 5.2rem;
+    }
+`;
+
 export default function LectureListPage() {
 const filterData = [
     {
@@ -60,8 +66,10 @@ const filterData = [
     return (
             <>
                 <StyledTitle>어떤 강의를 찾으시나요?</StyledTitle>
-                <FilterForm filterData={filterData}/>
-                <FilterCardList/>
+                    <StyledContent>
+                        <FilterForm filterData={filterData}/>
+                        <FilterCardList/>
+                    </StyledContent>
             </>
     );
     }

@@ -25,7 +25,6 @@ const StyledFilterForm = styled.form`
     border-block: 0.2rem solid ${({ theme }) => theme.colors.gray200};
     margin-block: 3.2rem;
     overflow-x: hidden;
-
     @media ${({ theme }) => theme.devices.tablet} {
         overflow-x: scroll;
     }
@@ -240,7 +239,7 @@ const FilterForm = ({ filterData, hasTags = true }: {
                     </StyledFieldset>              
                 ))}
             </StyledFilterForm>
-            { hasTags &&
+            { hasTags && selectedTags.length > 0 &&
                 <FilterTags
                     selectedTags={selectedTags} 
                     setSelectedTags={setSelectedTags}
