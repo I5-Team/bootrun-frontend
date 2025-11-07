@@ -91,7 +91,16 @@ const StyledTagWrapper = styled.div`
     justify-content: start;
     align-items: center;
     gap: 2rem;
+    flex-wrap: wrap;
     margin-bottom: 5.2rem;
+`;
+
+const StyledTagList = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
 `;
 
 // function
@@ -133,12 +142,13 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
             <Button variant="outline" iconSvg={<SvgReset/>} onClick={handleReset}>
                 필터 초기화
             </Button>
-            {selectedTags.map(tag => (
-                <button key={tag.value} data-label={tag.label} onClick={handleDelete}>
-                    <Tag variant="dark" hasDelete={true}>{tag.label}</Tag>
-                </button>
-            ))}
-            
+            <StyledTagList>
+                {selectedTags.map(tag => (
+                    <button key={tag.value} data-label={tag.label} onClick={handleDelete}>
+                        <Tag variant="dark" hasDelete={true}>{tag.label}</Tag>
+                    </button>
+                ))}
+            </StyledTagList>
         </StyledTagWrapper>
     )
 };

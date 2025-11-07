@@ -6,6 +6,12 @@ const StyledTitle = styled.h2`
     font-size: ${({ theme }) => theme.fontSize.xxl};
     font-weight: 600;
     margin-top: 6rem;
+    word-break: keep-all;
+    line-height: 1.3;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.fontSize.xl};
+    }
 `;
 
 export default function LectureListPage() {

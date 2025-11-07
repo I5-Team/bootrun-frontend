@@ -102,6 +102,13 @@ const StyledNoResult = styled.div`
         width: 8.8rem;
         height: 8.8rem;
     }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        svg {
+            width: 7rem;
+            height: 7rem;
+        }
+    }
 `;
 
 const NoResultPage = () => { 
