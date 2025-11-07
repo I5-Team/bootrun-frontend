@@ -1,4 +1,4 @@
-import type { UserListResponse, UserListItem, UserApiParams } from '../types/AdminUserType';
+import type { UserListResponse, UserListItem, UserApiParams, UserDetail } from '../types/AdminUserType';
 
 const users: UserListItem[] = Array.from({ length: 55 }, (_, i) => ({
   id: i + 1,
@@ -54,4 +54,34 @@ export const getMockUsers = (params: UserApiParams): UserListResponse => {
     total_pages,
     items: filteredUsers.slice(startIndex, endIndex),
   };
+};
+
+
+export const getMockUserDetail = (userId: number): UserDetail | null => {
+  // 1. users 배열에서 기본 정보 찾기
+  const baseInfo = users.find(user => user.id === userId);
+
+  if (!baseInfo) {
+    return null; // 사용자가 없으면 null 반환
+  }
+
+  // 2. 기본 정보에 상세 정보 동적 추가
+  const detailInfo: UserDetail = {
+    ...baseInfo, // (id, email, nickname, role, is_active 등 ...)
+
+    // UserDetail의 추가 필드 (목록 데이터 기반으로 동적 생성)
+    gender: baseInfo.id % 2 === 0 ? 'female' : 'male',
+    birth_date: '1995-01-01', // (이 값은 목록에 없으므로 고정)
+    provider: 'local',
+    total_study_time: baseInfo.total_enrollments * 3600, // (임의 계산)
+    active_enrollments: Math.floor(baseInfo.total_enrollments / 2),
+    completed_courses: Math.ceil(baseInfo.total_enrollments / 2),
+    avg_progress_rate: baseInfo.total_enrollments * 15.5,
+    total_refunds: 0,
+    total_questions: baseInfo.total_enrollments * 2,
+    total_comments: baseInfo.total_enrollments * 3,
+    enrollments: [],
+  };
+
+  return detailInfo;
 };

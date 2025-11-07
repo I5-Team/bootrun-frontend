@@ -5,10 +5,8 @@ import type { UserListItem } from '../../types/AdminUserType';
 // 부모 컴포넌트(UserManagePage)로부터 받을 Props 타입 정의
 interface UserTableProps {
   users: UserListItem[];
-  onActivate: (userId: number) => void;
-  onDeactivate: (userId: number) => void;
   // (추후) 사용자 상세 보기 모달을 위한 핸들러
-  // onUserClick: (userId: number) => void;
+  onUserClick: (userId: number) => void;
 }
 
 /**
@@ -32,8 +30,7 @@ const formatDateTime = (dateString: string) => {
 
 const UserTable: React.FC<UserTableProps> = ({
   users,
-  onActivate,
-  onDeactivate,
+  onUserClick,
 }) => {
   return (
     <S.TableWrapper>
@@ -57,7 +54,7 @@ const UserTable: React.FC<UserTableProps> = ({
             </tr>
           ) : (
             users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user.id} onClick={() => onUserClick(user.id)} style={{ cursor: 'pointer' }}>
                 <td>{user.id}</td>
                 <td>{user.email}</td>
                 <td>{user.nickname}</td>
@@ -71,22 +68,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 <td>{formatDateTime(user.created_at)}</td>
                 <td>{formatDateTime(user.last_login)}</td>
                 <td>{user.total_enrollments}회</td>
-                <td>
-                  {user.is_active ? (
-                    <S.ActionButton
-                      $danger={true}
-                      onClick={() => onDeactivate(user.id)}
-                    >
-                      비활성화
-                    </S.ActionButton>
-                  ) : (
-                    <S.ActionButton
-                      onClick={() => onActivate(user.id)}
-                    >
-                      활성화
-                    </S.ActionButton>
-                  )}
-                </td>
+                
               </tr>
             ))
           )}

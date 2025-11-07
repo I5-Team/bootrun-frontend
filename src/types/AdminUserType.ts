@@ -52,7 +52,7 @@ export interface UserDetail extends UserListItem {
   total_refunds: number;
   total_questions: number;
   total_comments: number;
-  enrollments: any[]; // (타입이 명시되지 않아 any, 추후 구체화 필요)
+  enrollments: unknown[];
 }
 
 /**
@@ -65,6 +65,6 @@ export interface LearningReport {
   total_study_time: number;
   attendance_rate: number;
   avg_progress_rate: number;
-  courses: any[];
-  attendance: any[];
+  courses: unknown[];
+  attendance: unknown[];
 }

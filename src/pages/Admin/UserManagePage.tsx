@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import type { UserApiParams, UserListItem } from '../../types/AdminUserType';
-import { fetchUsers, activateUser, deactivateUser } from '../../api/adminApi';
+import { fetchUsers } from '../../api/adminApi';
 
 // (하위 컴포넌트 임포트)
 import UserFilterBar from './UserFilterBar';
 import UserTable from './UserTable';
 import Pagination from './Pagination';
+import UserDetailModal from './UserDetailModal';
 
 
 
@@ -15,6 +16,9 @@ export default function UserManagePage() {
   // 1. 상태 정의
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const isModalOpen = selectedUserId !== null;
 
   // API 쿼리 파라미터 상태
   const [apiParams, setApiParams] = useState<UserApiParams>({
@@ -51,6 +55,8 @@ export default function UserManagePage() {
     loadUsers();
   }, [apiParams]); // apiParams가 변경될 때마다 API 재호출
 
+
+
   // 3. 핸들러 구현 (useCallback으로 최적화)
 
   // 필터/검색 핸들러
@@ -70,29 +76,17 @@ export default function UserManagePage() {
     }));
   }, []);
 
-  // (전략 적용) 로컬 상태 즉시 업데이트 핸들러
-  const handleActivate = useCallback(async (userId: number) => {
-    try {
-      await activateUser(userId);
-      // API 재호출 대신, 로컬 상태 즉시 변경
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === userId ? { ...user, is_active: true } : user,
-        ),
-      );
-    } catch (error) { console.error('활성화 실패', error); }
+  
+
+const handleUserClick = useCallback((userId: number) => {
+    console.log('선택된 사용자 ID:', userId);
+    setSelectedUserId(userId);
   }, []);
 
-  const handleDeactivate = useCallback(async (userId: number) => {
-    try {
-      await deactivateUser(userId);
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === userId ? { ...user, is_active: false } : user,
-        ),
-      );
-    } catch (error) { console.error('비활성화 실패', error); }
+  const handleCloseModal = useCallback(() => {
+    setSelectedUserId(null);
   }, []);
+
 
   return (
     <S.PageWrapper>
@@ -114,8 +108,7 @@ export default function UserManagePage() {
         ) : (
           <UserTable
             users={users}
-            onActivate={handleActivate}
-            onDeactivate={handleDeactivate}
+            onUserClick={handleUserClick}
           />
         )}
         
@@ -127,6 +120,15 @@ export default function UserManagePage() {
           />
         </S.PaginationWrapper>
       </S.CardBox>
+
+
+      {isModalOpen && (
+        <UserDetailModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          userId={selectedUserId}
+        />
+      )}
     </S.PageWrapper>
   );
 }

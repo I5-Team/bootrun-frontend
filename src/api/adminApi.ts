@@ -20,9 +20,10 @@ import {
 
 import type {
   UserApiParams,
+  UserDetail,
   UserListResponse,
 } from '../types/AdminUserType';
-import { getMockUsers } from '../data/mockAdminUserData';
+import { getMockUserDetail, getMockUsers } from '../data/mockAdminUserData';
 
 // 공통 API 지연 시간 (ms)
 const API_DELAY = 500;
@@ -146,4 +147,28 @@ export const activateUser = (userId: number): Promise<{ message: string }> => {
 export const deactivateUser = (userId: number): Promise<{ message: string }> => {
   console.log(`[Mock API] 사용자 ${userId} 비활성화`);
   return simulateFetch({ message: '사용자 비활성화 완료' }, 300);
+};
+
+/**
+ * GET /admin/users/{user_id}
+ * 특정 사용자 상세 정보 조회
+ */
+export const fetchUserDetail = (userId: number): Promise<UserDetail> => {
+  console.log(`[Mock API] 사용자 ${userId} 상세 정보 조회`);
+  
+  // ▼▼▼ 2. 수정: 동적 생성 함수 호출 ▼▼▼
+  const data = getMockUserDetail(userId);
+
+  if (!data) {
+    // 사용자를 찾지 못한 경우 404 에러 시뮬레이션
+    return new Promise((_, reject) =>
+      setTimeout(
+        () => reject(new Error('USER_NOT_FOUND')),
+        300
+      )
+    );
+  }
+  
+  return simulateFetch(data, 400);
+  
 };
