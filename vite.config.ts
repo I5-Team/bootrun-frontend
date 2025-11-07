@@ -6,4 +6,19 @@ import svgr from "vite-plugin-svgr"
 export default defineConfig({
   plugins: [react(), svgr()],
   base: '/bootrun-frontend/',
+  build:{
+    rollupOptions:{
+      output:{
+        manualChunks(id){
+          if(id.includes('node_modules')){
+            if(id.includes('recharts')){
+              return 'vendor_recharts';
+            }
+
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 })
