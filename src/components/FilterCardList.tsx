@@ -1,8 +1,9 @@
+import styled from "styled-components";
 import sampleCourses from "../assets/data/sampleCourses.json";
 import CourseCard from "../components/CourseCard/CourseCard";
-import  { StyledCardGrid } from "../pages/MainPage.styled";
 import { ROUTES } from "../router/RouteConfig";
 import { Link, useSearchParams } from "react-router-dom";
+import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
@@ -62,6 +63,56 @@ const difficultyLabel : Record<DifficultyType, string> = {
     advanced : '실무', 
 }
 
+// styled
+const StyledCardGrid = styled.ul`
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    
+    row-gap: clamp(2.4rem, 2vw, 4rem);
+    column-gap: clamp(1.4rem, 2vw, 2.5rem);
+
+    @media ${({ theme }) => theme.devices.laptop} {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+        grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+`;
+
+const StyledNoResult = styled.div`
+    width: 100%;
+    height: 36rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    
+    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-weight: 600;
+
+    svg {
+        width: 8.8rem;
+        height: 8.8rem;
+    }
+`;
+
+const NoResultPage = () => { 
+    return (
+        <StyledNoResult>
+            <SvgAlert/>
+            <p>찾는 조건의 강의가 없습니다.</p>
+        </StyledNoResult>
+    )
+}
+
 export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, priceTypeOpt, sortOpt, cardCount }: CourseFilter) => {
     const [searchParams] = useSearchParams();
 
@@ -115,33 +166,42 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
 
 
     return (
-        <StyledCardGrid>
-            { refinedCourseList
-            .map((course) => (
-                <Link
-                    key={course.id}
-                    to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
-                    aria-label={`${course.title} 강의 상세 보기`}
-                    >
-                    <CourseCard
-                        thumbnail={course.thumbnail_url}
-                        tags={[
-                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                            {'label': categoryLabel[course.category_type] || "기타"}, 
-                            {'label': difficultyLabel[course.difficulty]},
-                        ]}
-                        title={course.title}
-                        teacherName={course.instructor_name}
-                        teacherRole={course.instructor_bio}
-                        teacherImage={course.instructor_image}
-                        description={course.description}
-                        price={course.price}
-                        onLike={() => console.log(course.title)}
-                    />
-                </Link>
-            ))
+        <>
+            {refinedCourseList.length === 0 
+            ? 
+            <NoResultPage/>
+            : 
+            <StyledCardGrid>
+                { refinedCourseList
+                .map((course) => (
+                    <Link
+                        key={course.id}
+                        to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
+                        aria-label={`${course.title} 강의 상세 보기`}
+                        >
+                        <CourseCard
+                            thumbnail={course.thumbnail_url}
+                            tags={[
+                                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                                {'label': categoryLabel[course.category_type] || "기타"}, 
+                                {'label': difficultyLabel[course.difficulty]},
+                            ]}
+                            title={course.title}
+                            teacherName={course.instructor_name}
+                            teacherRole={course.instructor_bio}
+                            teacherImage={course.instructor_image}
+                            description={course.description}
+                            price={course.price}
+                            onLike={() => console.log(course.title)}
+                        />
+                    </Link>
+                ))
+                }
+            </StyledCardGrid>
             }
-        </StyledCardGrid>
+            
+
+        </>
     )
 }
 
