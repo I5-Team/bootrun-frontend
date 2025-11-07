@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, type SetStateAction } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,21 +6,20 @@ import Tag from "../components/Tag";
 import Button from "../components/Button";
 import SvgReset from "../assets/icons/icon-reset.svg?react";
 
-type FilterFormProps = {
+// type
+type FilterDataType = {
     label: string,
     queryName: string,
     options: {label: string, value: string}[];
 }
 
-type QueryParams = {
-    [key:string]: string[];
-}
-
-type SelectedState = {
-    options: QueryParams;
-    names: string[];
+type SelectedTag = {
+    queryName: string;
+    label: string;
+    value: string;
 };
 
+// styled
 const StyledFilterForm = styled.form`
     width: 100%;
     border-block: 0.2rem solid ${({ theme }) => theme.colors.gray200};
@@ -95,16 +94,38 @@ const StyledTagWrapper = styled.div`
     margin-bottom: 5.2rem;
 `;
 
-const FilterTags = ({ selected, setSelected }: { 
-    selected: SelectedState, 
-    setSelected: React.Dispatch<React.SetStateAction<SelectedState>>, 
+// function
+function matchLabelFromData({ filterData, queryName, value }: {
+    filterData: FilterDataType[],
+    queryName: string,
+    value: string,
+}) {
+    if (!filterData) return;
+
+    const label = filterData
+            .find(item => item.queryName === queryName)?.options
+            .find(options => options.value === value)?.label || "";
+    return label;
+};
+
+// components
+const FilterTags = ({ selectedTags, setSelectedTags }: {
+    selectedTags: SelectedTag[];
+    setSelectedTags: React.Dispatch<SetStateAction<SelectedTag[]>>
 }) => {
     const handleReset = () => {
-        setSelected({ options: {}, names: [] });
+        setSelectedTags([]);
     };
 
-    const handleDelete = () => {
-        // 
+    const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const targetLabel = e.currentTarget.dataset.label;
+        console.log(targetLabel);
+
+        setSelectedTags(prev => (
+            prev.some(tag => tag.label === targetLabel)
+                ? prev.filter(tag => tag.label !== targetLabel)
+                : prev
+        ));
     };
     
     return (
@@ -112,9 +133,9 @@ const FilterTags = ({ selected, setSelected }: {
             <Button variant="outline" iconSvg={<SvgReset/>} onClick={handleReset}>
                 필터 초기화
             </Button>
-            {selected.names.map(tagName => (
-                <button key={tagName} onClick={handleDelete}>
-                    <Tag variant="dark" hasDelete={true}>{tagName}</Tag>
+            {selectedTags.map(tag => (
+                <button key={tag.value} data-label={tag.label} onClick={handleDelete}>
+                    <Tag variant="dark" hasDelete={true}>{tag.label}</Tag>
                 </button>
             ))}
             
@@ -122,93 +143,57 @@ const FilterTags = ({ selected, setSelected }: {
     )
 };
 
-const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
+const FilterForm = ({ filterData, hasTags = true }: { 
+    filterData: FilterDataType[];
+    hasTags?: boolean;
+}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [isInitialized, setIsInitialized] = useState(false);
-    // const [selectedOptions, setSelectedOptions] = useState<QueryParams>({});
-    // const [selectedTagNames, setSelectedTagNames] = useState<string[]>([]);
-    const [selected, setSelected] = useState<SelectedState>({ options: {}, names: [] });
-
-
-    useEffect(() => {
-        const initialOptions: QueryParams = {};
-        const initialNames: string[] = [];
-
-        for (const key of searchParams.keys()) {
-            const values = searchParams.getAll(key);
-            initialOptions[key] = values;
-
-            values.forEach(value => {
-            const field = filterData.find(f => f.queryName === key);
-            if (field) {
-                const option = field.options.find(o => o.value === value);
-                if (option) initialNames.push(option.label);
-            }
-            });
-        }
-
-        setSelected({ options: initialOptions, names: initialNames });
-        setIsInitialized(true);
-    }, []);
+    const [selectedTags, setSelectedTags] = useState<SelectedTag[]>([]);
 
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, checked, dataset} = e.target;
-        const displayName = dataset.displayName;
-        if (!displayName) return;
+        const { name, value, checked } = e.target;
 
-        setSelected(prev => {
-            const currentOptions = prev.options[name] || [];
-            const newOptions = checked
-                ? [...currentOptions, value]
-                : currentOptions.filter(optValue => optValue !== value);
+        const label = matchLabelFromData({ filterData, queryName: name, value });
+        if(!label) return;
 
-            const newNames = checked
-            ? [...prev.names, displayName]
-            : prev.names.filter(name => name !== displayName);
-
-            return { options: { ...prev.options, [name]: newOptions }, names: newNames };
-            
-        })
-
-        // setSelectedOptions(prev => {
-        //     const currentOptions = prev[name] || [];
-        //     const newOptions = checked
-        //         ? [...currentOptions, value]
-        //         : currentOptions.filter(optValue => optValue !== value);
-        //     return {...prev, [name]: newOptions};
-        // })
-
-        // setSelectedTagNames(prev => (
-        //     checked
-        //     ? [...prev, displayName]
-        //     : prev.filter(name => name !== displayName)
-        // ))
+        setSelectedTags(prev => (
+            checked
+            ? prev.some(tag => tag.value === value)
+                ? prev
+                : [...prev, { queryName: name, value, label }]
+            : prev.filter(tag => tag.value !== value)
+        ))
     }
 
-    // useEffect(() => {
-    //     if (!isInitialized) return;
-
-    //     const params = new URLSearchParams();
-
-    //     Object.keys(selectedOptions).forEach(key => {
-    //         selectedOptions[key].forEach(value => {
-    //             params.append(key, value);
-    //         })
-    //     })
-    //     setSearchParams(params);
-    // }, [selectedOptions, isInitialized]);
+    useEffect(() => {
+        for (const key of searchParams.keys()) {
+            const values = searchParams.getAll(key);
+            values.forEach(value => {
+                const label = matchLabelFromData({ filterData, queryName: key, value});
+                if(!label) return;
+                
+                setSelectedTags(prev => (
+                    prev.some(tag => tag.value === value)
+                        ? prev
+                        : [...prev, { queryName: key, value, label }]
+                ));
+            })
+        }
+        setIsInitialized(true);
+    }, []);
 
     useEffect(() => {
         if (!isInitialized) return;
 
         const params = new URLSearchParams();
-        Object.keys(selected.options).forEach(key => {
-        selected.options[key].forEach(value => {
-            params.append(key, value);
+        selectedTags.forEach(({ queryName, value }) => {
+            params.append(queryName, value);
         });
-        });
+        
         setSearchParams(params);
-    }, [selected, isInitialized, setSearchParams]);
+
+    }, [selectedTags, isInitialized, setSearchParams]);
 
     return (
         <>
@@ -227,9 +212,10 @@ const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
                                             name={item.queryName}
                                             value={option.value}
                                             type="checkbox"
-                                            data-display-name={option.label}
                                             onChange={handleCheck}
-                                            checked={selected.options[item.queryName]?.includes(option.value) || false}
+                                            checked={
+                                                selectedTags.some(tag => tag.value === option.value)
+                                            }
                                             />
                                         <span>{option.label}</span>
                                     </label>
@@ -240,7 +226,12 @@ const FilterForm = ({ filterData }: { filterData: FilterFormProps[] }) => {
                     </StyledFieldset>              
                 ))}
             </StyledFilterForm>
-            <FilterTags selected={selected} setSelected={setSelected}/>          
+            { hasTags &&
+                <FilterTags
+                    selectedTags={selectedTags} 
+                    setSelectedTags={setSelectedTags}
+                />          
+            }
     </>
     )
 }
