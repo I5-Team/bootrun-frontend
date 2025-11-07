@@ -47,7 +47,6 @@ const SectionHead = ({ title }: { title:string }) => {
 const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     const { isLaptop } = useMediaQuery();
     const cardCount = isLaptop ? 4 : 3;
-    console.log(cardCount);
 
     const titleByType : Record<CourseType, string> = {
         'boost_community' : "부스트 커뮤니티에서 소통하며 학습",

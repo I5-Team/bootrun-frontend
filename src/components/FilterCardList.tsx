@@ -140,7 +140,6 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
         = priceTypeOpt || (priceTypeParam.length > 0 ? priceTypeParam : null);
     const keywordFilter 
         = keywordParam.toLowerCase().split(/\s+/).filter(Boolean);
-    console.log(courseTypeFilter);
 
     // refine
     const courseList = sampleCourses as CourseData[];

@@ -131,7 +131,6 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
 
     const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
         const targetLabel = e.currentTarget.dataset.label;
-        console.log(targetLabel);
 
         setSelectedTags(prev => (
             prev.some(tag => tag.label === targetLabel)
