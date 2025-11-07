@@ -18,6 +18,12 @@ import {
   mockAdminSettings,
 } from '../data/mockAdminData';
 
+import type {
+  UserApiParams,
+  UserListResponse,
+} from '../types/AdminUserType';
+import { getMockUsers } from '../data/mockAdminUserData';
+
 // 공통 API 지연 시간 (ms)
 const API_DELAY = 500;
 
@@ -109,4 +115,35 @@ export const updateSettings = (
   // 실제로는 mockAdminSettings를 업데이트해야 함
   const updatedSettings = { ...mockAdminSettings, ...newSettings };
   return simulateFetch(updatedSettings, 600);
+};
+
+
+/**
+ * GET /admin/users
+ * 사용자 목록 조회 (필터링, 페이지네이션)
+ */
+export const fetchUsers = (
+  params: UserApiParams,
+): Promise<UserListResponse> => {
+  // 목업 데이터 함수를 호출하여 실제 필터링/페이지네이션 흉내
+  const data = getMockUsers(params);
+  return simulateFetch(data, 500);
+};
+
+/**
+ * PATCH /admin/users/{user_id}/activate
+ * 사용자 활성화
+ */
+export const activateUser = (userId: number): Promise<{ message: string }> => {
+  console.log(`[Mock API] 사용자 ${userId} 활성화`);
+  return simulateFetch({ message: '사용자 활성화 완료' }, 300);
+};
+
+/**
+ * PATCH /admin/users/{user_id}/deactivate
+ * 사용자 비활성화
+ */
+export const deactivateUser = (userId: number): Promise<{ message: string }> => {
+  console.log(`[Mock API] 사용자 ${userId} 비활성화`);
+  return simulateFetch({ message: '사용자 비활성화 완료' }, 300);
 };
