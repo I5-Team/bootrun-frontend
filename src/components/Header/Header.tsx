@@ -19,12 +19,13 @@ import SvgMemo from "../../assets/icons/icon-memo.svg?react";
 import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 import SvgChapter from "../../assets/icons/icon-chapter.svg?react";
+import SvgSearch from "../../assets/icons/icon-search.svg?react";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
-import { SearchForm, SearchOpenBtn } from "./SearchForm.tsx";
+import SearchForm from "../SearchForm.tsx";
 
 const HeaderLogo = () => {
     return(
@@ -43,6 +44,27 @@ const NavList = () => {
         </StyledNavList>
     )
 }
+
+const SearchOpenBtn = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
+
+    const handleOpenSearch = () => {
+        navigate(ROUTES.LECTURE_LIST_SEARCH);
+    }
+
+    return (
+        <ButtonIcon 
+            ariaLabel="검색창 열기"
+            active={isActive}
+            onClick={handleOpenSearch}
+        >
+            <SvgSearch/>
+        </ButtonIcon>
+    )
+}
+
 
 const MenuOpenBtn = () => {
     return (

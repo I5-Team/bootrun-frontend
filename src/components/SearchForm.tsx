@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../router/RouteConfig.ts";
 
-import { StyledIconBtn } from "./Header.styled.ts";
-import SvgSearch from "../../assets/icons/icon-search.svg?react";
-import ButtonIcon from "../ButtonIcon.tsx";
+
+import SvgSearch from "../assets/icons/icon-search.svg?react";
+import { ROUTES } from "../router/RouteConfig.ts";
+import { StyledIconBtn } from "./Header/Header.styled.ts";
 
 const StyledSearchForm = styled.form`
     display: flex;
@@ -24,6 +24,11 @@ const StyledSearchForm = styled.form`
 
     &:focus-within {
         outline: 0.2rem solid ${({ theme }) => theme.colors.primary300};
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+        width: 100%;
+        margin-top: 2.4rem;
     }
 `;
 
@@ -97,12 +102,5 @@ export const SearchForm = () => {
     )
 }
 
-export const SearchOpenBtn = () => {
-    return (
-        <ButtonIcon ariaLabel="검색창 열기">
-            <SvgSearch/>
-        </ButtonIcon>
-    )
-}
 
 export default SearchForm;
