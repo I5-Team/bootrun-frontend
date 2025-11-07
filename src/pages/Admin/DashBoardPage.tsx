@@ -78,7 +78,6 @@ export default function DashboardPage() {
         <S.PageHeader>
           <S.PageTitle>관리자 대시보드</S.PageTitle>
         </S.PageHeader>
-        {/* 6. 실제 로딩 스피너 사용 */}
         <S.LoadingContainer>
           <LoadingSpinner />
         </S.LoadingContainer>
