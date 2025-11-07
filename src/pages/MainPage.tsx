@@ -6,7 +6,7 @@ import SvgDA from "../assets/icons/icon-category-DA.svg?react";
 import SvgAI from "../assets/icons/icon-category-AI.svg?react";
 import SvgDesign from "../assets/icons/icon-category-design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
 import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper } from "./MainPage.styled";
 import FilterCardList, { type CourseType } from "../components/FilterCardList";
@@ -15,9 +15,13 @@ import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 
-const CategoryBtn = ({ icon, title }: { icon: React.ReactNode, title: string }) => {
+const CategoryBtn = ({ icon, title, onClick }: { 
+    icon: React.ReactNode, 
+    title: string,
+    onClick?: () => void
+}) => {
     return (
-        <StyledCategoryBtn>
+        <StyledCategoryBtn onClick={onClick}>
             <StyledCategoryIcon>
                 {icon}
             </StyledCategoryIcon>
@@ -64,6 +68,12 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
 
 export default function MainPage() {
     const { isTablet } = useMediaQuery();
+    const navigate = useNavigate();
+
+    const goCategoryList = (categry?: string) => {
+        const queryString = categry ? `?category=${categry}` : "";
+        navigate(ROUTES.LECTURE_LIST + queryString);
+    }
 
     return (
         <>
@@ -73,13 +83,34 @@ export default function MainPage() {
             </StyledHeroWrapper>
 
             <StyledCategoryList role="group" aria-label="카테고리별 강의 보러가기:">
-                <CategoryBtn icon={<SvgAll/>} title="전체 보기"/>
-                <CategoryBtn icon={<SvgFE/>} title="프론트엔드" />
-                <CategoryBtn icon={<SvgBE/>} title="백엔드" />
-                <CategoryBtn icon={<SvgDA/>} title="데이터 분석" />
-                <CategoryBtn icon={<SvgAI/>} title="AI" />
-                <CategoryBtn icon={<SvgDesign/>} title="디자인" />
-                <CategoryBtn icon={<SvgMore/>} title="기타" />
+                <CategoryBtn icon={<SvgAll/>} 
+                    title="전체 보기" 
+                    onClick={() => goCategoryList()}
+                />
+                <CategoryBtn icon={<SvgFE/>} 
+                    title="프론트엔드"
+                    onClick={() => goCategoryList("frontend")}
+                />
+                <CategoryBtn icon={<SvgBE/>} 
+                    title="백엔드"
+                    onClick={() => goCategoryList("backend")}
+                />
+                <CategoryBtn icon={<SvgDA/>}
+                    title="데이터 분석"
+                    onClick={() => goCategoryList("data_analysis")}
+                />
+                <CategoryBtn icon={<SvgAI/>}
+                    title="AI"
+                    onClick={() => goCategoryList("ai")}
+                />
+                <CategoryBtn icon={<SvgDesign/>}
+                    title="디자인"
+                    onClick={() => goCategoryList("design")}
+                />
+                <CategoryBtn icon={<SvgMore/>}
+                    title="기타"
+                    onClick={() => goCategoryList("other")}
+                />
             </StyledCategoryList>
 
             <SectionByType courseType="boost_community"/>
