@@ -4,6 +4,7 @@ import CourseCard from "../components/CourseCard/CourseCard";
 import { ROUTES } from "../router/RouteConfig";
 import { Link, useSearchParams } from "react-router-dom";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
+import { useEffect } from "react";
 
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
@@ -120,7 +121,15 @@ const NoResultPage = () => {
     )
 }
 
-export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, priceTypeOpt, sortOpt, cardCount }: CourseFilter) => {
+export const FilterCardList = ({ 
+    courseTypeOpt, 
+    categoryOpt, 
+    difficultyOpt, 
+    priceTypeOpt, 
+    sortOpt, 
+    cardCount, 
+    onCountChange,
+}: CourseFilter & { onCountChange?: (count: number) => void }  ) => {
     const [searchParams] = useSearchParams();
 
     // query params
@@ -171,6 +180,9 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
         ? sortedCourseList.slice(0, cardCount)
         : sortedCourseList;
 
+    useEffect(() => {
+        onCountChange?.(refinedCourseList.length);
+    }, [refinedCourseList, onCountChange]);
 
     return (
         <div className="card-list">
@@ -206,8 +218,6 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
                 }
             </StyledCardGrid>
             }
-            
-
         </div>
     )
 }

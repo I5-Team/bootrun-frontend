@@ -3,6 +3,7 @@ export const ROUTES = {
     LOGIN: '/login',                            // 로그인 페이지
     SIGNUP: '/signup',                          // 회원가입 페이지
     LECTURE_LIST: '/lectures',                  // 강의 목록 페이지
+    LECTURE_LIST_SEARCH: '/lectures/search',           // 강의 목록  검색 페이지
     LECTURE_DETAIL: '/lectures/:id',            // 강의 상세 페이지
     LECTURE_PAYMENT: '/lectures/:id/payment',   // 강의 결제 페이지
     LECTURE_PAYMENT_RESULT: '/lectures/:id/payment/result', // 강의 결제 완료 페이지

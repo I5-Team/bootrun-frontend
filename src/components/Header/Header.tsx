@@ -4,8 +4,6 @@ import {
   StyledLogo,
   StyledActionList,
   StyledNavList,
-  StyledSearchForm,
-  StyledSearchInput,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
@@ -15,7 +13,6 @@ import Button from "../Button.tsx";
 import Profile from "../Profile.tsx";
 
 import logo from "../../assets/logos/logo-typo.svg";
-import SvgSearch from "../../assets/icons/icon-search.svg?react";
 import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
 import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
 import SvgMemo from "../../assets/icons/icon-memo.svg?react";
@@ -27,6 +24,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
+import { SearchForm, SearchOpenBtn } from "./SearchForm.tsx";
 
 const HeaderLogo = () => {
     return(
@@ -43,26 +41,6 @@ const NavList = () => {
             <li><Link to="*">부트런 소개</Link></li> 
             <li><Link to="*">수강생 이야기</Link></li>
         </StyledNavList>
-    )
-}
-
-const SearchForm = () => {
-    return (
-        <StyledSearchForm>
-            <label htmlFor="search" className="sr-only">검색어 입력</label>
-            <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledIconBtn type="submit" aria-label="검색 실행">
-                <SvgSearch/>
-            </StyledIconBtn>
-        </StyledSearchForm>
-    )
-}
-
-const SearchOpenBtn = () => {
-    return (
-        <ButtonIcon ariaLabel="검색창 열기">
-            <SvgSearch/>
-        </ButtonIcon>
     )
 }
 
@@ -202,10 +180,10 @@ export default function Header() {
     const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
     
     const renderHeader = () => {
-    if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
-    if (isLectureRoomPage) return <LectureRoomHeader />;
-    return <DefaultHeader />;
-};
+        if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
+        if (isLectureRoomPage) return <LectureRoomHeader />;
+        return <DefaultHeader />;
+    };
     return (
         <StyledHeader>
             {renderHeader()}
