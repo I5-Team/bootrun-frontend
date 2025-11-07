@@ -28,7 +28,12 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
-  button, a {
+  button, 
+  a, 
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  option {
     &:focus-visible {
       outline-offset: 0.1rem;
       outline: 0.2rem solid ${({ theme }) => theme.colors.focus};

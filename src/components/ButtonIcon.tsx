@@ -7,12 +7,14 @@ type ButtonProps = {
     ariaLabel: string;
     variant?: ButtonVariant;
     hasAlert?: boolean;
+    active?: boolean;
     onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 };
 
 const StyledButtonIcon = styled.button<{
     $variant?: ButtonVariant;
     $hasAlert: boolean;
+    $active: boolean;
 }>`
     width: auto;
     width: 4.2rem;
@@ -27,41 +29,41 @@ const StyledButtonIcon = styled.button<{
     position: relative;
 
     svg {
-            width: 2.4rem;
-            height: 2.4rem;
-            vertical-align: bottom;
-            transition: fill 0.1s;
-        }
+        width: 2.4rem;
+        height: 2.4rem;
+        vertical-align: bottom;
+        transition: fill 0.1s;
+    }
+
+    color: ${({ theme }) => theme.colors.gray400};
+    svg path {
+        fill: currentColor !important;
+    }
+
 
     &:hover {
         cursor: pointer;
-        
+
         ${(p) => 
             p.$variant !== "discord" &&
             css`
                 background-color: ${({ theme }) => theme.colors.primary100};
-                svg path {
-                    fill: ${({ theme }) => theme.colors.primary300}
-                }
+                color: ${({ theme }) => theme.colors.primary300}; 
             `
         }
     }
 
-    ${(p) => 
-        p.$variant === "dark" &&
+    ${({ $variant, $active,  theme }) => 
+        $variant === "dark" &&
         css`
-            svg path {
-                fill: ${({ theme }) => theme.colors.gray400};
-            }
+            color: ${$active ? theme.colors.primary300 : theme.colors.gray400};
         `
     }
 
-    ${(p) => 
-        p.$variant === "light" &&
+    ${({ $variant, $active,  theme }) => 
+        $variant === "light" &&
         css`
-            svg path {
-                fill: ${({ theme }) => theme.colors.gray300};
-            }
+            color: ${$active ? theme.colors.primary300 : theme.colors.gray300}; 
         `
     }
 
@@ -70,9 +72,7 @@ const StyledButtonIcon = styled.button<{
         css`
             position: relative;
             background-color: ${({ theme }) => theme.colors.gray400};
-            svg path {
-                fill: ${({ theme }) => theme.colors.white};
-            }
+            color: ${({ theme }) => theme.colors.white}; 
 
             &::before,
             &::after {
@@ -139,6 +139,7 @@ const ButtonIcon:React.FC<ButtonProps> = ({
     ariaLabel,
     variant = "dark",
     hasAlert = false,
+    active = false,
     onClick,
 }: ButtonProps) =>  {
     return (
@@ -146,6 +147,7 @@ const ButtonIcon:React.FC<ButtonProps> = ({
             $variant={variant}            
             $hasAlert={hasAlert}
             aria-label={ariaLabel}     
+            $active={active}
             onClick={onClick}
         >
             {children}

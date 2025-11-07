@@ -21,6 +21,7 @@ import MainPage from "../pages/MainPage";
 import MyPageLayout from "../layouts/MypageLayout";
 import OrderHistorySection from "../pages/MyPage/OrderHistorySection";
 import AccountSection from "../pages/MyPage/AccountSection";
+import LectureSearchPage from "../pages/Lecture/LectureSearchPage";
 
 
 
@@ -45,7 +46,8 @@ export default function AppRouter() {
                     <Route path={ROUTES.HOME} element={<MainPage />} />
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
-                    <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />  
+                    <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
+                    <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />  
                     <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />  
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
