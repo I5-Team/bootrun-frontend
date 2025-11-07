@@ -131,15 +131,16 @@ export const FilterCardList = ({ courseTypeOpt, categoryOpt, difficultyOpt, pric
     const keywordParam = searchParams.get('keyword') || '';
 
     const courseTypeFilter 
-        = courseTypeOpt || courseTypeParam.length > 0 ? courseTypeParam : null;
+        = courseTypeOpt || (courseTypeParam.length > 0 ? courseTypeParam : null);
     const categoryFilter 
-        = categoryOpt || categoryParam.length > 0 ? categoryParam : null;
+        = categoryOpt || (categoryParam.length > 0 ? categoryParam : null);
     const difficultyFilter 
-        = difficultyOpt || difficultyParam.length > 0 ? difficultyParam : null;
+        = difficultyOpt || (difficultyParam.length > 0 ? difficultyParam : null);
     const priceTypeFilter 
-        = priceTypeOpt || priceTypeParam.length > 0 ? priceTypeParam : null;
+        = priceTypeOpt || (priceTypeParam.length > 0 ? priceTypeParam : null);
     const keywordFilter 
         = keywordParam.toLowerCase().split(/\s+/).filter(Boolean);
+    console.log(courseTypeFilter);
 
     // refine
     const courseList = sampleCourses as CourseData[];
