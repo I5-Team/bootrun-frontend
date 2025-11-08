@@ -21,6 +21,7 @@ const filterData = [
         label: "상태",
         queryName: "is_active",
         options: [
+            { label: "전체", value: "all"},
             { label: "학습 가능", value: "true"},
             { label: "만료", value: "false"},
         ],
@@ -29,6 +30,7 @@ const filterData = [
         label: "학습",
         queryName: "progress",
         options: [
+            { label: "전체", value: "all"},
             { label: "학습 예정", value: "not_started"},
             { label: "학습중", value: "in_progress"},
             { label: "학습 완료", value: "completed"},
@@ -38,6 +40,7 @@ const filterData = [
         label: "유형",
         queryName: "courseType",
         options: [
+            { label: "전체", value: "all"},
             { label: "VOD", value: "vod"},
             { label: "부스트 커뮤니티", value: "boost_community"},
             { label: "KDC", value: "kdc"},
@@ -48,7 +51,7 @@ const filterData = [
     return (
         <>
             <StyledTitle>내 강의 목록</StyledTitle>
-            <FilterForm filterData={filterData}/>
+            <FilterForm filterData={filterData} inputType="radio" hasTags={false} />
             <FilterMyCourseList/>
         </>
     );

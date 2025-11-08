@@ -76,14 +76,16 @@ const StyledFilterItem = styled.li`
         font-weight: 400;
     }
 
-    input[type="checkbox"] {
+    input[type="checkbox"],
+    input[type="radio"] {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
     }
 
-    input[type="checkbox"]:checked + span {
+    input[type="checkbox"]:checked + span,
+    input[type="radio"]:checked + span {
         font-weight: 700;
         color: ${({ theme }) => theme.colors.primary300};
     }
@@ -155,15 +157,16 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
     )
 };
 
-const FilterForm = ({ filterData, hasTags = true }: { 
+const FilterForm = ({ filterData, inputType = "checkbox", hasTags = true }: { 
     filterData: FilterDataType[];
+    inputType?: "checkbox" | "radio"
     hasTags?: boolean;
 }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [isInitialized, setIsInitialized] = useState(false);
     const [selectedTags, setSelectedTags] = useState<SelectedTag[]>([]);
 
-    const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, checked } = e.target;
 
         const label = matchLabelFromData({ filterData, queryName: name, value });
@@ -176,6 +179,17 @@ const FilterForm = ({ filterData, hasTags = true }: {
                 : [...prev, { queryName: name, value, label }]
             : prev.filter(tag => tag.value !== value)
         ))
+    }
+
+    const handleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        const label = matchLabelFromData({ filterData, queryName: name, value });
+        if(!label) return;
+
+        setSelectedTags(prev => (
+            [...prev.filter(tag => tag.queryName !== name), {queryName: name, value, label }]
+        ));
     }
 
     useEffect(() => {
@@ -200,7 +214,9 @@ const FilterForm = ({ filterData, hasTags = true }: {
 
         const params = new URLSearchParams();
         selectedTags.forEach(({ queryName, value }) => {
-            params.append(queryName, value);
+            if (value !== "all") {
+                params.append(queryName, value);
+            }
         });
         
         setSearchParams(params);
@@ -219,16 +235,31 @@ const FilterForm = ({ filterData, hasTags = true }: {
                             {item.options.map((option) => (
                                 <StyledFilterItem key={option.value}>
                                     <label htmlFor={option.value}>
+                                        { inputType === "checkbox"
+                                        ? 
                                         <input
                                             id={option.value} 
                                             name={item.queryName}
                                             value={option.value}
                                             type="checkbox"
-                                            onChange={handleCheck}
+                                            onChange={handleCheckBox}
                                             checked={
                                                 selectedTags.some(tag => tag.value === option.value)
                                             }
-                                            />
+                                        />
+                                        :
+                                        <input
+                                            id={option.value} 
+                                            name={item.queryName}
+                                            value={option.value}
+                                            type="radio"
+                                            onChange={handleRadio}
+                                            checked={
+                                              selectedTags.some(tag => tag.queryName === item.queryName && tag.value === option.value) ||
+                                              (searchParams.getAll(item.queryName).length === 0 && option.value === 'all')
+                                            }
+                                        />
+                                        }
                                         <span>{option.label}</span>
                                     </label>
                                 </StyledFilterItem>

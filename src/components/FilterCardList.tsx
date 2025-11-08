@@ -252,22 +252,20 @@ export const FilterMyCourseList = ({
     const enrollmentList = sampleEnrollmentMy.items as EnrollmentItem[];
 
     // query params
-    const courseTypeParam = searchParams.getAll('courseType') as CourseType[];
-    const isActiveParam = searchParams.getAll('is_active');
-    const progressParam = searchParams.getAll('progress');
+    const courseTypeParam = searchParams.get('courseType');
+    const isActiveParam = searchParams.get('is_active');
+    const progressParam = searchParams.get('progress');
 
-    const courseTypeFilter = courseTypeParam.length > 0 ? courseTypeParam : null;
-    const isActiveFilter = isActiveParam.length > 0 ? isActiveParam : null;
-    const progressFilter = progressParam.length > 0 ? progressParam : null;
+    const courseTypeFilter = courseTypeParam !== "all" ? courseTypeParam : null;
+    const isActiveFilter = isActiveParam !== "all" ? isActiveParam : null;
+    const progressFilter = progressParam !== "all" ? progressParam : null;
 
     // refine
     const filteredList = [...enrollmentList].filter(course => { 
-        const matchCourseType = !courseTypeFilter || courseTypeFilter.includes(course.course_type);
-        const matchIsActive = !isActiveFilter || isActiveFilter.includes(course.days_until_expiry ? "true" : "false");
+        const matchCourseType = !courseTypeFilter || courseTypeFilter === course.course_type;
+        const matchIsActive = !isActiveFilter ||  isActiveFilter === (course.days_until_expiry ? "true" : "false");
         const matchProgress = !progressFilter! 
-        || progressFilter.includes(
-            course.progress_rate === 100 ? "completed" 
-                : course.progress_rate > 0 ? "in_progress" : "not_started");
+        || progressFilter === (course.progress_rate === 100 ? "completed" : course.progress_rate > 0 ? "in_progress" : "not_started");
 
         return matchCourseType && matchIsActive && matchProgress;
     })
