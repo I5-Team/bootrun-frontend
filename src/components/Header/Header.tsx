@@ -4,8 +4,6 @@ import {
   StyledLogo,
   StyledActionList,
   StyledNavList,
-  StyledSearchForm,
-  StyledSearchInput,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
@@ -15,18 +13,19 @@ import Button from "../Button.tsx";
 import Profile from "../Profile.tsx";
 
 import logo from "../../assets/logos/logo-typo.svg";
-import SvgSearch from "../../assets/icons/icon-search.svg?react";
 import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
 import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
 import SvgMemo from "../../assets/icons/icon-memo.svg?react";
 import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 import SvgChapter from "../../assets/icons/icon-chapter.svg?react";
+import SvgSearch from "../../assets/icons/icon-search.svg?react";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
+import SearchForm from "../SearchForm.tsx";
 
 const HeaderLogo = () => {
     return(
@@ -46,25 +45,26 @@ const NavList = () => {
     )
 }
 
-const SearchForm = () => {
-    return (
-        <StyledSearchForm>
-            <label htmlFor="search" className="sr-only">검색어 입력</label>
-            <StyledSearchInput id="search" type="search" placeholder="검색어를 입력하세요."/>
-            <StyledIconBtn type="submit" aria-label="검색 실행">
-                <SvgSearch/>
-            </StyledIconBtn>
-        </StyledSearchForm>
-    )
-}
-
 const SearchOpenBtn = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
+
+    const handleOpenSearch = () => {
+        navigate(ROUTES.LECTURE_LIST_SEARCH);
+    }
+
     return (
-        <ButtonIcon ariaLabel="검색창 열기">
+        <ButtonIcon 
+            ariaLabel="검색창 열기"
+            active={isActive}
+            onClick={handleOpenSearch}
+        >
             <SvgSearch/>
         </ButtonIcon>
     )
 }
+
 
 const MenuOpenBtn = () => {
     return (
@@ -202,10 +202,10 @@ export default function Header() {
     const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
     
     const renderHeader = () => {
-    if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
-    if (isLectureRoomPage) return <LectureRoomHeader />;
-    return <DefaultHeader />;
-};
+        if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
+        if (isLectureRoomPage) return <LectureRoomHeader />;
+        return <DefaultHeader />;
+    };
     return (
         <StyledHeader>
             {renderHeader()}

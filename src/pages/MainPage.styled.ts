@@ -120,26 +120,3 @@ export const StyledShowMore = styled.span`
         width: auto;
     }
 `;
-
-// cardGrid
-export const StyledCardGrid = styled.ul`
-    width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    
-    row-gap: clamp(2.4rem, 2vw, 4rem);
-    column-gap: clamp(1.4rem, 2vw, 2.5rem);
-
-    @media ${({ theme }) => theme.devices.laptop} {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    @media ${({ theme }) => theme.devices.tablet} {
-        grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
-    }
-
-    @media ${({ theme }) => theme.devices.mobile} {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
-`;

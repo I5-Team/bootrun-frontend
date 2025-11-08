@@ -16,7 +16,7 @@ type CourseCardProps =
 
 type HeadProps = {
   thumbnail: string;
-  tags: Array<{ label: string; variant?: 'dark' | 'primary' }>;
+  tags: Array<{ label: string; variant?: 'dark' | 'light' }>;
   title: string;
   onLike?: () => void;
 }
