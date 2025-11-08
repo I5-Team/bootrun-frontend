@@ -21,6 +21,7 @@ import MainPage from "../pages/MainPage";
 import MyPageLayout from "../layouts/MypageLayout";
 import OrderHistorySection from "../pages/MyPage/OrderHistorySection";
 import AccountSection from "../pages/MyPage/AccountSection";
+import LectureRoomLayout from "../layouts/LectureRoomLayout";
 
 
 
@@ -45,12 +46,11 @@ export default function AppRouter() {
                     <Route path={ROUTES.HOME} element={<MainPage />} />
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
-                    <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />  
-                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />  
+                    <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
+                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
                     <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
-                    <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
                     {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
 
                     {/* 관리자용 페이지 개발 후에는 일바 */}
@@ -64,6 +64,10 @@ export default function AppRouter() {
                         <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} /> {/* /mypage/orders */}
                         <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} /> {/* /mypage/account */}
                     </Route>
+                </Route>
+                {/* LectureRoom 전용 레이아웃 */}
+                <Route element={<LectureRoomLayout/>}>
+                    <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
                 </Route>
                 {/* 404 페이지 */}
                 <Route element={<ErrorLayout/>}>
