@@ -1,10 +1,16 @@
 import styled from "styled-components";
-import sampleCourses from "../assets/data/sampleCourses.json";
-import CourseCard from "../components/CourseCard/CourseCard";
+
 import { ROUTES } from "../router/RouteConfig";
 import { Link, useSearchParams } from "react-router-dom";
-import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 import { useEffect } from "react";
+
+import sampleCourses from "../assets/data/sampleCourses.json";
+import sampleEnrollmentMy from "../assets/data/sampleEnrollmentMy.json";
+
+import CourseCard from "../components/CourseCard/CourseCard";
+import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
+
+
 
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
@@ -15,23 +21,41 @@ export type PriceType = 'free' | 'paid' | 'national_support';
 export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
 export type CourseData = {
-    "id": number,
-    "category_type": CategoryType,
-    "course_type": CourseType,
-    "price_type": PriceType,
-    "difficulty": DifficultyType,
-    "title": string,
-    "description": string,
-    "thumbnail_url": string,
-    "instructor_name": string,
-    "instructor_bio": string,
-    "instructor_image": string,
-    "price": number,
-    "faq"?: string,
-    "enrollment_count"?: number,
-    "is_published": boolean,
-    "created_at": string,
-    "updated_at": string,
+    id: number,
+    category_type: CategoryType,
+    course_type: CourseType,
+    price_type: PriceType,
+    difficulty: DifficultyType,
+    title: string,
+    description: string,
+    thumbnail_url: string,
+    instructor_name: string,
+    instructor_bio: string,
+    instructor_image: string,
+    price: number,
+    faq?: string,
+    enrollment_count?: number,
+    is_published: boolean,
+    created_at: string,
+    updated_at: string,
+}
+
+export type EnrollmentItem = {
+    id: number;
+    user_id: number;
+    course_id: number;
+    course_type: CourseType,
+    course_title: string;
+    course_thumbnail: string;
+    category_name: CategoryType;
+    difficulty: DifficultyType;
+    enrolled_at: string;
+    expires_at: string;
+    is_active: boolean;
+    progress_rate: number;
+    days_until_expiry: number;
+    total_lectures: number;
+    completed_lectures: number;
 }
 
 export type CourseFilter = {
@@ -112,6 +136,7 @@ const StyledNoResult = styled.div`
     }
 `;
 
+// components
 const NoResultPage = () => { 
     return (
         <StyledNoResult>
@@ -221,5 +246,87 @@ export const FilterCardList = ({
         </div>
     )
 }
+
+export const FilterMyCourseList = ({ 
+    sortOpt, 
+    onCountChange,
+}: { sortOpt?: 'DATE_ASC' | 'DATE_DESC', onCountChange?: (count: number) => void }) => {
+    const [searchParams] = useSearchParams();
+    // DATA 
+    // /enrollments/my
+    const enrollmentList = sampleEnrollmentMy.items as EnrollmentItem[];
+
+    // query params
+    const courseTypeParam = searchParams.getAll('courseType') as CourseType[];
+    const isActiveParam = searchParams.getAll('is_active');
+    const progressParam = searchParams.getAll('progress');
+
+    const courseTypeFilter = courseTypeParam.length > 0 ? courseTypeParam : null;
+    const isActiveFilter = isActiveParam.length > 0 ? isActiveParam : null;
+    const progressFilter = progressParam.length > 0 ? progressParam : null;
+
+    // refine
+    const filteredList = [...enrollmentList].filter(course => { 
+        const matchCourseType = !courseTypeFilter || courseTypeFilter.includes(course.course_type);
+        const matchIsActive = !isActiveFilter || isActiveFilter.includes(course.days_until_expiry ? "true" : "false");
+        const matchProgress = !progressFilter! 
+        || progressFilter.includes(
+            course.progress_rate === 100 ? "completed" 
+                : course.progress_rate > 0 ? "in_progress" : "not_started");
+
+        return matchCourseType && matchIsActive && matchProgress;
+    })
+
+    const sortedList = [...filteredList].sort((a, b) => {
+        if (sortOpt === "DATE_ASC") {
+            return a.enrolled_at.localeCompare(b.enrolled_at);
+        } else {
+            return b.enrolled_at.localeCompare(a.enrolled_at);
+        }
+    })
+
+    const refinedList = sortedList;
+
+    useEffect(() => {
+        onCountChange?.(refinedList.length);
+    }, [refinedList, onCountChange]);
+
+    return (
+        <div className="card-list">
+            {refinedList.length === 0 
+            ? 
+            <NoResultPage/>
+            : 
+            <StyledCardGrid>
+                { refinedList
+                .map((course) => (
+                    <Link
+                        key={course.id}
+                        to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
+                        aria-label={`${course.course_title} 강의 상세 보기`}
+                        >
+                        <CourseCard variant="myLecture"
+                            thumbnail={course.course_thumbnail}
+                            title={course.course_title}
+                            tags={[
+                                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                                {'label': categoryLabel[course.category_name] || "기타"}, 
+                                {'label': difficultyLabel[course.difficulty]},
+                            ]}
+                            value={course.completed_lectures || 0} 
+                            max={course.total_lectures || 0} 
+                            lectureId={course.course_id}
+                            isActive={Boolean(course.days_until_expiry)}
+                            isCompleted={course.progress_rate === 100 ? true : false}
+                        />
+                    </Link>
+                ))
+                }
+            </StyledCardGrid>
+            }
+        </div>
+    )
+}
+
 
 export default FilterCardList;

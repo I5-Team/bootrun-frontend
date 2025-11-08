@@ -33,6 +33,8 @@ type LectureContentProps = {
   value: number;
   max: number;
   lectureId: number;
+  isActive: boolean;
+  isCompleted: boolean;
 }
 
 const CardHead = ({ thumbnail, tags, title, onLike }: HeadProps) => {
@@ -97,11 +99,15 @@ const CardContentMyLecture = ({ value = 0, max = 1, lectureId }: LectureContentP
       navigate(path);
   }
 
+  const formatPercent = (percent: number) => {
+    return Math.round(percent * 100);
+  }
+
   return (
     <LectureContentWrapper>
         <ProgressWrapper>
           <ProgressBar value={value} max={max}/>
-          <span>{value}/{max}강 ({value/max}%)</span>
+          <span>{value}/{max}강 ({formatPercent(value/max)}%)</span>
         </ProgressWrapper>
         <ButtonList>
           <Button iconSvg={<SvgPlay/>} onClick={goLectureRoom}>학습하기</Button>
@@ -132,6 +138,8 @@ export const CourseCard: React.FC<CourseCardProps> = (props) => {
           value={props.value} 
           max={props.max} 
           lectureId={props.lectureId}
+          isActive={props.isActive || false}
+          isCompleted = {props.isCompleted || false}
       />}
     </CardContainer>
   );
