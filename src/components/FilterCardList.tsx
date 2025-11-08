@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
-import { ROUTES } from "../router/RouteConfig";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
 import sampleCourses from "../assets/data/sampleCourses.json";
@@ -218,27 +217,23 @@ export const FilterCardList = ({
             <StyledCardGrid>
                 { refinedCourseList
                 .map((course) => (
-                    <Link
+                    <CourseCard
                         key={course.id}
-                        to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
-                        aria-label={`${course.title} 강의 상세 보기`}
-                        >
-                        <CourseCard
-                            thumbnail={course.thumbnail_url}
-                            tags={[
-                                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                                {'label': categoryLabel[course.category_type] || "기타"}, 
-                                {'label': difficultyLabel[course.difficulty]},
-                            ]}
-                            title={course.title}
-                            teacherName={course.instructor_name}
-                            teacherRole={course.instructor_bio}
-                            teacherImage={course.instructor_image}
-                            description={course.description}
-                            price={course.price}
-                            onLike={() => console.log(course.title)}
-                        />
-                    </Link>
+                        id={course.id}
+                        thumbnail={course.thumbnail_url}
+                        tags={[
+                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                            {'label': categoryLabel[course.category_type] || "기타"}, 
+                            {'label': difficultyLabel[course.difficulty]},
+                        ]}
+                        title={course.title}
+                        teacherName={course.instructor_name}
+                        teacherRole={course.instructor_bio}
+                        teacherImage={course.instructor_image}
+                        description={course.description}
+                        price={course.price}
+                        onLike={() => console.log(course.title)}
+                    />
                 ))
                 }
             </StyledCardGrid>
@@ -300,26 +295,25 @@ export const FilterMyCourseList = ({
             <StyledCardGrid>
                 { refinedList
                 .map((course) => (
-                    <Link
+                    <CourseCard 
                         key={course.id}
-                        to={`${ROUTES.LECTURE_LIST}/${course.id}`} 
-                        aria-label={`${course.course_title} 강의 상세 보기`}
-                        >
-                        <CourseCard variant="myLecture"
-                            thumbnail={course.course_thumbnail}
-                            title={course.course_title}
-                            tags={[
-                                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                                {'label': categoryLabel[course.category_name] || "기타"}, 
-                                {'label': difficultyLabel[course.difficulty]},
-                            ]}
-                            value={course.completed_lectures || 0} 
-                            max={course.total_lectures || 0} 
-                            lectureId={course.course_id}
-                            isActive={Boolean(course.days_until_expiry)}
-                            isCompleted={course.progress_rate === 100 ? true : false}
-                        />
-                    </Link>
+                        id={course.id}
+                        variant="myLecture"
+                        thumbnail={course.course_thumbnail}
+                        title={course.course_title}
+                        tags={[
+                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                            {'label': categoryLabel[course.category_name] || "기타"}, 
+                            {'label': difficultyLabel[course.difficulty]},
+                        ]}
+
+                        value={course.completed_lectures || 0} 
+                        max={course.total_lectures || 0} 
+                        lectureId={course.course_id}
+                        
+                        isActive={course.days_until_expiry !== 0 ? true: false}
+                        isCompleted={course.progress_rate === 100 ? true : false}
+                    />
                 ))
                 }
             </StyledCardGrid>

@@ -29,9 +29,9 @@ const filterData = [
         label: "학습",
         queryName: "progress",
         options: [
-            { label: "학습전", value: "not_started"},
+            { label: "학습 예정", value: "not_started"},
             { label: "학습중", value: "in_progress"},
-            { label: "완강", value: "completed"},
+            { label: "학습 완료", value: "completed"},
         ],
     },
     {

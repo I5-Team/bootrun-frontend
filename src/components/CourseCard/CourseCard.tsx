@@ -2,10 +2,11 @@ import React from 'react';
 import Tag from '../Tag';
 import IconHeart from '../../assets/icons/icon-heart.svg?react';
 import Profile from '../Profile';
-import { ButtonList, CardContainer, ContentWrapper, DescriptionBox, LectureContentWrapper, LikeButton, Price, ProgressWrapper, TagList, TeacherDetails, TeacherInfo, TeacherName, TeacherRole, TeacherSection, ThumbnailImage, ThumbnailWrapper, Title } from './CourseCard.styled';
+import { ButtonList, CardArticle, CardHeadLink, ContentWrapper, DescriptionBox, LectureContentWrapper, LikeButton, Price, ProgressWrapper, TagList, TeacherDetails, TeacherInfo, TeacherName, TeacherRole, TeacherSection, ThumbnailImage, ThumbnailWrapper, Title } from './CourseCard.styled';
 import ProgressBar from '../ProgressBar';
 import Button from '../Button';
 import SvgPlay from "../../assets/icons/icon-play.svg?react";
+import SvgCertificate from "../../assets/icons/icon-certificate.svg?react";
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 
@@ -15,10 +16,12 @@ type CourseCardProps =
 
 
 type HeadProps = {
+  id: number;
   thumbnail: string;
   tags: Array<{ label: string; variant?: 'dark' | 'light' }>;
   title: string;
   onLike?: () => void;
+  isActive?: boolean;
 }
 
 type ContentProps = {
@@ -33,8 +36,8 @@ type LectureContentProps = {
   value: number;
   max: number;
   lectureId: number;
-  isActive: boolean;
-  isCompleted: boolean;
+  isActive?: boolean;
+  isCompleted?: boolean;
 }
 
 const CardHead = ({ thumbnail, tags, title, onLike }: HeadProps) => {
@@ -86,17 +89,17 @@ const CardContent = ({ teacherImage, teacherName, teacherRole, description, pric
   )
 }
 
-const CardContentMyLecture = ({ value = 0, max = 1, lectureId }: LectureContentProps) => {
+const CardContentMyLecture = ({ value = 0, max = 1, lectureId, isActive, isCompleted }: LectureContentProps) => {
   const navigate = useNavigate();
 
-  const goLectureRoom = () => {
-      const path = ROUTES.LECTURE_ROOM.replace(':id', lectureId.toString());
-      navigate(path);
+  const goLectureRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      navigate(`${ROUTES.LECTURE_LIST}/${lectureId}/room`);
   }
 
-    const goLectureDetail= () => {
-      const path = ROUTES.LECTURE_DETAIL.replace(':id', lectureId.toString());
-      navigate(path);
+    const goLectureDetail= (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      navigate(`${ROUTES.LECTURE_LIST}/${lectureId}`);
   }
 
   const formatPercent = (percent: number) => {
@@ -110,38 +113,46 @@ const CardContentMyLecture = ({ value = 0, max = 1, lectureId }: LectureContentP
           <span>{value}/{max}강 ({formatPercent(value/max)}%)</span>
         </ProgressWrapper>
         <ButtonList>
-          <Button iconSvg={<SvgPlay/>} onClick={goLectureRoom}>학습하기</Button>
-          <Button variant='outline' onClick={goLectureDetail}>강의 상세</Button>
+          <Button iconSvg={<SvgPlay/>} onClick={goLectureRoom} disabled={!isActive}>학습하기</Button>
+          <Button variant='outline' onClick={goLectureDetail} disabled={!isActive}>강의 상세</Button>
+          {isCompleted && <Button iconSvg={<SvgCertificate/>} variant="outline">수료증</Button>}
         </ButtonList>
     </LectureContentWrapper>
   )
 }
 
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
-  const {variant, thumbnail, tags, title, onLike } = props;
+  const { id, variant, thumbnail, tags, title, onLike } = props;
+  const { isActive } = props;
+
   return (
-    <CardContainer>
-      <CardHead thumbnail={thumbnail} title={title} tags={tags} onLike={onLike}/>
-      
-      {(variant === "list" || variant === undefined) && 
-        <CardContent 
-          teacherName={props.teacherName} 
-          teacherRole={props.teacherRole} 
-          teacherImage={props.teacherImage} 
-          description={props.description} 
-          price={props.price}
-        />
-      }
+    <CardArticle $isActive={isActive}>
+      <CardHeadLink
+        to={`${ROUTES.LECTURE_LIST}/${id}/room`} 
+        aria-label={`${title} 강의실 바로가기`}
+      >
+        <CardHead id={id} thumbnail={thumbnail} title={title} tags={tags} onLike={onLike}/>
+      </CardHeadLink>
+
+        {(variant === "list" || variant === undefined) && 
+          <CardContent 
+            teacherName={props.teacherName} 
+            teacherRole={props.teacherRole} 
+            teacherImage={props.teacherImage} 
+            description={props.description} 
+            price={props.price}
+          />
+        }
 
       {variant === "myLecture" && 
         <CardContentMyLecture 
           value={props.value} 
           max={props.max} 
           lectureId={props.lectureId}
-          isActive={props.isActive || false}
-          isCompleted = {props.isCompleted || false}
+          isCompleted={props.isCompleted}
+          isActive={isActive}
       />}
-    </CardContainer>
+    </CardArticle>
   );
 };
 

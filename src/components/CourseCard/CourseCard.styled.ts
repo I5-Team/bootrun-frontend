@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
-export const CardContainer = styled.article`
+export const CardArticle = styled.article<{ $isActive?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -10,9 +11,23 @@ export const CardContainer = styled.article`
   @media ${({ theme }) => theme.devices.tablet} {
     max-width: 100%;
   }
+
+  ${({ $isActive }) => 
+    $isActive === false && css`
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+  `
+  }
 `;
 
 // CardHeader
+export const CardHeadLink = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
 export const ThumbnailWrapper = styled.div`
   position: relative;
   width: 100%;
