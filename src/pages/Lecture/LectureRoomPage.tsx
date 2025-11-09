@@ -198,11 +198,16 @@ export default function LectureRoomPage() {
         <S.CenterContent ref={centerContentRef}>
           {/* 브레드크럼 */}
           {currentLectureInfo && (
-            <S.BreadcrumbBar>
-              <S.BreadcrumbItem $active>{MOCK_DATA.course.title}</S.BreadcrumbItem>
-              <S.BreadcrumbSeparator>&gt;</S.BreadcrumbSeparator>
-              <S.BreadcrumbItem>{currentLectureInfo.chapter.title}</S.BreadcrumbItem>
-              <S.BreadcrumbSeparator>&gt;</S.BreadcrumbSeparator>
+            <S.BreadcrumbBar $compact={isLeftSidebarOpen || !!rightSidebarType}>
+              {/* 양쪽 사이드바가 모두 열렸을 때는 강의 제목만 표시 */}
+              {!(isLeftSidebarOpen && rightSidebarType) && (
+                <>
+                  <S.BreadcrumbItem $active>{MOCK_DATA.course.title}</S.BreadcrumbItem>
+                  <S.BreadcrumbSeparator>&gt;</S.BreadcrumbSeparator>
+                  <S.BreadcrumbItem>{currentLectureInfo.chapter.title}</S.BreadcrumbItem>
+                  <S.BreadcrumbSeparator>&gt;</S.BreadcrumbSeparator>
+                </>
+              )}
               <S.BreadcrumbItem $bold>{currentLectureInfo.lecture.title}</S.BreadcrumbItem>
             </S.BreadcrumbBar>
           )}

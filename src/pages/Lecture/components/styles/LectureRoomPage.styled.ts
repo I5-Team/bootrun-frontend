@@ -21,7 +21,7 @@ export const MainContent = styled.div`
   overflow: hidden;
 `;
 
-export const BreadcrumbBar = styled.div`
+export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -32,7 +32,8 @@ export const BreadcrumbBar = styled.div`
   padding: 1.3rem 2rem;
   background-color: ${({ theme }) => theme.colors.white};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme, $compact }) => ($compact ? theme.fontSize.caption : theme.fontSize.sm)};
+  letter-spacing: ${({ $compact }) => ($compact ? '-0.06rem' : '0')};
   height: 5rem;
   z-index: 10;
 
