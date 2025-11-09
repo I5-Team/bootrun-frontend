@@ -5,6 +5,7 @@ import { ROUTES } from "../router/RouteConfig";
 // profile dropdown
 export const StyledDropdownWrapper = styled.div`
     position: relative;
+    cursor: pointer;
 `
 
 const StyledProfileDropdown = styled.div`

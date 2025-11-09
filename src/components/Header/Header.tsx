@@ -26,7 +26,7 @@ import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
 import SearchForm from "../SearchForm.tsx";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProfileDropdown, StyledDropdownWrapper } from "../ProfileDropdown.tsx";
 
 const HeaderLogo = () => {
@@ -79,17 +79,40 @@ const MenuOpenBtn = () => {
 
 const UserActions = () => {
     const [isOpenDropdown, setIsOpenDropdown] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
     let isLoggedIn = true;
 
     const handleOpenDropdown = () => {
         setIsOpenDropdown(prev => !prev);
     }
 
+
+
+    useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+        if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) return;
+        setIsOpenDropdown(false);
+    } 
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setIsOpenDropdown(false);
+    }
+
+    if (isOpenDropdown) {
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("keydown", handleKeyDown);
+    }
+    }, [isOpenDropdown]);
+
     return (
         <>
             {isLoggedIn ?
-                <StyledDropdownWrapper>
-                    <button onClick={handleOpenDropdown}><Profile size={4.2}/></button>
+                <StyledDropdownWrapper ref={dropdownRef} onClick={handleOpenDropdown}>
+                    <Profile size={4.2} isActive={isOpenDropdown}/>
                     {isOpenDropdown && <ProfileDropdown/>}
                 </StyledDropdownWrapper>
                 : 
