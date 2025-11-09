@@ -73,12 +73,17 @@ export const LeftSidebar = styled.aside<{ $isOpen: boolean }>`
   @media ${({ theme }) => theme.devices.laptop} {
     position: fixed;
     left: 0;
-    top: 0;
-    height: 100vh;
+    top: 7rem;
+    height: calc(100vh - 7rem);
     width: 32rem;
     z-index: 1000;
     transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '-100%')});
     transition: transform 0.3s ease;
+  }
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    top: 5.6rem;
+    height: calc(100vh - 5.6rem);
   }
 `;
 
@@ -96,12 +101,17 @@ export const RightSidebar = styled.aside<{ $isOpen: boolean }>`
   @media ${({ theme }) => theme.devices.laptop} {
     position: fixed;
     right: 0;
-    top: 0;
-    height: 100vh;
+    top: 7rem;
+    height: calc(100vh - 7rem);
     width: 32rem;
     z-index: 1000;
     transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '100%')});
     transition: transform 0.3s ease;
+  }
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    top: 5.6rem;
+    height: calc(100vh - 5.6rem);
   }
 `;
 
