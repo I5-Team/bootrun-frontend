@@ -38,6 +38,9 @@ export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
   @media ${({ theme }) => theme.devices.desktop} {
     font-size: ${({ theme, $compact }) => ($compact ? theme.fontSize.caption : theme.fontSize.sm)};
   }
+  @media ${({ theme }) => theme.devices.laptop} {
+    font-size: ${({ theme }) => theme.fontSize.sm};
+  }
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 1.2rem 1.6rem;
     font-size: ${({ theme }) => theme.mobileFontSize.sm};
@@ -51,10 +54,18 @@ export const BreadcrumbItem = styled.span<{ $active?: boolean; $bold?: boolean }
   color: ${({ theme }) => theme.colors.surface};
   font-weight: ${({ $bold }) => ($bold ? '700' : '400')};
   border-radius: 0.4rem;
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    display: ${({ $bold }) => ($bold ? 'inline-flex' : 'none')};
+  }
 `;
 
 export const BreadcrumbSeparator = styled.span`
   color: ${({ theme }) => theme.colors.surface};
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    display: none;
+  }
 `;
 
 export const LeftSidebar = styled.aside<{ $isOpen: boolean }>`
@@ -168,7 +179,7 @@ export const CenterContent = styled.main`
   align-items: center;
   overflow-y: auto;
   position: relative;
-  padding: 5rem 0rem;
+  padding: 4rem 0rem;
 `;
 
 export const ContentArea = styled.div`
@@ -179,7 +190,7 @@ export const ContentArea = styled.div`
 `;
 
 export const VideoPlayerWrapper = styled.div`
-  width: 70%;
+  width: 60%;
   max-width: 99rem;
   aspect-ratio: 16 / 9;
   display: flex;

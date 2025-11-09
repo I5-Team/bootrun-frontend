@@ -121,7 +121,7 @@ const MOCK_DATA = {
 };
 
 export default function LectureRoomPage() {
-  const { isLeftSidebarOpen, rightSidebarType, toggleLeftSidebar, toggleRightSidebar } =
+  const { isLeftSidebarOpen, rightSidebarType, toggleLeftSidebar, toggleRightSidebar, closeAllSidebars } =
     useLectureRoom();
 
   // 현재 재생 중인 강의 ID 상태
@@ -273,14 +273,7 @@ export default function LectureRoomPage() {
       </S.MainContent>
 
       {/* 모바일 배경 딤 */}
-      {(isLeftSidebarOpen || rightSidebarType) && (
-        <S.MobileDimBackground
-          onClick={() => {
-            toggleLeftSidebar();
-            toggleRightSidebar(null);
-          }}
-        />
-      )}
+      {(isLeftSidebarOpen || rightSidebarType) && <S.MobileDimBackground onClick={closeAllSidebars} />}
     </S.PageContainer>
   );
 }
