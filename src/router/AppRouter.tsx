@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Suspense, lazy } from 'react';
 import { ROUTES } from "./RouteConfig";
+
 import LoginPage from "../pages/Auth/LoginPage";
 import LectureListPage from "../pages/Lecture/LectureListPage";
 import SignUpPage from "../pages/Auth/SignUpPage";
@@ -23,6 +25,31 @@ import OrderHistorySection from "../pages/MyPage/OrderHistorySection";
 import AccountSection from "../pages/MyPage/AccountSection";
 import LectureRoomLayout from "../layouts/LectureRoomLayout";
 
+import { LoadingSpinner } from '../components/HelperComponents';
+
+
+const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
+const SignUpPage = lazy(() => import("../pages/Auth/SignUpPage"));
+const MainLayout = lazy(() => import("../layouts/MainLayout"));
+const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
+const DashBoardPage = lazy(() => import("../pages/Admin/DashBoardPage"));
+const LectureManagePage = lazy(() => import("../pages/Admin/LectureManagePage"));
+const PaymentManagePage = lazy(() => import("../pages/Admin/PaymentManagePage"));
+const UserManagePage = lazy(() => import("../pages/Admin/UserManagePage"));
+const LectureListPage = lazy(() => import("../pages/Lecture/LectureListPage"));
+const LectureSearchPage = lazy(() => import ("../pages/Lecture/LectureSearchPage"));
+const LectureDetailPage = lazy(() => import("../pages/Lecture/LectureDetailPage"));
+const ProfilePage = lazy(() => import("../pages/MyPage/ProfilePage"));
+const LecturePaymentPage = lazy(() => import("../pages/Lecture/LecturePaymentPage"));
+const PaymentResultPage = lazy(() => import("../pages/Lecture/PaymentResultPage"));
+const MyLecturePage = lazy(() => import("../pages/Lecture/MyLecturePage"));
+const LectureRoomPage = lazy(() => import("../pages/Lecture/LectureRoomPage"));
+const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
+const ErrorLayout = lazy(() => import("../layouts/ErrorLayout"));
+const MainPage = lazy(() => import("../pages/MainPage"));
+const MyPageLayout = lazy(() => import("../layouts/MypageLayout"));
+const OrderHistorySection = lazy(() => import("../pages/MyPage/OrderHistorySection"));
+const AccountSection = lazy(() => import("../pages/MyPage/AccountSection"));
 
 
 // 사용자 타입별 페이지 인증 처리 예시
@@ -35,6 +62,7 @@ import LectureRoomLayout from "../layouts/LectureRoomLayout";
 export default function AppRouter() {
     return (
         <BrowserRouter basename="/bootrun-frontend">
+            <Suspense fallback={<LoadingSpinner />}>
             <Routes>
                 {/* 비인증용 페이지 */}
                 <Route element={<AuthLayout/>}>
@@ -47,7 +75,12 @@ export default function AppRouter() {
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
                     <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
+
                     <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
+
+                    <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />  
+                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />  
+
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
                     <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
@@ -74,6 +107,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
                 </Route>
             </Routes>
+            </Suspense>
         </BrowserRouter>
     )
 }

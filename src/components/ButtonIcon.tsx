@@ -7,6 +7,7 @@ type ButtonProps = {
     ariaLabel: string;
     variant?: ButtonVariant;
     hasAlert?: boolean;
+    active?: boolean;
     onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
     className?: string;
     tooltip?: string;
@@ -16,6 +17,7 @@ const StyledButtonIcon = styled.button<{
     $variant?: ButtonVariant;
     $hasAlert: boolean;
     $tooltip?: string;
+    $active: boolean;
 }>`
     width: auto;
     width: 4.2rem;
@@ -30,41 +32,41 @@ const StyledButtonIcon = styled.button<{
     position: relative;
 
     svg {
-            width: 2.4rem;
-            height: 2.4rem;
-            vertical-align: bottom;
-            transition: fill 0.1s;
-        }
+        width: 2.4rem;
+        height: 2.4rem;
+        vertical-align: bottom;
+        transition: fill 0.1s;
+    }
+
+    color: ${({ theme }) => theme.colors.gray400};
+    svg path {
+        fill: currentColor !important;
+    }
+
 
     &:hover {
         cursor: pointer;
-        
+
         ${(p) => 
             p.$variant !== "discord" &&
             css`
                 background-color: ${({ theme }) => theme.colors.primary100};
-                svg path {
-                    fill: ${({ theme }) => theme.colors.primary300}
-                }
+                color: ${({ theme }) => theme.colors.primary300}; 
             `
         }
     }
 
-    ${(p) => 
-        p.$variant === "dark" &&
+    ${({ $variant, $active,  theme }) => 
+        $variant === "dark" &&
         css`
-            svg path {
-                fill: ${({ theme }) => theme.colors.gray400};
-            }
+            color: ${$active ? theme.colors.primary300 : theme.colors.gray400};
         `
     }
 
-    ${(p) => 
-        p.$variant === "light" &&
+    ${({ $variant, $active,  theme }) => 
+        $variant === "light" &&
         css`
-            svg path {
-                fill: ${({ theme }) => theme.colors.gray300};
-            }
+            color: ${$active ? theme.colors.primary300 : theme.colors.gray300}; 
         `
     }
 
@@ -82,6 +84,7 @@ const StyledButtonIcon = styled.button<{
         (p.$tooltip || p.$variant === "discord") &&
         css`
             position: relative;
+            color: ${({ theme }) => theme.colors.white}; 
 
             &::before,
             &::after {
@@ -148,6 +151,7 @@ const ButtonIcon:React.FC<ButtonProps> = ({
     ariaLabel,
     variant = "dark",
     hasAlert = false,
+    active = false,
     onClick,
     className,
     tooltip,
@@ -158,6 +162,7 @@ const ButtonIcon:React.FC<ButtonProps> = ({
             $hasAlert={hasAlert}
             $tooltip={tooltip}
             aria-label={ariaLabel}
+            $active={active}
             onClick={onClick}
             className={className}
         >

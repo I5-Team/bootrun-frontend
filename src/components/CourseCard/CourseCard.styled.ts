@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const CardContainer = styled.article`
+export const StyledCardArticle = styled.article`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -10,29 +11,61 @@ export const CardContainer = styled.article`
   @media ${({ theme }) => theme.devices.tablet} {
     max-width: 100%;
   }
+
+  button {
+    z-index: 10;
+  }
 `;
 
 // CardHeader
-export const ThumbnailWrapper = styled.div`
+export const StyledThumbnailWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 380 / 200;
   border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md};
   overflow: hidden;
+
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  flex-direction: column;
+  padding: clamp(1rem, 3.3%, 1.4rem);
 `;
 
-export const ThumbnailImage = styled.img`
+export const StyledThumbnailLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100;
+`;
+
+export const StyledThumbnailImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
 `;
 
-export const LikeButton = styled.button`
+export const StlyedThumbnailNotice = styled.div`
   position: absolute;
-  top: clamp(1.2rem, 6%, 1.6rem);
-  right: clamp(0.8rem, 4%, 1.4rem);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+
+  color: ${({ theme }) => theme.colors.white};
+  font-weight: 500;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.surface}90;
+`;
+
+export const StyledLikeButton = styled.button`
   width: clamp(2.4rem, 6%, 2.8rem);
   height: auto;
   
@@ -56,17 +89,17 @@ export const LikeButton = styled.button`
   }
 `;
 
-export const TagList = styled.ul`
+export const StyledTagList = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(0.6rem, 1vw, 1.2rem);
+  gap: clamp(1rem, 1vw, 1.2rem);
 
   li {
     min-width: 0;
   }
 `;
 
-export const ContentWrapper = styled.div`
+export const StyledContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -74,8 +107,7 @@ export const ContentWrapper = styled.div`
   min-width: 0;
 `;
 
-export const Title = styled.h3`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>` 
   font-weight: 600;
   line-height: 1.4;
   color: ${({ theme }) => theme.colors.surface};
@@ -91,13 +123,15 @@ export const Title = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
 
+  font-size: ${({ $size, theme }) => $size === "sm" ? theme.mobileFontSize.xl : theme.fontSize.lg};
+
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.lg : theme.mobileFontSize.xl};
   }
-`;
+  `;
 
 // CardContent
-export const TeacherSection = styled.div`
+export const StyledTeacherSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -105,14 +139,14 @@ export const TeacherSection = styled.div`
   min-width: 0;
 `;
 
-export const TeacherInfo = styled.div`
+export const StyledTeacherInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 1.2rem;
   min-width: 0;
 `;
 
-export const TeacherDetails = styled.div`
+export const StyledTeacherDetails = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -121,7 +155,7 @@ export const TeacherDetails = styled.div`
   overflow: hidden;
 `;
 
-export const TeacherName = styled.p`
+export const StyledTeacherName = styled.p`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.surface};
@@ -129,14 +163,16 @@ export const TeacherName = styled.p`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.mobileFontSize.lg};
   }
 `;
 
-export const TeacherRole = styled.p`
+export const StyledTeacherRole = styled.p`
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 400;
   color: ${({ theme }) => theme.colors.gray300};
+  line-height: 1.4;
+
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -144,11 +180,11 @@ export const TeacherRole = styled.p`
   flex-shrink: 1;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.mobileFontSize.md};
   }
 `;
 
-export const DescriptionBox = styled.div`
+export const StyledDescriptionBox = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.gray100};
   padding: 2rem;
@@ -174,7 +210,7 @@ export const DescriptionBox = styled.div`
     text-overflow: ellipsis;
 
     @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.mobileFontSize.md};
+      font-size: ${({ theme }) => theme.mobileFontSize.lg};
     }
   }
 
@@ -193,24 +229,24 @@ export const DescriptionBox = styled.div`
   }
 `;
 
-export const Price = styled.div`
+export const StyledPrice = styled.div`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   line-height: 2.2rem;
   color: ${({ theme }) => theme.colors.surface};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.mobileFontSize.lg};
   }
 `;
 
 // CardContentMyLecture
-export const LectureContentWrapper = styled.div`
+export const StyledLectureContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
 `
-export const ProgressWrapper = styled.div`
+export const StyledProgressWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
@@ -219,7 +255,7 @@ export const ProgressWrapper = styled.div`
     color: ${({ theme }) => theme.colors.gray400};
     }
 `
-export const ButtonList = styled.div`
+export const StyledButtonList = styled.div`
     display: flex;
     justify-content: start;
     align-items: center;
