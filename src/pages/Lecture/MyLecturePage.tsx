@@ -1,19 +1,6 @@
-import styled from "styled-components";
 import FilterForm from "../../components/FilterForm";
 import { FilterMyCourseList } from "../../components/CourseList";
-
-const StyledTitle = styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.xxl};
-    font-weight: 600;
-    margin-top: 6rem;
-    word-break: keep-all;
-    line-height: 1.3;
-
-    @media ${({ theme }) => theme.devices.mobile} {
-        font-size: ${({ theme }) => theme.fontSize.xl};
-    }
-`;
-
+import { StyledTitle } from "../Lecture/LectureListPage"
 
 export default function MyLecturePage() {
 const filterData = [

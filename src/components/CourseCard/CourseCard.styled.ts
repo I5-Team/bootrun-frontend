@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const StyledCardArticle = styled.article`
   display: flex;
@@ -59,7 +59,6 @@ export const StlyedThumbnailNotice = styled.div`
   color: ${({ theme }) => theme.colors.white};
   font-weight: 500;
 
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,7 +92,7 @@ export const StyledLikeButton = styled.button`
 export const StyledTagList = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(0.6rem, 1vw, 1.2rem);
+  gap: clamp(1rem, 1vw, 1.2rem);
 
   li {
     min-width: 0;
@@ -108,8 +107,7 @@ export const StyledContentWrapper = styled.div`
   min-width: 0;
 `;
 
-export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>`
-  
+export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>` 
   font-weight: 600;
   line-height: 1.4;
   color: ${({ theme }) => theme.colors.surface};
@@ -125,16 +123,12 @@ export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  ${({ $size }) => $size === "sm" ? css`
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
-  ` : css`
-    font-size: ${({ theme }) => theme.fontSize.lg};
-  `}
+  font-size: ${({ $size, theme }) => $size === "sm" ? theme.mobileFontSize.xl : theme.fontSize.lg};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.lg : theme.mobileFontSize.xl};
   }
-`;
+  `;
 
 // CardContent
 export const StyledTeacherSection = styled.div`
@@ -169,7 +163,7 @@ export const StyledTeacherName = styled.p`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.mobileFontSize.lg};
   }
 `;
 
@@ -177,6 +171,8 @@ export const StyledTeacherRole = styled.p`
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 400;
   color: ${({ theme }) => theme.colors.gray300};
+  line-height: 1.4;
+
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -184,7 +180,7 @@ export const StyledTeacherRole = styled.p`
   flex-shrink: 1;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.mobileFontSize.md};
   }
 `;
 
@@ -214,7 +210,7 @@ export const StyledDescriptionBox = styled.div`
     text-overflow: ellipsis;
 
     @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.mobileFontSize.md};
+      font-size: ${({ theme }) => theme.mobileFontSize.lg};
     }
   }
 
@@ -240,7 +236,7 @@ export const StyledPrice = styled.div`
   color: ${({ theme }) => theme.colors.surface};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.mobileFontSize.lg};
   }
 `;
 

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FilterCourseList } from "../../components/CourseList";
 import FilterForm from "../../components/FilterForm";
 
-const StyledTitle = styled.h2`
+export const StyledTitle = styled.h2`
     font-size: ${({ theme }) => theme.fontSize.xxl};
     font-weight: 600;
     margin-top: 6rem;
@@ -11,12 +11,6 @@ const StyledTitle = styled.h2`
 
     @media ${({ theme }) => theme.devices.mobile} {
         font-size: ${({ theme }) => theme.fontSize.xl};
-    }
-`;
-
-const StyledContent = styled.div`
-    .card-list {
-        margin-top: 5.2rem;
     }
 `;
 
@@ -66,10 +60,8 @@ const filterData = [
     return (
             <>
                 <StyledTitle>어떤 강의를 찾으시나요?</StyledTitle>
-                    <StyledContent>
-                        <FilterForm filterData={filterData}/>
-                        <FilterCourseList/>
-                    </StyledContent>
+                <FilterForm filterData={filterData}/>
+                <FilterCourseList/>
             </>
     );
     }
