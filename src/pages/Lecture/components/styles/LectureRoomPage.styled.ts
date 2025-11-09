@@ -30,13 +30,14 @@ export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
   align-items: center;
   gap: 0.4rem;
   padding: 1.3rem 2rem;
-  background-color: ${({ theme }) => theme.colors.white};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-  font-size: ${({ theme, $compact }) => ($compact ? theme.fontSize.caption : theme.fontSize.sm)};
-  letter-spacing: ${({ $compact }) => ($compact ? '-0.06rem' : '0')};
+  font-size: ${({ theme }) => theme.fontSize.sm};
   height: 5rem;
   z-index: 10;
 
+  @media ${({ theme }) => theme.devices.desktop} {
+    font-size: ${({ theme, $compact }) => ($compact ? theme.fontSize.caption : theme.fontSize.sm)};
+  }
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 1.2rem 1.6rem;
     font-size: ${({ theme }) => theme.mobileFontSize.sm};
@@ -69,7 +70,7 @@ export const LeftSidebar = styled.aside<{ $isOpen: boolean }>`
   overflow: hidden;
   z-index: 100;
 
-  @media ${({ theme }) => theme.devices.tablet} {
+  @media ${({ theme }) => theme.devices.laptop} {
     position: fixed;
     left: 0;
     top: 0;
@@ -92,7 +93,7 @@ export const RightSidebar = styled.aside<{ $isOpen: boolean }>`
   transition: width 0.3s ease;
   overflow: hidden;
 
-  @media ${({ theme }) => theme.devices.tablet} {
+  @media ${({ theme }) => theme.devices.laptop} {
     position: fixed;
     right: 0;
     top: 0;
@@ -328,7 +329,7 @@ export const ScrollTopButton = styled.button`
 export const MobileDimBackground = styled.div`
   display: none;
 
-  @media ${({ theme }) => theme.devices.tablet} {
+  @media ${({ theme }) => theme.devices.laptop} {
     display: block;
     position: fixed;
     top: 0;

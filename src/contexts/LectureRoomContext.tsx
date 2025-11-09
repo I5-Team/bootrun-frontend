@@ -7,6 +7,7 @@ interface LectureRoomContextType {
   rightSidebarType: RightSidebarType;
   toggleLeftSidebar: () => void;
   toggleRightSidebar: (type: RightSidebarType) => void;
+  closeAllSidebars: () => void;
 }
 
 export const LectureRoomContext = createContext<LectureRoomContextType | null>(null);
@@ -19,6 +20,7 @@ export const useLectureRoom = () => {
       rightSidebarType: null as RightSidebarType,
       toggleLeftSidebar: () => {},
       toggleRightSidebar: () => {},
+      closeAllSidebars: () => {},
     };
   }
   return context;
