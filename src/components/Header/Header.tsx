@@ -26,6 +26,8 @@ import { ROUTES } from "../../router/RouteConfig.ts";
 import useMediaQuery from "../../hooks/useMediaQuery.ts";
 import ButtonIcon from "../ButtonIcon.tsx";
 import SearchForm from "../SearchForm.tsx";
+import { useState } from "react";
+import { ProfileDropdown, StyledDropdownWrapper } from "../ProfileDropdown.tsx";
 
 const HeaderLogo = () => {
     return(
@@ -74,15 +76,22 @@ const MenuOpenBtn = () => {
     )
 }
 
+
 const UserActions = () => {
-    let isLoggedIn = false;
+    const [isOpenDropdown, setIsOpenDropdown] = useState<boolean>(false);
+    let isLoggedIn = true;
+
+    const handleOpenDropdown = () => {
+        setIsOpenDropdown(prev => !prev);
+    }
 
     return (
         <>
             {isLoggedIn ?
-                <Link to={ROUTES.PROFILE}>
-                    <Profile size={4.2}/>
-                </Link>
+                <StyledDropdownWrapper>
+                    <button onClick={handleOpenDropdown}><Profile size={4.2}/></button>
+                    {isOpenDropdown && <ProfileDropdown/>}
+                </StyledDropdownWrapper>
                 : 
                 <Link to={ROUTES.LOGIN}>
                     <Button>로그인</Button>
