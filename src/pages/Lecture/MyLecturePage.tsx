@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FilterForm from "../../components/FilterForm";
-import { FilterMyCourseList } from "../../components/FilterCardList";
+import { FilterMyCourseList } from "../../components/CourseList";
 
 const StyledTitle = styled.h2`
     font-size: ${({ theme }) => theme.fontSize.xxl};

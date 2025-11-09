@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import FilterCardList from "../../components/FilterCardList";
+import { FilterCourseList } from "../../components/CourseList";
 import FilterForm from "../../components/FilterForm";
 
 const StyledTitle = styled.h2`
@@ -68,7 +68,7 @@ const filterData = [
                 <StyledTitle>어떤 강의를 찾으시나요?</StyledTitle>
                     <StyledContent>
                         <FilterForm filterData={filterData}/>
-                        <FilterCardList/>
+                        <FilterCourseList/>
                     </StyledContent>
             </>
     );

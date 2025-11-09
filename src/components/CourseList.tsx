@@ -9,8 +9,7 @@ import sampleEnrollmentMy from "../assets/data/sampleEnrollmentMy.json";
 import CourseCard from "../components/CourseCard/CourseCard";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 
-
-
+// type
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
 
 export type CategoryType = 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'design' | 'other';
@@ -19,7 +18,7 @@ export type PriceType = 'free' | 'paid' | 'national_support';
  
 export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
-export type CourseData = {
+export type CourseItem = {
     id: number,
     category_type: CategoryType,
     course_type: CourseType,
@@ -39,7 +38,7 @@ export type CourseData = {
     updated_at: string,
 }
 
-export type EnrollmentItem = {
+export type MyCourseItem = {
     id: number;
     user_id: number;
     course_id: number;
@@ -64,6 +63,7 @@ export type CourseFilter = {
     priceTypeOpt?: PriceType,
     sortOpt?: 'DATE_ASC' | 'DATE_DESC',
     cardCount?: number,
+    onCountChange?: (count: number) => void,
 }
 
 const courseTypeLabel : Record<CourseType, string> = {
@@ -94,7 +94,7 @@ const StyledCardGrid = styled.ul`
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     
-    row-gap: clamp(2.4rem, 2vw, 4rem);
+    row-gap: 4rem;
     column-gap: clamp(1.4rem, 2vw, 2.5rem);
 
     @media ${({ theme }) => theme.devices.laptop} {
@@ -145,7 +145,48 @@ const NoResultPage = () => {
     )
 }
 
-export const FilterCardList = ({ 
+type BaseCourseListProps<T> = {
+    data: T[];
+    filterFn: (item: T) => boolean;
+    sortFn?: (a: T, b: T) => number;
+    sliceFn?: (list: T[]) => T[];
+    courseCard: (item: T) => React.ReactNode;
+    onCountChange? : (count: number) => void;
+}
+
+const BaseCourseList = <T,>({
+    data,
+    filterFn,
+    sortFn,
+    sliceFn,
+    courseCard,
+    onCountChange,
+}: BaseCourseListProps<T>) => {
+    const courseList = data;
+    const filteredList = courseList.filter(filterFn);
+    const sortedList = sortFn ? filteredList.sort(sortFn) : filteredList;
+    const slicedList = sliceFn ? sliceFn(sortedList) : sortedList;
+    const refinedList = slicedList;
+    
+    useEffect(() => {
+        onCountChange?.(refinedList.length);
+    }, [refinedList, onCountChange])
+
+    return (
+        <div className="card-list">
+            {refinedList.length === 0 
+            ? 
+            <NoResultPage/>
+            : 
+            <StyledCardGrid>
+                {refinedList.map(courseCard)}
+            </StyledCardGrid>
+            }
+        </div>
+    )
+}
+
+export const FilterCourseList = ({ 
     courseTypeOpt, 
     categoryOpt, 
     difficultyOpt, 
@@ -153,7 +194,7 @@ export const FilterCardList = ({
     sortOpt, 
     cardCount, 
     onCountChange,
-}: CourseFilter & { onCountChange?: (count: number) => void }  ) => {
+}: CourseFilter ) => {
     const [searchParams] = useSearchParams();
 
     // query params
@@ -174,9 +215,8 @@ export const FilterCardList = ({
     const keywordFilter 
         = keywordParam.toLowerCase().split(/\s+/).filter(Boolean);
 
-    // refine
-    const courseList = sampleCourses as CourseData[];
-    const filteredList = [...courseList].filter(course => { 
+    // filterFn
+    const filterFn = ((course: CourseItem) => { 
         const matchCourseType = !courseTypeFilter || courseTypeFilter.includes(course.course_type);
         const matchCategory = !categoryFilter || categoryFilter.includes(course.category_type);
         const matchDifficulty = !difficultyFilter || difficultyFilter.includes(course.difficulty);
@@ -192,65 +232,59 @@ export const FilterCardList = ({
         return matchDifficulty && matchCourseType && matchCategory && matchPrice && MatchKeyword;
     })
 
-    const sortedCourseList = [...filteredList].sort((a, b) => {
+    // sortFn
+    const sortFn = (a: CourseItem, b: CourseItem) => {
         if (sortOpt === "DATE_ASC") {
             return a.created_at.localeCompare(b.created_at);
         } else {
             return b.created_at.localeCompare(a.created_at);
         }
-    })
+    };
 
-    const refinedCourseList = cardCount
-        ? sortedCourseList.slice(0, cardCount)
-        : sortedCourseList;
+    // sliceFn
+    const sliceFn = (list: CourseItem[]) => {
+        return cardCount ? list.slice(0, cardCount) : list;
+    }
 
-    useEffect(() => {
-        onCountChange?.(refinedCourseList.length);
-    }, [refinedCourseList, onCountChange]);
+    const courseCard = (course: CourseItem) => (
+        <CourseCard
+            key={course.id}
+            id={course.id}
+            thumbnail={course.thumbnail_url}
+            tags={[
+                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                {'label': categoryLabel[course.category_type] || "기타"}, 
+                {'label': difficultyLabel[course.difficulty]},
+            ]}
+            title={course.title}
+            teacherName={course.instructor_name}
+            teacherRole={course.instructor_bio}
+            teacherImage={course.instructor_image}
+            description={course.description}
+            price={course.price}
+            onLike={() => console.log(course.title)}
+        />
+    )
 
     return (
-        <div className="card-list">
-            {refinedCourseList.length === 0 
-            ? 
-            <NoResultPage/>
-            : 
-            <StyledCardGrid>
-                { refinedCourseList
-                .map((course) => (
-                    <CourseCard
-                        key={course.id}
-                        id={course.id}
-                        thumbnail={course.thumbnail_url}
-                        tags={[
-                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                            {'label': categoryLabel[course.category_type] || "기타"}, 
-                            {'label': difficultyLabel[course.difficulty]},
-                        ]}
-                        title={course.title}
-                        teacherName={course.instructor_name}
-                        teacherRole={course.instructor_bio}
-                        teacherImage={course.instructor_image}
-                        description={course.description}
-                        price={course.price}
-                        onLike={() => console.log(course.title)}
-                    />
-                ))
-                }
-            </StyledCardGrid>
-            }
-        </div>
+        <BaseCourseList
+            data={sampleCourses as CourseItem[]}
+            filterFn={filterFn}
+            sortFn={sortFn}
+            sliceFn={sliceFn}
+            courseCard={courseCard}
+            onCountChange={onCountChange}
+        />
     )
 }
 
 export const FilterMyCourseList = ({ 
-    sortOpt, 
+    sortOpt,
+    cardCount,
     onCountChange,
-}: { sortOpt?: 'DATE_ASC' | 'DATE_DESC', onCountChange?: (count: number) => void }) => {
+}: CourseFilter ) => {
     const [searchParams] = useSearchParams();
-    // DATA 
-    // /enrollments/my
-    const enrollmentList = sampleEnrollmentMy.items as EnrollmentItem[];
-
+    
     // query params
     const courseTypeParam = searchParams.get('courseType');
     const isActiveParam = searchParams.get('is_active');
@@ -260,65 +294,60 @@ export const FilterMyCourseList = ({
     const isActiveFilter = isActiveParam !== "all" ? isActiveParam : null;
     const progressFilter = progressParam !== "all" ? progressParam : null;
 
-    // refine
-    const filteredList = [...enrollmentList].filter(course => { 
+    // filterFn
+    const filterFn = (course: MyCourseItem) => { 
         const matchCourseType = !courseTypeFilter || courseTypeFilter === course.course_type;
         const matchIsActive = !isActiveFilter ||  isActiveFilter === (course.days_until_expiry ? "true" : "false");
         const matchProgress = !progressFilter! 
         || progressFilter === (course.progress_rate === 100 ? "completed" : course.progress_rate > 0 ? "in_progress" : "not_started");
 
         return matchCourseType && matchIsActive && matchProgress;
-    })
+    }
 
-    const sortedList = [...filteredList].sort((a, b) => {
+    // sortFn
+    const sortFn = (a: MyCourseItem, b: MyCourseItem) => {
         if (sortOpt === "DATE_ASC") {
             return a.enrolled_at.localeCompare(b.enrolled_at);
         } else {
             return b.enrolled_at.localeCompare(a.enrolled_at);
         }
-    })
+    }
 
-    const refinedList = sortedList;
+    // sliceFn
+    const sliceFn = (list: MyCourseItem[]) => {
+        return cardCount ? list.slice(0, cardCount) : list;
+    }
 
-    useEffect(() => {
-        onCountChange?.(refinedList.length);
-    }, [refinedList, onCountChange]);
+    const myCourseCard = (course: MyCourseItem) => (
+        <CourseCard 
+            key={course.id}
+            id={course.id}
+            variant="myLecture"
+            thumbnail={course.course_thumbnail}
+            title={course.course_title}
+            tags={[
+                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                {'label': categoryLabel[course.category_name] || "기타"}, 
+                {'label': difficultyLabel[course.difficulty]},
+            ]}
+
+            value={course.completed_lectures || 0} 
+            max={course.total_lectures || 0} 
+            lectureId={course.course_id}
+            
+            isActive={course.days_until_expiry !== 0 ? true: false}
+            isCompleted={course.progress_rate === 100 ? true : false}
+        />
+     );
 
     return (
-        <div className="card-list">
-            {refinedList.length === 0 
-            ? 
-            <NoResultPage/>
-            : 
-            <StyledCardGrid>
-                { refinedList
-                .map((course) => (
-                    <CourseCard 
-                        key={course.id}
-                        id={course.id}
-                        variant="myLecture"
-                        thumbnail={course.course_thumbnail}
-                        title={course.course_title}
-                        tags={[
-                            {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                            {'label': categoryLabel[course.category_name] || "기타"}, 
-                            {'label': difficultyLabel[course.difficulty]},
-                        ]}
-
-                        value={course.completed_lectures || 0} 
-                        max={course.total_lectures || 0} 
-                        lectureId={course.course_id}
-                        
-                        isActive={course.days_until_expiry !== 0 ? true: false}
-                        isCompleted={course.progress_rate === 100 ? true : false}
-                    />
-                ))
-                }
-            </StyledCardGrid>
-            }
-        </div>
+        <BaseCourseList
+            data={sampleEnrollmentMy.items as MyCourseItem[]}
+            filterFn={filterFn}
+            sortFn={sortFn}
+            sliceFn={sliceFn}
+            courseCard={myCourseCard}
+            onCountChange={onCountChange}
+        />
     )
 }
-
-
-export default FilterCardList;
