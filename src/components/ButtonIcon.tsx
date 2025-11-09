@@ -8,6 +8,7 @@ type ButtonProps = {
     variant?: ButtonVariant;
     hasAlert?: boolean;
     onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
+    className?: string;
 };
 
 const StyledButtonIcon = styled.button<{
@@ -140,13 +141,15 @@ const ButtonIcon:React.FC<ButtonProps> = ({
     variant = "dark",
     hasAlert = false,
     onClick,
+    className,
 }: ButtonProps) =>  {
     return (
         <StyledButtonIcon
-            $variant={variant}            
+            $variant={variant}
             $hasAlert={hasAlert}
-            aria-label={ariaLabel}     
+            aria-label={ariaLabel}
             onClick={onClick}
+            className={className}
         >
             {children}
             {hasAlert && <StyledAlertDot/>}
