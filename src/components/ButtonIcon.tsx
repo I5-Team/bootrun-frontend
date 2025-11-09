@@ -9,11 +9,13 @@ type ButtonProps = {
     hasAlert?: boolean;
     onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
     className?: string;
+    tooltip?: string;
 };
 
 const StyledButtonIcon = styled.button<{
     $variant?: ButtonVariant;
     $hasAlert: boolean;
+    $tooltip?: string;
 }>`
     width: auto;
     width: 4.2rem;
@@ -66,14 +68,20 @@ const StyledButtonIcon = styled.button<{
         `
     }
 
-    ${(p) => 
+    ${(p) =>
         p.$variant === "discord" &&
         css`
-            position: relative;
             background-color: ${({ theme }) => theme.colors.gray400};
             svg path {
                 fill: ${({ theme }) => theme.colors.white};
             }
+        `
+    }
+
+    ${(p) =>
+        (p.$tooltip || p.$variant === "discord") &&
+        css`
+            position: relative;
 
             &::before,
             &::after {
@@ -89,7 +97,7 @@ const StyledButtonIcon = styled.button<{
             }
 
             &::after {
-                content: "디스코드 참여하기";
+                content: "${p.$variant === "discord" ? "디스코드 참여하기" : p.$tooltip}";
                 position: absolute;
                 top: 125%;
                 left: 50%;
@@ -112,8 +120,8 @@ const StyledButtonIcon = styled.button<{
                 top: 115%;
                 left: 50%;
                 transform: translateX(-50%) rotate(45deg);
-                
-                width: 1rem; 
+
+                width: 1rem;
                 height: 1rem;
 
                 background-color: ${({ theme }) => theme.colors.surface};
@@ -142,11 +150,13 @@ const ButtonIcon:React.FC<ButtonProps> = ({
     hasAlert = false,
     onClick,
     className,
+    tooltip,
 }: ButtonProps) =>  {
     return (
         <StyledButtonIcon
             $variant={variant}
             $hasAlert={hasAlert}
+            $tooltip={tooltip}
             aria-label={ariaLabel}
             onClick={onClick}
             className={className}

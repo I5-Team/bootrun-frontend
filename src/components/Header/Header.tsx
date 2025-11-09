@@ -136,6 +136,7 @@ const DownloadBtn = () => {
       hasAlert={hasAlert}
       onClick={handleClick}
       className={rightSidebarType === 'materials' ? 'active' : ''}
+      tooltip="자료 다운로드"
     >
       <SvgDownload />
     </ButtonIcon>
@@ -155,6 +156,7 @@ const QnaBtn = () => {
       variant="light"
       onClick={handleClick}
       className={rightSidebarType === 'qna' ? 'active' : ''}
+      tooltip="Q&A"
     >
       <SvgMemo />
     </ButtonIcon>
@@ -168,7 +170,7 @@ const HomeBackBtn = () => {
 
   return (
     <Link to={`/lectures/${lectureId}`}>
-      <ButtonIcon ariaLabel="강의 상세 페이지로 돌아가기" variant="light">
+      <ButtonIcon ariaLabel="강의 상세 페이지로 돌아가기" variant="light" tooltip="강의 상세보기">
         <SvgHomeBack />
       </ButtonIcon>
     </Link>
