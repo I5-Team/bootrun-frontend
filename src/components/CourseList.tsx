@@ -249,7 +249,8 @@ export const FilterCourseList = ({
     const courseCard = (course: CourseItem) => (
         <CourseCard
             key={course.id}
-            id={course.id}
+            variant="info"
+            lectureId={course.id}
             thumbnail={course.thumbnail_url}
             tags={[
                 {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
@@ -262,7 +263,6 @@ export const FilterCourseList = ({
             teacherImage={course.instructor_image}
             description={course.description}
             price={course.price}
-            onLike={() => console.log(course.title)}
         />
     )
 
@@ -320,9 +320,8 @@ export const FilterMyCourseList = ({
 
     const myCourseCard = (course: MyCourseItem) => (
         <CourseCard 
-            key={course.id}
-            id={course.id}
-            variant="myLecture"
+            key={course.course_id}
+            variant="study"
             thumbnail={course.course_thumbnail}
             title={course.course_title}
             tags={[
