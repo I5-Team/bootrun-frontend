@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import FilterCardList from "../../components/FilterCardList";
+import { FilterCourseList } from "../../components/CourseList";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useMediaQuery from "../../hooks/useMediaQuery";
@@ -76,7 +76,7 @@ export default function LectureSearchPage() {
             </StyledTitleWrapper>
             {keyword === ""
                 ? <TempNoResultPage>검색 키워드를 입력하세요</TempNoResultPage>
-                : <FilterCardList onCountChange={setResultCount}/>
+                : <FilterCourseList onCountChange={setResultCount}/>
             }
         </>
     );

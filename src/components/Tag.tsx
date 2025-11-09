@@ -32,7 +32,7 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
     $variant === 'light' ? theme.colors.primary300 : theme.colors.white};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.mobileFontSize.md};
   }
 
   svg path {
