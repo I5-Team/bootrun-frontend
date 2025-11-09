@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 
 // import - components
@@ -75,7 +75,13 @@ const linkTo = variant === 'info'
 
       <CardTagList tags={tags}/>
 
-      <StyledTitle $size={variant === "study" ? 'sm' : 'lg'}>{title}</StyledTitle>
+      {variant === "info" ? (
+        <Link to={linkTo}>
+          <StyledTitle $size="lg">{title}</StyledTitle>
+        </Link>
+      ) : (
+          <StyledTitle $size="sm">{title}</StyledTitle>
+      )}     
     </>
 
   )
