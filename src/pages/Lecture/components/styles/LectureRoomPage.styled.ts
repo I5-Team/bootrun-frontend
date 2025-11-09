@@ -14,24 +14,6 @@ export const PageContainer = styled.div`
   margin-right: calc(-50vw + 50%);
 `;
 
-export const ProgressBar = styled.div<{ $progress: number }>`
-  position: relative;
-  width: 100%;
-  height: 0.4rem;
-  background-color: ${({ theme }) => theme.colors.gray200};
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: ${({ $progress }) => $progress}%;
-    background-color: ${({ theme }) => theme.colors.primary300};
-    transition: width 0.3s ease;
-  }
-`;
-
 export const MainContent = styled.div`
   display: flex;
   flex: 1;
@@ -249,7 +231,6 @@ export const QuizContentWrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin: 8rem 0 0 0;
-  background-color: ${({ theme }) => theme.colors.gray50};
 
   @media ${({ theme }) => theme.devices.tablet} {
     max-width: 100%;

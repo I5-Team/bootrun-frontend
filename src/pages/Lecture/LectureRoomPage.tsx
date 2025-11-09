@@ -6,6 +6,7 @@ import CurriculumSidebar from './components/CurriculumSidebar';
 import VideoPlayer from './components/VideoPlayer';
 import MaterialsTab from './components/MaterialsTab';
 import QnaTab from './components/QnaTab';
+import ProgressBar from '../../components/ProgressBar';
 import { useLectureRoom } from '../../contexts/LectureRoomContext';
 import iconArrowLeft from '../../assets/icons/icon-arrow-left.svg';
 import iconArrowRight from '../../assets/icons/icon-arrow-right.svg';
@@ -169,7 +170,7 @@ export default function LectureRoomPage() {
   return (
     <S.PageContainer>
       {/* 진행률 바 */}
-      <S.ProgressBar $progress={MOCK_DATA.enrollment.progress_rate} />
+      <ProgressBar variant="lecture" value={MOCK_DATA.enrollment.progress_rate} />
 
       {/* 메인 컨텐츠 영역 */}
       <S.MainContent>
