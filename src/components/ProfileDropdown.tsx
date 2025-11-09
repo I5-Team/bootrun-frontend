@@ -22,7 +22,7 @@ const StyledProfileDropdown = styled.div`
     font-weight: 500;
 `;
 
-const StyledItem = styled.div`
+const StyledItemWrapper = styled.div`
     width: 100%;
     padding: 0.8rem 0;
 
@@ -36,16 +36,14 @@ const StyledItem = styled.div`
     }
 `;
 
-const StyledLink = styled(Link)`
+const StyledItem = styled.div`
     width: 100%;
     padding: 1rem 2rem;
     line-height: 2rem;
-`;
 
-const StyledButton = styled.button`
-    width: 100%;
-    padding: 1rem 2rem;
-    line-height: 2rem;
+    &:hover {
+        background-color: ${({ theme }) => theme.colors.gray100}
+    }
 `;
 
 const StyledCaption = styled.p`
@@ -64,20 +62,20 @@ export const ProfileDropdown = () => {
 
     return (
         <StyledProfileDropdown>
-            <StyledItem>
-                <StyledLink to={ROUTES.MY_LECTURES}>내 강의 목록</StyledLink>
-                <StyledLink to={ROUTES.MYPAGE}>마이페이지</StyledLink>
-            </StyledItem>
+            <StyledItemWrapper>
+                <StyledItem as={Link} to={ROUTES.MY_LECTURES}>내 강의 목록</StyledItem>
+                <StyledItem as={Link} to={ROUTES.MYPAGE}>마이페이지</StyledItem>
+            </StyledItemWrapper>
 
-            <StyledItem>
-                <StyledButton onClick={handleLogout}>로그아웃</StyledButton>
-            </StyledItem>
+            <StyledItemWrapper>
+                <StyledItem as="button" onClick={handleLogout}>로그아웃</StyledItem>
+            </StyledItemWrapper>
 
-            <StyledItem>
+            <StyledItemWrapper>
                 <StyledCaption>
                     제보 및 문의: <a href="mailto:">boot-run@bootrun.com</a>
                 </StyledCaption>
-            </StyledItem>
+            </StyledItemWrapper>
         </StyledProfileDropdown>
     )
 }
