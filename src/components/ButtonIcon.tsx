@@ -74,6 +74,7 @@ const StyledButtonIcon = styled.button<{
         p.$variant === "discord" &&
         css`
             background-color: ${({ theme }) => theme.colors.gray400};
+            color: ${({ theme }) => theme.colors.white};
             svg path {
                 fill: ${({ theme }) => theme.colors.white};
             }
@@ -84,7 +85,6 @@ const StyledButtonIcon = styled.button<{
         (p.$tooltip || p.$variant === "discord") &&
         css`
             position: relative;
-            color: ${({ theme }) => theme.colors.white}; 
 
             &::before,
             &::after {
