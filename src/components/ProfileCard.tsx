@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Button from "../components/Button";
 import Profile from "../components/Profile";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,12 +8,12 @@ import SvgPlay from "../assets/icons/icon-play.svg?react";
 import SvgMyPage from "../assets/icons/icon-mypage.svg?react";
 
 // profileCard
-const StyledPofileCard = styled.article`
+const StyledPofileCard = styled.article<{ $variant: "main" | "sidebar" }>`
     width: clamp(25rem, 24vw, 29rem);
     min-width: 25rem;
     height: 100%;
 
-    padding: 4rem 3.2rem;
+    padding: 0 3.2rem;
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.md};
 
@@ -24,14 +24,26 @@ const StyledPofileCard = styled.article`
     gap: 1.6rem;
     text-align: center;
 
-    @media ${({ theme }) => theme.devices.mobile} {
-        border: 0.1rem solid transparent;
-        min-width: 29rem;
-    }
+    ${({ $variant }) => ($variant === "sidebar") && css`
+        border: none;
+        border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+        border-radius: 0;
+        width: 100%;
+        height: 33rem;
+        z-index: 10;
+    `}
 `;
 
 // userInfo - name + email
 const StyledUserInfo = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.2rem;
+`;
+
+const StyledInfoText = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,6 +54,7 @@ const StyledUserInfo = styled.div`
 const StyledName = styled.p`
     font-weight: 600;
     text-align: center;
+    line-height: 2.2rem;
 `;
 
 const StyledEmail = styled.p`
@@ -52,7 +65,7 @@ const StyledEmail = styled.p`
 
 // !loggedIn > text
 const StyledText = styled.p`
-    line-height: 1.3;
+    line-height: 2.2rem;
 `;
 
 // loggedIn > actionList
@@ -63,8 +76,6 @@ const StyledActionList = styled.div`
     flex-direction: column;
     gap: 1.2rem;
     margin-top: 0.8rem;
-
-
     width: 14.8rem;
     min-width: fit-content;
 `
@@ -76,6 +87,7 @@ const StlyedLink = styled(Link)`
 
     font-size: ${({ theme }) => theme.fontSize.sm};
     color: ${({ theme }) => theme.colors.gray300};
+    font-weight: 500; 
 
     width: 100%;
     padding-block: 0.4rem;
@@ -98,19 +110,19 @@ const UserActionList = () => {
     return (
         <StyledActionList>
             <StlyedLink to={ROUTES.MY_LECTURES}><SvgPlay/>내 강의 목록 보기</StlyedLink>
-            <StlyedLink to={ROUTES.PROFILE}><SvgMyPage/>마이페이지</StlyedLink>
+            <StlyedLink to={ROUTES.MYPAGE}><SvgMyPage/>마이페이지</StlyedLink>
         </StyledActionList>
     )
 }
 
-export const ProfileCard = () => {
+export const ProfileCard = ( { variant = "main" }: { variant?: "main" | "sidebar" }) => {
     const navigate = useNavigate();
 
     const goLogin = () => {
         navigate(ROUTES.LOGIN);
     }
 
-    const isLoggedIn = false;
+    const isLoggedIn = true;
     const userInfo = {
         profile_image : 'https://picsum.photos/id/237/200/200',
         nickname: 'S부트런짱2',
@@ -118,22 +130,23 @@ export const ProfileCard = () => {
     }
 
     return (
-        <StyledPofileCard>
-            {isLoggedIn 
-            ? <Profile size={10} src={userInfo.profile_image}/>
-            : <Profile size={10}/>
-            }
-            
+        <StyledPofileCard $variant={variant}>            
             <StyledUserInfo>
-                <StyledName>{isLoggedIn ? userInfo.nickname : '호기심 많은 개발자님'}</StyledName>
-                {isLoggedIn && <StyledEmail>{userInfo.email}</StyledEmail>}
+                {isLoggedIn 
+                ? <Profile size={10} src={userInfo.profile_image}/>
+                : <Profile size={10}/>
+                }
+                <StyledInfoText>
+                    <StyledName>{isLoggedIn ? userInfo.nickname : '호기심 많은 개발자님'}</StyledName>
+                    {isLoggedIn && <StyledEmail>{userInfo.email}</StyledEmail>}
+                </StyledInfoText>
             </StyledUserInfo>
 
             {!isLoggedIn && <StyledText>부트런에 로그인 후<br/>커뮤니티와 함께 성장하세요.</StyledText>}
 
             {isLoggedIn
             ? <UserActionList/>
-            : <Button fullWidth onClick={goLogin}>로그인</Button>
+            : <Button size="lg" fullWidth onClick={goLogin}>로그인</Button>
             }
         </StyledPofileCard>
     )

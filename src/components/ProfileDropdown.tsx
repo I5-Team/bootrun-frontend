@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ROUTES } from "../router/RouteConfig";
 
 // profile dropdown
@@ -8,7 +8,7 @@ export const StyledDropdownWrapper = styled.div`
     cursor: pointer;
 `
 
-const StyledProfileDropdown = styled.div`
+const StyledProfileDropdown = styled.div<{ $isOpen: boolean, $variant: 'dropdown' | 'sidebar' }>`
     position: absolute;
     top: calc(100% + 0.4rem);
     right: 0;
@@ -20,6 +20,20 @@ const StyledProfileDropdown = styled.div`
 
     font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 500;
+
+    ${({ $variant }) => ($variant === "sidebar") && css`
+        position: relative;
+        top: 0;
+        width: 100%;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    `}
+
+    visibility: ${({ $isOpen }) => $isOpen ? "visible" : "hidden"};
+    opacity: ${({ $isOpen }) => $isOpen ? 1 : 0};
+    transform: ${({ $isOpen }) => $isOpen ? 'translateY(0)' : 'translateY(-0.5rem)'};
+    transition: opacity 0.3s ease, transform 0.3s ease;
 `;
 
 const StyledItemWrapper = styled.div`
@@ -55,25 +69,38 @@ const StyledCaption = styled.p`
 
 `;
 
-export const ProfileDropdown = () => {
+export const ProfileDropdown = ({ isOpen = true, variant = "dropdown" }: { 
+    isOpen?: boolean;
+    variant?: 'dropdown' | 'sidebar';
+}) => {
+    const isLoggedIn = true;
     const handleLogout = () => {
         console.log("로그아웃");
     }
 
     return (
-        <StyledProfileDropdown>
-            <StyledItemWrapper>
-                <StyledItem as={Link} to={ROUTES.MY_LECTURES}>내 강의 목록</StyledItem>
-                <StyledItem as={Link} to={ROUTES.MYPAGE}>마이페이지</StyledItem>
-            </StyledItemWrapper>
+        <StyledProfileDropdown $variant={variant} $isOpen={isOpen}>
+            {variant === "dropdown" ? (
+                <StyledItemWrapper>
+                    <StyledItem as={Link} to={ROUTES.MY_LECTURES}>내 강의 목록</StyledItem>
+                    <StyledItem as={Link} to={ROUTES.MYPAGE}>마이페이지</StyledItem>
+                </StyledItemWrapper>
+            ): (
+                <StyledItemWrapper>
+                    <StyledItem as={Link} to="*">부트런 소개</StyledItem>
+                    <StyledItem as={Link} to="*">수강생 후기</StyledItem>
+                </StyledItemWrapper>
+            )}
 
-            <StyledItemWrapper>
-                <StyledItem as="button" onClick={handleLogout}>로그아웃</StyledItem>
-            </StyledItemWrapper>
+            {isLoggedIn &&
+                <StyledItemWrapper>
+                    <StyledItem as="button" onClick={handleLogout}>로그아웃</StyledItem>
+                </StyledItemWrapper>
+            }
 
             <StyledItemWrapper>
                 <StyledCaption>
-                    제보 및 문의: <a href="mailto:">boot-run@bootrun.com</a>
+                    제보 및 문의: <a href="mailto:boot-run@bootrun.com">boot-run@bootrun.com</a>
                 </StyledCaption>
             </StyledItemWrapper>
         </StyledProfileDropdown>

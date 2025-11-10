@@ -28,6 +28,7 @@ import ButtonIcon from "../ButtonIcon.tsx";
 import SearchForm from "../SearchForm.tsx";
 import { useEffect, useRef, useState } from "react";
 import { ProfileDropdown, StyledDropdownWrapper } from "../ProfileDropdown.tsx";
+import HeaderSidebar from "./HeaderSidebar.tsx";
 
 const HeaderLogo = () => {
     return(
@@ -47,73 +48,84 @@ const NavList = () => {
     )
 }
 
-const SearchOpenBtn = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
-
-    const handleOpenSearch = () => {
-        navigate(ROUTES.LECTURE_LIST_SEARCH);
-    }
-
+const SearchOpenBtn = ({ isActive, onClick }: { 
+    isActive: boolean, 
+    onClick: (e:React.MouseEvent<HTMLButtonElement>) => void 
+}) => {
     return (
         <ButtonIcon 
             ariaLabel="검색창 열기"
             active={isActive}
-            onClick={handleOpenSearch}
+            onClick={onClick}
         >
             <SvgSearch/>
         </ButtonIcon>
     )
 }
 
-
-const MenuOpenBtn = () => {
+const SidebarOpenBtn = ({ isActive, onClick }: {
+    isActive?: boolean, 
+    onClick: (e:React.MouseEvent<HTMLButtonElement>) => void 
+}) => {
     return (
-        <ButtonIcon ariaLabel="메뉴 열기">
+        <ButtonIcon 
+            ariaLabel="메뉴 열기"
+            active={isActive}
+            onClick={onClick}
+        >
             <SvgHamberger/>
         </ButtonIcon>
     )
 }
 
-
 const UserActions = () => {
-    const [isOpenDropdown, setIsOpenDropdown] = useState<boolean>(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     let isLoggedIn = true;
 
     const handleOpenDropdown = () => {
-        setIsOpenDropdown(prev => !prev);
+        setIsDropdownOpen(prev => !prev);
     }
-
-
 
     useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-        if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) return;
-        setIsOpenDropdown(false);
-    } 
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") setIsOpenDropdown(false);
-    }
+        const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (!dropdownRef.current) return;
 
-    if (isOpenDropdown) {
-        document.addEventListener("mousedown", handleClickOutside);
-        document.addEventListener("keydown", handleKeyDown);
-    }
+        if (dropdownRef.current.contains(target)) {
+            if (target.tagName === "BUTTON" || target.tagName === "A") {
+            setTimeout(() => setIsDropdownOpen(false), 0);
+                setIsDropdownOpen(false);
+        }
+            return; 
+        }
 
-    return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-        document.removeEventListener("keydown", handleKeyDown);
-    }
-    }, [isOpenDropdown]);
+        setIsDropdownOpen(false);
+        };
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsDropdownOpen(false);
+        }
+
+        if (isDropdownOpen) {
+            document.addEventListener("mouseup", handleClickOutside);
+            document.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener("mouseup", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+    }, [isDropdownOpen]);
 
     return (
         <>
             {isLoggedIn ?
-                <StyledDropdownWrapper ref={dropdownRef} onClick={handleOpenDropdown}>
-                    <Profile size={4.2} isActive={isOpenDropdown}/>
-                    {isOpenDropdown && <ProfileDropdown/>}
+                <StyledDropdownWrapper ref={dropdownRef}>
+                    <button onClick={handleOpenDropdown}>
+                        <Profile size={4.2} isActive={isDropdownOpen}/>
+                    </button>
+                    <ProfileDropdown isOpen={isDropdownOpen}/>
                 </StyledDropdownWrapper>
                 : 
                 <Link to={ROUTES.LOGIN}>
@@ -126,13 +138,34 @@ const UserActions = () => {
 
 const ActionLists = () => {
     const { isTablet } = useMediaQuery();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isSearchActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
+    const handleOpenSearch = () => {
+        navigate(ROUTES.LECTURE_LIST_SEARCH);
+    }
+
+    const handleSidebarOpen = () => {
+        setIsSidebarOpen(prev => !prev);
+    }
+    
     return (
         <StyledActionList>
             {isTablet ?
                 <>
-                    <SearchOpenBtn/>
-                    <MenuOpenBtn/>
+                    <SearchOpenBtn 
+                        isActive={isSearchActive}
+                        onClick={handleOpenSearch}
+                    />
+                    <SidebarOpenBtn
+                        onClick={handleSidebarOpen}
+                    />
+                    <HeaderSidebar 
+                        isOpen={isSidebarOpen}
+                        setIsOpen={setIsSidebarOpen}
+                    />
                 </>
             : 
                 <>
