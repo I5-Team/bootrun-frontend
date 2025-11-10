@@ -72,7 +72,7 @@ const S = {
     display: flex;
     gap: 8px;
   `,
-  Title: styled.h3`
+  Title: styled.h2`
     font-size: ${({ theme }) => theme.fontSize.xxl};
     line-height: 5.6rem;
     font-weight: 700;
