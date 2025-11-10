@@ -7,6 +7,8 @@ interface UserTableProps {
   users: UserListItem[];
   // (추후) 사용자 상세 보기 모달을 위한 핸들러
   onUserClick: (userId: number) => void;
+  onActivate?: (userId: number) => void;
+  onDeactivate?: (userId: number) => void;
 }
 
 /**

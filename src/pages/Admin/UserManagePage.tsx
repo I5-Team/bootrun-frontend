@@ -1,21 +1,27 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import type { UserApiParams, UserListItem } from '../../types/AdminUserType';
-import { fetchUsers } from '../../api/adminApi';
+import type { UserApiParams } from '../../types/AdminUserType';
 
 // (하위 컴포넌트 임포트)
 import UserFilterBar from './UserFilterBar';
 import UserTable from './UserTable';
 import Pagination from './Pagination';
 import UserDetailModal from './UserDetailModal';
+import { useActivateUserMutation, useDeactivateUserMutation, useUserListQuery } from '../../queries/useUserQueries';
 
 
 
 
 export default function UserManagePage() {
-  // 1. 상태 정의
-  const [users, setUsers] = useState<UserListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  // // 1. 상태 정의
+  // const [users, setUsers] = useState<UserListItem[]>([]);
+  // const [loading, setLoading] = useState(true);
+  // // API 응답의 페이지네이션 정보 상태
+  // const [pagination, setPagination] = useState({
+  //   total: 0,
+  //   totalPages: 1,
+  // });
+  
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const isModalOpen = selectedUserId !== null;
@@ -29,31 +35,44 @@ export default function UserManagePage() {
     is_active: null,
   });
 
-  // API 응답의 페이지네이션 정보 상태
-  const [pagination, setPagination] = useState({
-    total: 0,
-    totalPages: 1,
-  });
+  // React Query를 사용한 데이터 패칭
+  const { data: userData, isLoading } = useUserListQuery(apiParams);
 
-  // 2. 데이터 흐름 (useEffect)
-  useEffect(() => {
-    const loadUsers = async () => {
-      setLoading(true);
-      try {
-        const response = await fetchUsers(apiParams);
-        setUsers(response.items);
-        setPagination({
-          total: response.total,
-          totalPages: response.total_pages,
-        });
-      } catch (error) {
-        console.error('사용자 목록 로딩 실패:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadUsers();
-  }, [apiParams]); // apiParams가 변경될 때마다 API 재호출
+  // 사용자 활성화/비활성화 뮤테이션 훅
+  const {mutate: activateUser} = useActivateUserMutation();
+  const {mutate: deactivateUser} = useDeactivateUserMutation();
+
+  // 로딩 상태
+  const loading = isLoading;
+  
+  // 사용자 목록
+  const users = userData ? userData.items : [];      
+  // 페이지네이션 정보
+  const pagination = {
+    total: userData ? userData.total : 0,
+    totalPages: userData ? userData.total_pages : 1,
+  };    
+
+
+  // // 2. 데이터 흐름 (useEffect)
+  // useEffect(() => {
+  //   const loadUsers = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetchUsers(apiParams);
+  //       setUsers(response.items);
+  //       setPagination({
+  //         total: response.total,
+  //         totalPages: response.total_pages,
+  //       });
+  //     } catch (error) {
+  //       console.error('사용자 목록 로딩 실패:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   loadUsers();
+  // }, [apiParams]); // apiParams가 변경될 때마다 API 재호출
 
 
 
@@ -99,7 +118,7 @@ const handleUserClick = useCallback((userId: number) => {
       {/* 테이블과 페이지네이션을 카드에 함께 표시 */}
       <S.CardBox>
         <S.TableHeader>
-          <span>총 {pagination.total}명의 사용자</span>
+          <span>총 {pagination.total.toLocaleString()}명의 사용자</span>
           {/* (엑셀 내보내기 버튼 등) */}
         </S.TableHeader>
         
@@ -109,6 +128,8 @@ const handleUserClick = useCallback((userId: number) => {
           <UserTable
             users={users}
             onUserClick={handleUserClick}
+            onActivate={activateUser}
+            onDeactivate={deactivateUser}
           />
         )}
         
