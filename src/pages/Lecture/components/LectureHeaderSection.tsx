@@ -4,6 +4,8 @@ import { useApiData } from '../../../hooks/useApiData';
 import { mockHeaderData } from '../../../data/mockLectureData';
 import type { LectureHeaderData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import Tag from '../../../components/Tag';
+import Profile from '../../../components/Profile';
 
 const LectureHeaderSection: React.FC = () => {
   const { data, loading, error } = useApiData<LectureHeaderData>(mockHeaderData, 300);
@@ -18,9 +20,12 @@ const LectureHeaderSection: React.FC = () => {
     <S.HeaderWrapper>
       <S.LectureInfo>
         <S.TagContainer>
-          {tags.map(tag => (
-            <S.Tag key={tag} $dark={tag.includes("커뮤니티")}>{tag}</S.Tag>
+          {tags.map((tag, index) => (
+            <Tag key={tag} variant={index === 0 ? 'dark' : 'light'}>
+              {tag}
+            </Tag>
           ))}
+          
         </S.TagContainer>
         <S.Title>{title}</S.Title>
         <S.Description>{description}</S.Description>
@@ -28,9 +33,9 @@ const LectureHeaderSection: React.FC = () => {
       
       <S.InstructorContainer>
         <S.Profile>
-          <S.ProfileImage src={instructor.imageUrl} alt={instructor.name} />
+          <Profile size={4.6} src={instructor.imageUrl} alt={`${instructor.name} 강사 프로필`} />
           <S.ProfileInfo>
-            <S.ProfileName>{instructor.name}</S.ProfileName>
+            <S.ProfileName>{instructor.name} 강사님</S.ProfileName>
             <S.ProfileRole>{instructor.role}</S.ProfileRole>
           </S.ProfileInfo>
         </S.Profile>
@@ -53,38 +58,28 @@ const LectureHeaderSection: React.FC = () => {
 
 const S = {
   HeaderWrapper: styled.section`
-    width: 790px;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 3.2rem;
   `,
   LectureInfo: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.6rem;
   `,
   TagContainer: styled.div`
     display: flex;
     gap: 8px;
   `,
-  Tag: styled.div<{ $dark?: boolean }>`
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    background: ${({ $dark }) => ($dark ? '#47494D' : '#DEE8FF')};
-    color: ${({ $dark }) => ($dark ? '#FFFFFF' : '#2E6FF2')};
-  `,
   Title: styled.h3`
-    font-size: 40px;
+    font-size: ${({ theme }) => theme.fontSize.xxl};
+    line-height: 5.6rem;
     font-weight: 700;
-    color: #121314;
-    margin: 0;
   `,
   Description: styled.p`
-    font-size: 16px;
-    color: #47494D;
-    margin: 0;
+    font-size: 1.6rem;
+    color: ${({ theme }) => theme.colors.gray400};
   `,
   InstructorContainer: styled.div`
     display: flex;
@@ -92,56 +87,53 @@ const S = {
   Profile: styled.div`
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 1.2rem;
   `,
-  ProfileImage: styled.img`
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid #D9DBE0;
-    object-fit: cover;
+  ProfileInfo: styled.div`
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    gap: 0.4rem;
   `,
-  ProfileInfo: styled.div``,
   ProfileName: styled.p`
-    font-size: 16px;
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 600;
-    color: #121314;
-    margin: 0;
+    line-height: 2.2rem;
+    color: ${({ theme }) => theme.colors.surface};
   `,
   ProfileRole: styled.p`
-    font-size: 14px;
-    color: #47494D;
-    margin: 0;
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.gray400};
   `,
   ScheduleContainer: styled.div`
-    background: #F3F5FA;
-    border-radius: 12px;
-    padding: 32px;
+    background: ${({ theme }) => theme.colors.gray100};
+    border-radius: ${({ theme }) => theme.radius.lg};
+    padding: 3.2rem;
     
     strong {
-      font-size: 18px;
-      font-weight: 700;
-      color: #121314;
       display: block;
+      line-height: 2.4rem;
+      font-size: ${({ theme }) => theme.mobileFontSize.xl};
+      font-weight: 700;
+      color: ${({ theme }) => theme.colors.surface};
+      margin-bottom: 1.2rem;
     }
     ul {
-      list-style: none;
-      padding: 0;
-      margin: 12px 0 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 1.2rem;
     }
     li {
       display: flex;
-      font-size: 16px;
+      line-height: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 500;
       color: #121314;
     }
   `,
   ScheduleLabel: styled.span`
-    color: #8D9299;
-    width: 80px;
+    color: ${({ theme }) => theme.colors.gray300};
+    width: 8rem;
     flex-shrink: 0;
   `,
 };

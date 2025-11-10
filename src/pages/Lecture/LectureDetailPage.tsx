@@ -3,10 +3,9 @@ import type { SectionRefs } from '../../types/LectureType';
 
 // 스타일
 import {
-  LectureDetailContainer,
   LectureMainLayout,
-  PageContainer,
   ContentWrapper,
+  SectionWrapper,
 } from './LectureDetailPage.styled';
 
 // 컴포넌트
@@ -39,29 +38,29 @@ export default function LectureDetailPage() {
   };
 
   return (
-    <PageContainer>
-      <LectureDetailContainer>
+      <>
         <LectureBannerSection />
 
         <LectureMainLayout>
           {/* 메인 콘텐츠 영역 (왼쪽) */}
           <ContentWrapper>
             <LectureHeaderSection />
-            <SectionTabs refs={sectionRefs} />
 
-            {/* 각 섹션은 ref를 받고, 데이터는 내부의 useApiData 훅으로 가져온다. */}
-            <LectureIntroSection ref={introRef} />
-            <ReviewSection ref={reviewsRef} />
-            <CurriculumSection ref={curriculumRef} />
-            <InstructorSection ref={instructorRef} />
-            <FAQSection ref={faqRef} />
-            <NoticeSection />
+            <SectionWrapper>
+              <SectionTabs refs={sectionRefs} />
+              {/* 각 섹션은 ref를 받고, 데이터는 내부의 useApiData 훅으로 가져온다. */}
+              <LectureIntroSection ref={introRef} />
+              <ReviewSection ref={reviewsRef} />
+              <CurriculumSection ref={curriculumRef} />
+              <InstructorSection ref={instructorRef} />
+              <FAQSection ref={faqRef} />
+              <NoticeSection />
+            </SectionWrapper>
           </ContentWrapper>
 
           {/* 고정 사이드바 (오른쪽) */}
           <LectureInfoBox />
         </LectureMainLayout>
-      </LectureDetailContainer>
-    </PageContainer>
+      </>
   );
 }

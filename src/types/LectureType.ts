@@ -100,6 +100,6 @@ export interface CardInfoItem {
 export interface CardData {
   title: string;
   items: CardInfoItem[];
-  price: string;
+  price: number;
   status: 'open' | 'closed'; // 버튼 상태 ('open' -> 수강신청, 'closed' -> 마감)
 }

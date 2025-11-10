@@ -10,39 +10,37 @@ const NoticeSection: React.FC = () => {
   if (!data) return null; // 로딩/에러는 생략 (간단한 컴포넌트)
 
   return (
-    <S.NoticeWrapper>
-      <S.NoticeTitle>{data.title}</S.NoticeTitle>
-      <S.NoticeList>
+    <Notice.NoticeWrapper>
+      <Notice.NoticeTitle>{data.title}</Notice.NoticeTitle>
+      <Notice.NoticeList>
         {data.items.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
-      </S.NoticeList>
-    </S.NoticeWrapper>
+      </Notice.NoticeList>
+    </Notice.NoticeWrapper>
   );
 };
-const S = {
-  NoticeWrapper: styled.section`
+const Notice = {
+  NoticeWrapper: styled.div`
     width: 100%;
-    background: #F3F5FA;
-    border-radius: 12px;
-    padding: 32px;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #47494D;
+    background: ${({ theme }) => theme.colors.gray100};
+    border-radius: ${({ theme }) => theme.radius.xl};
+    padding: 3.2rem;
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.gray400};
   `,
   NoticeTitle: styled.strong`
-    font-weight: 700;
-    color: #121314;
+    font-weight: 500;
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 1.2rem;
+    color: ${({ theme }) => theme.colors.gray300};
   `,
   NoticeList: styled.ul`
     list-style: disc;
-    margin: 0;
-    padding-left: 20px;
+    padding-left: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.8rem;
   `,
 };
 

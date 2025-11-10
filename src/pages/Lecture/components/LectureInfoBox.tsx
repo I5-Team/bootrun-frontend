@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockCardData } from '../../../data/mockLectureData';
 import type { CardData } from '../../../types/LectureType';
@@ -7,10 +7,22 @@ import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponen
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 
-
-
 const LectureInfoBox: React.FC = () => {
   const { data, loading, error } = useApiData<CardData>(mockCardData, 200);
+
+  const calculateDdayFrom = (targetDateString: string) => {
+    const targetDate = new Date(targetDateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = targetDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays > 0) return `D-${diffDays}`;
+    if (diffDays === 0) return 'D-Day';
+    return `D+${Math.abs(diffDays)}`;
+};
 
   return (
     <S.FloatingCardWrapper>
@@ -18,31 +30,34 @@ const LectureInfoBox: React.FC = () => {
       {error && <ErrorMessage message={error.message} />}
       {data && (
         <>
+          <S.Title>{data.title}</S.Title>
+
           <S.Content>
-            <S.Title>{data.title}</S.Title>
             <S.LectureInfoList>
               {data.items.map((item) => (
                 <li key={item.label}>
                   <S.InfoLabel>{item.label}</S.InfoLabel>
                   <S.InfoValue>
                     <span style={{ whiteSpace: 'nowrap' }}>{item.value}</span>
-                    {item.isClosed && (
-                      <S.DdayClosed>모집마감</S.DdayClosed>
-                    )}
+                    {item.isClosed !== undefined && 
+                    (item.isClosed 
+                      ? <S.DdayTag $variant="closed">모집마감</S.DdayTag> 
+                      : <S.DdayTag $variant="open">{calculateDdayFrom('2025-07-27')}</S.DdayTag>)
+                    }
                   </S.InfoValue>
                 </li>
               ))}
             </S.LectureInfoList>
-            <S.Price>{data.price}</S.Price>
           </S.Content>
 
           <S.ButtonContainer>
-            <Button variant='primary' fullWidth disabled={data.status === 'closed'}>
-              {data.status === 'closed' ? '수강신청 마감' : '수강신청 하기'}
-            </Button>
-            <Button variant='outline' fullWidth aria-label="강의 링크 공유하기" iconSvg={<ShareIcon/>}>
-              공유하기
-            </Button>
+            <S.Price>₩{data.price.toLocaleString()}</S.Price>
+            {data.status === "closed" 
+              ? <Button size="lg" fullWidth disabled={true}>수강신청 마감</Button>
+              :   
+              <Button size="lg" fullWidth>수강신청 하기</Button>
+            }
+            <Button variant='outline' size="lg" fullWidth aria-label="강의 링크 공유하기" iconSvg={<ShareIcon/>}>공유하기</Button>
           </S.ButtonContainer>
         </>
       )}
@@ -53,40 +68,46 @@ const LectureInfoBox: React.FC = () => {
 // --- Styles (HTML 클래스명 기반으로 재정리) ---
 const S = {
   FloatingCardWrapper: styled.aside`
-    /* _container_8lgj3_34 */
-    width: 360px;
+    flex: 1 1 auto;
+    min-width: 34rem;
+
     display: flex;
     flex-direction: column;
-    border: 1px solid #d9dbe0;
-    border-radius: 12px;
-    background: #ffffff;
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.lg};
+    padding: 3.2rem;
+
+    background: ${({ theme }) => theme.colors.white};
     position: sticky;
-    top: 140px; 
-    box-sizing: border-box;
-    /* 내부에 padding을 주는 대신, content와 button 영역으로 분리 */
-  `,
-  Content: styled.div`
-    /* _content_8lgj3_49 */
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    top: calc(7rem + 1.6rem);
+
+    & > *:not(:last-child)::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 0.1rem;
+      border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+      margin-block: 2.4rem;
+    }
   `,
   Title: styled.p`
-    /* _title_8lgj3_14 */
-    font-size: 18px;
+    font-size: ${({ theme }) => theme.mobileFontSize.xl};
     font-weight: 700;
-    color: #121314;
+    color: ${({ theme }) => theme.colors.surface};
     margin: 0;
   `,
+  Content: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  `,
   LectureInfoList: styled.ul`
-    /* _lectureInfo_8lgj3_71 */
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.6rem;
 
     li {
       display: flex;
@@ -95,93 +116,52 @@ const S = {
     }
   `,
   InfoLabel: styled.span`
-    /* _label_8lgj3_10 */
-    font-size: 16px;
     font-weight: 500;
-    color: #8D9299;
+    color: ${({ theme }) => theme.colors.gray300};
   `,
   InfoValue: styled.span`
-    /* _value_8lgj3_10 */
-    font-size: 16px;
-    font-weight: 600;
-    color: #121314;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.gray400};
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.8rem;
   `,
-  DdayClosed: styled.span`
-    /* _ddayClosed_8lgj3_6 */
-    font-size: 12px;
-    font-weight: 600;
-    color: #FF4D4D; // (색상 추정)
-    background-color: #FFF0F0; // (색상 추정)
-    padding: 4px 8px;
-    border-radius: 4px;
-  `,
-  Price: styled.p`
-    /* _price_8lgj3_22 */
-    font-size: 24px;
-    font-weight: 600;
-    color: #121314;
-    margin: 8px 0 0; /* 위 목록과의 여백 */
-    text-align: right;
-  `,
-  ButtonContainer: styled.div`
-    /* _btnContainer_8lgj3_145 */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 24px 24px; /* 하단 버튼 영역 패딩 */
-    border-top: 1px solid #F3F5FA; // (스타일 추가)
-    padding-top: 24px; // (스타일 추가)
-  `,
-  PrimaryButton: styled.button`
-    /* _solid_hjb3g_64, _mainBtn_8lgj3_176 */
-    width: 100%;
-    height: 48px;
-    background: #2e6ff2;
-    border-radius: 10px;
-    border: none;
-    font-weight: 500;
-    font-size: 14px;
-    color: #ffffff;
-    cursor: pointer;
-    
-    &:hover {
-      opacity: 0.9;
-    }
-    
-    &:disabled {
-      background: #D9DBE0; // (비활성 색상 추정)
-      color: #8D9299;
-      cursor: not-allowed;
-    }
-  `,
-  SecondaryButton: styled.button`
-    /* _outline_hjb3g_74, _shareBtn_8lgj3_173 */
-    width: 100%;
-    height: 48px;
-    background: #ffffff;
-    border: 1px solid #d9dbe0;
-    border-radius: 10px;
-    
+  DdayTag: styled.span<{ $variant : "open" | "closed"}>`
+    font-size: ${({ theme }) => theme.fontSize.caption};
+    font-weight: 700;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    
-    font-weight: 500;
-    font-size: 14px;
-    color: #121314;
-    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    height: 2.4rem;
+    border-radius: ${({ theme }) => theme.radius.xs};
 
-    svg {
-      fill: #8D9299;
-    }
-
-    &:hover {
-      background: #f3f5fa;
-    }
+  ${({ $variant, theme }) => {
+    const variants = {
+      open: css`
+        color: ${theme.colors.white};
+        background-color: ${theme.colors.primary300};
+      `,
+      closed: css`
+        color: ${theme.colors.gray300};
+        background-color: ${theme.colors.gray200};
+      `,
+    };
+    return variants[$variant];
+  }}
+  `,
+  Price: styled.p`
+    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.primary300};;
+    text-align: left;
+    margin-bottom: 1.2rem;
+  `,
+  ButtonContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
   `,
 };
 

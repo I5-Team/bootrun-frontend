@@ -32,6 +32,8 @@ const S = {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    margin-top: 6rem;
     
     img {
       width: 100%;

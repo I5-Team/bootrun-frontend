@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   
   body {
     font-size: 1.6rem;
+    line-height: 1.3;
     color: ${({ theme }) => theme.colors.surface}
   }
   
