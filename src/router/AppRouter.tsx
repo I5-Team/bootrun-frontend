@@ -12,7 +12,7 @@ const LectureManagePage = lazy(() => import("../pages/Admin/LectureManagePage"))
 const PaymentManagePage = lazy(() => import("../pages/Admin/PaymentManagePage"));
 const UserManagePage = lazy(() => import("../pages/Admin/UserManagePage"));
 const LectureListPage = lazy(() => import("../pages/Lecture/LectureListPage"));
-const LectureSearchPage = lazy(() => import ("../pages/Lecture/LectureSearchPage"));
+const LectureSearchPage = lazy(() => import("../pages/Lecture/LectureSearchPage"));
 const LectureDetailPage = lazy(() => import("../pages/Lecture/LectureDetailPage"));
 const ProfilePage = lazy(() => import("../pages/MyPage/ProfilePage"));
 const LecturePaymentPage = lazy(() => import("../pages/Lecture/LecturePaymentPage"));
@@ -25,6 +25,7 @@ const MainPage = lazy(() => import("../pages/MainPage"));
 const MyPageLayout = lazy(() => import("../layouts/MypageLayout"));
 const OrderHistorySection = lazy(() => import("../pages/MyPage/OrderHistorySection"));
 const AccountSection = lazy(() => import("../pages/MyPage/AccountSection"));
+const LectureRoomLayout = lazy(() => import("../layouts/LectureRoomLayout"));
 
 
 // 사용자 타입별 페이지 인증 처리 예시
@@ -50,12 +51,15 @@ export default function AppRouter() {
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
                     <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
+
+                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
+
                     <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />  
                     <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />  
+
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
                     <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
-                    <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
                     {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
 
                     {/* 관리자용 페이지 개발 후에는 일바 */}
@@ -69,6 +73,10 @@ export default function AppRouter() {
                         <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} /> {/* /mypage/orders */}
                         <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} /> {/* /mypage/account */}
                     </Route>
+                </Route>
+                {/* LectureRoom 전용 레이아웃 */}
+                <Route element={<LectureRoomLayout/>}>
+                    <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
                 </Route>
                 {/* 404 페이지 */}
                 <Route element={<ErrorLayout/>}>

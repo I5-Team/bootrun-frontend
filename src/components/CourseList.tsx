@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import sampleCourses from "../assets/data/sampleCourses.json";
@@ -8,6 +8,9 @@ import sampleEnrollmentMy from "../assets/data/sampleEnrollmentMy.json";
 
 import CourseCard from "../components/CourseCard/CourseCard";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
+import EmptyState from "../components/EmptyState/EmptyState";
+import { Button } from "../components/Button";
+import { ROUTES } from "../router/RouteConfig";
 
 // type
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
@@ -110,39 +113,31 @@ const StyledCardGrid = styled.ul`
     }
 `;
 
-const StyledNoResult = styled.div`
-    width: 100%;
-    height: 36rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 2rem;
-    
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
-    font-weight: 600;
-
-    svg {
-        width: 8.8rem;
-        height: 8.8rem;
-    }
-
-    @media ${({ theme }) => theme.devices.mobile} {
-        svg {
-            width: 7rem;
-            height: 7rem;
-        }
-    }
-`;
-
 // components
-const NoResultPage = () => { 
+const NoResultPage = () => {
+    const navigate = useNavigate();
+
+    const handleGoToLectures = () => {
+        navigate(ROUTES.LECTURE_LIST);
+    };
+
     return (
-        <StyledNoResult>
-            <SvgAlert/>
-            <p>찾는 조건의 강의가 없습니다.</p>
-        </StyledNoResult>
-    )
+        <EmptyState
+            icon={<SvgAlert />}
+            title="검색 결과가 없어요"
+            description="다른 키워드로 다시 검색해보세요."
+            buttons={
+                <Button
+                    variant="primary"
+                    size="md"
+                    onClick={handleGoToLectures}
+                    ariaLabel="강의 보러가기"
+                >
+                    강의 보러가기
+                </Button>
+            }
+        />
+    );
 }
 
 type BaseCourseListProps<T> = {
