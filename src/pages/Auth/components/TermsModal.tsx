@@ -26,6 +26,7 @@ const TermsModalContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md};
+  margin-top: 3rem;
   width: 100%;
   max-width: 60rem;
   max-height: 80vh;
