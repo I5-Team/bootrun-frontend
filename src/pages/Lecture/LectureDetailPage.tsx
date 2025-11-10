@@ -7,7 +7,7 @@ import {
   LectureMainLayout,
   PageContainer,
   ContentWrapper,
-} from './components/styles/LectureDetailPage.styled';
+} from './LectureDetailPage.styled';
 
 // 컴포넌트
 import LectureBannerSection from './components/LectureBannerSection';
