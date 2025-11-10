@@ -3,6 +3,7 @@ import { Button } from '../../components/Button';
 import SuccessIcon from '../../assets/icons/icon-status-success.svg';
 import ErrorIcon from '../../assets/icons/icon-status-error.svg';
 import { ROUTES } from '../../router/RouteConfig';
+import EmptyState from '../../components/EmptyState/EmptyState';
 import * as S from './PaymentResultPage.styled';
 
 export default function PaymentResultPage() {
@@ -27,18 +28,15 @@ export default function PaymentResultPage() {
   };
 
   return (
-    <S.Container>
-      <S.ResultContent role={isSuccess ? 'status' : 'alert'}>
-        <S.IconWrapper $isSuccess={isSuccess}>
-          <img src={isSuccess ? SuccessIcon : ErrorIcon} alt="" aria-hidden="true" />
-        </S.IconWrapper>
-
-        <S.Title>{isSuccess ? '결제가 완료되었습니다' : '결제에 실패했어요'}</S.Title>
-
-        {isSuccess && <S.Description>수강 준비가 끝났어요. 지금 시작해볼까요?</S.Description>}
-
-        <S.ButtonGroup $isSuccess={isSuccess}>
-          {isSuccess ? (
+    <>
+      <EmptyState
+        className="payment-empty-state"
+        iconAnimation={isSuccess ? 'success' : 'error'}
+        icon={<img src={isSuccess ? SuccessIcon : ErrorIcon} alt="" aria-hidden="true" />}
+        title={isSuccess ? '결제가 완료되었습니다' : '결제에 실패했어요'}
+        description={isSuccess ? '수강 준비가 끝났어요. 지금 시작해볼까요?' : undefined}
+        buttons={
+          isSuccess ? (
             <Button
               variant="primary"
               size="md"
@@ -66,15 +64,15 @@ export default function PaymentResultPage() {
                 내 강의실로 이동
               </Button>
             </>
-          )}
-        </S.ButtonGroup>
-      </S.ResultContent>
+          )
+        }
+      />
 
       {/* // 나중에 삭제 필요 */}
       {/* 개발용 토글 버튼 */}
       <S.DevToggle onClick={handleToggleStatus}>
         {isSuccess ? '실패 화면 보기' : '성공 화면 보기'}
       </S.DevToggle>
-    </S.Container>
+    </>
   );
 }
