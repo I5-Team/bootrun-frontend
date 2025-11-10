@@ -1,3 +1,20 @@
+
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ROUTES } from "../../router/RouteConfig.ts";
+import useMediaQuery from "../../hooks/useMediaQuery.ts";
+
+// svg
+import logo from "../../assets/logos/logo-typo.svg";
+import SvgHamberger from "../../assets/icons/icon-hambuger.svg?react";
+import SvgDownload from "../../assets/icons/icon-download-folder.svg?react";
+import SvgMemo from "../../assets/icons/icon-memo.svg?react";
+import SvgHomeBack from "../../assets/icons/icon-home-back.svg?react";
+import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
+import SvgChapter from "../../assets/icons/icon-chapter.svg?react";
+import SvgSearch from "../../assets/icons/icon-search.svg?react";
+
+// components
 import {
   StyledHeader,
   StyledHeaderInner,
@@ -7,26 +24,16 @@ import {
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
+} from "./Header.styled.ts";
 
-} from './Header.styled.ts';
-
-import Button from '../Button.tsx';
-import Profile from '../Profile.tsx';
-
-import logo from '../../assets/logos/logo-typo.svg';
-import SvgSearch from '../../assets/icons/icon-search.svg?react';
-import SvgHamberger from '../../assets/icons/icon-hambuger.svg?react';
-import SvgDownload from '../../assets/icons/icon-download-folder.svg?react';
-import SvgMemo from '../../assets/icons/icon-memo.svg?react';
-import SvgHomeBack from '../../assets/icons/icon-home-back.svg?react';
-import SvgDiscord from '../../assets/icons/icon-sns-discord.svg?react';
-import SvgChapter from '../../assets/icons/icon-chapter.svg?react';
-
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../router/RouteConfig.ts';
-import useMediaQuery from '../../hooks/useMediaQuery.ts';
-import ButtonIcon from '../ButtonIcon.tsx';
+import Button from "../Button.tsx";
+import ButtonIcon from "../ButtonIcon.tsx";
+import Profile from "../Profile.tsx";
+import SearchForm from "../SearchForm.tsx";
+import HeaderSidebar from "./HeaderSidebar.tsx";
+import { ProfileDropdown, StyledDropdownWrapper } from "../ProfileDropdown.tsx";
 import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
+
 
 const HeaderLogo = () => {
   return (
@@ -51,74 +58,136 @@ const NavList = () => {
 };
 
 
-const SearchOpenBtn = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
-
-    const handleOpenSearch = () => {
-        navigate(ROUTES.LECTURE_LIST_SEARCH);
-    }
-
+const SearchOpenBtn = ({ isActive, onClick }: { 
+    isActive: boolean, 
+    onClick: (e:React.MouseEvent<HTMLButtonElement>) => void 
+}) => {
     return (
         <ButtonIcon 
             ariaLabel="검색창 열기"
             active={isActive}
-            onClick={handleOpenSearch}
+            onClick={onClick}
         >
             <SvgSearch/>
         </ButtonIcon>
     )
 }
 
-
-
-const MenuOpenBtn = () => {
-  return (
-    <ButtonIcon ariaLabel="메뉴 열기">
-      <SvgHamberger />
-    </ButtonIcon>
-  );
-};
+const SidebarOpenBtn = ({ isActive, onClick }: {
+    isActive?: boolean, 
+    onClick: (e:React.MouseEvent<HTMLButtonElement>) => void 
+}) => {
+    return (
+        <ButtonIcon 
+            ariaLabel="메뉴 열기"
+            active={isActive}
+            onClick={onClick}
+        >
+            <SvgHamberger/>
+        </ButtonIcon>
+    )
+}
 
 const UserActions = () => {
-  let isLoggedIn = false;
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    let isLoggedIn = true;
 
-  return (
-    <>
-      {isLoggedIn ? (
-        <Link to={ROUTES.PROFILE}>
-          <Profile size={4.2} />
-        </Link>
-      ) : (
-        <Link to={ROUTES.LOGIN}>
-          <Button>로그인</Button>
-        </Link>
-      )}
-    </>
-  );
-};
+    const handleOpenDropdown = () => {
+        setIsDropdownOpen(prev => !prev);
+    }
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (!dropdownRef.current) return;
+
+        if (dropdownRef.current.contains(target)) {
+            if (target.tagName === "BUTTON" || target.tagName === "A") {
+            setTimeout(() => setIsDropdownOpen(false), 0);
+                setIsDropdownOpen(false);
+        }
+            return; 
+        }
+
+        setIsDropdownOpen(false);
+        };
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsDropdownOpen(false);
+        }
+
+        if (isDropdownOpen) {
+            document.addEventListener("mouseup", handleClickOutside);
+            document.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener("mouseup", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+    }, [isDropdownOpen]);
+
+    return (
+        <>
+            {isLoggedIn ?
+                <StyledDropdownWrapper ref={dropdownRef}>
+                    <button onClick={handleOpenDropdown}>
+                        <Profile size={4.2} isActive={isDropdownOpen}/>
+                    </button>
+                    <ProfileDropdown isOpen={isDropdownOpen}/>
+                </StyledDropdownWrapper>
+                : 
+                <Link to={ROUTES.LOGIN}>
+                    <Button>로그인</Button>
+                </Link>
+            } 
+        </>    
+    )
+}
 
 const ActionLists = () => {
-  const { isTablet } = useMediaQuery();
+    const { isTablet } = useMediaQuery();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isSearchActive = location.pathname.includes(ROUTES.LECTURE_LIST_SEARCH);
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
-  return (
-    <StyledActionList>
-      {isTablet ? (
-        <>
-          <SearchOpenBtn />
-          <MenuOpenBtn />
-        </>
-      ) : (
-        <>
-          <NavList />
-          <SearchOpenBtn />
-          <UserActions />
-        </>
-      )}
-    </StyledActionList>
-  );
-};
+    const handleOpenSearch = () => {
+        navigate(ROUTES.LECTURE_LIST_SEARCH);
+    }
+
+    const handleSidebarOpen = () => {
+        setIsSidebarOpen(prev => !prev);
+    }
+    
+    return (
+        <StyledActionList>
+            {isTablet ?
+                <>
+                    <SearchOpenBtn 
+                        isActive={isSearchActive}
+                        onClick={handleOpenSearch}
+                    />
+                    <SidebarOpenBtn
+                        onClick={handleSidebarOpen}
+                    />
+                    <HeaderSidebar 
+                        isOpen={isSidebarOpen}
+                        setIsOpen={setIsSidebarOpen}
+                    />
+                </>
+            : 
+                <>
+                   <NavList/>
+                   <SearchForm/>
+                   <UserActions/>
+                </>
+            }
+
+        </StyledActionList>
+    )
+}
 
 // lectureRoom
 const DownloadBtn = () => {

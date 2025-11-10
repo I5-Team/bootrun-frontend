@@ -3,26 +3,34 @@ import userProfileDefault from "../assets/images/profile-user-default.png"
 
 type ProfileProps = {
     src?: string;
-    size?: number // rem
-    alt?: string
+    size?: number; // rem
+    alt?: string;
+    isActive?: boolean;
 }
 
-const StyledProfileImg = styled.img<{ size: number }>`
-    width: ${({ size }) => size}rem;
-    height: ${({ size }) => size}rem;
+const StyledProfileImg = styled.img<{ $size: number, $isActive: boolean }>`
+    width: ${({ $size }) => $size}rem;
+    height: ${({ $size }) => $size}rem;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
-    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     vertical-align: bottom;
+
+    border: ${({ $isActive, theme }) => $isActive
+    ? `0.2rem solid ${theme.colors.primary300}`
+    : `0.1rem solid ${theme.colors.gray200}`
+    }
+
+    
 `;
 
-export default function Profile({ src, size = 4.2, alt = "프로필" }: ProfileProps) { 
+export default function Profile({ src, size = 4.2, alt = "프로필", isActive = false }: ProfileProps) { 
     return (
         <>
             <StyledProfileImg 
                 src={src || userProfileDefault} 
-                size={size}
+                $size={size}
                 alt={ alt }
+                $isActive={isActive}  
             />
         </>
     );
