@@ -101,7 +101,21 @@ const ErrorMessage = styled.span`
  * - 제어/비제어 컴포넌트 모두 지원
  */
 export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
-  ({ error, fullWidth, className, value, defaultValue, ariaLabel, ...props }, ref) => {
+  (
+    {
+      error,
+      fullWidth,
+      className,
+      value,
+      defaultValue,
+      ariaLabel,
+      onFocus,
+      onBlur,
+      onChange,
+      ...props
+    },
+    ref
+  ) => {
     // 포커스 상태 관리
     const [isFocused, setIsFocused] = useState(false);
     // 비제어 컴포넌트를 위한 내부 상태 관리
@@ -118,13 +132,13 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
     // 포커스 시 상태 업데이트 및 부모의 onFocus 이벤트 호출
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
-      props.onFocus?.(e);
+      onFocus?.(e);
     };
 
     // 포커스 해제 시 상태 업데이트 및 부모의 onBlur 이벤트 호출
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(false);
-      props.onBlur?.(e);
+      onBlur?.(e);
     };
 
     // 값 변경 시 처리
@@ -134,12 +148,13 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
       if (value === undefined) {
         setInternalValue(e.target.value);
       }
-      props.onChange?.(e);
+      onChange?.(e);
     };
 
     return (
       <InputWrapper $fullWidth={fullWidth} className={className}>
         <StyledInput
+          {...props}
           ref={ref}
           id={inputId}
           $error={error}
@@ -151,7 +166,6 @@ export const InputLogin = React.forwardRef<HTMLInputElement, InputLoginProps>(
           aria-label={ariaLabel}
           aria-describedby={error && typeof error === 'string' ? errorId : undefined}
           aria-invalid={error ? true : undefined}
-          {...props}
         />
         {/* error가 문자열일 때만 에러 메시지 표시 */}
         {error && typeof error === 'string' && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
