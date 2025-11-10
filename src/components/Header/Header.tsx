@@ -22,7 +22,7 @@ import SvgHomeBack from '../../assets/icons/icon-home-back.svg?react';
 import SvgDiscord from '../../assets/icons/icon-sns-discord.svg?react';
 import SvgChapter from '../../assets/icons/icon-chapter.svg?react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig.ts';
 import useMediaQuery from '../../hooks/useMediaQuery.ts';
 import ButtonIcon from '../ButtonIcon.tsx';
@@ -112,7 +112,7 @@ const ActionLists = () => {
       ) : (
         <>
           <NavList />
-          <SearchForm />
+          <SearchOpenBtn />
           <UserActions />
         </>
       )}

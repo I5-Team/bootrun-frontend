@@ -1,32 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from 'react';
 import { ROUTES } from "./RouteConfig";
-
-import LoginPage from "../pages/Auth/LoginPage";
-import LectureListPage from "../pages/Lecture/LectureListPage";
-import SignUpPage from "../pages/Auth/SignUpPage";
-import AuthLayout from "../layouts/AuthLayout";
-import MainLayout from "../layouts/MainLayout";
-import DashBoardPage from "../pages/Admin/DashBoardPage";
-import LectureManagePage from "../pages/Admin/LectureManagePage";
-import PaymentManagePage from "../pages/Admin/PaymentManagePage";
-import UserManagePage from "../pages/Admin/UserManagePage";
-import LectureDetailPage from "../pages/Lecture/LectureDetailPage";
-import ProfilePage from "../pages/MyPage/ProfilePage";
-import LecturePaymentPage from "../pages/Lecture/LecturePaymentPage";
-import PaymentResultPage from "../pages/Lecture/PaymentResultPage";
-import MyLecturePage from "../pages/Lecture/MyLecturePage";
-import LectureRoomPage from "../pages/Lecture/LectureRoomPage";
-import NotFoundPage from "../pages/NotFoundPage";
-import ErrorLayout from "../layouts/ErrorLayout";
-import MainPage from "../pages/MainPage";
-import MyPageLayout from "../layouts/MypageLayout";
-import OrderHistorySection from "../pages/MyPage/OrderHistorySection";
-import AccountSection from "../pages/MyPage/AccountSection";
-import LectureRoomLayout from "../layouts/LectureRoomLayout";
-
 import { LoadingSpinner } from '../components/HelperComponents';
-
 
 const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
 const SignUpPage = lazy(() => import("../pages/Auth/SignUpPage"));
@@ -37,7 +12,7 @@ const LectureManagePage = lazy(() => import("../pages/Admin/LectureManagePage"))
 const PaymentManagePage = lazy(() => import("../pages/Admin/PaymentManagePage"));
 const UserManagePage = lazy(() => import("../pages/Admin/UserManagePage"));
 const LectureListPage = lazy(() => import("../pages/Lecture/LectureListPage"));
-const LectureSearchPage = lazy(() => import ("../pages/Lecture/LectureSearchPage"));
+const LectureSearchPage = lazy(() => import("../pages/Lecture/LectureSearchPage"));
 const LectureDetailPage = lazy(() => import("../pages/Lecture/LectureDetailPage"));
 const ProfilePage = lazy(() => import("../pages/MyPage/ProfilePage"));
 const LecturePaymentPage = lazy(() => import("../pages/Lecture/LecturePaymentPage"));
@@ -50,6 +25,7 @@ const MainPage = lazy(() => import("../pages/MainPage"));
 const MyPageLayout = lazy(() => import("../layouts/MypageLayout"));
 const OrderHistorySection = lazy(() => import("../pages/MyPage/OrderHistorySection"));
 const AccountSection = lazy(() => import("../pages/MyPage/AccountSection"));
+const LectureRoomLayout = lazy(() => import("../layouts/LectureRoomLayout"));
 
 
 // 사용자 타입별 페이지 인증 처리 예시
