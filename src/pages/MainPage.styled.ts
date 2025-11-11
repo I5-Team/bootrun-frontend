@@ -96,10 +96,10 @@ export const StyledSectionHead = styled.div`
     margin-bottom: 3.2rem;
 
     h2 {
-        font-size: ${({ theme }) => theme.fontSize.xl};
-        font-weight: 600;
+    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-weight: 600;
         line-height: 1.2;
-        word-break: keep-all;
+    word-break: keep-all;
     }
 `;
 
@@ -118,5 +118,31 @@ export const StyledShowMore = styled.span`
     svg {
         height: 1.2rem;
         width: auto;
+    }
+`;
+
+// button 
+export const StyledCircleBtn = styled.button`
+    position: fixed;
+    bottom: 1.6rem;
+    right: 1.6rem;
+
+    width: 5rem;
+    height: 5rem;
+    padding: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: ${({ theme }) => theme.colors.white};
+    border-radius: 50%;
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    box-shadow: ${({ theme }) => theme.colors.shadow};
+
+    z-index: 1000;
+
+    svg {
+        width: auto;
+        height: 100%;
     }
 `;
