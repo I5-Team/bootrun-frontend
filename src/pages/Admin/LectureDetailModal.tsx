@@ -4,7 +4,7 @@
  */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import type { CourseListItem, CreateCourseRequest, Chapter, Mission, FaqItem } from '../../types/AdminCourseType';
+import type { CreateCourseRequest, Chapter, Mission, FaqItem } from '../../types/AdminCourseType';
 import { Button } from '../../components/Button';
 
 interface LectureDetailModalProps {
@@ -560,7 +560,7 @@ interface Step2Props {
   disabled: boolean;
 }
 
-const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled }) => {
+const Step2Curriculum: React.FC<Step2Props> = ({ disabled }) => {
   return (
     <S.PlaceholderContainer>
       <S.PlaceholderText>커리큘럼 정보는 추후 구현 예정입니다.</S.PlaceholderText>
@@ -578,7 +578,7 @@ interface Step3Props {
   disabled: boolean;
 }
 
-const Step3Mission: React.FC<Step3Props> = ({ missions, setMissions, disabled }) => {
+const Step3Mission: React.FC<Step3Props> = ({ disabled }) => {
   return (
     <S.PlaceholderContainer>
       <S.PlaceholderText>미션 정보는 추후 구현 예정입니다.</S.PlaceholderText>

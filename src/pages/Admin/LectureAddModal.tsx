@@ -466,7 +466,7 @@ interface Step2Props {
   setChapters: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters }) => {
+const Step2Curriculum: React.FC<Step2Props> = () => {
   return (
     <S.PlaceholderContainer>
       <S.PlaceholderText>커리큘럼 추가 기능은 추후 구현 예정입니다.</S.PlaceholderText>
@@ -483,7 +483,7 @@ interface Step3Props {
   setMissions: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const Step3Mission: React.FC<Step3Props> = ({ missions, setMissions }) => {
+const Step3Mission: React.FC<Step3Props> = () => {
   return (
     <S.PlaceholderContainer>
       <S.PlaceholderText>미션 추가 기능은 추후 구현 예정입니다.</S.PlaceholderText>
