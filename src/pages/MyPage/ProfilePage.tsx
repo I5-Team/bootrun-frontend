@@ -4,10 +4,9 @@ import { useApiData } from '../../hooks/useApiData';
 import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 
-
 const ProfilePage: React.FC = () => {
   const { data, loading, error } = useApiData(mockProfileData, 500);
-  
+
   const [name, setName] = useState('');
   const [gender, setGender] = useState('none');
   const [birthdate, setBirthdate] = useState('');
@@ -22,7 +21,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("수정하기:", { name, gender, birthdate });
+    console.log('수정하기:', { name, gender, birthdate });
     // TODO: 프로필 수정 API 호출
   };
 
@@ -37,21 +36,14 @@ const ProfilePage: React.FC = () => {
         <S.ProfileContainer>
           <S.ImagePreview>
             <img src={data.profileImageUrl} alt="프로필" />
-            <S.ImageUploadButton type="button">
-              {/* <CameraIcon /> */} 📷
-            </S.ImageUploadButton>
+            <S.ImageUploadButton type="button">{/* <CameraIcon /> */} 📷</S.ImageUploadButton>
           </S.ImagePreview>
         </S.ProfileContainer>
-        
+
         <S.FormContent>
           <S.FormGroup>
             <label htmlFor="name">이름</label>
-            <input 
-              id="name" 
-              type="text" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)}
-            />
+            <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
           </S.FormGroup>
           <S.FormRow>
             <S.FormGroup>
@@ -65,21 +57,19 @@ const ProfilePage: React.FC = () => {
             <S.FormGroup>
               <label htmlFor="birthdate">생년월일</label>
 
-        <S.Input
-          id="start-date-filter"
-          type="date"
-          name="start_date"
-          value={birthdate}
-          onChange={
-            (e) => setBirthdate(e.target.value)
-          }
-          aria-label="시작일 필터"
-        />
+              <S.Input
+                id="start-date-filter"
+                type="date"
+                name="start_date"
+                value={birthdate}
+                onChange={(e) => setBirthdate(e.target.value)}
+                aria-label="시작일 필터"
+              />
             </S.FormGroup>
           </S.FormRow>
         </S.FormContent>
       </S.Container>
-      
+
       <S.SubmitButtonWrapper>
         <S.SubmitButton type="submit">수정하기</S.SubmitButton>
       </S.SubmitButtonWrapper>
@@ -94,7 +84,7 @@ const S = {
     max-width: 72rem;
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.05);
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
   `,
   Title: styled.h2`
     font-size: 2.4rem;
@@ -151,26 +141,27 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    
+
     label {
       font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
       font-weight: 500;
     }
-    
-    input, select {
+
+    input,
+    select {
       height: 4.8rem;
       padding: 0 1.6rem;
       border: 1px solid ${({ theme }) => theme.colors.gray200};
       border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
       font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-      
+
       &:focus {
         border-color: ${({ theme }) => theme.colors.primary300};
         outline: none;
       }
     }
-    
-    input[type="text"] {
+
+    input[type='text'] {
       border-color: ${({ theme }) => theme.colors.primary300};
     }
   `,
@@ -191,13 +182,15 @@ const S = {
     position: relative;
     display: flex;
     align-items: center;
-    
+
     input {
       width: 100%;
       padding-right: 4rem;
     }
-    
-    svg, span { /* (임시 span) */
+
+    svg,
+    span {
+      /* (임시 span) */
       position: absolute;
       right: 1.2rem;
       color: ${({ theme }) => theme.colors.gray300};
@@ -217,8 +210,10 @@ const S = {
     border: none;
     border-radius: ${({ theme }) => theme.radius.md};
     cursor: pointer;
-    
-    &:hover { opacity: 0.9; }
+
+    &:hover {
+      opacity: 0.9;
+    }
   `,
 };
 
