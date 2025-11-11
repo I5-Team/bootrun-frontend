@@ -25,6 +25,7 @@ import type {
 } from '../types/AdminUserType';
 import { getMockUserDetail, getMockUsers } from '../data/mockAdminUserData';
 import { apiClient } from './client';
+import { API_URL } from '../constants/apiConfig'
 
 // 공통 API 지연 시간 (ms)
 const API_DELAY = 100;
@@ -194,7 +195,7 @@ export const fetchUsers = async(
 const data = getMockUsers(params);
   return simulateFetch(data, API_DELAY);
   } else {
-  const response = await apiClient.get<UserListResponse>('/admin/users', { params });
+  const response = await apiClient.get<UserListResponse>(API_URL.ADMIN_USERS.USER_LIST, { params });
   return response.data;
   }  
 };
@@ -212,7 +213,7 @@ export const activateUser = async (userId: number): Promise<{ message: string }>
   console.log(`[Mock API] 사용자 ${userId} 활성화`);
   return simulateFetch({ message: '사용자 활성화 완료' }, API_DELAY);
   } else {
-    const response = await apiClient.patch<{ message: string }>(`/admin/users/${userId}/activate`);
+    const response = await apiClient.patch<{ message: string }>(API_URL.ADMIN_USERS.ACTIVATE_USER(userId));
     return response.data;
   }
 };
@@ -226,7 +227,7 @@ export const deactivateUser = async(userId: number): Promise<{ message: string }
   console.log(`[Mock API] 사용자 ${userId} 비활성화`);
   return simulateFetch({ message: '사용자 비활성화 완료' }, API_DELAY);
   } else {
-    const response = await apiClient.patch<{ message: string }>(`/admin/users/${userId}/deactivate`);
+    const response = await apiClient.patch<{ message: string }>(API_URL.ADMIN_USERS.DEACTIVATE_USER(userId));
     return response.data;
   }
 };
