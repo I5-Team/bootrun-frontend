@@ -3,18 +3,7 @@ import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
 import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
-import CalendarIconSvg from '../../assets/icons/icon-calendar.svg';
 
-
-const CalendarIcon = styled.img`
-  position: absolute;
-  top: 50%;
-  right: 1.2rem;
-  width: 1.6rem;
-  height: 1.6rem;
-  transform: translateY(-50%);
-  pointer-events: none;
-`;
 
 const ProfilePage: React.FC = () => {
   const { data, loading, error } = useApiData(mockProfileData, 500);
@@ -75,16 +64,17 @@ const ProfilePage: React.FC = () => {
             </S.FormGroup>
             <S.FormGroup>
               <label htmlFor="birthdate">생년월일</label>
-              <S.DateInputWrapper>
-                <input 
-                  id="birthdate" 
-                  type="text" 
-                  placeholder="----년 --월 --일"
-                  value={birthdate} 
-                  onChange={(e) => setBirthdate(e.target.value)}
-                />
-                <CalendarIcon src={CalendarIconSvg} alt="" />
-              </S.DateInputWrapper>
+
+        <S.Input
+          id="start-date-filter"
+          type="date"
+          name="start_date"
+          value={birthdate}
+          onChange={
+            (e) => setBirthdate(e.target.value)
+          }
+          aria-label="시작일 필터"
+        />
             </S.FormGroup>
           </S.FormRow>
         </S.FormContent>
@@ -182,6 +172,19 @@ const S = {
     
     input[type="text"] {
       border-color: ${({ theme }) => theme.colors.primary300};
+    }
+  `,
+  Input: styled.input`
+    height: 4.2rem;
+    padding: 0 1.6rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.sm};
+    font-size: 1.4rem;
+    min-width: 20rem;
+
+    &:focus {
+      border-color: ${({ theme }) => theme.colors.primary300};
+      outline: none;
     }
   `,
   DateInputWrapper: styled.div`
