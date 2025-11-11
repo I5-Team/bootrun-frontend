@@ -43,7 +43,7 @@ export const Title = styled.h1`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
   }
 `;
 

@@ -10,7 +10,7 @@ import SvgArrowUp from "../assets/icons/icon-arrow-up.svg?react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledCircleBtn } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledCircleBtn, StyledTitle } from "./MainPage.styled";
 import { FilterCourseList, type CourseType } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
@@ -36,7 +36,7 @@ const CategoryBtn = ({ icon, title, onClick }: {
 const SectionHead = ({ title }: { title:string }) => {
     return (
         <StyledSectionHead>
-            <h2>{title}</h2>
+            <StyledTitle>{title}</StyledTitle>
             <Link to={ROUTES.LECTURE_LIST} aria-label={`${title} 강의 리스트 더보기`}>
                 <StyledShowMore>
                     더 보기
@@ -68,7 +68,6 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     )
 }
 
-
 const ScrollToTopBtn = () => {
     const onScrollToTop = () => {
         window.scrollTo({
@@ -98,6 +97,7 @@ export default function MainPage() {
         const queryString = categry ? `?category=${categry}` : "";
         navigate(ROUTES.LECTURE_LIST + queryString);
     }
+
     useEffect(() => {
         const handleShowButton = () => {
             if (window.scrollY > window.innerHeight / 2) {

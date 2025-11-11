@@ -126,7 +126,7 @@ export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>`
   font-size: ${({ $size, theme }) => $size === "sm" ? theme.mobileFontSize.xl : theme.fontSize.lg};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.lg : theme.mobileFontSize.xl};
+    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.lg : theme.mobileFontSize.xxl};
   }
   `;
 

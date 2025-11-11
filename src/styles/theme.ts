@@ -52,7 +52,7 @@ const fontSize = {
 }
 
 const mobileFontSize = {
-  xxl: '3.2rem',
+  xxl: '2.0rem',
   xl: '1.8rem',
   lg: '1.6rem',
   md: '1.4rem',
