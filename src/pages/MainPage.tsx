@@ -6,13 +6,15 @@ import SvgDA from "../assets/icons/icon-category-DA.svg?react";
 import SvgAI from "../assets/icons/icon-category-AI.svg?react";
 import SvgDesign from "../assets/icons/icon-category-design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledTitle } from "./MainPage.styled";
 import { FilterCourseList, type CourseType } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -33,7 +35,7 @@ const CategoryBtn = ({ icon, title, onClick }: {
 const SectionHead = ({ title }: { title:string }) => {
     return (
         <StyledSectionHead>
-            <h2>{title}</h2>
+            <StyledTitle>{title}</StyledTitle>
             <Link to={ROUTES.LECTURE_LIST} aria-label={`${title} 강의 리스트 더보기`}>
                 <StyledShowMore>
                     더 보기
@@ -115,6 +117,8 @@ export default function MainPage() {
             <SectionByType courseType="boost_community"/>
             <SectionByType courseType="vod"/>
             <SectionByType courseType="kdc"/>
+
+            <ScrollToTopButton/>
         </>
     );
 }

@@ -66,7 +66,7 @@ export const StlyedThumbnailNotice = styled.div`
 `;
 
 export const StyledLikeButton = styled.button`
-  width: clamp(2.4rem, 6%, 2.8rem);
+  width: clamp(2.6rem, 100%, 2.8rem);
   height: auto;
   
   display: flex;
@@ -114,7 +114,8 @@ export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>`
   margin: 0;
   width: 100%;
   min-width: 0;
-  word-wrap: break-word;
+
+  word-break: break-all;
   overflow-wrap: break-word;
 
   display: -webkit-box;
@@ -126,7 +127,7 @@ export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>`
   font-size: ${({ $size, theme }) => $size === "sm" ? theme.mobileFontSize.xl : theme.fontSize.lg};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.lg : theme.mobileFontSize.xl};
+    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.xl : theme.mobileFontSize.xxl};
   }
   `;
 

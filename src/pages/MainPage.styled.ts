@@ -13,6 +13,7 @@ export const StyledHeroWrapper = styled.div`
     @media ${({ theme }) => theme.devices.mobile} {
         height: auto;
         aspect-ratio: 358 / 200;
+        margin-top: 2.4rem;
     }
 `;
 
@@ -95,11 +96,23 @@ export const StyledSectionHead = styled.div`
     gap: 2rem;
     margin-bottom: 3.2rem;
 
-    h2 {
-        font-size: ${({ theme }) => theme.fontSize.xl};
-        font-weight: 600;
-        line-height: 1.2;
-        word-break: keep-all;
+    @media ${({ theme }) => theme.devices.mobile} {
+        margin-bottom: 1.6rem;
+    }
+`;
+
+export const StyledTitle = styled.h2`
+    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-weight: 600;
+    line-height: 1.3;
+    word-break: keep-all;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+        font-size: ${({ theme }) => theme.fontSize.lg};
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.mobileFontSize.xl};
     }
 `;
 
@@ -118,5 +131,14 @@ export const StyledShowMore = styled.span`
     svg {
         height: 1.2rem;
         width: auto;
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        gap: 0.6rem;
+        font-size: ${({ theme }) => theme.fontSize.sm};
+
+        svg {
+            height: 1rem;
+        }
     }
 `;

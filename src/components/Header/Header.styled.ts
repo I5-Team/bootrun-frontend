@@ -46,6 +46,7 @@ export const StyledHeaderInnerLecture = styled(StyledHeaderInner)`
 // logo
 export const StyledLogo = styled.img`
     width: 12.4rem;
+    height: auto;
     vertical-align: bottom;
 
     @media ${({ theme }) => theme.devices.tablet} {
