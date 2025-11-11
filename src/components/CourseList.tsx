@@ -11,6 +11,7 @@ import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 import EmptyState from "../components/EmptyState/EmptyState";
 import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 // type
 export type CourseType = 'boost_community' | 'vod' | 'kdc';
@@ -173,9 +174,12 @@ const BaseCourseList = <T,>({
             ? 
             <NoResultPage/>
             : 
-            <StyledCardGrid>
-                {refinedList.map(courseCard)}
-            </StyledCardGrid>
+            <>
+                <StyledCardGrid>
+                    {refinedList.map(courseCard)}
+                </StyledCardGrid>
+                <ScrollToTopButton/>
+            </>
             }
         </div>
     )

@@ -142,29 +142,3 @@ export const StyledShowMore = styled.span`
         }
     }
 `;
-
-// button 
-export const StyledCircleBtn = styled.button`
-    position: fixed;
-    bottom: 1.6rem;
-    right: 1.6rem;
-
-    width: 5rem;
-    height: 5rem;
-    padding: 1.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: ${({ theme }) => theme.colors.white};
-    border-radius: 50%;
-    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    box-shadow: ${({ theme }) => theme.colors.shadow};
-
-    z-index: 1000;
-
-    svg {
-        width: auto;
-        height: 100%;
-    }
-`;

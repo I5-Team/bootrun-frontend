@@ -6,16 +6,15 @@ import SvgDA from "../assets/icons/icon-category-DA.svg?react";
 import SvgAI from "../assets/icons/icon-category-AI.svg?react";
 import SvgDesign from "../assets/icons/icon-category-design.svg?react";
 import SvgMore from "../assets/icons/icon-category-more.svg?react";
-import SvgArrowUp from "../assets/icons/icon-arrow-up.svg?react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledCircleBtn, StyledTitle } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledTitle } from "./MainPage.styled";
 import { FilterCourseList, type CourseType } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
-import { useEffect, useState } from "react";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -68,28 +67,7 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     )
 }
 
-const ScrollToTopBtn = () => {
-    const onScrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        })
-    }
-    
-    return (
-        <StyledCircleBtn
-            type="button"
-            aria-label="페이지 상단으로 이동"
-            onClick={onScrollToTop}
-        >
-            <SvgArrowUp/>
-        </StyledCircleBtn>
-    )
-}
-
 export default function MainPage() {
-    const [isBtnVisible, setIsBtnVisible] = useState<boolean>(false);
-
     const { isTablet } = useMediaQuery();
     const navigate = useNavigate();
 
@@ -97,18 +75,6 @@ export default function MainPage() {
         const queryString = categry ? `?category=${categry}` : "";
         navigate(ROUTES.LECTURE_LIST + queryString);
     }
-
-    useEffect(() => {
-        const handleShowButton = () => {
-            if (window.scrollY > window.innerHeight / 2) {
-                setIsBtnVisible(true);
-            } else {
-                setIsBtnVisible(false);
-            }
-        }
-        window.addEventListener('scroll', handleShowButton);
-        return () => window.removeEventListener('scroll', handleShowButton);
-    }, [])
 
     return (
         <>
@@ -152,7 +118,7 @@ export default function MainPage() {
             <SectionByType courseType="vod"/>
             <SectionByType courseType="kdc"/>
 
-            {(isTablet && isBtnVisible) && <ScrollToTopBtn/>}
+            <ScrollToTopButton/>
         </>
     );
 }
