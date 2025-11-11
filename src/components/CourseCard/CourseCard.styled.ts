@@ -66,7 +66,7 @@ export const StlyedThumbnailNotice = styled.div`
 `;
 
 export const StyledLikeButton = styled.button`
-  width: clamp(2.4rem, 6%, 2.8rem);
+  width: clamp(2.6rem, 100%, 2.8rem);
   height: auto;
   
   display: flex;

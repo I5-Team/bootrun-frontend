@@ -39,7 +39,7 @@ const HeaderLogo = () => {
   return (
     <Link to={ROUTES.HOME} aria-label="부트런 홈으로 이동">
       <h1 className="sr-only">bootRun</h1>
-      <StyledLogo src={logo} alt="" />
+      <StyledLogo src={logo} alt="" width={124} height={24}/>
     </Link>
   );
 };

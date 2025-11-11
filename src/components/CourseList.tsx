@@ -245,24 +245,25 @@ export const FilterCourseList = ({
         return cardCount ? list.slice(0, cardCount) : list;
     }
 
-    const courseCard = (course: CourseItem) => (
-        <CourseCard
-            key={course.id}
-            variant="info"
-            lectureId={course.id}
-            thumbnail={course.thumbnail_url}
-            tags={[
-                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                {'label': categoryLabel[course.category_type] || "기타"}, 
-                {'label': difficultyLabel[course.difficulty]},
-            ]}
-            title={course.title}
-            teacherName={course.instructor_name}
-            teacherRole={course.instructor_bio}
-            teacherImage={course.instructor_image}
-            description={course.description}
-            price={course.price}
-        />
+    const courseCardItem = (course: CourseItem) => (
+        <li key={course.id}>
+            <CourseCard
+                variant="info"
+                lectureId={course.id}
+                thumbnail={course.thumbnail_url}
+                tags={[
+                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                    {'label': categoryLabel[course.category_type] || "기타"}, 
+                    {'label': difficultyLabel[course.difficulty]},
+                ]}
+                title={course.title}
+                teacherName={course.instructor_name}
+                teacherRole={course.instructor_bio}
+                teacherImage={course.instructor_image}
+                description={course.description}
+                price={course.price}
+            />
+        </li>
     )
 
     return (
@@ -271,7 +272,7 @@ export const FilterCourseList = ({
             filterFn={filterFn}
             sortFn={sortFn}
             sliceFn={sliceFn}
-            courseCard={courseCard}
+            courseCard={courseCardItem}
             onCountChange={onCountChange}
         />
     )
@@ -317,25 +318,26 @@ export const FilterMyCourseList = ({
         return cardCount ? list.slice(0, cardCount) : list;
     }
 
-    const myCourseCard = (course: MyCourseItem) => (
-        <CourseCard 
-            key={course.course_id}
-            variant="study"
-            thumbnail={course.course_thumbnail}
-            title={course.course_title}
-            tags={[
-                {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                {'label': categoryLabel[course.category_name] || "기타"}, 
-                {'label': difficultyLabel[course.difficulty]},
-            ]}
-
-            value={course.completed_lectures || 0} 
-            max={course.total_lectures || 0} 
-            lectureId={course.course_id}
-            
-            isActive={course.days_until_expiry !== 0 ? true: false}
-            isCompleted={course.progress_rate === 100 ? true : false}
-        />
+    const myCourseCardItem = (course: MyCourseItem) => (
+        <li key={course.course_id}>
+            <CourseCard
+                variant="study"
+                thumbnail={course.course_thumbnail}
+                title={course.course_title}
+                tags={[
+                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                    {'label': categoryLabel[course.category_name] || "기타"}, 
+                    {'label': difficultyLabel[course.difficulty]},
+                ]}
+    
+                value={course.completed_lectures || 0} 
+                max={course.total_lectures || 0} 
+                lectureId={course.course_id}
+                
+                isActive={course.days_until_expiry !== 0 ? true: false}
+                isCompleted={course.progress_rate === 100 ? true : false}
+            />
+        </li>
      );
 
     return (
@@ -344,7 +346,7 @@ export const FilterMyCourseList = ({
             filterFn={filterFn}
             sortFn={sortFn}
             sliceFn={sliceFn}
-            courseCard={myCourseCard}
+            courseCard={myCourseCardItem}
             onCountChange={onCountChange}
         />
     )
