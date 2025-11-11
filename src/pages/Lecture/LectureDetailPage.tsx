@@ -1,27 +1,33 @@
 import { useRef } from 'react';
-import type { SectionRefs } from '../../types/LectureType';
+import type { CardData, SectionRefs } from '../../types/LectureType';
+import { mockCardData } from '../../data/mockLectureData';
+import { useApiData } from '../../hooks/useApiData';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 // 스타일
 import {
-  LectureDetailContainer,
   LectureMainLayout,
-  PageContainer,
   ContentWrapper,
+  SectionWrapper,
 } from './LectureDetailPage.styled';
 
 // 컴포넌트
 import LectureBannerSection from './components/LectureBannerSection';
 import LectureHeaderSection from './components/LectureHeaderSection';
-import { SectionTabs } from './components/SectionTabs';
-import LectureInfoBox from './components/LectureInfoBox';
 import LectureIntroSection from './components/LectureIntroSection';
 import CurriculumSection from './components/CurriculumSection';
 import InstructorSection from './components/InstructorSection';
 import FAQSection from './components/FAQSection';
 import NoticeSection from './components/NoticeSection';
 import ReviewSection from './components/ReviewSection';
+import { SectionTabs } from './components/SectionTabs';
+import LectureInfoBox, { InfoBoxButtons } from './components/LectureInfoBox';
+
 
 export default function LectureDetailPage() {
+  const { isLaptop } = useMediaQuery();
+  const cardData = useApiData<CardData>(mockCardData, 200);
+  
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);
   const curriculumRef = useRef<HTMLElement>(null);
@@ -39,29 +45,32 @@ export default function LectureDetailPage() {
   };
 
   return (
-    <PageContainer>
-      <LectureDetailContainer>
+      <>
         <LectureBannerSection />
 
         <LectureMainLayout>
-          {/* 메인 콘텐츠 영역 (왼쪽) */}
           <ContentWrapper>
-            <LectureHeaderSection />
-            <SectionTabs refs={sectionRefs} />
+            {/* 헤더 영역 (왼쪽) */}
+            <LectureHeaderSection cardData={cardData}/>
 
-            {/* 각 섹션은 ref를 받고, 데이터는 내부의 useApiData 훅으로 가져온다. */}
-            <LectureIntroSection ref={introRef} />
-            <ReviewSection ref={reviewsRef} />
-            <CurriculumSection ref={curriculumRef} />
-            <InstructorSection ref={instructorRef} />
-            <FAQSection ref={faqRef} />
-            <NoticeSection />
+            {/* 고정 사이드바 (오른쪽) */}
+            <LectureInfoBox cardData={cardData} />
+
+            {/* 메인 콘텐츠 영역 (왼쪽) */}
+            <SectionWrapper>
+              <SectionTabs refs={sectionRefs} />
+              {/* 각 섹션은 ref를 받고, 데이터는 내부의 useApiData 훅으로 가져온다. */}
+              <LectureIntroSection ref={introRef} />
+              <ReviewSection ref={reviewsRef} />
+              <CurriculumSection ref={curriculumRef} />
+              <InstructorSection ref={instructorRef} />
+              <FAQSection ref={faqRef} />
+              <NoticeSection />
+            </SectionWrapper>
+
+            {isLaptop && <InfoBoxButtons cardData={cardData}/>}
           </ContentWrapper>
-
-          {/* 고정 사이드바 (오른쪽) */}
-          <LectureInfoBox />
         </LectureMainLayout>
-      </LectureDetailContainer>
-    </PageContainer>
+      </>
   );
 }

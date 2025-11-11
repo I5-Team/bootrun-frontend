@@ -1,92 +1,147 @@
 import styled from 'styled-components';
 
-export const PageContainer = styled.div`
-  background: #ffffff;
-  font-family: 'Pretendard', sans-serif;
-`;
-
 export const LectureDetailContainer = styled.div`
-  max-width: 1190px;
-  margin: 60px auto 0;
-  padding: 0 24px; /* 모바일을 위한 좌우 여백 */
+  margin-top: 6rem;
 `;
 
 export const LectureMainLayout = styled.div`
+  width: 100%;
+  margin-top: 3.2rem;
+
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 32px;
-  align-items: flex-start;
-  margin-top: 40px; /* 배너와 메인 콘텐츠 사이 여백 */
+  justify-content: start;
+  align-items: start;
+  gap: 4rem;
+  flex-wrap: wrap;
 `;
 
-export const ContentWrapper = styled.main`
-  flex-grow: 1;
-  width: 790px; // HTML 기준 콘텐츠 너비
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 60px; /* 섹션 간의 기본 간격 */
+export const ContentWrapper = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr minmax(34rem, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "header infoBox"
+    "content infoBox";
+  gap: 4rem;
+  align-items: start;
+
+  @media ${({ theme }) => theme.devices.laptop} {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "infoBox"
+      "content";
+    gap: 3.2rem;
+  }
 `;
+
+export const SectionWrapper = styled.div`
+  grid-area: 'content';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
 
 // --- SectionTabs 스타일 ---
 export const StickyNavWrapper = styled.nav`
-  position: sticky;
-  top: 0px; // 상단에 딱 붙도록 설정
   width: 100%;
-  background: #ffffff;
-  border-bottom: 1px solid #d9dbe0;
+  height: 5rem;
+  
+  background: ${({ theme }) => theme.colors.white};
+  border-bottom: 0.1rem solid${({ theme }) => theme.colors.gray200};
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 100;
   
-  ul {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    height: 50px;
+  position: sticky;
+  top: 7rem;
+  @media ${({ theme }) => theme.devices.tablet} {
+    top: 5.6rem;
   }
 `;
 
 export const NavContent = styled.ul`
+  width: 100%;
+  height: 100%;
   display: flex;
-  gap: 40px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  height: 50px;
+  justify-content: center;
   align-items: center;
-  width: 790px;
+  gap: 4rem;
+  height: 5rem;
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    gap: 0;
+    justify-content: space-between;
+    padding: 0 1.2rem;
+  }
 `;
 
-export const NavItem = styled.a<{ $active: boolean }>`
-  font-family: 'Pretendard';
-  font-size: 16px;
-  line-height: 22px;
-  text-decoration: none;
+export const NavItem = styled.a<{ $active?: boolean }>`
   cursor: pointer;
-  padding: 14px 0;
-  
+  padding: 0.4rem 0;
+  white-space: nowrap;
+
   font-weight: ${({ $active }) => ($active ? 600 : 500)};
-  color: ${({ $active }) => ($active ? '#121314' : '#8D9299')};
-  border-bottom: 2px solid ${({ $active }) => ($active ? '#121314' : 'transparent')};
+  color: ${({ $active, theme }) => ($active ? theme.colors.surface : theme.colors.gray300)};
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    font-size: ${({ theme }) => theme.mobileFontSize.md};
+  }
 `;
 
-export const NavCta = styled.a`
-  font-family: 'Pretendard';
-  font-size: 16px;
-  line-height: 22px;
+export const NavCta = styled(NavItem)`
   font-weight: 700;
-  color: #2e6ff2;
-  text-decoration: none;
-  margin-left: auto;
-  cursor: pointer;
-  
+  color: ${({ theme }) => theme.colors.primary300};
+
   &:hover {
     opacity: 0.8;
   }
 `;
 
+// --- Section 공통 스타일 ---
+export const StyledBaseSection = {
+  Section: styled.section`
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    width: 100%;
+    max-width: 79rem;
+    scroll-margin-top: calc(7rem + 5rem);
+
+    padding-block: 8rem;
+    &:not(:nth-last-child(-n+2)) {
+      border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      scroll-margin-top: calc(5.6rem + 5rem);
+      padding-block: 4.8rem;
+    }
+  `,
+  SectionHeader: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  `,
+  SectionTitle: styled.h3`
+    font-weight: 700;
+    font-size: ${({ theme }) => theme.fontSize.xl};
+    color: ${({ theme }) => theme.colors.surface};
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.lg};
+    }
+  `,
+  SectionSubtitle: styled.p`
+    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontSize.md};
+    color: ${({ theme }) => theme.colors.primary300};
+    text-align: center;
+    width: 80%;
+    line-height: 1.4;
+  `,
+}

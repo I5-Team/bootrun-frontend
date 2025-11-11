@@ -4,6 +4,8 @@ import { useApiData } from '../../../hooks/useApiData';
 import { mockReviewData } from '../../../data/mockLectureData';
 import type { ReviewData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
+import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import SvgStar from "../../../assets/icons/icon-star.svg?react";
 
 const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<ReviewData>(mockReviewData, 1200);
@@ -22,84 +24,82 @@ const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error.message} />}
       {data && (
-        <S.ReviewContainer>
+        <Review.Container>
           {data.reviews.map(review => (
-            <S.ReviewCard key={review.id}>
-              <S.ReviewHeader>
-                <S.ReviewAuthor>
+            <Review.Card key={review.id}>
+              <Review.CardHeader>
+                <Review.CardAuthor>
                   <span className="name">{review.author}</span>
-                  <span className="rating">★ {review.rating}</span>
-                </S.ReviewAuthor>
+                  <span className="rating"><SvgStar/>{review.rating}</span>
+                </Review.CardAuthor>
                 <span className="date">{review.date}</span>
-              </S.ReviewHeader>
-              <S.ReviewBody>{review.comment}</S.ReviewBody>
-            </S.ReviewCard>
+              </Review.CardHeader>
+              <Review.CardComent>{review.comment}</Review.CardComent>
+            </Review.Card>
           ))}
-        </S.ReviewContainer>
+        </Review.Container>
       )}
     </S.Section>
   );
 });
 
 // --- Styles ---
-const S = {
-  Section: styled.section`
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    width: 100%;
-    scroll-margin-top: 100px;
-  `,
-  SectionHeader: styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  `,
-  SectionTitle: styled.h2`
-    font-weight: 700;
-    font-size: 32px;
-    color: #121314;
-    margin: 0;
-  `,
-  SectionSubtitle: styled.p`
-    font-weight: 600;
-    font-size: 16px;
-    color: #2e6ff2;
-    margin: 0;
-  `,
-  ReviewContainer: styled.div`
+const Review = {
+  Container: styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.2rem;
   `,
-  ReviewCard: styled.div`
+  Card: styled.div`
     width: 100%;
-    border: 1px solid #d9dbe0;
-    border-radius: 12px;
-    padding: 24px;
-    box-sizing: border-box;
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200 };
+    border-radius: ${({ theme }) => theme.radius.xl};
+    padding: 2.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
   `,
-  ReviewHeader: styled.div`
+  CardHeader: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    .date { font-size: 14px; color: #8d9299; }
+
+    .date { 
+      font-size: ${({ theme }) => theme.fontSize.sm};
+      color: #8d9299; 
+    }
   `,
-  ReviewAuthor: styled.div`
+  CardAuthor: styled.div`
     display: flex;
     align-items: center;
-    gap: 8px;
-    .name { font-weight: 600; font-size: 16px; color: #121314; }
-    .rating { font-size: 14px; color: #47494D; }
+    gap: 0.8rem;
+    .name { 
+      font-weight: 600; 
+    }
+    .rating { 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+      color: ${({ theme }) => theme.colors.primary300};
+      font-weight: 500;
+      line-height: 1;
+      svg {
+        position: relative;
+        top: -0.5px;
+        width: 1.24rem;
+        height: auto;
+      }
+    }
   `,
-  ReviewBody: styled.p`
-    font-size: 16px;
-    line-height: 1.6;
-    color: #47494D;
-    margin: 0;
+  CardComent: styled.p`
+    color: ${({ theme }) => theme.colors.gray400};
+    line-height: 1.4;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
 };
 

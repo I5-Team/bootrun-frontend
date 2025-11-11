@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from 'react';
 import { ROUTES } from "./RouteConfig";
 import { LoadingSpinner } from '../components/HelperComponents';
+import LectureDetailLayout from "../layouts/LectureDetailLayout";
 
 const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
 const SignUpPage = lazy(() => import("../pages/Auth/SignUpPage"));
@@ -51,17 +52,11 @@ export default function AppRouter() {
 
                     {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
                     <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
-
-                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
-
                     <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />  
-                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />  
-
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
-                    <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
                     {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
-
+                    
                     {/* 관리자용 페이지 개발 후에는 일바 */}
                     <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
                     <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
@@ -74,10 +69,18 @@ export default function AppRouter() {
                         <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} /> {/* /mypage/account */}
                     </Route>
                 </Route>
+
+                {/* LectureDetail 전용 레이아웃 */}
+                <Route element={<LectureDetailLayout/>}>
+                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
+                    <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
+                </Route>
+
                 {/* LectureRoom 전용 레이아웃 */}
                 <Route element={<LectureRoomLayout/>}>
                     <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
                 </Route>
+
                 {/* 404 페이지 */}
                 <Route element={<ErrorLayout/>}>
                     <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />

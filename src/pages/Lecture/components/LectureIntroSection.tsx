@@ -1,94 +1,61 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 
 const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
   return (
-    <S.Section ref={ref} id="description">
-      <S.TitleHeader>
-        <h3>강의 소개</h3>
-      </S.TitleHeader>
+    <Intro.Section ref={ref} id="description">
+        <S.SectionTitle className="sr-only">강의 소개</S.SectionTitle>
       
-      <S.StaticContentWrapper>
-        <div>
-          <h3>대 AI 시대, 개발을 어떻게 배워야 할까요?</h3>
-          <p>위니브는 단순한 문법 강의가 아닌 '배우는 방법' 자체를 바꿉니다...</p>
-        </div>
-      </S.StaticContentWrapper>
-
- 
-
-    </S.Section>
+      <Intro.StaticContentWrapper>
+          <Intro.Title>대 AI 시대,<br/>개발을 어떻게 배워야 할까요?</Intro.Title>
+          <Intro.Desc>부트런은 단순한 문법 강의가 아닌<br/>'배우는 방법' 자체를 바꿉니다</Intro.Desc>
+          <Intro.ContentContainer>
+            강의 소개에 대한 섹션
+          </Intro.ContentContainer>
+      </Intro.StaticContentWrapper>
+    </Intro.Section>
   );
 });
 
 // --- Styles ---
-const S = {
-  Section: styled.section`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    scroll-margin-top: 100px;
-  `,
-  TitleHeader: styled.div`
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+const Intro = {
+  Section: styled(S.Section)`
+    max-width: 100%;
+    background-color: ${({ theme }) => theme.colors.gray100};
   `,
   StaticContentWrapper: styled.div`
-    h3 { font-size: 28px; font-weight: 700; }
-    p { font-size: 16px; color: #47494D; line-height: 1.6; }
-  `,
-  ReviewWrapper: styled.div`
-    width: 100%;
-    padding-top: 40px;
-    border-top: 1px solid #eee;
-    
-    h3 {
-      font-size: 28px;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-  `,
-  ReviewList: styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    
-    li {
-      border: 1px solid #D9DBE0;
-      border-radius: 12px;
-      padding: 24px;
-    }
-  `,
-  ReviewHeader: styled.div`
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 12px;
+    flex-direction: column;
+    gap: 4rem;
   `,
-  ReviewAuthor: styled.span`
-    font-weight: 600;
-    font-size: 16px;
+  Title: styled.p`
+    font-size: ${({ theme }) => theme.fontSize.xl}; 
+    font-weight: 700;
+    text-align: center;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.lg};
+    }
   `,
-  ReviewRating: styled.span`
-    font-size: 14px;
-    color: #47494D;
+  Desc: styled.p`
+    font-size: ${({ theme }) => theme.fontSize.lg}; 
+    color: ${({ theme }) => theme.colors.gray400}; 
+    text-align: center;
+    line-height: 1.4;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.md};
+    }
   `,
-  ReviewContent: styled.div`
-    font-size: 16px;
-    color: #47494D;
-    line-height: 1.7;
-    p { margin: 0; }
-  `
+  ContentContainer: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40rem;
+  `,
 };
 
 export default LectureIntroSection;

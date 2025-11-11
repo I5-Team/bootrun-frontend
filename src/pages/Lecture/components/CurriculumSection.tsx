@@ -4,17 +4,18 @@ import { useApiData } from '../../../hooks/useApiData';
 import { mockCurriculumData } from '../../../data/mockLectureData';
 import type { CurriculumData } from '../../../types/LectureType';
 import { ErrorMessage, LoadingSpinner } from '../../../components/HelperComponents';
-import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
-
+import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
+import SvgPlay from "../../../assets/icons/icon-play.svg?react";
 
 
 const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<CurriculumData>(mockCurriculumData, 700);
   // 1주차(id: 1)만 기본으로 열도록 설정
-  const [openChapterId, setOpenChapterId] = useState<number | null>(1);
+  const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
 
   const toggleChapter = (id: number) => {
-    setOpenChapterId(openChapterId === id ? null : id);
+    setOpenChapterId(prev => prev.includes(id) ? prev.filter(ch => ch !== id) : [...prev, id]);
   };
 
   return (
@@ -24,78 +25,54 @@ const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
         <S.SectionSubtitle>4주간 진행하는 견고한 커리큘럼</S.SectionSubtitle>
       </S.SectionHeader>
 
-      <S.CurriculumContainer>
-        {loading && <LoadingSpinner/>}
-        {error && <ErrorMessage message={error.message} />}
+      {loading && <LoadingSpinner/>}
+      {error && <ErrorMessage message={error.message} />}
+      <Curr.Container>
         {data?.chapters.map(chapter => {
-          const isOpen = openChapterId === chapter.id;
+          const isOpen = openChapterId.includes(chapter.id) ;
           return (
-            <S.Chapter key={chapter.id}>
-              <S.ChapterHeader onClick={() => toggleChapter(chapter.id)}>
-                <S.ToggleButton $isOpen={isOpen}>
-                  <ArrowDownIcon /> 
-                </S.ToggleButton>
-                <S.ChapterTitleText>
-                  <span>Chapter{String(chapter.id).padStart(2, '0')}.&nbsp;</span>{chapter.title}
-                </S.ChapterTitleText>
-              </S.ChapterHeader>
+            <Curr.Chapter key={chapter.id}>
+
+              <Curr.ChapterHeader onClick={() => toggleChapter(chapter.id)}>
+                <Curr.ToggleButton $isOpen={isOpen}>
+                  <SvgArrowDown /> 
+                </Curr.ToggleButton>
+                <Curr.ChapterTitleText>
+                  <span>Chapter{String(chapter.id).padStart(2, '0')}.</span>
+                  <span>{chapter.title}</span>
+                </Curr.ChapterTitleText>
+              </Curr.ChapterHeader>
+
               {isOpen && (
-                <S.LectureList>
+                <Curr.LectureList>
                   {chapter.lectures.map((lecture, index) => (
-                    <S.LectureItem key={index}>
-                      <S.LectureIcon>
-                        <svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M6.50879 5.47559C6.69956 5.36985 6.9332 5.37561 7.11816 5.49121L10.3184 7.49121C10.4936 7.60088 10.5996 7.79323 10.5996 8C10.5996 8.20677 10.4936 8.39912 10.3184 8.50879L7.11816 10.5088C6.9332 10.6244 6.69956 10.6301 6.50879 10.5244C6.31827 10.4186 6.2002 10.218 6.2002 10V6C6.2002 5.78205 6.31827 5.58138 6.50879 5.47559Z"></path></svg>
-                      </S.LectureIcon>
-                      <S.LectureTitle>
-                        <span>{index + 1}.&nbsp;</span>{lecture.title}
-                      </S.LectureTitle>
-                    </S.LectureItem>
+                    <Curr.LectureItem key={lecture.title}>
+                      <SvgPlay/>
+                      <Curr.LectureTitle>
+                        {index + 1}. {lecture.title}
+                      </Curr.LectureTitle>
+                    </Curr.LectureItem>
                   ))}
-                </S.LectureList>
+                </Curr.LectureList>
               )}
-            </S.Chapter>
+
+            </Curr.Chapter>
           );
         })}
-      </S.CurriculumContainer>
+      </Curr.Container>
     </S.Section>
   );
 });
 
-const S = {
-  Section: styled.section`
+const Curr = {
+  Container: styled.div`
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.xl};
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    scroll-margin-top: 100px;
-  `,
-  SectionHeader: styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  `,
-  SectionTitle: styled.h2`
-    font-weight: 700;
-    font-size: 32px;
-    color: #121314;
-    margin: 0;
-  `,
-  SectionSubtitle: styled.p`
-    font-weight: 600;
-    font-size: 16px;
-    color: #2e6ff2;
-    margin: 0;
-  `,
-  CurriculumContainer: styled.div`
-    border: 1px solid #D9DBE0;
-    border-radius: 12px;
-    width: 790px;
     overflow: hidden;
   `,
   Chapter: styled.div`
-    border-bottom: 1px solid #D9DBE0;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
     &:last-child {
       border-bottom: none;
     }
@@ -103,52 +80,63 @@ const S = {
   ChapterHeader: styled.div`
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 2rem 1.2rem;
     cursor: pointer;
-    background: #F3F5FA;
+    background: ${({ theme }) => theme.colors.gray100};
   `,
   ToggleButton: styled.button<{ $isOpen: boolean }>`
-    background: #fff;
+    background: ${({ theme }) => theme.colors.white};
     border: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.4rem;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #47494D;
+    margin-right: 0.8rem;
+
+    color: ${({ theme }) => theme.colors.gray400};
     transform: ${({ $isOpen }) => ($isOpen ? 'rotate(0deg)' : 'rotate(-90deg)')};
     transition: transform 0.2s ease;
+
+    svg {
+      width: 50%;
+    }
   `,
-  ChapterTitleText: styled.h4`
-    font-size: 16px;
+  ChapterTitleText: styled.p`
     font-weight: 500;
-    color: #121314;
-    margin: 0 0 0 12px;
-    span { font-weight: 700; }
+    display: flex;
+    gap: 0.4rem;
+    span { font-weight: 600; }
   `,
   LectureList: styled.ul`
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: #fff;
+    background: ${({ theme }) => theme.colors.white};
   `,
   LectureItem: styled.li`
     display: flex;
     align-items: center;
-    padding: 16px 20px 16px 52px; /* 20 + 20 + 12 */
-    border-top: 1px solid #F3F5FA;
+    gap: 1.2rem;
+    padding-block: 1.6rem;
+    padding-inline: 5.2rem 2rem;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray100};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.primary100};
+    }
+
+    svg {
+      width: 1.4rem;
+      height: 1.4rem;
+      path { fill: ${({ theme }) => theme.colors.gray400}; }
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
-  LectureIcon: styled.div`
-    color: #47494D;
-    margin-right: 8px;
-  `,
-  LectureTitle: styled.h5`
-    font-size: 16px;
-    font-weight: 400;
-    color: #121314;
-    margin: 0;
-    span { font-weight: 500; }
+  LectureTitle: styled.span`
+    span { font-weight: 400; }
   `,
 };
 

@@ -4,6 +4,9 @@ import { useApiData } from '../../../hooks/useApiData';
 import { mockInstructorData } from '../../../data/mockLectureData';
 import type { Instructor } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import Profile from '../../../components/Profile';
+
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<Instructor>(mockInstructorData, 800);
@@ -13,138 +16,139 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
       <S.SectionHeader>
         <S.SectionTitle>강사소개</S.SectionTitle>
         <S.SectionSubtitle>
-          "부트캠프 수료율 100%의 비결은 
-          <span className="lineBreak">수강생을 향한 '진심'입니다."</span>
+          "부트캠프 수료율 100%의 비결은 수강생을 향한 '진심'입니다."
         </S.SectionSubtitle>
       </S.SectionHeader>
 
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error.message} />}
       {data && (
-        <S.InfoBox>
-          <S.ImageContainer>
-            <img src={data.imageUrl} alt={data.title} />
-          </S.ImageContainer>
-          <S.Content>
-            <S.Header>
-              <S.Title>{data.title}<S.SubName>{data.subName}</S.SubName></S.Title>
-            </S.Header>
-            <S.PositionList>
-              {data.positions.map(pos => (
-                <li key={pos.text}>
-                  <S.PositionLabel $isCurrent={pos.type === 'current'}>
-                    {pos.type === 'current' ? '現' : '前'}
-                  </S.PositionLabel>
-                  <span>{pos.text}</span>
-                </li>
+        <Instructor.InfoBox>
+          <Profile size={24} src={data.imageUrl} alt={data.title}></Profile>
+
+          <Instructor.ContentContainer>
+            <Instructor.Header>
+              <Instructor.Title>{data.title}</Instructor.Title>
+              <Instructor.SubName>{data.subName}</Instructor.SubName>
+            </Instructor.Header>
+
+              <Instructor.PositionList>
+                {data.positions.map(pos => (
+                  <li key={pos.text}>
+                    <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
+                      {pos.type === 'current' ? '現' : '前'}
+                    </Instructor.PositionLabel>
+                    <span>{pos.text}</span>
+                  </li>
+                ))}
+              </Instructor.PositionList>
+  
+              {data.experiences.map(exp => (
+                <div key={exp.title}>
+                  <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
+                  <Instructor.ExperienceList>
+                    {exp.items.map(item => <li key={item}>{item}</li>)}
+                  </Instructor.ExperienceList>
+                </div>
               ))}
-            </S.PositionList>
-            {data.experiences.map(exp => (
-              <div key={exp.title}>
-                <S.ExperienceTitle>{exp.title}</S.ExperienceTitle>
-                <S.ExperienceList>
-                  {exp.items.map(item => <li key={item}>{item}</li>)}
-                </S.ExperienceList>
-              </div>
-            ))}
-          </S.Content>
-        </S.InfoBox>
+          </Instructor.ContentContainer>
+
+        </Instructor.InfoBox>
       )}
     </S.Section>
   );
 });
 
-const S = {
-  Section: styled.section`
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    width: 100%;
-    scroll-margin-top: 100px;`, 
-  SectionHeader: styled.div`
-    .lineBreak { display: block; }
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  `,
-  SectionTitle: styled.h2`
-    font-weight: 700;
-    font-size: 32px;
-    color: #121314;
-    margin: 0;
-  `,
-  SectionSubtitle: styled.p`
-    font-weight: 600;
-    font-size: 16px;
-    color: #2e6ff2;
-    margin: 0;
-  `,
+const Instructor = {
   InfoBox: styled.div`
     display: flex;
-    gap: 40px;
-    background: #F3F5FA;
-    border-radius: 16px;
-    padding: 40px;
-    width: 790px;
-    box-sizing: border-box;
-  `,
-  ImageContainer: styled.div`
+    justify-content: center;
+    gap: 2.4rem 4rem;
+    background: ${({ theme }) => theme.colors.gray100};
+    border-radius: ${({ theme }) => theme.radius.xl};
+    padding: 4rem;
+    width: 100%;
+
     img {
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      object-fit: cover;
+      width: clamp(17rem, 30%, 24rem);
+      height: clamp(17rem, 30%, 24rem);
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      padding: 3.2rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
   `,
-  Content: styled.div`
+  ContentContainer: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 2.4rem;
   `,
-  Header: styled.div``,
-  Title: styled.h4`
-    font-size: 24px;
+  Header: styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  `,
+  Title: styled.p`
+    font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
-    color: #121314;
-    margin: 0;
   `,
   SubName: styled.span`
-    font-size: 16px;
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
-    color: #8D9299;
-    margin-left: 8px;
+    color: ${({ theme }) => theme.colors.gray300};
   `,
   PositionList: styled.ul`
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.8rem;
     
-    li { display: flex; font-size: 16px; color: #47494D; }
+    li { 
+      display: flex; 
+      color: ${({ theme }) => theme.colors.gray400}; 
+      font-weight: 500;
+    }
+    
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   PositionLabel: styled.span<{ $isCurrent: boolean }>`
     font-weight: 500;
-    color: ${({ $isCurrent }) => ($isCurrent ? '#2E6FF2' : '#8D9299')};
-    width: 24px;
+    color: ${({ $isCurrent, theme }) => ($isCurrent ? theme.colors.primary300 : theme.colors.gray300)};
+    width: 2.4rem;
   `,
-  ExperienceTitle: styled.h5`
-    font-size: 16px;
+  ExperienceTitle: styled.p`
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 700;
-    color: #121314;
-    margin: 0 0 8px 0;
+    margin-bottom: 0.8rem;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   ExperienceList: styled.ul`
-    list-style: disc;
-    margin: 0;
-    padding-left: 20px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.8rem;
     
-    li { font-size: 16px; color: #47494D; }
+    li { 
+      font-size: ${({ theme }) => theme.fontSize.md};
+      color: ${({ theme }) => theme.colors.gray400};
+      font-weight: 500;
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.fontSize.sm};
+      }
+    }
   `,
 };
 

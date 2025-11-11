@@ -11,7 +11,7 @@ import type {
 } from '../types/LectureType';
 
 export const mockBannerData: BannerData = {
-  imageUrl: "/",
+  imageUrl: "https://picsum.photos/seed/python1/1200/800",
   altText: "견고한 파이썬 부스트 커뮤니티 1기"
 };
 
@@ -20,9 +20,9 @@ export const mockHeaderData: LectureHeaderData = {
   title: "견고한 파이썬 부스트 커뮤니티 1기",
   description: "실무에서 통하는 파이썬을 AI & 커뮤니티와 함께 배우고 싶은 분을 위한 단기 커뮤니티 러닝 프로그램",
   instructor: {
-    name: "이호준 강사님",
+    name: "이호준",
     role: "위니브 CEO",
-    imageUrl: "/"
+    imageUrl: "https://picsum.photos/id/237/200/200"
   },
   schedule: [
     { label: "모집 기간", value: "2025.07.01(화) ~ 2025.07.27(일)" },
@@ -68,17 +68,32 @@ export const mockCurriculumData: CurriculumData = {
 };
 
 export const mockInstructorData: Instructor = {
-  title: '이호준',
-  subName: 'Hojun Lee',
-  imageUrl: '/',
-  positions: [],
-  experiences: [],
+  title: '이준호',
+  subName: 'Junho Lee',
+  imageUrl: 'https://picsum.photos/id/237/200/200',
+  positions: [
+  { type: 'current', text: '테크브릿지랩 대표' },
+  { type: 'current', text: '넥스트코드 교육팀 리드 강사' },
+  { type: 'current', text: 'AI스터디 커뮤니티 운영진' },
+  { type: 'previous', text: '데브위크 컨퍼런스 기획팀 매니저' },
+  { type: 'previous', text: '소프트하우스코리아 백엔드 개발자' },
+],
+  experiences: [{
+    title: '강의 경력',
+    items: [
+      "테크브릿지랩 부트캠프 메인 강사",
+      "넥스트코드 아카데미 프론트엔드 과정 책임 강사",
+      "AI스터디 커뮤니티 온라인 특강 진행",
+      "오픈소스 컨퍼런스 '코드와 사람' 초청 강연",
+      "유튜브 채널 '개발레슨' 운영",
+    ],
+  },],
 };
 
 export const mockFaqData: FaqData = {
   title: 'FAQ',
   items: [
-    { id: 1, prefix: 'Q1.', question: '프로그래밍이 처음인데 괜찮을까요?', answer: '...' },
+    { id: 1, prefix: 'Q1.', question: '프로그래밍이 처음인데 괜찮을까요?', answer: '영상을 반복적으로 학습하며 따라오면 가능합니다. 프로그래밍 경험이 한 번이라도 있다면 더 원활하게 수업을 들을 수 있습니다. 가능하면 1 ~ 2시간 간단한 기초 강의라도 유튜브에서 보고 오시는 것을 권해드립니다.' },
     { id: 2, prefix: 'Q2.', question: '강의 시간은 어떻게 되나요?', answer: '...' },
   ],
 };
@@ -102,7 +117,7 @@ export const mockCardData: CardData = {
     { label: '모집 기간', value: '~ 2025.07.27(일)', isClosed: true }, // "모집마감" 태그
     { label: '교육 기간', value: '2025.07.28(월) ~ 08.27(수)' },
   ],
-  price: "₩150,000",
+  price: 150000,
   status: "closed" // "수강신청 마감" 버튼
 };
 

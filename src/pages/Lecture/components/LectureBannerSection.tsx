@@ -11,6 +11,7 @@ const LectureBannerSection: React.FC = () => {
 
   return (
     <S.BannerWrapper>
+      <h2 className="sr-only">강의 소개 배너</h2>
       {/* 2. 로딩 및 에러 상태 처리 */}
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error.message} />}
@@ -25,18 +26,26 @@ const S = {
   BannerWrapper: styled.section`
     width: 100%;
     /* 로딩 중에도 레이아웃이 밀리지 않도록 높이를 지정합니다. */
-    height: 416px; 
-    border-radius: 12px;
+    height: 41.6rem; 
+    border-radius: ${({ theme }) => theme.radius.lg};
     overflow: hidden;
-    background-color: #f3f5fa; // 로딩 중 배경색
+    background-color: ${({ theme }) => theme.colors.gray200}; // 로딩 중 배경색
     display: flex;
     align-items: center;
     justify-content: center;
+
+    margin-top: 6rem;
     
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      margin-top: 2.4rem;
+      aspect-ratio: 342 / 180;
+      height: auto;
     }
   `
 };

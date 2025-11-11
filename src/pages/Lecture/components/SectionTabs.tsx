@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import type { RefObject } from 'react';
 import type { SectionRefs } from '../../../types/LectureType'; 
 import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailPage.styled";
+import useMediaQuery from '../../../hooks/useMediaQuery';
 
 interface StickyNavProps {
   refs: SectionRefs;
 }
 
 export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
+  const { isTablet } = useMediaQuery();
   const [activeTab, setActiveTab] = useState('강의 소개');
 
   const navItems = [
@@ -48,13 +50,15 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
         ))}
         
         {/* 수강신청 CTA 버튼 (별도 스타일링) */}
-        <NavCta
-          key={ctaItem.name}
-          href={ctaItem.href} // 실제 링크로 이동
-          // onClick={handleCtaClick} (페이지 이동이므로 onClick 제거)
-        >
-          {ctaItem.name}
-        </NavCta>
+        {!isTablet && 
+          <NavCta
+            key={ctaItem.name}
+            href={ctaItem.href} // 실제 링크로 이동
+            // onClick={handleCtaClick} (페이지 이동이므로 onClick 제거)
+          >
+            {ctaItem.name}
+          </NavCta>
+        }
       </NavContent>
     </StickyNavWrapper>
   );

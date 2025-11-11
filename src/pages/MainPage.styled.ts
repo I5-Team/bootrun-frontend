@@ -43,7 +43,7 @@ export const StyledCategoryIcon = styled.div`
     align-items: center;
     padding: clamp(0.72rem, 1rem, 0.9rem);
 
-    border-radius: ${({ theme }) => theme.radius.lg};
+    border-radius: ${({ theme }) => theme.radius.xxl};
     background-color: ${({ theme }) => theme.colors.gray100};
     border: 0.2rem solid transparent;
 

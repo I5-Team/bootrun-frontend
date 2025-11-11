@@ -5,7 +5,11 @@ import { useApiData } from '../../../hooks/useApiData';
 import { mockFaqData } from '../../../data/mockLectureData';
 import type { FaqData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
-import ArrowDownIcon from '../../../assets/icons/icon-arrow-down.svg?react';
+import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
+
+
+
 
 const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data, loading, error } = useApiData<FaqData>(mockFaqData, 1000);
@@ -15,12 +19,6 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
     setOpenItemId(openItemId === id ? null : id);
   };
 
-  const ArrowIcon = ({ open }: { open: boolean }) => (
-    <S.FAQArrowIcon $open={open}>
-      <ArrowDownIcon />
-    </S.FAQArrowIcon>
-  );
-  
   return (
     <S.Section ref={ref} id="faq">
       {loading && <LoadingSpinner />}
@@ -31,31 +29,32 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
             <S.SectionTitle>{data.title}</S.SectionTitle>
           </S.SectionHeader>
 
-          <S.FAQContainer>
+          <FAQ.Container>
             {data.items.map((item) => {
               const isOpen = openItemId === item.id;
               return (
-                <S.FAQItem key={item.id} $open={isOpen}>
-                  <S.FAQQuestion onClick={() => toggleItem(item.id)}>
-                    <S.FAQQuestionTitle>
+                <FAQ.Item key={item.id} $open={isOpen}>
+
+                  <FAQ.Question onClick={() => toggleItem(item.id)}>
+                    <FAQ.QuestionTitle>
                       <span className="prefix">{item.prefix}</span>
                       <span>{item.question}</span>
-                    </S.FAQQuestionTitle>
-                    <S.FAQToggleButton>
-                      <ArrowIcon open={isOpen} />
-                    </S.FAQToggleButton>
-                  </S.FAQQuestion>
+                    </FAQ.QuestionTitle>
+                    <FAQ.ToggleButton $open={isOpen}><SvgArrowDown/></FAQ.ToggleButton>
+                  </FAQ.Question>
+
                   {isOpen && (
-                    <S.FAQAnswer>
+                    <FAQ.Answer>
                       {/* HTML 마크다운을 렌더링하려면 dangerouslySetInnerHTML을 사용해야 하지만, 
                           간단한 텍스트로 처리합니다. */}
                       <p>{item.answer}</p>
-                    </S.FAQAnswer>
+                    </FAQ.Answer>
                   )}
-                </S.FAQItem>
+
+                </FAQ.Item>
               );
             })}
-          </S.FAQContainer>
+          </FAQ.Container>
         </>
       )}
     </S.Section>
@@ -63,80 +62,84 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
 });
 
 
-const S = {
-  Section: styled.section`
+const FAQ = {
+  Container: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 1.2rem;
     width: 100%;
-    scroll-margin-top: 100px;
   `,
-  SectionHeader: styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  `,
-  SectionTitle: styled.h2`
-    font-weight: 700;
-    font-size: 32px;
-    color: #121314;
-    margin: 0;
-  `,
-  FAQContainer: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 790px;
-  `,
-  FAQItem: styled.div<{ $open: boolean }>`
+  Item: styled.div<{ $open: boolean }>`
     width: 100%;
-    background: #ffffff;
-    border: 1px solid #d9dbe0;
-    border-radius: 16px;
+    background: ${({ theme }) => theme.colors.white};
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.xl};
     overflow: hidden;
     transition: all 0.2s ease-out;
-    ${({ $open }) => $open && `box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);`}
+    ${({ $open, theme }) => $open && theme.colors.shadow};
   `,
-  FAQQuestion: styled.div`
+  Question: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 24px 24px 28px;
+    padding: 2.4rem;
+    padding-left: 2.8rem;
     cursor: pointer;
-  `,
-  FAQQuestionTitle: styled.p`
-    margin: 0;
-    font-weight: 500;
-    font-size: 16px;
-    color: #121314;
-    span.prefix {
-      font-weight: 700;
-      font-size: 20px;
-      color: #2e6ff2;
-      margin-right: 12px;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      padding: 1.6rem;
+      padding-right: 1.2rem;
     }
   `,
-  FAQToggleButton: styled.button`
-    border: none;
-    background: none;
-    padding: 0;
+  QuestionTitle: styled.p`
+    font-weight: 500;
+    font-size: ${({ theme }) => theme.fontSize.md};
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    .prefix {
+      font-size: ${({ theme }) => theme.fontSize.lg};
+      font-weight: 600;
+      color: ${({ theme }) => theme.colors.primary300};
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.mobileFontSize.xl};
+      }
+    }
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.fontSize.sm};
+      }
   `,
-  FAQArrowIcon: styled.div<{ $open: boolean }>`
-    width: 16px;
-    height: 16px;
-    color: #47494D;
-    transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'rotate(0deg)')};
-    transition: transform 0.2s ease;
+  ToggleButton: styled.button<{ $open: boolean }>`
+    width: 3.2rem;
+    height: 3.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: 50%;
+    
+      transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'rotate(0deg)')};
+      transition: transform 0.2s ease;
+    
+    svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
   `,
-  FAQAnswer: styled.div`
-    padding: 0 28px 24px 28px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 28px;
-    color: #47494D;
+  Answer: styled.div`
+    padding: 2.8rem 2.4rem;
+    padding-top: 0;
+    line-height: 1.6;
+    color: ${({ theme }) => theme.colors.gray400};
     white-space: pre-wrap;
-    p { margin: 0; }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
 };
 

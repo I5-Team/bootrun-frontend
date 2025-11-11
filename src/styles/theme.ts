@@ -37,7 +37,9 @@ const radius = {
   xs: '0.6rem',
   sm: '0.8rem',
   md: '1rem',
-  lg: '2rem'
+  lg: '1.2rem',
+  xl: '1.6rem',
+  xxl: '2rem',
 } as const;
 
 const fontSize = {
