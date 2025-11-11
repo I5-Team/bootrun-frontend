@@ -8,31 +8,35 @@ const AccountSection: React.FC = () => {
   const { data, loading, error } = useApiData(mockAccountData, 400);
 
   const handlePasswordReset = () => {
-    alert("비밀번호 재설정 메일을 발송합니다.");
+    alert('비밀번호 재설정 메일을 발송합니다.');
   };
 
   const handleGithubLink = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert("GitHub 계정 연동 페이지로 이동합니다.");
+    alert('GitHub 계정 연동 페이지로 이동합니다.');
   };
 
-  if (loading) return <S.PageWrapper><LoadingSpinner /></S.PageWrapper>;
-  if (error) return <S.PageWrapper><ErrorMessage message={error.message} /></S.PageWrapper>;
+  if (loading)
+    return (
+      <S.PageWrapper>
+        <LoadingSpinner />
+      </S.PageWrapper>
+    );
+  if (error)
+    return (
+      <S.PageWrapper>
+        <ErrorMessage message={error.message} />
+      </S.PageWrapper>
+    );
   if (!data) return null;
-  
+
   return (
     <S.PageWrapper>
-      <S.Title>계정 관리</S.Title>
+      <S.Title as="h2">계정 관리</S.Title>
       <S.Container>
         <S.FormGroup>
           <label htmlFor="email">이메일</label>
-          <S.EmailInput 
-            id="email" 
-            disabled 
-            readOnly 
-            type="email" 
-            value={data.email} 
-          />
+          <S.EmailInput id="email" disabled readOnly type="email" value={data.email} />
         </S.FormGroup>
 
         <S.FormGroup>
@@ -40,7 +44,13 @@ const AccountSection: React.FC = () => {
           {data.githubEmail ? (
             <S.GithubLinked>
               <span>{data.githubEmail}</span>
-              <button type="button" onClick={handleGithubLink}>연동 해제</button>
+              <button
+                type="button"
+                onClick={handleGithubLink}
+                aria-label={`${data.githubEmail} GitHub 계정 연동 해제`}
+              >
+                연동 해제
+              </button>
             </S.GithubLinked>
           ) : (
             <S.GithubLink href="#" onClick={handleGithubLink}>
@@ -48,7 +58,7 @@ const AccountSection: React.FC = () => {
             </S.GithubLink>
           )}
         </S.FormGroup>
-        
+
         <S.FormGroup>
           <label>비밀번호</label>
           <S.PasswordButton type="button" onClick={handlePasswordReset}>
@@ -67,7 +77,7 @@ const S = {
     max-width: 72rem;
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.05);
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
   `,
   Title: styled.h2`
     font-size: ${({ theme }) => theme.fontSize.lg}; /* 2.4rem */
@@ -86,7 +96,7 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    
+
     label {
       font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
       font-weight: 500;
@@ -108,7 +118,7 @@ const S = {
     color: ${({ theme }) => theme.colors.primary300};
     text-decoration: none;
     cursor: pointer;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -117,14 +127,14 @@ const S = {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    
+
     span {
-      font-size: ${({ theme }) => theme.fontSize.md}; 
+      font-size: ${({ theme }) => theme.fontSize.md};
       color: ${({ theme }) => theme.colors.surface};
     }
-    
+
     button {
-      font-size: ${({ theme }) => theme.fontSize.sm}; 
+      font-size: ${({ theme }) => theme.fontSize.sm};
       color: ${({ theme }) => theme.colors.gray300};
       background: none;
       border: none;
@@ -142,7 +152,7 @@ const S = {
     border: none;
     border-radius: ${({ theme }) => theme.radius.md};
     cursor: pointer;
-    
+
     &:hover {
       opacity: 0.9;
     }

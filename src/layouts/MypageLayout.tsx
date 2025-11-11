@@ -8,23 +8,23 @@ const navLinks = [
   { to: '/mypage/account', label: '계정 관리', end: false },
 ];
 
-
 const MobileNavDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   // 현재 활성화된 링크의 텍스트 찾기
-  const activeLink =
-    navLinks.find((link) => location.pathname === link.to) || navLinks[0];
+  const activeLink = navLinks.find((link) => location.pathname === link.to) || navLinks[0];
 
   const handleToggle = () => setIsOpen(!isOpen);
-  
+
   // 링크 클릭 시 드롭다운 닫기
   const handleClose = () => setIsOpen(false);
 
+  const dropdownId = 'mobile-nav-dropdown';
+
   return (
-    <S.MobileNavWrapper>
-      <S.MobileNavButton onClick={handleToggle}>
+    <S.MobileNavWrapper as="nav" aria-label="마이페이지 모바일 메뉴">
+      <S.MobileNavButton onClick={handleToggle} aria-controls={dropdownId} aria-expanded={isOpen}>
         {activeLink.label}
         <S.ArrowDown $isOpen={isOpen} />
       </S.MobileNavButton>
@@ -46,48 +46,44 @@ const MobileNavDropdown: React.FC = () => {
 const MyPageLayout: React.FC = () => {
   return (
     <>
-    <S.MyPageContainer>
-      
-      <S.Nav>
-        <S.NavList>
-          {navLinks.map((link) => (
-            <li key={link.to}>
-              <NavLink to={link.to} end={link.end}>
-                {link.label}
-              </NavLink>
-            </li>
-          ))}
-        </S.NavList>
-      </S.Nav>
-      <MobileNavDropdown />
+      <S.MyPageContainer>
+        <S.Nav aria-label="마이페이지 데스크탑 메뉴">
+          <S.NavList>
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <NavLink to={link.to} end={link.end}>
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
+          </S.NavList>
+        </S.Nav>
+        <MobileNavDropdown />
 
-      <S.ContentArea>
-        <Outlet />
-      </S.ContentArea>
-    </S.MyPageContainer>
+        <S.ContentArea>
+          <Outlet />
+        </S.ContentArea>
+      </S.MyPageContainer>
     </>
   );
 };
 
 const S = {
   MyPageContainer: styled.div`
-  width: 100%;
-  margin-top: 3.2rem;
-      display: flex;
+    width: 100%;
+    margin-top: 3.2rem;
+    display: flex;
     justify-content: start;
     align-items: start;
-    gap: 4rem; 
+    gap: 4rem;
 
     @media ${({ theme }) => theme.devices.tablet} {
       flex-direction: column;
       gap: 3.2rem;
     }
-    
-
-
   `,
   Nav: styled.nav`
-    width: 20%; 
+    width: 20%;
     flex-shrink: 0;
 
     @media ${({ theme }) => theme.devices.tablet} {

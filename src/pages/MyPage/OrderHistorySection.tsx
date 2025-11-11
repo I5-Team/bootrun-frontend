@@ -37,10 +37,11 @@ const OrderCard: React.FC<{ order: OrderItem }> = ({ order }) => {
           </S.InfoItem>
           <S.InfoItem>
             <dt>결제 수단</dt>
-            <S.PaymentInfo>
+            <S.PaymentInfo as="dd">
               <span>{order.paymentMethod}</span>
               <a href={order.receiptUrl} target="_blank" rel="noopener noreferrer">
-                영수증 보기 ↗
+                영수증 보기 <span aria-hidden="true">↗</span>
+                <span className="sr-only">(새 창)</span>
               </a>
             </S.PaymentInfo>
           </S.InfoItem>
@@ -78,15 +79,27 @@ const OrderHistoryPage: React.FC = () => {
   return (
     <S.PageWrapper>
       <S.Header>
-        <S.Title>결제 내역</S.Title>
-        <S.FilterGroup>
-          <S.FilterButton $active={filter === 'all'} onClick={() => setFilter('all')}>
+        <S.Title as="h2">결제 내역</S.Title>
+        <S.FilterGroup role="group" aria-label="결제 내역 필터">
+          <S.FilterButton
+            $active={filter === 'all'}
+            onClick={() => setFilter('all')}
+            aria-pressed={filter === 'all'}
+          >
             전체
           </S.FilterButton>
-          <S.FilterButton $active={filter === 'pending'} onClick={() => setFilter('pending')}>
+          <S.FilterButton
+            $active={filter === 'pending'}
+            onClick={() => setFilter('pending')}
+            aria-pressed={filter === 'pending'}
+          >
             결제 대기
           </S.FilterButton>
-          <S.FilterButton $active={filter === 'completed'} onClick={() => setFilter('completed')}>
+          <S.FilterButton
+            $active={filter === 'completed'}
+            onClick={() => setFilter('completed')}
+            aria-pressed={filter === 'completed'}
+          >
             결제 완료
           </S.FilterButton>
         </S.FilterGroup>
@@ -226,6 +239,7 @@ const S = {
   PaymentInfo: styled.div`
     font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
     color: ${({ theme }) => theme.colors.gray400};
+    margin: 0;
 
     a {
       color: ${({ theme }) => theme.colors.primary300};
@@ -236,6 +250,17 @@ const S = {
       &:hover {
         text-decoration: underline;
       }
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
   `,
 };
