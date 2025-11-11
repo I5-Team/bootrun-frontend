@@ -85,6 +85,11 @@ const FAQ = {
     padding: 2.4rem;
     padding-left: 2.8rem;
     cursor: pointer;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      padding: 1.6rem;
+      padding-right: 1.2rem;
+    }
   `,
   QuestionTitle: styled.p`
     font-weight: 500;
@@ -97,7 +102,15 @@ const FAQ = {
       font-size: ${({ theme }) => theme.fontSize.lg};
       font-weight: 600;
       color: ${({ theme }) => theme.colors.primary300};
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.mobileFontSize.xl};
+      }
     }
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.fontSize.sm};
+      }
   `,
   ToggleButton: styled.button<{ $open: boolean }>`
     width: 3.2rem;
@@ -123,6 +136,10 @@ const FAQ = {
     line-height: 1.6;
     color: ${({ theme }) => theme.colors.gray400};
     white-space: pre-wrap;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
 };
 

@@ -32,25 +32,25 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
               <Instructor.SubName>{data.subName}</Instructor.SubName>
             </Instructor.Header>
 
-            <Instructor.PositionList>
-              {data.positions.map(pos => (
-                <li key={pos.text}>
-                  <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
-                    {pos.type === 'current' ? '現' : '前'}
-                  </Instructor.PositionLabel>
-                  <span>{pos.text}</span>
-                </li>
+              <Instructor.PositionList>
+                {data.positions.map(pos => (
+                  <li key={pos.text}>
+                    <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
+                      {pos.type === 'current' ? '現' : '前'}
+                    </Instructor.PositionLabel>
+                    <span>{pos.text}</span>
+                  </li>
+                ))}
+              </Instructor.PositionList>
+  
+              {data.experiences.map(exp => (
+                <div key={exp.title}>
+                  <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
+                  <Instructor.ExperienceList>
+                    {exp.items.map(item => <li key={item}>{item}</li>)}
+                  </Instructor.ExperienceList>
+                </div>
               ))}
-            </Instructor.PositionList>
-
-            {data.experiences.map(exp => (
-              <div key={exp.title}>
-                <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
-                <Instructor.ExperienceList>
-                  {exp.items.map(item => <li key={item}>{item}</li>)}
-                </Instructor.ExperienceList>
-              </div>
-            ))}
           </Instructor.ContentContainer>
 
         </Instructor.InfoBox>
@@ -62,11 +62,24 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
 const Instructor = {
   InfoBox: styled.div`
     display: flex;
-    gap: 4rem;
+    justify-content: center;
+    gap: 2.4rem 4rem;
     background: ${({ theme }) => theme.colors.gray100};
     border-radius: ${({ theme }) => theme.radius.xl};
     padding: 4rem;
     width: 100%;
+
+    img {
+      width: clamp(17rem, 30%, 24rem);
+      height: clamp(17rem, 30%, 24rem);
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      padding: 3.2rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
   `,
   ContentContainer: styled.div`
     display: flex;
@@ -78,6 +91,11 @@ const Instructor = {
     display: flex;
     align-items: center;
     gap: 0.8rem;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
   `,
   Title: styled.p`
     font-size: ${({ theme }) => theme.fontSize.lg};
@@ -98,6 +116,10 @@ const Instructor = {
       color: ${({ theme }) => theme.colors.gray400}; 
       font-weight: 500;
     }
+    
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   PositionLabel: styled.span<{ $isCurrent: boolean }>`
     font-weight: 500;
@@ -108,6 +130,10 @@ const Instructor = {
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 700;
     margin-bottom: 0.8rem;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   ExperienceList: styled.ul`
     display: flex;
@@ -118,6 +144,10 @@ const Instructor = {
       font-size: ${({ theme }) => theme.fontSize.md};
       color: ${({ theme }) => theme.colors.gray400};
       font-weight: 500;
+
+      @media ${({ theme }) => theme.devices.mobile} {
+        font-size: ${({ theme }) => theme.fontSize.sm};
+      }
     }
   `,
 };

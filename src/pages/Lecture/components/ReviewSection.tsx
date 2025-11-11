@@ -94,7 +94,12 @@ const Review = {
     }
   `,
   CardComent: styled.p`
-    color: ${({ theme }) => theme.colors.gray400}; 
+    color: ${({ theme }) => theme.colors.gray400};
+    line-height: 1.4;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
 };
 

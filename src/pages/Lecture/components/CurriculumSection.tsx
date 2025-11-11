@@ -130,6 +130,10 @@ const Curr = {
       height: 1.4rem;
       path { fill: ${({ theme }) => theme.colors.gray400}; }
     }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   LectureTitle: styled.span`
     span { font-weight: 400; }

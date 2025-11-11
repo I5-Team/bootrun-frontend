@@ -103,3 +103,11 @@ export interface CardData {
   price: number;
   status: 'open' | 'closed'; // 버튼 상태 ('open' -> 수강신청, 'closed' -> 마감)
 }
+
+export interface InfoBoxProps {
+  cardData: {
+    data: CardData | null;
+    loading: boolean;
+    error: Error | null;
+  }
+}

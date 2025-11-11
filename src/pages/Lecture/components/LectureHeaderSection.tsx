@@ -2,12 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../../hooks/useApiData';
 import { mockHeaderData } from '../../../data/mockLectureData';
-import type { LectureHeaderData } from '../../../types/LectureType';
+import type { InfoBoxProps, LectureHeaderData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import Tag from '../../../components/Tag';
 import Profile from '../../../components/Profile';
+import useMediaQuery from '../../../hooks/useMediaQuery';
+import { InfoBoxContent } from './LectureInfoBox';
 
-const LectureHeaderSection: React.FC = () => {
+const LectureHeaderSection: React.FC<InfoBoxProps> = ({ cardData }) => {
+  const { isLaptop } = useMediaQuery();
   const { data, loading, error } = useApiData<LectureHeaderData>(mockHeaderData, 300);
 
   if (loading) return <S.HeaderWrapper><LoadingSpinner /></S.HeaderWrapper>;
@@ -40,15 +43,17 @@ const LectureHeaderSection: React.FC = () => {
           </S.ProfileInfo>
         </S.Profile>
       </S.InstructorContainer>
-      
+
+      {isLaptop && <InfoBoxContent cardData={cardData}/>}
+          
       <S.ScheduleContainer>
         <strong>교육 일정</strong>
         <ul>
           {schedule.map(item => (
-            <li key={item.label}>
+            <S.ScheduleItem key={item.label}>
               <S.ScheduleLabel>{item.label}</S.ScheduleLabel>
               <span>{item.value}</span>
-            </li>
+            </S.ScheduleItem>
           ))}
         </ul>
       </S.ScheduleContainer>
@@ -58,7 +63,9 @@ const LectureHeaderSection: React.FC = () => {
 
 const S = {
   HeaderWrapper: styled.section`
+    grid-area: header;
     width: 100%;
+
     display: flex;
     flex-direction: column;
     gap: 3.2rem;
@@ -70,16 +77,22 @@ const S = {
   `,
   TagContainer: styled.div`
     display: flex;
-    gap: 8px;
+    gap: 0.8rem;
   `,
   Title: styled.h2`
     font-size: ${({ theme }) => theme.fontSize.xxl};
-    line-height: 5.6rem;
+    line-height: 1.4;
     font-weight: 700;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      font-size: ${({ theme }) => theme.fontSize.xl};
+    }
   `,
   Description: styled.p`
-    font-size: 1.6rem;
     color: ${({ theme }) => theme.colors.gray400};
+    word-break: keep-all;
+    width: 90%;
+    line-height: 1.4;
   `,
   InstructorContainer: styled.div`
     display: flex;
@@ -123,12 +136,17 @@ const S = {
       flex-direction: column;
       gap: 1.2rem;
     }
-    li {
+  `,
+  ScheduleItem: styled.li`
       display: flex;
       line-height: 2.2rem;
       font-size: 1.6rem;
       font-weight: 500;
-      color: #121314;
+      flex-wrap: wrap;
+      gap: 0.8rem 0;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
   ScheduleLabel: styled.span`

@@ -21,6 +21,7 @@ const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
 // --- Styles ---
 const Intro = {
   Section: styled(S.Section)`
+    max-width: 100%;
     background-color: ${({ theme }) => theme.colors.gray100};
   `,
   StaticContentWrapper: styled.div`
@@ -34,12 +35,20 @@ const Intro = {
     font-size: ${({ theme }) => theme.fontSize.xl}; 
     font-weight: 700;
     text-align: center;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.lg};
+    }
   `,
   Desc: styled.p`
     font-size: ${({ theme }) => theme.fontSize.lg}; 
     color: ${({ theme }) => theme.colors.gray400}; 
     text-align: center;
     line-height: 1.4;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.md};
+    }
   `,
   ContentContainer: styled.div`
     display: flex;

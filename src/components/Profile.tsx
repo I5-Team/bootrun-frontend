@@ -18,9 +18,7 @@ const StyledProfileImg = styled.img<{ $size: number, $isActive: boolean }>`
     border: ${({ $isActive, theme }) => $isActive
     ? `0.2rem solid ${theme.colors.primary300}`
     : `0.1rem solid ${theme.colors.gray200}`
-    }
-
-    
+    };
 `;
 
 export default function Profile({ src, size = 4.2, alt = "프로필", isActive = false }: ProfileProps) { 

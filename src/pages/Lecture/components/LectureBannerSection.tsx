@@ -41,6 +41,12 @@ const S = {
       height: 100%;
       object-fit: cover;
     }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      margin-top: 2.4rem;
+      aspect-ratio: 342 / 180;
+      height: auto;
+    }
   `
 };
 

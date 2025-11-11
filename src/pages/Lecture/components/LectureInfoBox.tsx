@@ -1,14 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockCardData } from '../../../data/mockLectureData';
-import type { CardData } from '../../../types/LectureType';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import type { InfoBoxProps } from '../../../../src/types/LectureType';
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
+import useMediaQuery from '../../../hooks/useMediaQuery';
 
-const LectureInfoBox: React.FC = () => {
-  const { data, loading, error } = useApiData<CardData>(mockCardData, 200);
+export const InfoBoxContent = ({ cardData }: InfoBoxProps) => {
+  const { data } = cardData;
 
   const calculateDdayFrom = (targetDateString: string) => {
     const targetDate = new Date(targetDateString);
@@ -25,6 +24,51 @@ const LectureInfoBox: React.FC = () => {
 };
 
   return (
+      <S.Content>
+        {data &&
+        <>
+          <S.LectureInfoList>
+            {data.items.map((item) => (
+              <li key={item.label}>
+                <S.InfoLabel>{item.label}</S.InfoLabel>
+                <S.InfoValue>
+                  <span style={{ whiteSpace: 'nowrap' }}>{item.value}</span>
+                  {item.isClosed !== undefined && 
+                  (item.isClosed 
+                    ? <S.DdayTag $variant="closed">모집마감</S.DdayTag> 
+                    : <S.DdayTag $variant="open">{calculateDdayFrom('2025-07-27')}</S.DdayTag>)
+                  }
+                </S.InfoValue>
+              </li>
+            ))}
+          </S.LectureInfoList>
+          <S.Price>₩{data.price.toLocaleString()}</S.Price>
+        </>
+        }
+      </S.Content>
+  )
+}
+
+export const InfoBoxButtons = ({ cardData }: InfoBoxProps) => {
+  const { isLaptop } = useMediaQuery();
+  const { data } = cardData;
+
+  return (
+    <S.ButtonContainer>
+      {data?.status === "closed" 
+        ? <Button size="lg" fullWidth={!isLaptop} disabled={true}>수강신청 마감</Button>
+        :   
+        <Button size="lg" fullWidth={!isLaptop}>수강신청 하기</Button>
+      }
+      <Button variant='outline' size="lg" fullWidth={!isLaptop} aria-label="강의 링크 공유하기" iconSvg={<ShareIcon/>}>공유하기</Button>
+    </S.ButtonContainer>
+  )
+}
+
+const LectureInfoBox: React.FC<InfoBoxProps> = ({ cardData }) => {
+  const { data, loading, error } = cardData;
+
+  return (
     <S.FloatingCardWrapper>
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error.message} />}
@@ -32,33 +76,9 @@ const LectureInfoBox: React.FC = () => {
         <>
           <S.Title>{data.title}</S.Title>
 
-          <S.Content>
-            <S.LectureInfoList>
-              {data.items.map((item) => (
-                <li key={item.label}>
-                  <S.InfoLabel>{item.label}</S.InfoLabel>
-                  <S.InfoValue>
-                    <span style={{ whiteSpace: 'nowrap' }}>{item.value}</span>
-                    {item.isClosed !== undefined && 
-                    (item.isClosed 
-                      ? <S.DdayTag $variant="closed">모집마감</S.DdayTag> 
-                      : <S.DdayTag $variant="open">{calculateDdayFrom('2025-07-27')}</S.DdayTag>)
-                    }
-                  </S.InfoValue>
-                </li>
-              ))}
-            </S.LectureInfoList>
-          </S.Content>
+          <InfoBoxContent cardData={cardData}/>
 
-          <S.ButtonContainer>
-            <S.Price>₩{data.price.toLocaleString()}</S.Price>
-            {data.status === "closed" 
-              ? <Button size="lg" fullWidth disabled={true}>수강신청 마감</Button>
-              :   
-              <Button size="lg" fullWidth>수강신청 하기</Button>
-            }
-            <Button variant='outline' size="lg" fullWidth aria-label="강의 링크 공유하기" iconSvg={<ShareIcon/>}>공유하기</Button>
-          </S.ButtonContainer>
+          <InfoBoxButtons cardData={cardData}/>
         </>
       )}
     </S.FloatingCardWrapper>
@@ -68,8 +88,8 @@ const LectureInfoBox: React.FC = () => {
 // --- Styles (HTML 클래스명 기반으로 재정리) ---
 const S = {
   FloatingCardWrapper: styled.aside`
-    flex: 1 1 auto;
-    min-width: 34rem;
+    grid-area: infoBox;
+    height: fit-content;
 
     display: flex;
     flex-direction: column;
@@ -81,7 +101,19 @@ const S = {
     position: sticky;
     top: calc(7rem + 1.6rem);
 
-    & > *:not(:last-child)::after {
+    @media ${({ theme }) => theme.devices.laptop} {
+      display: none;
+      position: relative;
+      top: 0;
+    }
+  `,
+  Title: styled.p`
+    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.surface};
+    margin: 0;
+
+    &::after {
       content: "";
       display: block;
       width: 100%;
@@ -90,21 +122,11 @@ const S = {
       margin-block: 2.4rem;
     }
   `,
-  Title: styled.p`
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.surface};
-    margin: 0;
-  `,
   Content: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
   `,
   LectureInfoList: styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
@@ -113,6 +135,15 @@ const S = {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 0.1rem;
+      border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+      margin-block: 2.4rem;
     }
   `,
   InfoLabel: styled.span`
@@ -156,12 +187,38 @@ const S = {
     font-weight: 600;
     color: ${({ theme }) => theme.colors.primary300};;
     text-align: left;
-    margin-bottom: 1.2rem;
+    margin-bottom: 2.4rem;
+
+    @media ${({ theme }) => theme.devices.laptop} {
+      margin-bottom: 0;
+    }
   `,
   ButtonContainer: styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+
+    @media ${({ theme }) => theme.devices.laptop} {
+    width: 100%;
+    padding-block: 1.1rem 2.8rem;
+    padding-inline: 1.6rem; 
+    flex-direction: row;
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+
+    border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+    background-color: ${({ theme }) => theme.colors.white};
+      
+    & > button:nth-child(1) {
+      flex: 1 1 70%;
+    }
+    & > button:nth-child(2) {
+      flex: 1 1 30%;
+    }
+    }
   `,
 };
 
