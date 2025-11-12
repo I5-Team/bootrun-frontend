@@ -20,7 +20,7 @@ const TableArea: React.FC<TableAreaProps> = ({ courseStats }) => {
 
       {loading && <LoadingSpinner />}
       {!loading && !courseStats && <ErrorMessage message="데이터 없음" />}
-      
+
       <S.TableWrapper>
         <S.StyledTable>
           <thead>
@@ -35,7 +35,9 @@ const TableArea: React.FC<TableAreaProps> = ({ courseStats }) => {
           </thead>
           <tbody>
             {!loading && courseStats?.length === 0 && (
-              <tr><td colSpan={6}>데이터가 없습니다.</td></tr>
+              <tr>
+                <td colSpan={6}>데이터가 없습니다.</td>
+              </tr>
             )}
             {courseStats?.map((course) => (
               <tr key={course.course_id}>
@@ -44,9 +46,7 @@ const TableArea: React.FC<TableAreaProps> = ({ courseStats }) => {
                 <td>{course.total_revenue.toLocaleString()}원</td>
                 <td>
                   {course.total_enrollments.toLocaleString()}
-                  <span className="active">
-                    ({course.active_enrollments.toLocaleString()})
-                  </span>
+                  <span className="active">({course.active_enrollments.toLocaleString()})</span>
                 </td>
                 <td>{course.avg_progress.toFixed(1)}%</td>
                 <td>{course.completion_rate.toFixed(1)}%</td>
@@ -64,7 +64,7 @@ const S = {
   CardBox: styled.div`
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
-    padding: 2.4rem;
+    padding: clamp(1.6rem, 3vw, 2.4rem);
     box-shadow: ${({ theme }) => theme.colors.shadow};
   `,
   SectionHeader: styled.div`
@@ -79,7 +79,7 @@ const S = {
     }
   `,
   SectionTitle: styled.h3`
-    font-size: ${({ theme }) => theme.fontSize.lg}; // 2.4rem
+    font-size: clamp(1.6rem, 2.1vw, 1.9rem);
     font-weight: 600;
     color: ${({ theme }) => theme.colors.surface};
     margin: 0;
@@ -116,6 +116,16 @@ const S = {
   TableWrapper: styled.div`
     width: 100%;
     overflow-x: auto; // 모바일/태블릿에서 가로 스크롤
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      height: 0.6rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${({ theme }) => theme.colors.gray200};
+      border-radius: ${({ theme }) => theme.radius.sm};
+    }
   `,
   StyledTable: styled.table`
     width: 100%;
@@ -148,6 +158,15 @@ const S = {
       text-align: center;
       padding: 4rem;
       color: ${({ theme }) => theme.colors.gray300};
+    }
+
+    @media (${({ theme }) => theme.devices.mobile}) {
+      font-size: 1.3rem;
+
+      th,
+      td {
+        padding: 1.2rem 0.8rem;
+      }
     }
   `,
 };

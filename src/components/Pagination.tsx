@@ -16,11 +16,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   // 렌더링할 페이지가 없거나 1페이지뿐이면 아무것도 표시하지 않음
   if (totalPages <= 1) {
     return null;
@@ -95,18 +91,6 @@ const S = {
     strong {
       color: ${({ theme }) => theme.colors.surface};
       font-weight: 600;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
     }
   `,
 };
