@@ -77,7 +77,7 @@ const AccountSection: React.FC = () => {
           </S.FormGroup>
 
           <S.FormGroup>
-            <label>GitHub 계정</label>
+            <S.FormLabel>GitHub 계정</S.FormLabel>
             {data.githubEmail ? (
               <S.GithubLinked>
                 <span>{data.githubEmail}</span>
@@ -90,14 +90,14 @@ const AccountSection: React.FC = () => {
                 </button>
               </S.GithubLinked>
             ) : (
-              <S.GithubLink href="#" onClick={handleGithubLink}>
+              <S.GithubLink type="button" onClick={handleGithubLink}>
                 * GitHub 계정 로그인
               </S.GithubLink>
             )}
           </S.FormGroup>
 
           <S.FormGroup>
-            <label>비밀번호</label>
+            <S.FormLabel>비밀번호</S.FormLabel>
             <S.PasswordButton type="button" onClick={handlePasswordReset}>
               비밀번호 재설정
             </S.PasswordButton>
@@ -106,7 +106,7 @@ const AccountSection: React.FC = () => {
         <S.DangerZone>
           <S.DangerSummary>
             <span>회원 탈퇴</span>
-            <S.ArrowIcon />
+            <S.ArrowIcon aria-hidden="true" />
           </S.DangerSummary>
           <S.DangerContent>
             <S.DangerDescription>
@@ -189,6 +189,11 @@ const S = {
       color: ${({ theme }) => theme.colors.surface};
     }
   `,
+  FormLabel: styled.span`
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.surface};
+  `,
   EmailInput: styled.input`
     height: 4.8rem;
     padding: 0 1.6rem;
@@ -199,10 +204,15 @@ const S = {
     color: ${({ theme }) => theme.colors.gray300};
   `,
   GithubLink: styled.a`
-    font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+
+    /* 기존 <a> 스타일 적용 */
+    font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.primary300};
-    text-decoration: none;
     cursor: pointer;
 
     &:hover {
@@ -244,25 +254,20 @@ const S = {
     }
   `,
   DangerZone: styled.details`
-    /* <details> 태그의 기본 '열기' 마커(화살표)를 숨깁니다.
-      (우리는 커스텀 화살표(S.ArrowIcon)를 사용할 것입니다.)
-    */
     summary::-webkit-details-marker {
       display: none;
     }
     summary {
-      list-style: none; /* (Firefox용 마커 숨기기) */
+      list-style: none;
     }
 
-    /* 닫혀 있을 때의 스타일 */
     border-top: 1px solid ${({ theme }) => theme.colors.gray100};
     border-bottom-left-radius: ${({ theme }) => theme.radius.lg};
     border-bottom-right-radius: ${({ theme }) => theme.radius.lg};
     background: ${({ theme }) => theme.colors.white};
 
-    /* [open] 속성이 붙었을 때 (펼쳐졌을 때)의 스타일 */
     &[open] {
-      background: #fffafa; // (임시) 붉은 배경
+      background: #fffafa;
     }
   `,
 
@@ -281,7 +286,9 @@ const S = {
       border-bottom-right-radius: 0;
     }
   `,
-  ArrowIcon: styled.span`
+  ArrowIcon: styled.span.attrs({
+    'aria-hidden': 'true',
+  })`
     &::before {
       content: '▼';
       display: inline-block;
@@ -289,6 +296,7 @@ const S = {
       color: ${({ theme }) => theme.colors.gray300};
       transition: transform 0.2s ease;
 
+      /* details[open] 상태일 때 <summary> 내부의 화살표 회전 */
       details[open] & {
         transform: rotate(180deg);
       }
@@ -296,10 +304,8 @@ const S = {
   `,
 
   DangerContent: styled.div`
-    padding: 0 2.4rem 2.4rem 2.4rem;
-    border-top: 1px solid ${({ theme }) => theme.colors.gray200}; // (임시)
-    margin: 0 2.4rem; // (임시)
-    padding-top: 2.4rem; // (임시)
+    padding: 2.4rem;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray200};
   `,
 
   DangerTitle: styled.h3`
