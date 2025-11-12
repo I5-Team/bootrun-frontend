@@ -1,95 +1,128 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
 import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
-import CalendarIconSvg from '../../assets/icons/icon-calendar.svg';
-
-
-const CalendarIcon = styled.img`
-  position: absolute;
-  top: 50%;
-  right: 1.2rem;
-  width: 1.6rem;
-  height: 1.6rem;
-  transform: translateY(-50%);
-  pointer-events: none;
-`;
+import SvgProfileImage from '../../assets/images/profile-user-default.png';
 
 const ProfilePage: React.FC = () => {
   const { data, loading, error } = useApiData(mockProfileData, 500);
-  
+
   const [name, setName] = useState('');
   const [gender, setGender] = useState('none');
   const [birthdate, setBirthdate] = useState('');
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // 숨겨진 input 제어
 
   useEffect(() => {
     if (data) {
       setName(data.name);
       setGender(data.gender);
-      setBirthdate(data.birthdate);
+      setBirthdate(data.birthdate || '');
+      setImagePreview(null); // 초기 프리뷰 없음
+      setSelectedFile(null); // 초기 선택 파일 없음
     }
   }, [data]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("수정하기:", { name, gender, birthdate });
+    console.log('수정하기:', { name, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
+  };
+
+  const handleImageUploadClick = () => {
+    fileInputRef.current?.click(); // 숨겨진 input 클릭
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file); // API 전송용
+      setImagePreview(URL.createObjectURL(file)); // 프리뷰용
+    }
   };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error.message} />;
   if (!data) return null;
+  console.log('프로필 데이터:', data.profileImageUrl);
+  const displayImageUrl = imagePreview || data.profileImageUrl;
 
   return (
     <S.Form onSubmit={handleSubmit}>
-      <S.Title>프로필 설정</S.Title>
+      <S.Title as="h2">프로필 설정</S.Title>
       <S.Container>
         <S.ProfileContainer>
-          <S.ImagePreview>
-            <img src={data.profileImageUrl} alt="프로필" />
-            <S.ImageUploadButton type="button">
-              {/* <CameraIcon /> */} 📷
+          <S.ImageWrapper>
+            <S.ImagePreview>
+              {displayImageUrl ? (
+                <img src={displayImageUrl} alt="현재 프로필 이미지" />
+              ) : (
+                <img src={SvgProfileImage} alt="기본 프로필 이미지" />
+              )}
+            </S.ImagePreview>
+            <S.ImageUploadButton
+              type="button"
+              onClick={handleImageUploadClick}
+              aria-label="프로필 이미지 변경"
+            >
+              +
             </S.ImageUploadButton>
-          </S.ImagePreview>
+          </S.ImageWrapper>
+
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            aria-hidden="true"
+          />
         </S.ProfileContainer>
-        
+
         <S.FormContent>
           <S.FormGroup>
             <label htmlFor="name">이름</label>
-            <input 
-              id="name" 
-              type="text" 
-              value={name} 
+            <S.Input
+              id="name"
+              type="text"
+              name="name"
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </S.FormGroup>
           <S.FormRow>
             <S.FormGroup>
               <label htmlFor="gender">성별</label>
-              <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+              <S.Select
+                id="gender"
+                name="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
                 <option value="none">선택</option>
                 <option value="male">남성</option>
                 <option value="female">여성</option>
-              </select>
+              </S.Select>
             </S.FormGroup>
             <S.FormGroup>
               <label htmlFor="birthdate">생년월일</label>
-              <S.DateInputWrapper>
-                <input 
-                  id="birthdate" 
-                  type="text" 
-                  placeholder="----년 --월 --일"
-                  value={birthdate} 
-                  onChange={(e) => setBirthdate(e.target.value)}
-                />
-                <CalendarIcon src={CalendarIconSvg} alt="" />
-              </S.DateInputWrapper>
+
+              <S.Input
+                id="birthdate"
+                type="date"
+                name="birthdate"
+                value={birthdate}
+                onChange={(e) => setBirthdate(e.target.value)}
+                aria-label="생년월일 입력"
+              />
             </S.FormGroup>
           </S.FormRow>
         </S.FormContent>
       </S.Container>
-      
+
       <S.SubmitButtonWrapper>
         <S.SubmitButton type="submit">수정하기</S.SubmitButton>
       </S.SubmitButtonWrapper>
@@ -104,7 +137,7 @@ const S = {
     max-width: 72rem;
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.05);
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
   `,
   Title: styled.h2`
     font-size: 2.4rem;
@@ -122,14 +155,33 @@ const S = {
   ProfileContainer: styled.div`
     flex-shrink: 0;
   `,
+  ImageWrapper: styled.div`
+    position: relative; /* ◀ 버튼의 기준점이 됨 */
+    width: 12rem;
+    height: 12rem;
+  `,
   ImagePreview: styled.div`
-    position: relative;
     width: 12rem;
     height: 12rem;
     border-radius: 50%;
     background-color: ${({ theme }) => theme.colors.gray100};
     border: 1px solid ${({ theme }) => theme.colors.gray200};
-    img { ... }
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `,
+  ImagePlaceholder: styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    color: ${({ theme }) => theme.colors.gray300};
+    border-radius: 50%;
   `,
   ImageUploadButton: styled.button`
     position: absolute;
@@ -140,11 +192,12 @@ const S = {
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.gray400};
     color: ${({ theme }) => theme.colors.white};
-    border: none;
+    border: 2px solid ${({ theme }) => theme.colors.white};
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-size: 1.6rem;
   `,
   FormContent: styled.div`
     flex-grow: 1;
@@ -161,45 +214,61 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    
+
     label {
       font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
       font-weight: 500;
     }
-    
-    input, select {
+
+    input,
+    select {
       height: 4.8rem;
       padding: 0 1.6rem;
       border: 1px solid ${({ theme }) => theme.colors.gray200};
       border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
       font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-      
+
       &:focus {
         border-color: ${({ theme }) => theme.colors.primary300};
         outline: none;
       }
     }
-    
-    input[type="text"] {
+
+    input[type='text'] {
       border-color: ${({ theme }) => theme.colors.primary300};
     }
   `,
-  DateInputWrapper: styled.div`
-    position: relative;
-    display: flex;
-    align-items: center;
-    
-    input {
-      width: 100%;
-      padding-right: 4rem;
+  Input: styled.input`
+    height: 4.8rem;
+    padding: 0 1.6rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.md};
+    font-size: ${({ theme }) => theme.fontSize.md};
+    min-width: auto;
+
+    &:focus {
+      border-color: ${({ theme }) => theme.colors.primary300};
+      outline: none;
     }
-    
-    svg, span { /* (임시 span) */
-      position: absolute;
-      right: 1.2rem;
-      color: ${({ theme }) => theme.colors.gray300};
+
+    &[type='text'] {
+      border-color: ${({ theme }) => theme.colors.primary300};
     }
   `,
+  Select: styled.select`
+    height: 4.8rem;
+    padding: 0 1.6rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.md};
+    font-size: ${({ theme }) => theme.fontSize.md};
+    background: white;
+
+    &:focus {
+      border-color: ${({ theme }) => theme.colors.primary300};
+      outline: none;
+    }
+  `,
+
   SubmitButtonWrapper: styled.div`
     padding: 2.4rem;
     display: flex;
@@ -214,8 +283,10 @@ const S = {
     border: none;
     border-radius: ${({ theme }) => theme.radius.md};
     cursor: pointer;
-    
-    &:hover { opacity: 0.9; }
+
+    &:hover {
+      opacity: 0.9;
+    }
   `,
 };
 
