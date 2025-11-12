@@ -3,16 +3,18 @@
  * 필터/검색, 페이지네이션, 엑셀 다운로드 기능
  */
 import { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
 import type { PaymentApiParams, PaymentListItem } from '../../types/AdminPaymentType';
 import { getPaginatedPayments } from '../../data/mockPaymentData';
 import { Button } from '../../components/Button';
 
 // 하위 컴포넌트 임포트
+import AdminPageLayout from './AdminPageLayout';
 import PaymentFilterBar from './PaymentFilterBar';
 import PaymentTable from './PaymentTable';
-import Pagination from './Pagination';
+import Pagination from '../../components/Pagination';
 import PaymentDetailModal from './PaymentDetailModal';
+import { LoadingSpinner } from '../../components/HelperComponents';
+import { AdminPageStyles as S } from './AdminPageStyles';
 
 /**
  * 엑셀(CSV) 다운로드 함수
@@ -216,24 +218,26 @@ export default function PaymentManagePage() {
   }, []);
 
   return (
-    <S.PageWrapper>
-      <S.PageHeader>
-        <S.PageTitle>결제 관리</S.PageTitle>
+    <AdminPageLayout
+      title="결제 관리"
+      rightElement={
         <Button size="md" onClick={handleDownloadExcel} ariaLabel="엑셀 다운로드">
           엑셀 다운로드
         </Button>
-      </S.PageHeader>
-
+      }
+    >
       <PaymentFilterBar onFilterChange={handleFilterChange} initialFilters={apiParams} />
 
       {/* 테이블과 페이지네이션을 카드에 함께 표시 */}
       <S.CardBox>
         <S.TableHeader>
-          <span>총 {pagination.total}건의 결제 내역</span>
+          <span>총 {pagination.total.toLocaleString()}건의 결제 내역</span>
         </S.TableHeader>
 
         {loading ? (
-          <S.LoadingMessage>로딩 중...</S.LoadingMessage>
+          <S.LoadingContainer>
+            <LoadingSpinner />
+          </S.LoadingContainer>
         ) : (
           <PaymentTable
             payments={payments}
@@ -256,56 +260,6 @@ export default function PaymentManagePage() {
       {selectedPayment && (
         <PaymentDetailModal payment={selectedPayment} onClose={handleCloseModal} />
       )}
-    </S.PageWrapper>
+    </AdminPageLayout>
   );
 }
-
-// --- Styles (DashboardPage, UserManagePage와 일관성 유지) ---
-const S = {
-  PageWrapper: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2.4rem;
-    padding: 2.4rem;
-    background-color: ${({ theme }) => theme.colors.gray100};
-    min-height: 100vh;
-  `,
-  PageHeader: styled.header`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  `,
-  PageTitle: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.xl};
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.surface};
-    margin: 0;
-  `,
-  CardBox: styled.div`
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.radius.md};
-    padding: 2.4rem;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
-  `,
-  TableHeader: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.6rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.surface};
-  `,
-  LoadingMessage: styled.div`
-    text-align: center;
-    padding: 6rem;
-    color: ${({ theme }) => theme.colors.gray300};
-    font-size: 1.4rem;
-  `,
-  PaginationWrapper: styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 2.4rem;
-  `,
-};

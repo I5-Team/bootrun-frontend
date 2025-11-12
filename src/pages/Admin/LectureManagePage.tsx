@@ -3,7 +3,6 @@
  * 필터/검색, 페이지네이션, 모달을 통한 CRUD 작업 관리
  */
 import { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
 import type {
   CourseApiParams,
   CourseListItem,
@@ -13,11 +12,13 @@ import { getPaginatedCourses } from '../../data/mockAdminCourseData';
 import { Button } from '../../components/Button';
 
 // 하위 컴포넌트 임포트
+import AdminPageLayout from './AdminPageLayout';
 import LectureFilterBar from './LectureFilterBar';
 import LectureTable from './LectureTable';
-import Pagination from './Pagination';
+import Pagination from '../../components/Pagination';
 import LectureAddModal from './LectureAddModal';
 import LectureDetailModal from './LectureDetailModal';
+import { AdminPageStyles as S } from './AdminPageStyles';
 
 export default function LectureManagePage() {
   // 1. 상태 정의
@@ -143,14 +144,14 @@ export default function LectureManagePage() {
   }, []);
 
   return (
-    <S.PageWrapper>
-      <S.PageHeader>
-        <S.PageTitle>강의 관리</S.PageTitle>
+    <AdminPageLayout
+      title="강의 관리"
+      rightElement={
         <Button size="lg" onClick={handleAddCourse} ariaLabel="새 강의 추가">
           + 새 강의 추가
         </Button>
-      </S.PageHeader>
-
+      }
+    >
       <LectureFilterBar onFilterChange={handleFilterChange} initialFilters={apiParams} />
 
       {/* 테이블과 페이지네이션을 카드에 함께 표시 */}
@@ -197,57 +198,6 @@ export default function LectureManagePage() {
         }}
         onUpdate={handleUpdateCourse}
       />
-    </S.PageWrapper>
+    </AdminPageLayout>
   );
 }
-
-// --- Styles (DashboardPage, UserManagePage와 일관성 유지) ---
-const S = {
-  PageWrapper: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2.4rem;
-    padding: 2.4rem;
-    background-color: ${({ theme }) => theme.colors.gray100};
-    min-height: 100vh;
-  `,
-  PageHeader: styled.header`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  `,
-  PageTitle: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.xl};
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.surface};
-    margin: 0;
-  `,
-  CardBox: styled.div`
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.radius.md};
-    padding: 2.4rem;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
-  `,
-  TableHeader: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.6rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.surface};
-  `,
-  LoadingContainer: styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 6rem;
-    color: ${({ theme }) => theme.colors.gray300};
-  `,
-  PaginationWrapper: styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 2.4rem;
-  `,
-};

@@ -1,24 +1,21 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import type {
-  AdminStats,
-  CourseStat,
-  DailyStat,
-  CategoryStat, 
-} from '../../types/AdminType';
+import type { AdminStats, CourseStat, DailyStat, CategoryStat } from '../../types/AdminType';
 import {
   fetchDashboardStats,
   fetchDailyStats,
   fetchCourseStats,
-  fetchCategoryStats, 
+  fetchCategoryStats,
 } from '../../api/adminApi';
 
+import AdminPageLayout from './AdminPageLayout';
 import StatsCardArea from './StatsCardArea';
 import ChartArea from './ChartArea';
 import ProgressArea from './ProgressArea';
 import TableArea from './TableArea';
+import { AdminPageStyles as S } from './AdminPageStyles';
 
-import { LoadingSpinner } from '../../components/HelperComponents'; 
+import { LoadingSpinner } from '../../components/HelperComponents';
 
 // --- 헬퍼 함수 ---
 const getTodayDate = () => {
@@ -37,7 +34,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [dailyStats, setDailyStats] = useState<DailyStat[] | null>(null);
   const [courseStats, setCourseStats] = useState<CourseStat[] | null>(null);
-  const [categoryStats, setCategoryStats] = useState<CategoryStat[] | null>(null); 
+  const [categoryStats, setCategoryStats] = useState<CategoryStat[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,12 +42,7 @@ export default function DashboardPage() {
       try {
         setLoading(true);
         // ▼▼▼ 5. 4개의 API를 동시에 호출 ▼▼▼
-        const [
-          statsData,
-          dailyStatsData,
-          courseStatsData,
-          categoryStatsData,
-        ] = await Promise.all([
+        const [statsData, dailyStatsData, courseStatsData, categoryStatsData] = await Promise.all([
           fetchDashboardStats(),
           fetchDailyStats({ period: 'week' }), // 7일치 데이터
           fetchCourseStats({}),
@@ -74,74 +66,64 @@ export default function DashboardPage() {
   // 로딩 중 표시
   if (loading) {
     return (
-      <S.PageWrapper>
-        <S.PageHeader>
-          <S.PageTitle>관리자 대시보드</S.PageTitle>
-        </S.PageHeader>
+      <AdminPageLayout title="관리자 대시보드">
         <S.LoadingContainer>
           <LoadingSpinner />
         </S.LoadingContainer>
-      </S.PageWrapper>
+      </AdminPageLayout>
     );
   }
 
   return (
-    <S.PageWrapper>
-      <S.PageHeader>
-        <S.PageTitle>관리자 대시보드</S.PageTitle>
-        <S.DateDisplay>{todayDate}</S.DateDisplay>
-      </S.PageHeader>
+    <AdminPageLayout
+      title="관리자 대시보드"
+      rightElement={<S.DateDisplay>{todayDate}</S.DateDisplay>}
+    >
+      <Layout.Wrapper>
+        <Layout.Section>
+          <StatsCardArea stats={stats} dailyStats={dailyStats} />
+        </Layout.Section>
 
-      <S.ContentLayout>
-        {/* ▼▼▼ 7. 자식 컴포넌트에 props로 데이터 전달 ▼▼▼ */}
-        <StatsCardArea stats={stats} dailyStats={dailyStats} />
-        <ChartArea dailyStats={dailyStats} />
-        <ProgressArea
-          courseStats={courseStats}
-          categoryStats={categoryStats}
-        />
-        <TableArea courseStats={courseStats} />
-      </S.ContentLayout>
-    </S.PageWrapper>
+        <Layout.Section>
+          <ChartArea dailyStats={dailyStats} />
+        </Layout.Section>
+
+        <Layout.Section>
+          <ProgressArea courseStats={courseStats} categoryStats={categoryStats} />
+        </Layout.Section>
+
+        <Layout.Section>
+          <TableArea courseStats={courseStats} />
+        </Layout.Section>
+      </Layout.Wrapper>
+    </AdminPageLayout>
   );
 }
 
-// --- Styles ---
-const S = {
-  PageWrapper: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2.4rem;
-    padding: 2.4rem;
-    background-color: ${({ theme }) => theme.colors.gray100};
-    min-height: 100vh;
-  `,
-  PageHeader: styled.header`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+const Layout = {
+  Wrapper: styled.div`
     width: 100%;
-  `,
-  PageTitle: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.xl};
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.surface};
-    margin: 0;
-  `,
-  DateDisplay: styled.span`
-    font-size: ${({ theme }) => theme.fontSize.md};
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.gray300};
-  `,
-  ContentLayout: styled.main`
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(1.6rem, 5vw, 3.2rem);
     display: flex;
     flex-direction: column;
-    gap: 2.4rem;
+    gap: clamp(2rem, 4vw, 3.2rem);
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+      padding: 0 clamp(1.2rem, 4vw, 2.4rem);
+      gap: 2.4rem;
+    }
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+      padding: 0 1.2rem;
+      gap: 2rem;
+    }
   `,
-  LoadingContainer: styled.div`
+  Section: styled.section`
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
+    flex-direction: column;
+    gap: clamp(1.6rem, 3vw, 2.4rem);
+    width: 100%;
   `,
 };

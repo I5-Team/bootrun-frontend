@@ -4,8 +4,9 @@ import styled, { keyframes } from 'styled-components';
 // --- 1. 로딩 스피너 ---
 
 export const LoadingSpinner: React.FC = () => (
-  <S.SpinnerWrapper>
+  <S.SpinnerWrapper role="status" aria-live="polite" aria-label="데이터 로딩 중">
     <S.Spinner />
+    <span className="sr-only">로딩 중...</span>
   </S.SpinnerWrapper>
 );
 
@@ -37,6 +38,18 @@ const S = {
     align-items: center;
     padding: 60px 0; // 섹션 내부에서 충분한 공간 확보
     width: 100%;
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   `,
 
   Spinner: styled.div`

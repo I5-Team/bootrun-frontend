@@ -36,32 +36,46 @@ const UserTable: React.FC<UserTableProps> = ({
 }) => {
   return (
     <S.TableWrapper>
-      <S.StyledTable>
+      <S.StyledTable role="table" aria-label="사용자 목록">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>이메일</th>
-            <th>닉네임</th>
-            <th>상태</th>
-            <th>가입일</th>
-            <th>최근 접속</th>
-            <th>수강 횟수</th>
-            <th>관리</th>
+            <th scope="col">ID</th>
+            <th scope="col">이메일</th>
+            <th scope="col">닉네임</th>
+            <th scope="col">역할</th>
+            <th scope="col">상태</th>
+            <th scope="col">가입일</th>
+            <th scope="col">최근 접속</th>
+            <th scope="col">수강 횟수</th>
           </tr>
         </thead>
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td colSpan={8}>검색된 사용자가 없습니다.</td>
+              <td colSpan={8} role="status" aria-live="polite">
+                검색된 사용자가 없습니다.
+              </td>
             </tr>
           ) : (
             users.map((user) => (
-              <tr key={user.id} onClick={() => onUserClick(user.id)} style={{ cursor: 'pointer' }}>
+              <tr
+                key={user.id}
+                onClick={() => onUserClick(user.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onUserClick(user.id);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={`${user.nickname} 사용자 상세보기`}
+                style={{ cursor: 'pointer' }}
+              >
                 <td>{user.id}</td>
                 <td>{user.email}</td>
                 <td>{user.nickname}</td>
-                <td>{user.role === 'admin' ? '관리자' : '수강생'
-                 }</td>
+                <td>{user.role === 'admin' ? '관리자' : '수강생'}</td>
                 <td>
                   <S.StatusBadge $active={user.is_active}>
                     {user.is_active ? '활성' : '비활성'}
@@ -70,7 +84,6 @@ const UserTable: React.FC<UserTableProps> = ({
                 <td>{formatDateTime(user.created_at)}</td>
                 <td>{formatDateTime(user.last_login)}</td>
                 <td>{user.total_enrollments}회</td>
-                
               </tr>
             ))
           )}
@@ -107,6 +120,11 @@ const S = {
       vertical-align: middle;
     }
     tbody tr:hover {
+      background: ${({ theme }) => theme.colors.gray100};
+    }
+    tbody tr:focus {
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
+      outline-offset: -2px;
       background: ${({ theme }) => theme.colors.gray100};
     }
     tbody td[colSpan] {
