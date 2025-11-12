@@ -9,14 +9,17 @@ export type DifficultyType = "beginner" | "intermediate" | "advanced";
 // [GET] /courses
 export interface CoursesApiParams {
   category_id?: number;
-  category_type?: CategoryType[], // 임시로 []로 수정
-  course_type?: CourseType[],
-  difficulty?: DifficultyType[],
-  price_type?: PriceType[],
   keyword?: string,
   is_published?: boolean,
   page?: number,
   page_size?: number,
+}
+
+export interface CoursesApiBody {
+  category_types?: CategoryType[],
+  course_types?: CourseType[],
+  difficulties?: DifficultyType[],
+  price_types?: PriceType[],
 }
 
 export type CourseItem = {

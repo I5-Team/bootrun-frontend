@@ -10,7 +10,7 @@ import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { fetchCourses, fetchMyEnrollments } from "../api/coursesApi";
-import type { CategoryType, CourseItem, CoursesApiParams, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
+import type { CategoryType, CourseItem, CoursesApiParams, CoursesApiBody, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
 import { LoadingSpinner } from "./HelperComponents";
 
 export type MyCourseItem = {
@@ -131,7 +131,7 @@ const BaseCourseList = <T,>({
 }: BaseCourseListProps<T>) => {
     const courseList = data;
     const filteredList = filterFn ? courseList.filter(filterFn) : courseList;
-    const sortedList = sortFn ? filteredList.sort(sortFn) : filteredList;
+    const sortedList = sortFn ? [...filteredList].sort(sortFn) : filteredList;
     const refinedList = sortedList;
     
     useEffect(() => {
@@ -162,7 +162,6 @@ export const FilterCourseList = ({
     onCountChange,
 }: CourseFilter ) => {
     const [searchParams] = useSearchParams();
-
     const [courses, setCourses] = useState<CourseItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -171,21 +170,50 @@ export const FilterCourseList = ({
             try {
                 setIsLoading(true);
 
-                // searchParams에서 params 가져오기
-                const searchParamsObj: Record<string, string | string[]> = {};
+                // searchParams에서 bodyData 가져오기
+                const bodyData: CoursesApiBody = {
+                    category_types: [],
+                    course_types: courseTypeOpt ? [courseTypeOpt] : [],
+                    difficulties: [],
+                    price_types: [],
+                };
+
+                const bodyDataKeys: (keyof CoursesApiBody)[] = [
+                    'category_types',
+                    'course_types',
+                    'difficulties',
+                    'price_types'
+                ];
+
                 searchParams.forEach((value, key) => {
-                    if (searchParamsObj[key]) {
-                        searchParamsObj[key] = Array.isArray(searchParamsObj[key])
-                        ? [...searchParamsObj[key], value]
-                        : [searchParamsObj[key], value];
-                    } else {
-                        searchParamsObj[key] = value;
+                    if (!bodyDataKeys.includes(key as keyof CoursesApiBody)) return;
+
+                    const typedKey = key as keyof CoursesApiBody;
+
+                    if (!bodyData[typedKey]) bodyData[typedKey] = [];
+
+                    switch (typedKey) {
+                        case 'category_types':
+                        bodyData[typedKey].push(value as CategoryType);
+                        break;
+                        case 'course_types':
+                        bodyData[typedKey].push(value as CourseType);
+                        break;
+                        case 'difficulties':
+                        bodyData[typedKey].push(value as DifficultyType);
+                        break;
+                        case 'price_types':
+                        bodyData[typedKey].push(value as PriceType);
+                        break;
                     }
                 });
-                const params: CoursesApiParams = (cardCount !== undefined) 
-                    ? {...searchParamsObj, page_size: cardCount} 
-                    : searchParamsObj;
-                const coursesData = await fetchCourses(params);
+
+                const params: CoursesApiParams= {
+                    keyword: searchParams.get("keyword") || undefined,
+                    page_size: cardCount || undefined,
+                };
+
+                const coursesData = await fetchCourses({ params, bodyData });
 
                 setCourses(coursesData);
             } catch (err) {
@@ -196,12 +224,6 @@ export const FilterCourseList = ({
         }
         loadCourses();
     }, [searchParams]);
-
-    // filterfn
-    const filterFn = ((course: CourseItem) => {
-        const matchCourseType = !courseTypeOpt || course.course_type === courseTypeOpt;
-        return matchCourseType;
-    })
 
     // sortFn
     const sortFn = (a: CourseItem, b: CourseItem) => {
@@ -239,7 +261,6 @@ export const FilterCourseList = ({
     return (
         <BaseCourseList
             data={courses}
-            filterFn={filterFn}
             sortFn={sortFn}
             courseCard={courseCardItem}
             onCountChange={onCountChange}

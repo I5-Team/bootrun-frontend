@@ -18,7 +18,7 @@ export default function LectureListPage() {
 const filterData = [
     {
         label: "주제",
-        queryName: "category_type",
+        queryName: "category_types",
         options: [
             { label: "프론트엔드", value: "frontend"},
             { label: "백엔드", value: "backend"},
@@ -30,7 +30,7 @@ const filterData = [
     },
     {
         label: "유형",
-        queryName: "course_type",
+        queryName: "course_types",
         options: [
             { label: "VOD", value: "vod"},
             { label: "부스트 커뮤니티", value: "boost_community"},
@@ -39,7 +39,7 @@ const filterData = [
     },
     {
         label: "난이도",
-        queryName: "difficulty",
+        queryName: "difficulties",
         options: [
             { label: "초급", value: "beginner"},
             { label: "중급", value: "intermediate"},
@@ -48,7 +48,7 @@ const filterData = [
     },
     {
         label: "가격",
-        queryName: "price_type",
+        queryName: "price_types",
         options: [
             { label: "무료", value: "free"},
             { label: "유료", value: "paid"},
