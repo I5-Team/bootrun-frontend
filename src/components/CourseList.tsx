@@ -156,6 +156,7 @@ const BaseCourseList = <T,>({
 }
 
 export const FilterCourseList = ({ 
+    courseTypeOpt,
     sortOpt, 
     cardCount, 
     onCountChange,
@@ -196,6 +197,12 @@ export const FilterCourseList = ({
         loadCourses();
     }, [searchParams]);
 
+    // filterfn
+    const filterFn = ((course: CourseItem) => {
+        const matchCourseType = !courseTypeOpt || course.course_type === courseTypeOpt;
+        return matchCourseType;
+    })
+
     // sortFn
     const sortFn = (a: CourseItem, b: CourseItem) => {
         if (sortOpt === "DATE_ASC") {
@@ -232,6 +239,7 @@ export const FilterCourseList = ({
     return (
         <BaseCourseList
             data={courses}
+            filterFn={filterFn}
             sortFn={sortFn}
             courseCard={courseCardItem}
             onCountChange={onCountChange}
