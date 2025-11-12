@@ -10,11 +10,12 @@ import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
 import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledTitle } from "./MainPage.styled";
-import { FilterCourseList, type CourseType } from "../components/CourseList";
+import { FilterCourseList } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import type { CourseType } from "../types/CourseType";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 

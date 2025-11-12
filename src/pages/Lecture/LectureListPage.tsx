@@ -18,7 +18,7 @@ export default function LectureListPage() {
 const filterData = [
     {
         label: "주제",
-        queryName: "category",
+        queryName: "category_type",
         options: [
             { label: "프론트엔드", value: "frontend"},
             { label: "백엔드", value: "backend"},
@@ -30,7 +30,7 @@ const filterData = [
     },
     {
         label: "유형",
-        queryName: "courseType",
+        queryName: "course_type",
         options: [
             { label: "VOD", value: "vod"},
             { label: "부스트 커뮤니티", value: "boost_community"},
@@ -48,7 +48,7 @@ const filterData = [
     },
     {
         label: "가격",
-        queryName: "priceType",
+        queryName: "price_type",
         options: [
             { label: "무료", value: "free"},
             { label: "유료", value: "paid"},

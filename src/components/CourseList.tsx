@@ -1,10 +1,7 @@
 import styled from "styled-components";
 
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
-import sampleCourses from "../assets/data/sampleCourses.json";
-import sampleEnrollmentMy from "../assets/data/sampleEnrollmentMy.json";
+import { useEffect, useState } from "react";
 
 import CourseCard from "../components/CourseCard/CourseCard";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
@@ -12,35 +9,9 @@ import EmptyState from "../components/EmptyState/EmptyState";
 import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
-
-// type
-export type CourseType = 'boost_community' | 'vod' | 'kdc';
-
-export type CategoryType = 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'design' | 'other';
-
-export type PriceType = 'free' | 'paid' | 'national_support';
- 
-export type DifficultyType = "beginner" | "intermediate" | "advanced";
-
-export type CourseItem = {
-    id: number,
-    category_type: CategoryType,
-    course_type: CourseType,
-    price_type: PriceType,
-    difficulty: DifficultyType,
-    title: string,
-    description: string,
-    thumbnail_url: string,
-    instructor_name: string,
-    instructor_bio: string,
-    instructor_image: string,
-    price: number,
-    faq?: string,
-    enrollment_count?: number,
-    is_published: boolean,
-    created_at: string,
-    updated_at: string,
-}
+import { fetchCourses, fetchMyEnrollments } from "../api/coursesApi";
+import type { CategoryType, CourseItem, CoursesApiParams, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
+import { LoadingSpinner } from "./HelperComponents";
 
 export type MyCourseItem = {
     id: number;
@@ -143,26 +114,25 @@ const NoResultPage = () => {
 
 type BaseCourseListProps<T> = {
     data: T[];
-    filterFn: (item: T) => boolean;
+    filterFn?: (item: T) => boolean;
     sortFn?: (a: T, b: T) => number;
-    sliceFn?: (list: T[]) => T[];
     courseCard: (item: T) => React.ReactNode;
     onCountChange? : (count: number) => void;
+    isLoading?: boolean;
 }
 
 const BaseCourseList = <T,>({
     data,
     filterFn,
     sortFn,
-    sliceFn,
     courseCard,
     onCountChange,
+    isLoading,
 }: BaseCourseListProps<T>) => {
     const courseList = data;
-    const filteredList = courseList.filter(filterFn);
+    const filteredList = filterFn ? courseList.filter(filterFn) : courseList;
     const sortedList = sortFn ? filteredList.sort(sortFn) : filteredList;
-    const slicedList = sliceFn ? sliceFn(sortedList) : sortedList;
-    const refinedList = slicedList;
+    const refinedList = sortedList;
     
     useEffect(() => {
         onCountChange?.(refinedList.length);
@@ -170,7 +140,7 @@ const BaseCourseList = <T,>({
 
     return (
         <div className="card-list">
-            {refinedList.length === 0 
+            {(!isLoading && refinedList.length === 0)
             ? 
             <NoResultPage/>
             : 
@@ -186,50 +156,45 @@ const BaseCourseList = <T,>({
 }
 
 export const FilterCourseList = ({ 
-    courseTypeOpt, 
-    categoryOpt, 
-    difficultyOpt, 
-    priceTypeOpt, 
     sortOpt, 
     cardCount, 
     onCountChange,
 }: CourseFilter ) => {
     const [searchParams] = useSearchParams();
 
-    // query params
-    const courseTypeParam = searchParams.getAll('courseType') as CourseType[];
-    const categoryParam = searchParams.getAll('category') as CategoryType[];
-    const difficultyParam = searchParams.getAll('difficulty') as DifficultyType[];
-    const priceTypeParam = searchParams.getAll('priceType') as PriceType[];
-    const keywordParam = searchParams.get('keyword') || '';
+    const [courses, setCourses] = useState<CourseItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const courseTypeFilter 
-        = courseTypeOpt || (courseTypeParam.length > 0 ? courseTypeParam : null);
-    const categoryFilter 
-        = categoryOpt || (categoryParam.length > 0 ? categoryParam : null);
-    const difficultyFilter 
-        = difficultyOpt || (difficultyParam.length > 0 ? difficultyParam : null);
-    const priceTypeFilter 
-        = priceTypeOpt || (priceTypeParam.length > 0 ? priceTypeParam : null);
-    const keywordFilter 
-        = keywordParam.toLowerCase().split(/\s+/).filter(Boolean);
+    useEffect(() => {
+        const loadCourses = async () => {
+            try {
+                setIsLoading(true);
 
-    // filterFn
-    const filterFn = ((course: CourseItem) => { 
-        const matchCourseType = !courseTypeFilter || courseTypeFilter.includes(course.course_type);
-        const matchCategory = !categoryFilter || categoryFilter.includes(course.category_type);
-        const matchDifficulty = !difficultyFilter || difficultyFilter.includes(course.difficulty);
-        const matchPrice = !priceTypeFilter || priceTypeFilter.includes(course.price_type);
-        const MatchKeyword = 
-            keywordFilter.length === 0 || 
-            keywordFilter.every(keyword => 
-                [course.title, course.instructor_name].some(content =>
-                    content.toLowerCase().includes(keyword)
-                )
-            );
+                // searchParams에서 params 가져오기
+                const searchParamsObj: Record<string, string | string[]> = {};
+                searchParams.forEach((value, key) => {
+                    if (searchParamsObj[key]) {
+                        searchParamsObj[key] = Array.isArray(searchParamsObj[key])
+                        ? [...searchParamsObj[key], value]
+                        : [searchParamsObj[key], value];
+                    } else {
+                        searchParamsObj[key] = value;
+                    }
+                });
+                const params: CoursesApiParams = (cardCount !== undefined) 
+                    ? {...searchParamsObj, page_size: cardCount} 
+                    : searchParamsObj;
+                const coursesData = await fetchCourses(params);
 
-        return matchDifficulty && matchCourseType && matchCategory && matchPrice && MatchKeyword;
-    })
+                setCourses(coursesData);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadCourses();
+    }, [searchParams]);
 
     // sortFn
     const sortFn = (a: CourseItem, b: CourseItem) => {
@@ -240,14 +205,11 @@ export const FilterCourseList = ({
         }
     };
 
-    // sliceFn
-    const sliceFn = (list: CourseItem[]) => {
-        return cardCount ? list.slice(0, cardCount) : list;
-    }
-
     const courseCardItem = (course: CourseItem) => (
         <li key={course.id}>
-            <CourseCard
+            {isLoading 
+            ? <LoadingSpinner/>
+            : <CourseCard
                 variant="info"
                 lectureId={course.id}
                 thumbnail={course.thumbnail_url}
@@ -263,27 +225,44 @@ export const FilterCourseList = ({
                 description={course.description}
                 price={course.price}
             />
+            }
         </li>
     )
 
     return (
         <BaseCourseList
-            data={sampleCourses as CourseItem[]}
-            filterFn={filterFn}
+            data={courses}
             sortFn={sortFn}
-            sliceFn={sliceFn}
             courseCard={courseCardItem}
             onCountChange={onCountChange}
+            isLoading={isLoading}
         />
     )
 }
 
 export const FilterMyCourseList = ({ 
     sortOpt,
-    cardCount,
     onCountChange,
 }: CourseFilter ) => {
     const [searchParams] = useSearchParams();
+    const [myEnrollments, setMyEnrollments] = useState<MyEnrollmentItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {   
+        const loadMyEnrollments = async () => {
+            try {
+                setIsLoading(true);
+                const data = await fetchMyEnrollments({});
+                setMyEnrollments(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadMyEnrollments();
+    }, [searchParams]);
+    
     
     // query params
     const courseTypeParam = searchParams.get('courseType');
@@ -313,14 +292,11 @@ export const FilterMyCourseList = ({
         }
     }
 
-    // sliceFn
-    const sliceFn = (list: MyCourseItem[]) => {
-        return cardCount ? list.slice(0, cardCount) : list;
-    }
-
     const myCourseCardItem = (course: MyCourseItem) => (
-        <li key={course.course_id}>
-            <CourseCard
+        <li key={course.course_id}>{
+            isLoading 
+            ? <LoadingSpinner/>
+            : <CourseCard
                 variant="study"
                 thumbnail={course.course_thumbnail}
                 title={course.course_title}
@@ -329,7 +305,6 @@ export const FilterMyCourseList = ({
                     {'label': categoryLabel[course.category_name] || "기타"}, 
                     {'label': difficultyLabel[course.difficulty]},
                 ]}
-    
                 value={course.completed_lectures || 0} 
                 max={course.total_lectures || 0} 
                 lectureId={course.course_id}
@@ -337,15 +312,15 @@ export const FilterMyCourseList = ({
                 isActive={course.days_until_expiry !== 0 ? true: false}
                 isCompleted={course.progress_rate === 100 ? true : false}
             />
+        }
         </li>
      );
 
     return (
         <BaseCourseList
-            data={sampleEnrollmentMy.items as MyCourseItem[]}
+            data={myEnrollments}
             filterFn={filterFn}
             sortFn={sortFn}
-            sliceFn={sliceFn}
             courseCard={myCourseCardItem}
             onCountChange={onCountChange}
         />
