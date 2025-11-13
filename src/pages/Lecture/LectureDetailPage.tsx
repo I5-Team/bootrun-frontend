@@ -50,7 +50,7 @@ export default function LectureDetailPage() {
   const { isLaptop } = useMediaQuery();
   const params = useParams<{ id: string }>();
   const coursdId = Number(params.id);
-  const { data, isLoading, isError } = useCourseDetailQuery(coursdId);
+  const { data, isLoading } = useCourseDetailQuery(coursdId);
   const courseData = { ...data, schedule } as CoursesDetailItem;
   console.log(courseData);
   
@@ -92,9 +92,9 @@ export default function LectureDetailPage() {
 
                     <LectureIntroSection ref={introRef} />
                     <ReviewSection ref={reviewsRef} />
-                    <CurriculumSection ref={curriculumRef} />
-                    <InstructorSection ref={instructorRef} />
-                    <FAQSection ref={faqRef} />
+                    <CurriculumSection ref={curriculumRef} data={courseData.chapters}/>
+                    <InstructorSection ref={instructorRef} data={courseData}/>
+                    <FAQSection ref={faqRef} data={courseData}/>
                     <NoticeSection />
                   </SectionWrapper>
   

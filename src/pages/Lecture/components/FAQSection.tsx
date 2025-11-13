@@ -1,19 +1,48 @@
 // src/components/FAQSection.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockFaqData } from '../../../data/mockLectureData';
-import type { FaqData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
+import type { CoursesDetailItem } from '../../../types/CourseType';
 
+type FAQSectionProps = {
+  data: CoursesDetailItem,
+}
 
+type FaqItem = {
+  id: number;
+  prefix: string;
+  question: string;
+  answer: string;
+};
 
-
-const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
-  const { data, loading, error } = useApiData<FaqData>(mockFaqData, 1000);
+const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data }, ref) => {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
+
+  if (!data) return null;
+
+  const faqData: FaqItem[] = [];
+  
+  if (data.faq) {
+    try {
+      const parsed = JSON.parse(data.faq);
+
+      Object.keys(parsed)
+        .filter((key) => key.startsWith('Q'))
+        .forEach((qKey, index) => {
+          const aKey = qKey.replace('Q', 'A');
+
+          faqData.push({
+            id: index,
+            prefix: qKey,
+            question: parsed[qKey],
+            answer: parsed[aKey] || '',
+          });
+        });
+    } catch (e) {
+      console.error('FAQ parsing error', e);
+    }
+  }
 
   const toggleItem = (id: number) => {
     setOpenItemId(openItemId === id ? null : id);
@@ -21,20 +50,16 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
 
   return (
     <S.Section ref={ref} id="faq">
-      {loading && <LoadingSpinner />}
-      {error && <ErrorMessage message={error.message} />}
-      {data && (
         <>
           <S.SectionHeader>
-            <S.SectionTitle>{data.title}</S.SectionTitle>
+            <S.SectionTitle>FAQ</S.SectionTitle>
           </S.SectionHeader>
 
           <FAQ.Container>
-            {data.items.map((item) => {
+            {faqData.map((item: any) => {
               const isOpen = openItemId === item.id;
               return (
                 <FAQ.Item key={item.id} $open={isOpen}>
-
                   <FAQ.Question onClick={() => toggleItem(item.id)}>
                     <FAQ.QuestionTitle>
                       <span className="prefix">{item.prefix}</span>
@@ -45,8 +70,6 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
 
                   {isOpen && (
                     <FAQ.Answer>
-                      {/* HTML 마크다운을 렌더링하려면 dangerouslySetInnerHTML을 사용해야 하지만, 
-                          간단한 텍스트로 처리합니다. */}
                       <p>{item.answer}</p>
                     </FAQ.Answer>
                   )}
@@ -56,7 +79,6 @@ const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
             })}
           </FAQ.Container>
         </>
-      )}
     </S.Section>
   );
 });

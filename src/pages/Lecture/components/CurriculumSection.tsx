@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockCurriculumData } from '../../../data/mockLectureData';
-import type { CurriculumData } from '../../../types/LectureType';
-import { ErrorMessage, LoadingSpinner } from '../../../components/HelperComponents';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
 import SvgPlay from "../../../assets/icons/icon-play.svg?react";
+import type { ChapterItem, LectureItem } from '../../../types/CourseType';
 
+type CurriculumSectionProps = {
+  data?: ChapterItem[] | null;
+}
 
-const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
-  const { data, loading, error } = useApiData<CurriculumData>(mockCurriculumData, 700);
+const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(({ data: chapterData }, ref) => {
   // 1주차(id: 1)만 기본으로 열도록 설정
   const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
 
@@ -25,40 +24,61 @@ const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
         <S.SectionSubtitle>4주간 진행하는 견고한 커리큘럼</S.SectionSubtitle>
       </S.SectionHeader>
 
-      {loading && <LoadingSpinner/>}
-      {error && <ErrorMessage message={error.message} />}
       <Curr.Container>
-        {data?.chapters.map(chapter => {
-          const isOpen = openChapterId.includes(chapter.id) ;
-          return (
-            <Curr.Chapter key={chapter.id}>
+        {chapterData && chapterData.length === 0
+        ? <Curr.Chapter>
+            <Curr.ChapterHeader>
+              <Curr.ToggleButton $isOpen={true}>
+                <SvgArrowDown /> 
+              </Curr.ToggleButton>
+              <Curr.ChapterTitleText>
+                <span>커리큘럼 준비중 ⋯</span>
+              </Curr.ChapterTitleText>
+            </Curr.ChapterHeader>
 
-              <Curr.ChapterHeader onClick={() => toggleChapter(chapter.id)}>
-                <Curr.ToggleButton $isOpen={isOpen}>
-                  <SvgArrowDown /> 
-                </Curr.ToggleButton>
-                <Curr.ChapterTitleText>
-                  <span>Chapter{String(chapter.id).padStart(2, '0')}.</span>
-                  <span>{chapter.title}</span>
-                </Curr.ChapterTitleText>
-              </Curr.ChapterHeader>
+            <Curr.LectureList>
+                <Curr.LectureItem>
+                  <SvgPlay/>
+                  <Curr.LectureTitle>
+                    등록된 강의가 없습니다.
+                  </Curr.LectureTitle>
+                </Curr.LectureItem>
 
-              {isOpen && (
-                <Curr.LectureList>
-                  {chapter.lectures.map((lecture, index) => (
-                    <Curr.LectureItem key={lecture.title}>
-                      <SvgPlay/>
-                      <Curr.LectureTitle>
-                        {index + 1}. {lecture.title}
-                      </Curr.LectureTitle>
-                    </Curr.LectureItem>
-                  ))}
-                </Curr.LectureList>
-              )}
-
-            </Curr.Chapter>
-          );
-        })}
+            </Curr.LectureList>
+          </Curr.Chapter>
+        :  <>
+            {chapterData?.map(chapter => {
+              const isOpen = openChapterId.includes(chapter.id);
+              return (
+                <Curr.Chapter key={chapter.id}>
+  
+                  <Curr.ChapterHeader onClick={() => toggleChapter(chapter.id)}>
+                    <Curr.ToggleButton $isOpen={isOpen}>
+                      <SvgArrowDown /> 
+                    </Curr.ToggleButton>
+                    <Curr.ChapterTitleText>
+                      <span>Chapter{String(chapter.id).padStart(2, '0')}.</span>
+                      <span>{chapter.title}</span>
+                    </Curr.ChapterTitleText>
+                  </Curr.ChapterHeader>
+  
+                  {isOpen && (
+                    <Curr.LectureList>
+                      {(chapter?.lectures ?? [] as LectureItem[]).map((lecture, index) => (
+                        <Curr.LectureItem key={lecture.title}>
+                          <SvgPlay/>
+                          <Curr.LectureTitle>
+                            {index + 1}. {lecture.title}
+                          </Curr.LectureTitle>
+                        </Curr.LectureItem>
+                      ))}
+                    </Curr.LectureList>
+                  )}
+                </Curr.Chapter>
+              );
+            })}
+        </>
+        }
       </Curr.Container>
     </S.Section>
   );

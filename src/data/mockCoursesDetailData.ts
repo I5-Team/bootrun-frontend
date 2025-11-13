@@ -15,7 +15,7 @@ export const mockCoursesDetails: CoursesDetailItem[]= [
     "price_type": "paid",
     "price": 50000,
     "total_duration": 0,
-    "faq": "{\"Q1\":\"사전 지식이 필요한가요?\",\"A1\":\"없어도 수강 가능합니다.\"}",
+    "faq": "{\"Q1\":\"사전 지식이 필요한가요?\",\"A1\":\"없어도 수강 가능합니다.\",\"Q2\":\"강의 자료를 제공하나요?\",\"A2\":\"PDF 및 예제 코드가 제공됩니다.\",\"Q3\":\"수강 기간은 얼마나 되나요?\",\"A3\":\"결제일로부터 90일간 수강 가능합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-01T09:00:00",
     "updated_at": "2025-10-02T10:00:00",
