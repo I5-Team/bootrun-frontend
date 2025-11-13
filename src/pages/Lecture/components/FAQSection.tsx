@@ -56,27 +56,47 @@ const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data }, ref
           </S.SectionHeader>
 
           <FAQ.Container>
-            {faqData.map((item: any) => {
-              const isOpen = openItemId === item.id;
-              return (
-                <FAQ.Item key={item.id} $open={isOpen}>
-                  <FAQ.Question onClick={() => toggleItem(item.id)}>
-                    <FAQ.QuestionTitle>
-                      <span className="prefix">{item.prefix}</span>
-                      <span>{item.question}</span>
-                    </FAQ.QuestionTitle>
-                    <FAQ.ToggleButton $open={isOpen}><SvgArrowDown/></FAQ.ToggleButton>
-                  </FAQ.Question>
+            {faqData.length === 0
+            ? <FAQ.Item $open={openItemId === 1234}>
+                <FAQ.Question onClick={() => toggleItem(1234)}>
+                  <FAQ.QuestionTitle>
+                    <span className="prefix">Q</span>
+                    <span>아직 등록된 FAQ가 없습니다.</span>
+                  </FAQ.QuestionTitle>
+                  <FAQ.ToggleButton $open={openItemId === 1234}><SvgArrowDown/></FAQ.ToggleButton>
+                </FAQ.Question>
+                {openItemId === 1234 && (
+                  <FAQ.Answer>
+                    <p>궁금한 점이 있다면 <FAQ.Anchor href="mailto:">고객센터</FAQ.Anchor>로 문의해주세요.</p>
+                  </FAQ.Answer>
+                )}
+              </FAQ.Item>
+            :
+              <>
+                {faqData.map((item: any) => {
+                  const isOpen = openItemId === item.id;
+                  return (
+                    <FAQ.Item key={item.id} $open={isOpen}>
+                      <FAQ.Question onClick={() => toggleItem(item.id)}>
+                        <FAQ.QuestionTitle>
+                          <span className="prefix">{item.prefix}</span>
+                          <span>{item.question}</span>
+                        </FAQ.QuestionTitle>
+                        <FAQ.ToggleButton $open={isOpen}><SvgArrowDown/></FAQ.ToggleButton>
+                      </FAQ.Question>
+    
+                      {isOpen && (
+                        <FAQ.Answer>
+                          <p>{item.answer}</p>
+                        </FAQ.Answer>
+                      )}
+    
+                    </FAQ.Item>
+                  );
+                })}
+              </>
+            }
 
-                  {isOpen && (
-                    <FAQ.Answer>
-                      <p>{item.answer}</p>
-                    </FAQ.Answer>
-                  )}
-
-                </FAQ.Item>
-              );
-            })}
           </FAQ.Container>
         </>
     </S.Section>
@@ -163,6 +183,10 @@ const FAQ = {
       font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
+  Anchor: styled.a`
+    font-weight: 500; 
+    cursor: pointer;
+  `
 };
 
 export default FAQSection;
