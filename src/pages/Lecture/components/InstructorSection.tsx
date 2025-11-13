@@ -93,20 +93,28 @@ const Instructor = {
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    flex-wrap: wrap;
 
     @media ${({ theme }) => theme.devices.tablet} {
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.8rem;
     }
   `,
   Name: styled.p`
+    white-space: nowrap;
     font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
   `,
   SubName: styled.span`
+    word-break: keep-all;
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray300};
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      width: 75%;
+      text-align: center;
+    }
   `,
   PositionList: styled.ul`
     display: flex;
