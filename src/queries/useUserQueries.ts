@@ -3,6 +3,7 @@ import { activateUser, deactivateUser, fetchUsers } from '../api/adminApi';
 import type { UserApiParams } from '../types/AdminUserType';
 import { deleteAccount, fetchProfile, updateProfile, uploadProfileImage } from '../api/userApi';
 import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
+import { useNavigate } from 'react-router-dom';
 
 export const userKeys = {
   all: ['users'] as const,
@@ -65,12 +66,13 @@ export const useUploadProfileImage = () => {
  */
 export const useDeleteAccount = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: (params: { password: string; confirm_deletion: boolean }) => deleteAccount(params),
     onSuccess: (data) => {
       alert(data.message);
       queryClient.clear(); // 모든 캐시 삭제
-      //   window.location.href = '/';  // 로그아웃 및 홈으로 이동
+      navigate('/'); // 홈으로 이동
     },
     onError: () => {
       alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
