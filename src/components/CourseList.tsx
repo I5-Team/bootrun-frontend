@@ -161,6 +161,7 @@ export const FilterCourseList = ({
                     price_types: [],
                 };
                 searchParams.forEach((value, key) => {
+                    if (key === 'keyword') return;
                     filterPramsObj[key]
                     ? filterPramsObj[key] = [...filterPramsObj[key], value]
                     : filterPramsObj[key] = [value]
@@ -168,11 +169,12 @@ export const FilterCourseList = ({
                 })
 
                 const params: CoursesApiParams= {
+                    ...filterPramsObj,
                     keyword: searchParams.get("keyword") || undefined,
                     page_size: cardCount && cardCount > 20 ? cardCount : undefined,
-                    ...filterPramsObj
                 };
 
+                console.log(params);
                 const coursesData = await fetchCourses(params);
 
                 setCourses(coursesData);

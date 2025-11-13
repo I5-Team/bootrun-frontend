@@ -1,4 +1,4 @@
-import type { CourseItem, CoursesApiParams, CoursesApiBody } from "../types/CourseType";
+import type { CourseItem, CoursesApiParams } from "../types/CourseType";
 
 // [GET] /courses
 export const mockCourses: CourseItem[] = ([
@@ -506,17 +506,18 @@ export const mockCourses: CourseItem[] = ([
 
 export const getMockCourses = (
   params: CoursesApiParams = {},
-  bodyData: CoursesApiBody = {},
 ): CourseItem[] => {
   const filtered = mockCourses.filter(course => {
-    // bodyData 필터
-    if (bodyData.category_types?.length && !bodyData.category_types.includes(course.category_type)) return false;
-    if (bodyData.course_types?.length && !bodyData.course_types.includes(course.course_type)) return false;
-    if (bodyData.price_types?.length && !bodyData.price_types.includes(course.price_type)) return false;
-    if (bodyData.difficulties?.length && !bodyData.difficulties.includes(course.difficulty)) return false;
+    // 카테고리, 코스 타입, 가격, 난이도 필터
+    if (params.category_types?.length && !params.category_types.includes(course.category_type)) return false;
+    if (params.course_types?.length && !params.course_types.includes(course.course_type)) return false;
+    if (params.price_types?.length && !params.price_types.includes(course.price_type)) return false;
+    if (params.difficulties?.length && !params.difficulties.includes(course.difficulty)) return false;
 
-    // params 필터
+    // 키워드 필터
     if (params.keyword && !course.title.toLowerCase().includes(params.keyword.toLowerCase())) return false;
+
+    // 공개 여부 필터
     if (params.is_published !== undefined && params.is_published !== course.is_published) return false;
 
     return true;
@@ -525,8 +526,6 @@ export const getMockCourses = (
   const page = params.page || 1;
   const pageSize = params.page_size || 20;
 
-  const result = filtered.slice((page - 1) * pageSize, page * pageSize);
-
-  return result;
+  return filtered.slice((page - 1) * pageSize, page * pageSize);
 };
 
