@@ -1,6 +1,7 @@
 import { API_URL } from "../constants/apiConfig";
-import { getMockCourses, getMockMyEnrollments } from "../data/mockCourseList";
-import type { CourseItem, CoursesApiBody, CoursesApiParams, MyEnrollmentItem, MyEnrollmentsApiParams } from "../types/CourseType";
+import { getMockCourses } from "../data/mockCourseList";
+import { getMockCoursesDetails } from "../data/mockCoursesDetailData";
+import type { CourseItem, CoursesApiBody, CoursesApiParams, CoursesDetailItem, CoursesDetailParams } from "../types/CourseType";
 import { apiClient } from "./client";
 
 // 임시 목업 불러오기
@@ -45,9 +46,13 @@ export const fetchCourses = async ({
     }
 };  
 
-export const fetchMyEnrollments = async (
-    params: MyEnrollmentsApiParams,
-): Promise<MyEnrollmentItem[]> => {
+/**
+ * GET /courses/{course_id}
+ * 강의 상세 조회
+ */
+export const fetchCoursesDetail = async (
+    params: CoursesDetailParams,
+): Promise<CoursesDetailItem | undefined> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
         if (response?.data?.items && response.data.items.length > 0) {
@@ -55,12 +60,11 @@ export const fetchMyEnrollments = async (
             return response.data.items;
         }
         console.warn('[API 데이터 없음] mock 데이터로 대체');
-        const data = getMockMyEnrollments(params);
+         const data = getMockCoursesDetails(params);
         return simulateFetch(data);
     } catch (err) {
         console.error('[API 요청 실패] mock 데이터로 대체', err);
-        const data = getMockMyEnrollments(params);
+        const data = getMockCoursesDetails(params);
         return simulateFetch(data);
     }
 };  
-

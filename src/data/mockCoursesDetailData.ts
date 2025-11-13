@@ -1,7 +1,6 @@
-import type { CourseItem, CoursesApiParams, CoursesApiBody } from "../types/CourseType";
+import type { CoursesDetailItem, CoursesDetailParams } from "../types/CourseType";
 
-// [GET] /courses
-export const mockCourses: CourseItem[] = ([
+export const mockCoursesDetails: CoursesDetailItem[]= [
   {
     "id": 1,
     "category_type": "data_analysis",
@@ -20,7 +19,79 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-10-01T09:00:00",
     "updated_at": "2025-10-02T10:00:00",
-    "enrollment_count": 345
+    "enrollment_count": 345,
+    "chapters": [
+      {
+        "id": 101,
+        "course_id": 1,
+        "title": "데이터 분석 환경 설정 및 파이썬 기초",
+        "description": "파이썬 설치부터 기초 문법까지 익힙니다.",
+        "order_number": 1,
+        "total_duration": 2000,
+        "lectures": [
+          {
+            "id": 1001,
+            "chapter_id": 101,
+            "title": "개발 환경 설정 및 Jupyter Notebook",
+            "description": null,
+            "video_url": "https://youtube.com/embed/python_setup_v1",
+            "video_type": "youtube",
+            "duration_seconds": 600,
+            "order_number": 1,
+            "material_url": null,
+            "is_completed": true,
+            "last_position": 600,
+            "watched_seconds": 600,
+            "created_at": "2025-10-01T09:30:00",
+            "updated_at": "2025-10-01T09:40:00"
+          },
+          {
+            "id": 1002,
+            "chapter_id": 101,
+            "title": "파이썬 변수와 자료형",
+            "description": null,
+            "video_url": "https://youtube.com/embed/python_basic_v2",
+            "video_type": "youtube",
+            "duration_seconds": 800,
+            "order_number": 2,
+            "material_url": null,
+            "is_completed": false,
+            "last_position": 400,
+            "watched_seconds": 400,
+            "created_at": "2025-10-01T10:00:00",
+            "updated_at": "2025-10-01T10:30:00"
+          }
+        ]
+      },
+      {
+        "id": 102,
+        "course_id": 1,
+        "title": "Pandas와 Numpy로 데이터 다루기",
+        "description": "데이터 분석의 핵심 라이브러리 활용법을 배웁니다.",
+        "order_number": 2,
+        "total_duration": 3000,
+        "lectures": [
+          {
+            "id": 1003,
+            "chapter_id": 102,
+            "title": "Numpy 배열의 이해",
+            "description": null,
+            "video_url": "https://youtube.com/embed/numpy_v1",
+            "video_type": "youtube",
+            "duration_seconds": 1200,
+            "order_number": 1,
+            "material_url": null,
+            "is_completed": false,
+            "last_position": 0,
+            "watched_seconds": 0,
+            "created_at": "2025-10-02T10:00:00",
+            "updated_at": "2025-10-02T10:00:00"
+          }
+        ]
+      }
+    ],
+    "is_enrolled": true,
+    "my_progress": 20
   },
   {
     "id": 2,
@@ -40,7 +111,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-20T12:00:00",
     "updated_at": "2025-09-30T14:00:00",
-    "enrollment_count": 182
+    "enrollment_count": 182,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 3,
@@ -60,7 +134,53 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-10T15:00:00",
     "updated_at": "2025-09-15T09:00:00",
-    "enrollment_count": 277
+    "enrollment_count": 277,
+    "chapters": [
+      {
+        "id": 301,
+        "course_id": 3,
+        "title": "Node.js & Express 기초",
+        "description": "기본 환경 설정 및 라우팅 이해.",
+        "order_number": 1,
+        "total_duration": 1500,
+        "lectures": [
+          {
+            "id": 3001,
+            "chapter_id": 301,
+            "title": "개발 환경 및 Express 설치",
+            "description": null,
+            "video_url": "https://vod.example.com/node_install_v1",
+            "video_type": "vod",
+            "duration_seconds": 500,
+            "order_number": 1,
+            "material_url": "https://github.com/node_express_repo/1-1",
+            "is_completed": true,
+            "last_position": 500,
+            "watched_seconds": 500,
+            "created_at": "2025-09-11T10:00:00",
+            "updated_at": "2025-09-11T10:15:00"
+          },
+          {
+            "id": 3002,
+            "chapter_id": 301,
+            "title": "라우팅과 미들웨어",
+            "description": null,
+            "video_url": "https://vod.example.com/node_routing_v2",
+            "video_type": "vod",
+            "duration_seconds": 1000,
+            "order_number": 2,
+            "material_url": "https://github.com/node_express_repo/1-2",
+            "is_completed": false,
+            "last_position": 900,
+            "watched_seconds": 900,
+            "created_at": "2025-09-11T11:00:00",
+            "updated_at": "2025-09-11T11:45:00"
+          }
+        ]
+      }
+    ],
+    "is_enrolled": true,
+    "my_progress": 55
   },
   {
     "id": 4,
@@ -80,7 +200,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-10-02T11:00:00",
     "updated_at": "2025-10-04T09:00:00",
-    "enrollment_count": 491
+    "enrollment_count": 491,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 5,
@@ -100,7 +223,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-25T10:30:00",
     "updated_at": "2025-09-01T10:30:00",
-    "enrollment_count": 125
+    "enrollment_count": 125,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 0
   },
   {
     "id": 6,
@@ -120,7 +246,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-15T10:00:00",
     "updated_at": "2025-09-20T09:00:00",
-    "enrollment_count": 310
+    "enrollment_count": 310,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 7,
@@ -140,7 +269,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-05T12:00:00",
     "updated_at": "2025-09-12T12:00:00",
-    "enrollment_count": 98
+    "enrollment_count": 98,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 100
   },
   {
     "id": 8,
@@ -160,7 +292,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-15T11:00:00",
     "updated_at": "2025-08-20T11:00:00",
-    "enrollment_count": 403
+    "enrollment_count": 403,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 9,
@@ -180,7 +315,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-10-03T09:00:00",
     "updated_at": "2025-10-05T09:00:00",
-    "enrollment_count": 420
+    "enrollment_count": 420,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 10,
@@ -200,7 +338,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-12T12:00:00",
     "updated_at": "2025-09-15T12:00:00",
-    "enrollment_count": 361
+    "enrollment_count": 361,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 72
   },
   {
     "id": 11,
@@ -220,7 +361,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-01T14:00:00",
     "updated_at": "2025-08-10T11:00:00",
-    "enrollment_count": 255
+    "enrollment_count": 255,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 0
   },
   {
     "id": 12,
@@ -240,7 +384,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-25T16:00:00",
     "updated_at": "2025-10-01T16:00:00",
-    "enrollment_count": 140
+    "enrollment_count": 140,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 13,
@@ -260,7 +407,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-05T09:00:00",
     "updated_at": "2025-08-15T12:00:00",
-    "enrollment_count": 218
+    "enrollment_count": 218,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 14,
@@ -280,7 +430,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-01T10:00:00",
     "updated_at": "2025-09-08T10:00:00",
-    "enrollment_count": 105
+    "enrollment_count": 105,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 15
   },
   {
     "id": 15,
@@ -300,7 +453,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-18T13:00:00",
     "updated_at": "2025-08-25T13:00:00",
-    "enrollment_count": 388
+    "enrollment_count": 388,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 16,
@@ -320,7 +476,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-10-05T10:00:00",
     "updated_at": "2025-10-06T10:00:00",
-    "enrollment_count": 289
+    "enrollment_count": 289,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 17,
@@ -340,7 +499,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-08T11:00:00",
     "updated_at": "2025-09-18T11:00:00",
-    "enrollment_count": 472
+    "enrollment_count": 472,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 90
   },
   {
     "id": 18,
@@ -360,7 +522,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-07-20T10:00:00",
     "updated_at": "2025-08-01T10:00:00",
-    "enrollment_count": 399
+    "enrollment_count": 399,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 19,
@@ -380,7 +545,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-03T14:30:00",
     "updated_at": "2025-09-10T14:30:00",
-    "enrollment_count": 234
+    "enrollment_count": 234,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 20,
@@ -400,7 +568,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-10-10T09:00:00",
     "updated_at": "2025-10-12T09:00:00",
-    "enrollment_count": 456
+    "enrollment_count": 456,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 0
   },
   {
     "id": 21,
@@ -420,7 +591,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-20T11:00:00",
     "updated_at": "2025-08-28T11:00:00",
-    "enrollment_count": 169
+    "enrollment_count": 169,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 22,
@@ -440,7 +614,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-07-25T15:00:00",
     "updated_at": "2025-08-05T15:00:00",
-    "enrollment_count": 301
+    "enrollment_count": 301,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 8
   },
   {
     "id": 23,
@@ -460,7 +637,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-08-10T10:00:00",
     "updated_at": "2025-08-20T10:00:00",
-    "enrollment_count": 78
+    "enrollment_count": 78,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 24,
@@ -480,7 +660,10 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-09-28T10:00:00",
     "updated_at": "2025-10-08T10:00:00",
-    "enrollment_count": 133
+    "enrollment_count": 133,
+    "chapters": null,
+    "is_enrolled": false,
+    "my_progress": null
   },
   {
     "id": 25,
@@ -500,33 +683,13 @@ export const mockCourses: CourseItem[] = ([
     "is_published": true,
     "created_at": "2025-07-01T10:00:00",
     "updated_at": "2025-07-15T10:00:00",
-    "enrollment_count": 374
+    "enrollment_count": 374,
+    "chapters": null,
+    "is_enrolled": true,
+    "my_progress": 100
   }
-])
+]
 
-export const getMockCourses = (
-  params: CoursesApiParams = {},
-  bodyData: CoursesApiBody = {},
-): CourseItem[] => {
-  const filtered = mockCourses.filter(course => {
-    // bodyData 필터
-    if (bodyData.category_types?.length && !bodyData.category_types.includes(course.category_type)) return false;
-    if (bodyData.course_types?.length && !bodyData.course_types.includes(course.course_type)) return false;
-    if (bodyData.price_types?.length && !bodyData.price_types.includes(course.price_type)) return false;
-    if (bodyData.difficulties?.length && !bodyData.difficulties.includes(course.difficulty)) return false;
-
-    // params 필터
-    if (params.keyword && !course.title.toLowerCase().includes(params.keyword.toLowerCase())) return false;
-    if (params.is_published !== undefined && params.is_published !== course.is_published) return false;
-
-    return true;
-  });
-
-  const page = params.page || 1;
-  const pageSize = params.page_size || 20;
-
-  const result = filtered.slice((page - 1) * pageSize, page * pageSize);
-
-  return result;
-};
-
+export const getMockCoursesDetails = (params: CoursesDetailParams) => {
+  return mockCoursesDetails.find(data => data.id === params.course_id);
+}

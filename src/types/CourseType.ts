@@ -49,7 +49,7 @@ export interface CoursesDetailParams {
 }
 
 export type CoursesDetailItem = CourseItem & {
-  chapters?: ChapterItem[],
+  chapters?: ChapterItem[] | null,
   is_enrolled?: boolean,
   my_progress?: number | null,
 }
