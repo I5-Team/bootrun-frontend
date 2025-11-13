@@ -52,7 +52,7 @@ export default function LectureDetailPage() {
   const coursdId = Number(params.id);
   const { data, isLoading } = useCourseDetailQuery(coursdId);
   const courseData = { ...data, schedule } as CoursesDetailItem;
-  console.log(courseData);
+  console.log('[강의 상세 페이지 | 데이터]', courseData);
   
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);

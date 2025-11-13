@@ -12,6 +12,7 @@ type CurriculumSectionProps = {
 const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(({ data: chapterData }, ref) => {
   // 1주차(id: 1)만 기본으로 열도록 설정
   const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
+  console.log(chapterData);
 
   const toggleChapter = (id: number) => {
     setOpenChapterId(prev => prev.includes(id) ? prev.filter(ch => ch !== id) : [...prev, id]);
@@ -25,7 +26,7 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
       </S.SectionHeader>
 
       <Curr.Container>
-        {chapterData && chapterData.length === 0
+        {!chapterData || chapterData.length === 0
         ? <Curr.Chapter>
             <Curr.ChapterHeader>
               <Curr.ToggleButton $isOpen={true}>
@@ -47,7 +48,7 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
             </Curr.LectureList>
           </Curr.Chapter>
         :  <>
-            {chapterData?.map(chapter => {
+            {chapterData?.map((chapter, index) => {
               const isOpen = openChapterId.includes(chapter.id);
               return (
                 <Curr.Chapter key={chapter.id}>
@@ -57,7 +58,7 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
                       <SvgArrowDown /> 
                     </Curr.ToggleButton>
                     <Curr.ChapterTitleText>
-                      <span>Chapter{String(chapter.id).padStart(2, '0')}.</span>
+                      <span>Chapter{String(index + 1).padStart(2, '0')}.</span>
                       <span>{chapter.title}</span>
                     </Curr.ChapterTitleText>
                   </Curr.ChapterHeader>
