@@ -8,7 +8,7 @@ import type { CoursesApiParams } from "../types/CourseType";
  */
 export const useCoursesQuery = (params: CoursesApiParams) => {
   return useQuery({
-    queryKey: ['courses'],
+    queryKey: ['courses', params],
     queryFn: () => fetchCourses(params),
     placeholderData: keepPreviousData,
   });

@@ -9,10 +9,10 @@ import EmptyState from "../components/EmptyState/EmptyState";
 import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { fetchCourses } from "../api/coursesApi";
 import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type PriceType } from "../types/CourseType";
 import { SkeletonCard } from "./Skeleton";
 import { fetchMyEnrollments } from "../api/enrollmentsApi";
+import { useCoursesQuery } from "../queries/useCourseQueries";
 
 export type MyCourseItem = {
     id: number;
@@ -145,50 +145,19 @@ export const FilterCourseList = ({
     onCountChange,
 }: CourseFilter ) => {
     const [searchParams] = useSearchParams();
-    const [courses, setCourses] = useState<CourseItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const loadCourses = async () => {
-            try {
-                setIsLoading(true);
+    const filterParams: CoursesApiParams = {
+        course_types: courseTypeOpt 
+            ? [courseTypeOpt] 
+            : searchParams.getAll('course_types').length > 0 ? searchParams.getAll('course_types') as CourseType[] : [],
+        category_types: searchParams.getAll('category_types') as CategoryType[],
+        difficulties: searchParams.getAll('difficulties') as DifficultyType[],
+        price_types: searchParams.getAll('price_types') as PriceType[],
+        keyword: searchParams.get('keyword') || undefined,
+        page_size: cardCount && cardCount > 20 ? cardCount : undefined,
+    };
 
-                // searchParams에서 bodyData 가져오기
-                const filterPramsObj:Record<string, string[] | null> = {
-                    category_types: [],
-                    course_types: courseTypeOpt ? [ courseTypeOpt ] : [],
-                    difficulties: [],
-                    price_types: [],
-                };
-                searchParams.forEach((value, key) => {
-                    if (key === 'keyword') return;
-                    filterPramsObj[key]
-                    ? filterPramsObj[key] = [...filterPramsObj[key], value]
-                    : filterPramsObj[key] = [value]
-                })
-
-            if (searchParams.getAll('course_types').length > 0) {
-                filterPramsObj.course_types = searchParams.getAll('course_types');
-            }
-
-                const params: CoursesApiParams= {
-                    ...filterPramsObj,
-                    keyword: searchParams.get("keyword") || undefined,
-                    page_size: cardCount && cardCount > 20 ? cardCount : undefined,
-                };
-
-                console.log(params);
-                const coursesData = await fetchCourses(params);
-
-                setCourses(coursesData);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        loadCourses();
-    }, [searchParams, cardCount]);
+    const { data: courses = [], isLoading } = useCoursesQuery(filterParams);
 
     // sliceFn
     const sliceFn = (list: CourseItem[]) => {
