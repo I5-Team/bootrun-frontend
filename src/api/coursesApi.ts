@@ -33,7 +33,7 @@ export const fetchCourses = async ({
             data: bodyData,
         });
         
-        if (response?.data?.items) {
+        if (response?.data?.items && response.data.items.length > 0) {
             console.log('[API 요청 성공]');
             return response.data.items;
         }

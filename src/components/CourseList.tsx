@@ -11,7 +11,7 @@ import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { fetchCourses, fetchMyEnrollments } from "../api/coursesApi";
 import type { CategoryType, CourseItem, CoursesApiParams, CoursesApiBody, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
-import { LoadingSpinner } from "./HelperComponents";
+import { SkeletonCard } from "./Skeleton";
 
 export type MyCourseItem = {
     id: number;
@@ -116,6 +116,7 @@ type BaseCourseListProps<T> = {
     data: T[];
     filterFn?: (item: T) => boolean;
     sortFn?: (a: T, b: T) => number;
+    sliceFn?: (list: T[]) => T[];
     courseCard: (item: T) => React.ReactNode;
     onCountChange? : (count: number) => void;
     isLoading?: boolean;
@@ -125,6 +126,7 @@ const BaseCourseList = <T,>({
     data,
     filterFn,
     sortFn,
+    sliceFn,
     courseCard,
     onCountChange,
     isLoading,
@@ -132,7 +134,8 @@ const BaseCourseList = <T,>({
     const courseList = data;
     const filteredList = filterFn ? courseList.filter(filterFn) : courseList;
     const sortedList = sortFn ? [...filteredList].sort(sortFn) : filteredList;
-    const refinedList = sortedList;
+    const slicedList = sliceFn ? sliceFn(sortedList) : sortedList;
+    const refinedList = slicedList;
     
     useEffect(() => {
         onCountChange?.(refinedList.length);
@@ -210,7 +213,7 @@ export const FilterCourseList = ({
 
                 const params: CoursesApiParams= {
                     keyword: searchParams.get("keyword") || undefined,
-                    page_size: cardCount || undefined,
+                    page_size: cardCount && cardCount > 20 ? cardCount : undefined,
                 };
 
                 const coursesData = await fetchCourses({ params, bodyData });
@@ -223,7 +226,12 @@ export const FilterCourseList = ({
             }
         }
         loadCourses();
-    }, [searchParams]);
+    }, [searchParams, cardCount]);
+
+    // sliceFn
+    const sliceFn = (list: CourseItem[]) => {
+        return cardCount ? list.slice(0, cardCount) : list;
+    }
 
     // sortFn
     const sortFn = (a: CourseItem, b: CourseItem) => {
@@ -237,7 +245,7 @@ export const FilterCourseList = ({
     const courseCardItem = (course: CourseItem) => (
         <li key={course.id}>
             {isLoading 
-            ? <LoadingSpinner/>
+            ? <SkeletonCard/>
             : <CourseCard
                 variant="info"
                 lectureId={course.id}
@@ -262,6 +270,7 @@ export const FilterCourseList = ({
         <BaseCourseList
             data={courses}
             sortFn={sortFn}
+            sliceFn={sliceFn}
             courseCard={courseCardItem}
             onCountChange={onCountChange}
             isLoading={isLoading}
@@ -324,7 +333,7 @@ export const FilterMyCourseList = ({
     const myCourseCardItem = (course: MyCourseItem) => (
         <li key={course.course_id}>{
             isLoading 
-            ? <LoadingSpinner/>
+            ? <SkeletonCard/>
             : <CourseCard
                 variant="study"
                 thumbnail={course.course_thumbnail}
