@@ -12,7 +12,6 @@ type CurriculumSectionProps = {
 const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(({ data: chapterData }, ref) => {
   // 1주차(id: 1)만 기본으로 열도록 설정
   const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
-  console.log(chapterData);
 
   const toggleChapter = (id: number) => {
     setOpenChapterId(prev => prev.includes(id) ? prev.filter(ch => ch !== id) : [...prev, id]);

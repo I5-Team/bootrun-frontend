@@ -1,12 +1,11 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
-import type { InfoBoxProps } from '../../../../src/types/LectureType';
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { categoryLabel, courseTypeLabel, difficultyLabel, type CoursesDetailItem } from '../../../types/CourseType';
 import { formatDate } from '../LectureDetailPage';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ROUTES } from '../../../router/RouteConfig';
 
 export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetailItem, enrollmentStatus?: boolean }) => {
   const { schedule, course_type, category_type, difficulty } = data;
@@ -53,16 +52,24 @@ export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetail
             </li>
             <li>
               <S.InfoLabel>모집 기간</S.InfoLabel>
-              <S.InfoValue>~ {formatDate(schedule.enrollment.end)}</S.InfoValue>
+              <S.InfoValue>
+                <span>~ {formatDate(schedule?.enrollment.end ?? '미정')}</span>
+                {schedule && 
+                  <>
+                    {enrollmentStatus
+                    ? <S.DdayTag $variant="open">{calculateDdayFrom(schedule.learning.end)}</S.DdayTag>
+                    : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
+                    }
+                  </>
+                }
+              </S.InfoValue>
             </li>
             <li>
               <S.InfoLabel>교육 기간</S.InfoLabel>
               <S.InfoValue>
-                {formatDate(schedule.learning.start)} ~ {formatDate(schedule.learning.end)}
-
-                {enrollmentStatus
-                ? <S.DdayTag $variant="open">{calculateDdayFrom(schedule.learning.end)}</S.DdayTag>
-                : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
+                { schedule
+                  ? <span>{formatDate(schedule.learning.start)} ~ {formatDate(schedule.learning.end).slice(5)}</span>
+                  : <span>미정</span>
                 }
               </S.InfoValue>
               
@@ -78,21 +85,37 @@ export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetail
 
 export const InfoBoxButtons = ({ enrollmentStatus }: { enrollmentStatus?: boolean }) => {
   const { isLaptop } = useMediaQuery();
+  const navigate = useNavigate();
+  const { id } = useParams<{id: string}>();
+
+  const handleEnrollCourse = () => {
+    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
+    console.log(path);
+    navigate(path);
+  }
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href)
+    .then(() => alert('주소가 복사되었습니다.'))
+    .catch(() => alert('주소 복사를 실패하였습니다.'));
+  }
 
   return (
     <S.ButtonContainer>
       {enrollmentStatus
-        ? <Button size="lg" fullWidth={!isLaptop}>수강신청 하기</Button>
+        ? <Button size="lg" fullWidth={!isLaptop} onClick={handleEnrollCourse}>수강신청 하기</Button>
         : <Button size="lg" fullWidth={!isLaptop} disabled={true}>수강신청 마감</Button>  
       } 
-      <Button variant='outline' size="lg" fullWidth={!isLaptop}  iconSvg={<ShareIcon/>}>공유하기</Button>
+      <Button variant='outline' size="lg" fullWidth={!isLaptop} iconSvg={<ShareIcon/>} onClick={handleShare}>공유하기</Button>
     </S.ButtonContainer>
   )
 }
 
 export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
   const { title, schedule } = data;
-    const enrollmentStatus = new Date(schedule.enrollment.end) > new Date() ? true : false;
+    const enrollmentStatus = schedule 
+      ? (new Date(schedule.enrollment.end)) > new Date() ? true : false
+      : false;
 
   return (
     <S.FloatingCardWrapper>
@@ -177,13 +200,14 @@ const S = {
     color: ${({ theme }) => theme.colors.gray300};
   `,
   InfoValue: styled.span`
-    font-weight: 500;
+    font-weight: 600;
     color: ${({ theme }) => theme.colors.gray400};
     display: flex;
     align-items: center;
     gap: 0.8rem;
   `,
   DdayTag: styled.span<{ $variant : "open" | "closed"}>`
+    white-space: nowrap;
     font-size: ${({ theme }) => theme.fontSize.caption};
     font-weight: 700;
 

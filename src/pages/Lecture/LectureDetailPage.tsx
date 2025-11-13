@@ -43,8 +43,8 @@ export const formatDate = (dateString: string): string => {
 export default function LectureDetailPage() {
   // 임시 데이터
   const schedule = {
-    enrollment: { label: '모집 기간', start: '2025-07-01T15:00:00.000Z', end: '2025-07-27T15:00:00.000Z' },
-    learning: { label: '교육 기간', start: '2025-07-28T15:00:00.000Z', end: '2025-08-27T15:00:00.000Z' },
+    enrollment: { label: '모집 기간', start: '2026-07-01T15:00:00.000Z', end: '2026-07-27T15:00:00.000Z' },
+    learning: { label: '교육 기간', start: '2026-07-28T15:00:00.000Z', end: '2026-08-27T15:00:00.000Z' },
   }
 
   const { isLaptop } = useMediaQuery();
@@ -52,7 +52,6 @@ export default function LectureDetailPage() {
   const coursdId = Number(params.id);
   const { data, isLoading } = useCourseDetailQuery(coursdId);
   const courseData = { ...data, schedule } as CoursesDetailItem;
-  console.log('[강의 상세 페이지 | 데이터]', courseData);
   
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);
