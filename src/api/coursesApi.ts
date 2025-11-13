@@ -3,12 +3,8 @@ import { getMockCourses, getMockMyEnrollments } from "../data/mockCourseList";
 import type { CourseItem, CoursesApiBody, CoursesApiParams, MyEnrollmentItem, MyEnrollmentsApiParams } from "../types/CourseType";
 import { apiClient } from "./client";
 
-// 공통 API 지연 시간 (ms)
-const API_DELAY = 100;
-
-// 임시 목업
-// const USE_MOCK_DATA = true;
-const simulateFetch = <T>(data: T, delay: number = API_DELAY): Promise<T> => {
+// 임시 목업 불러오기
+export const simulateFetch = <T>(data: T, delay: number = 100): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(data);
@@ -23,14 +19,14 @@ const simulateFetch = <T>(data: T, delay: number = API_DELAY): Promise<T> => {
  * 강의 목록 조회
  */
 export const fetchCourses = async ({
-    params, bodyData
+    params, 
+    bodyData
 }: { params: CoursesApiParams, bodyData: CoursesApiBody }): Promise<CourseItem[]> => {
     console.log('[params]', params);
     console.log('[bodyData]', bodyData);
     try {
         const response = await apiClient.get(API_URL.COURSE.COURSE_LIST, {
-            params: params,
-            data: bodyData,
+            params: { ...params, ...bodyData }
         });
         
         if (response?.data?.items && response.data.items.length > 0) {
@@ -40,12 +36,12 @@ export const fetchCourses = async ({
 
         console.warn('[API 데이터 없음] mock 데이터로 대체');
         const data = getMockCourses(params, bodyData);
-        return simulateFetch(data, API_DELAY);
+        return simulateFetch(data);
 
     } catch (err) {
         console.error('[API 요청 실패] mock 데이터로 대체', err);
         const data = getMockCourses(params, bodyData);
-        return simulateFetch(data, API_DELAY);
+        return simulateFetch(data);
     }
 };  
 
@@ -54,17 +50,17 @@ export const fetchMyEnrollments = async (
 ): Promise<MyEnrollmentItem[]> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
-        if (response?.data?.items) {
+        if (response?.data?.items && response.data.items.length > 0) {
             console.log('[API 요청 성공]');
             return response.data.items;
         }
         console.warn('[API 데이터 없음] mock 데이터로 대체');
         const data = getMockMyEnrollments(params);
-        return simulateFetch(data, API_DELAY);
+        return simulateFetch(data);
     } catch (err) {
         console.error('[API 요청 실패] mock 데이터로 대체', err);
         const data = getMockMyEnrollments(params);
-        return simulateFetch(data, API_DELAY);
+        return simulateFetch(data);
     }
 };  
 

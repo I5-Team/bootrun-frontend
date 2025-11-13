@@ -8,18 +8,18 @@ export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
 // [GET] /courses
 export interface CoursesApiParams {
-  category_id?: number;
-  keyword?: string,
-  is_published?: boolean,
+  category_id?: number | null;
+  keyword?: string | null,
+  is_published?: boolean | null,
   page?: number,
   page_size?: number,
 }
 
 export interface CoursesApiBody {
-  category_types?: CategoryType[],
-  course_types?: CourseType[],
-  difficulties?: DifficultyType[],
-  price_types?: PriceType[],
+  category_types?: CategoryType[] | null,
+  course_types?: CourseType[] | null,
+  difficulties?: DifficultyType[] | null,
+  price_types?: PriceType[] | null,
 }
 
 export type CourseItem = {
@@ -38,7 +38,45 @@ export type CourseItem = {
   total_duration: number,
   faq: string,
   is_published: boolean,
-  enrollment_count: number,
+  enrollment_count?: number,
+  created_at: string,
+  updated_at: string,
+}
+
+// [GET] /courses/{course_id}
+export interface CoursesDetailParams {
+  course_id: number,
+}
+
+export type CoursesDetailItem = CourseItem & {
+  chapters?: ChapterItem[],
+  is_enrolled?: boolean,
+  my_progress?: number | null,
+}
+
+export type ChapterItem = {
+  id: number,
+  course_id: number,
+  title: string,
+  description: string | null,
+  order_number: number,
+  total_duration?: number,
+  lectures?: LectureItem[],
+}
+
+export type LectureItem = {
+  id: number
+  chapter_id: number
+  title: string
+  description: string | null,
+  video_url: string
+  video_type: 'vod' | 'youtube',
+  duration_seconds: number,
+  order_number: number,
+  material_url?: string | null,
+  is_completed?: boolean | null,
+  last_position?: number | null,
+  watched_seconds?: number | null,
   created_at: string,
   updated_at: string,
 }
