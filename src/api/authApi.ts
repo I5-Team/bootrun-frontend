@@ -1,5 +1,11 @@
 import { apiClient } from './client';
-import type { LoginPayload, TokenResponseData } from '../types/AuthType';
+import type {
+  EmailVerificationConfirmPayload,
+  EmailVerificationRequestPayload,
+  LoginPayload,
+  RegisterPayload,
+  TokenResponseData,
+} from '../types/AuthType';
 import type { UserProfile } from '../types/UserType';
 import { API_URL } from '../constants/apiConfig';
 
@@ -137,6 +143,79 @@ export const refreshToken = async (): Promise<TokenResponseData> => {
     };
     localStorage.setItem('accessToken', mockResponse.access_token);
     localStorage.setItem('refreshToken', mockResponse.refresh_token);
+    return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
+  }
+};
+
+/**
+ * POST /auth/register
+ * 회원가입
+ */
+export const register = async (payload: RegisterPayload): Promise<UserProfile> => {
+  // (목업 응답: Swagger의 201 응답 data와 UserProfile을 맞춤)
+  const mockUser: UserProfile = {
+    id: 2,
+    email: payload.email,
+    nickname: payload.nickname,
+    role: 'student',
+    gender: 'none',
+    birth_date: '',
+    is_active: true,
+    is_email_verified: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    last_login: new Date().toISOString(),
+    social_provider: 'email',
+  };
+
+  try {
+    const response = await apiClient.post<{ data: UserProfile }>(API_URL.AUTH.REGISTER, payload);
+    return response.data.data;
+  } catch (error) {
+    console.warn('[MOCK FALLBACK] register', error);
+    return new Promise((resolve) => setTimeout(() => resolve(mockUser), 500));
+  }
+};
+
+/**
+ * POST /auth/email/verification/request
+ * 이메일 인증 코드 요청
+ */
+export const requestEmailVerification = async (
+  payload: EmailVerificationRequestPayload
+): Promise<{ message: string; detail: string }> => {
+  const mockResponse = {
+    success: true,
+    message: '인증 코드가 이메일로 발송되었습니다',
+    detail: '개발 환경에서 인증 코드: 123456', // (Swagger 예시)
+  };
+
+  try {
+    const response = await apiClient.post(API_URL.AUTH.EMAIL_VERIFICATION_REQUEST, payload);
+    return response.data; // (data.data가 아닌 data로 추정)
+  } catch (error) {
+    console.warn('[MOCK FALLBACK] requestEmailVerification', error);
+    return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
+  }
+};
+
+/**
+ * POST /auth/email/verification/confirm
+ * 이메일 인증 코드 확인
+ */
+export const confirmEmailVerification = async (
+  payload: EmailVerificationConfirmPayload
+): Promise<{ message: string }> => {
+  const mockResponse = {
+    success: true,
+    message: '이메일 인증이 완료되었습니다',
+  };
+
+  try {
+    const response = await apiClient.post(API_URL.AUTH.EMAIL_VERIFICATION_CONFIRM, payload);
+    return response.data;
+  } catch (error) {
+    console.warn('[MOCK FALLBACK] confirmEmailVerification', error);
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
   }
 };

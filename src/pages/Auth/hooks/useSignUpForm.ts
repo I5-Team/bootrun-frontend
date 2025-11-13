@@ -5,6 +5,11 @@
  * - 이메일 인증 상태 관리
  */
 import { useState, useEffect } from 'react';
+import {
+  useConfirmEmailVerification,
+  useRegister,
+  useRequestEmailVerification,
+} from '../../../queries/useAuthQueries';
 
 /**
  * 입력값에서 공백을 제거하는 유틸 함수
@@ -126,6 +131,13 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showEmailHelp, setShowEmailHelp] = useState(false);
 
+  const { mutate: requestVerifyMutate, isPending: isSendingCode } = useRequestEmailVerification();
+
+  const { mutate: confirmVerifyMutate, isPending: isConfirmingCode } =
+    useConfirmEmailVerification();
+
+  const { mutate: registerMutate, isPending: isRegistering } = useRegister();
+
   // 이메일 처리 핸들러
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -228,20 +240,37 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     }
 
     // TODO: API 호출 - 이메일 중복 확인 및 인증 메일 발송
-    setIsEmailSent(true);
+    requestVerifyMutate(
+      { email },
+      {
+        onSuccess: () => {
+          setIsEmailSent(true);
+        },
+        // (onError는 훅 내부에서 alert 처리)
+      }
+    );
   };
 
   // 인증번호 확인
   const handleVerificationCodeSubmit = () => {
     // TODO: API 호출 - 인증번호 확인
     // 임시로 인증 완료 처리
-    setIsEmailVerified(true);
+    confirmVerifyMutate(
+      { email, verification_code: verificationCode },
+      {
+        onSuccess: () => {
+          setIsEmailVerified(true);
+        },
+        // (onError는 훅 내부에서 alert 처리)
+      }
+    );
   };
 
   // 인증번호 재전송
   const handleResendCode = () => {
     // TODO: API 호출 - 인증번호 재전송
     console.log('인증번호 재전송');
+    requestVerifyMutate({ email });
   };
 
   // 회원가입 버튼 활성화 조건
@@ -253,7 +282,10 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     !!nickName &&
     !passwordError &&
     !passwordConfirmError &&
-    !nickNameError;
+    !nickNameError &&
+    !isSendingCode &&
+    !isConfirmingCode &&
+    !isRegistering;
 
   // 회원가입 처리
   const handleSignUp = () => {
@@ -261,6 +293,12 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
 
     // TODO: API 호출 - 회원가입
     console.log('회원가입:', { email, password, nickName });
+    registerMutate({
+      email,
+      password,
+      password_confirm: passwordConfirm,
+      nickname: nickName,
+    });
   };
 
   return {
