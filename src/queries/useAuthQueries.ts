@@ -12,6 +12,7 @@ export const authKeys = {
 
 export const useVerifyAuth = () => {
   const queryClient = useQueryClient();
+  // 토큰 검증 쿼리
 
   const query = useQuery({
     queryKey: authKeys.me, // 고정된 쿼리 키
