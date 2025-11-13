@@ -4,18 +4,14 @@ import type { UserApiParams } from '../types/AdminUserType';
 import { deleteAccount, fetchProfile, updateProfile, uploadProfileImage } from '../api/userApi';
 import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
 import { useNavigate } from 'react-router-dom';
-
-export const userKeys = {
-  all: ['users'] as const,
-  profile: ['users', 'profile'] as const,
-};
+import { adminUserKeys, userKeys } from './queryKeys';
 
 /**
  * [Query] 내 프로필 정보 조회
  */
 export const useProfile = () => {
   return useQuery({
-    queryKey: userKeys.profile,
+    queryKey: userKeys.me,
     queryFn: fetchProfile,
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
@@ -29,7 +25,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: (payload: ProfileUpdatePayload) => updateProfile(payload),
     onSuccess: (data) => {
-      queryClient.setQueryData(userKeys.profile, data.data);
+      queryClient.setQueryData(userKeys.me, data.data);
       alert('프로필이 성공적으로 업데이트되었습니다.');
     },
     onError: () => {
@@ -47,9 +43,9 @@ export const useUploadProfileImage = () => {
     mutationFn: (formData: FormData) => uploadProfileImage(formData),
     onSuccess: (data) => {
       // 프로필 이미지 URL을 프로필 데이터에 반영
-      queryClient.setQueryData<UserProfile | undefined>(userKeys.profile, (oldData) => {
+      queryClient.setQueryData<UserProfile | undefined>(userKeys.me, (oldData) => {
         if (oldData) {
-          return { ...oldData, profileImageUrl: data.data?.image_url };
+          return { ...oldData, profile_image_url: data.data?.image_url };
         }
         return oldData;
       });
@@ -85,7 +81,7 @@ export const useDeleteAccount = () => {
  */
 export const useUserListQuery = (params: UserApiParams) => {
   return useQuery({
-    queryKey: ['users', params],
+    queryKey: adminUserKeys.list(params),
     queryFn: () => fetchUsers(params),
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
@@ -100,7 +96,7 @@ export const useActivateUserMutation = () => {
   return useMutation({
     mutationFn: activateUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: adminUserKeys.lists() });
     },
     onError: (error) => {
       console.error('사용자 활성화 실패:', error);
@@ -114,7 +110,7 @@ export const useDeactivateUserMutation = () => {
   return useMutation({
     mutationFn: deactivateUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: adminUserKeys.lists() });
     },
     onError: (error) => {
       console.error('사용자 비활성화 실패:', error);

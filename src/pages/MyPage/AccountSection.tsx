@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useApiData } from '../../hooks/useApiData';
-import { mockAccountData } from '../../data/mockMyPageData';
+import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import BaseModal from '../../components/BaseModal';
 
 const AccountSection: React.FC = () => {
-  const { data, loading, error } = useApiData(mockAccountData, 400);
+  const { data, loading, error } = useApiData(mockProfileData, 400);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,7 +45,8 @@ const AccountSection: React.FC = () => {
         closeWithdrawalModal();
         //  TODO: 탈퇴 후 처리 (예: 로그아웃, 메인 페이지 이동 등)
         window.location.href = '/';
-      } catch (err) {
+      } catch (error) {
+        console.error('회원 탈퇴 중 오류 발생:', error);
         setIsDeleting(false);
         alert('탈퇴 처리 중 오류가 발생했습니다.');
       }
@@ -78,13 +79,13 @@ const AccountSection: React.FC = () => {
 
           <S.FormGroup>
             <S.FormLabel>GitHub 계정</S.FormLabel>
-            {data.githubEmail ? (
+            {data.social_provider === 'github' ? (
               <S.GithubLinked>
-                <span>{data.githubEmail}</span>
+                <span>{data.email}</span>
                 <button
                   type="button"
                   onClick={handleGithubLink}
-                  aria-label={`${data.githubEmail} GitHub 계정 연동 해제`}
+                  aria-label={`${data.email} GitHub 계정 연동 해제`}
                 >
                   연동 해제
                 </button>

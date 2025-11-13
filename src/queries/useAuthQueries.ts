@@ -4,18 +4,14 @@ import { login, logout, verifyToken } from '../api/authApi';
 import type { LoginPayload } from '../types/AuthType';
 import type { ResponseError } from '../types/UserType';
 import { useNavigate } from 'react-router-dom';
-
-export const authKeys = {
-  all: ['auth'] as const,
-  me: ['auth', 'me'] as const,
-};
+import { authKeys, userKeys } from './queryKeys';
 
 export const useVerifyAuth = () => {
   const queryClient = useQueryClient();
   // 토큰 검증 쿼리
 
   const query = useQuery({
-    queryKey: authKeys.me, // 고정된 쿼리 키
+    queryKey: authKeys.verify, // 고정된 쿼리 키
     queryFn: verifyToken, // API 함수
     retry: false, // 토큰 검증 실패 시 재시도하지 않음
   });
@@ -25,12 +21,12 @@ export const useVerifyAuth = () => {
       // 토큰이 유효할 때
       console.log('토큰 검증 성공:', query.data);
 
-      queryClient.setQueryData(['users', 'me'], query.data); // 사용자 데이터 캐시에 저장
+      queryClient.setQueryData(userKeys.me, query.data); // 사용자 데이터 캐시에 저장
     }
     if (query.error) {
       // 토큰이 유효하지 않을 때
       console.error('토큰 검증 실패:', query.error);
-      queryClient.removeQueries({ queryKey: authKeys.me }); // 사용자 데이터 캐시 삭제
+      queryClient.removeQueries({ queryKey: userKeys.me }); // 사용자 데이터 캐시 삭제
     }
   }, [query.data, query.error, queryClient]);
 
@@ -49,7 +45,7 @@ export const useLogin = () => {
     mutationFn: (payload: LoginPayload) => login(payload), // API 함수
     onSuccess: (data) => {
       console.log('로그인 성공:', data);
-      queryClient.setQueryData(authKeys.me, data.user); // 사용자 데이터 캐시에 저장
+      queryClient.setQueryData(userKeys.me, data.user); // 사용자 데이터 캐시에 저장
       // TODO: 로그인 후 리다이렉트 처리
       navigate('/'); // 예: 홈 페이지로 이동
     },
