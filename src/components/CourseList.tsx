@@ -10,7 +10,7 @@ import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { fetchCourses } from "../api/coursesApi";
-import type { CategoryType, CourseItem, CoursesApiParams, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
+import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type PriceType } from "../types/CourseType";
 import { SkeletonCard } from "./Skeleton";
 import { fetchMyEnrollments } from "../api/enrollmentsApi";
 
@@ -40,27 +40,6 @@ export type CourseFilter = {
     sortOpt?: 'DATE_ASC' | 'DATE_DESC',
     cardCount?: number,
     onCountChange?: (count: number) => void,
-}
-
-const courseTypeLabel : Record<CourseType, string> = {
-    boost_community : '부스트 커뮤니티',
-    vod : 'VOD',
-    kdc : 'KDC', 
-}
-
-const categoryLabel : Record<CategoryType, string> = {
-    frontend : '프론트엔드',
-    backend : '백엔드',
-    data_analysis : '데이터 분석', 
-    ai: 'AI',
-    design: '디자인', 
-    other: '기타',
-}
-
-const difficultyLabel : Record<DifficultyType, string> = {
-    beginner : '초급',
-    intermediate : '중급',
-    advanced : '실무', 
 }
 
 // styled

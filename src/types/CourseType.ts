@@ -6,6 +6,29 @@ export type PriceType = 'free' | 'paid' | 'national_support';
  
 export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
+// 타입별 라벨
+export const courseTypeLabel : Record<CourseType, string> = {
+    boost_community : '부스트 커뮤니티',
+    vod : 'VOD',
+    kdc : 'KDC', 
+}
+
+export const categoryLabel : Record<CategoryType, string> = {
+    frontend : '프론트엔드',
+    backend : '백엔드',
+    data_analysis : '데이터 분석', 
+    ai: 'AI',
+    design: '디자인', 
+    other: '기타',
+}
+
+export const difficultyLabel : Record<DifficultyType, string> = {
+    beginner : '초급',
+    intermediate : '중급',
+    advanced : '실무', 
+}
+
+
 // [GET] /courses
 export interface CoursesApiParams {
   category_id?: number | null;
@@ -45,6 +68,10 @@ export type CoursesDetailItem = CourseItem & {
   chapters?: ChapterItem[] | null,
   is_enrolled?: boolean,
   my_progress?: number | null,
+  schedule?: {
+    enrollment: { label: string, start: string, end: string },
+    learning: { label: string, start: string, end: string }
+  }, // 임시
 }
 
 export type ChapterItem = {

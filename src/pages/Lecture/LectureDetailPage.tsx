@@ -1,8 +1,9 @@
 import { useRef } from 'react';
-import type { CardData, SectionRefs } from '../../types/LectureType';
-import { mockCardData } from '../../data/mockLectureData';
-import { useApiData } from '../../hooks/useApiData';
+import type { SectionRefs } from '../../types/LectureType';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { useParams } from 'react-router-dom';
+import type { CoursesDetailItem } from '../../types/CourseType';
+import { useCourseDetailQuery } from '../../queries/useCourseQueries';
 
 // 스타일
 import {
@@ -21,12 +22,37 @@ import FAQSection from './components/FAQSection';
 import NoticeSection from './components/NoticeSection';
 import ReviewSection from './components/ReviewSection';
 import { SectionTabs } from './components/SectionTabs';
-import LectureInfoBox, { InfoBoxButtons } from './components/LectureInfoBox';
+import { LectureInfoBox, InfoBoxButtons } from './components/LectureInfoBox';
+import { LoadingSpinner } from '../../components/HelperComponents';
 
+// 함수
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
 
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 0부터 시작하므로 +1
+  const day = date.getDate();
+
+  const weekDayNames = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekDay = weekDayNames[date.getDay()];
+
+  return `${year}.${month.toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}(${weekDay})`;
+}
+
+//
 export default function LectureDetailPage() {
+  // 임시 데이터
+  const schedule = {
+    enrollment: { label: '모집 기간', start: '2025-07-01T15:00:00.000Z', end: '2025-07-27T15:00:00.000Z' },
+    learning: { label: '교육 기간', start: '2025-07-28T15:00:00.000Z', end: '2025-08-27T15:00:00.000Z' },
+  }
+
   const { isLaptop } = useMediaQuery();
-  const cardData = useApiData<CardData>(mockCardData, 200);
+  const params = useParams<{ id: string }>();
+  const coursdId = Number(params.id);
+  const { data, isLoading, isError } = useCourseDetailQuery(coursdId);
+  const courseData = { ...data, schedule } as CoursesDetailItem;
+  console.log(courseData);
   
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);
@@ -46,31 +72,38 @@ export default function LectureDetailPage() {
 
   return (
       <>
-        <LectureBannerSection />
+        {isLoading
+        ? <LoadingSpinner/>
+        : 
+          <>
+            <LectureBannerSection data={courseData}/>
+            <LectureMainLayout>
+              {courseData && 
+                <ContentWrapper>
+                  {/* 헤더 영역 (왼쪽) */}
+                  <LectureHeaderSection data={courseData}/>
+  
+                  {/* 고정 사이드바 (오른쪽) */}
+                  <LectureInfoBox data={courseData} />
+  
+                  {/* 메인 콘텐츠 영역 (왼쪽) */}
+                  <SectionWrapper>
+                    <SectionTabs refs={sectionRefs} />
 
-        <LectureMainLayout>
-          <ContentWrapper>
-            {/* 헤더 영역 (왼쪽) */}
-            <LectureHeaderSection cardData={cardData}/>
-
-            {/* 고정 사이드바 (오른쪽) */}
-            <LectureInfoBox cardData={cardData} />
-
-            {/* 메인 콘텐츠 영역 (왼쪽) */}
-            <SectionWrapper>
-              <SectionTabs refs={sectionRefs} />
-              {/* 각 섹션은 ref를 받고, 데이터는 내부의 useApiData 훅으로 가져온다. */}
-              <LectureIntroSection ref={introRef} />
-              <ReviewSection ref={reviewsRef} />
-              <CurriculumSection ref={curriculumRef} />
-              <InstructorSection ref={instructorRef} />
-              <FAQSection ref={faqRef} />
-              <NoticeSection />
-            </SectionWrapper>
-
-            {isLaptop && <InfoBoxButtons cardData={cardData}/>}
-          </ContentWrapper>
-        </LectureMainLayout>
+                    <LectureIntroSection ref={introRef} />
+                    <ReviewSection ref={reviewsRef} />
+                    <CurriculumSection ref={curriculumRef} />
+                    <InstructorSection ref={instructorRef} />
+                    <FAQSection ref={faqRef} />
+                    <NoticeSection />
+                  </SectionWrapper>
+  
+                  {isLaptop && <InfoBoxButtons/>}
+                </ContentWrapper>
+              }
+            </LectureMainLayout>
+          </>
+        }
       </>
   );
 }

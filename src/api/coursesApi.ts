@@ -20,13 +20,10 @@ export const simulateFetch = <T>(data: T, delay: number = 100): Promise<T> => {
  * 강의 목록 조회
  */
 export const fetchCourses = async (params: CoursesApiParams): Promise<CourseItem[]> => {
-    console.log('[params]', params);
     try {
         const response = await apiClient.get(API_URL.COURSE.COURSE_LIST, {
             params
-        }
-    
-        );
+        });
         
         if (response?.data?.items) {
             console.log('[API 요청 성공]');
@@ -53,9 +50,9 @@ export const fetchCoursesDetail = async (
 ): Promise<CoursesDetailItem | undefined> => {
     try {
         const response = await apiClient.get(`${API_URL.COURSE.COURSE_LIST}/${course_id}`);
-        if (response?.data && response.data.length > 0) {
+        if (response?.data) {
             console.log('[API 요청 성공]');
-            return response.data;
+            return response.data.data;
         }
         console.warn('[API 데이터 없음] mock 데이터로 대체');
          const data = getMockCoursesDetails(course_id);

@@ -1,4 +1,4 @@
-import type { CoursesDetailItem, CoursesDetailParams } from "../types/CourseType";
+import type { CoursesDetailItem } from "../types/CourseType";
 
 export const mockCoursesDetails: CoursesDetailItem[]= [
   {
@@ -690,6 +690,6 @@ export const mockCoursesDetails: CoursesDetailItem[]= [
   }
 ]
 
-export const getMockCoursesDetails = (params: CoursesDetailParams) => {
-  return mockCoursesDetails.find(data => data.id === params.course_id);
+export const getMockCoursesDetails = (course_id: number) => {
+  return mockCoursesDetails.find(data => data.id === course_id);
 }
