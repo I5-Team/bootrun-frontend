@@ -13,9 +13,6 @@ export interface CoursesApiParams {
   is_published?: boolean | null,
   page?: number,
   page_size?: number,
-}
-
-export interface CoursesApiBody {
   category_types?: CategoryType[] | null,
   course_types?: CourseType[] | null,
   difficulties?: DifficultyType[] | null,
@@ -44,10 +41,6 @@ export type CourseItem = {
 }
 
 // [GET] /courses/{course_id}
-export interface CoursesDetailParams {
-  course_id: number,
-}
-
 export type CoursesDetailItem = CourseItem & {
   chapters?: ChapterItem[] | null,
   is_enrolled?: boolean,

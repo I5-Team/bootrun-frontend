@@ -13,7 +13,7 @@ export const fetchMyEnrollments = async (
 ): Promise<MyEnrollmentItem[]> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
-        if (response?.data?.items && response.data.items.length > 0) {
+        if (response?.data?.items) {
             console.log('[API 요청 성공]');
             return response.data.items;
         }

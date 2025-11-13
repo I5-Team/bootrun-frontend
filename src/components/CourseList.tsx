@@ -9,9 +9,10 @@ import EmptyState from "../components/EmptyState/EmptyState";
 import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { fetchCourses, fetchMyEnrollments } from "../api/coursesApi";
-import type { CategoryType, CourseItem, CoursesApiParams, CoursesApiBody, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
+import { fetchCourses } from "../api/coursesApi";
+import type { CategoryType, CourseItem, CoursesApiParams, CourseType, DifficultyType, MyEnrollmentItem, PriceType } from "../types/CourseType";
 import { SkeletonCard } from "./Skeleton";
+import { fetchMyEnrollments } from "../api/enrollmentsApi";
 
 export type MyCourseItem = {
     id: number;
@@ -174,49 +175,26 @@ export const FilterCourseList = ({
                 setIsLoading(true);
 
                 // searchParams에서 bodyData 가져오기
-                const bodyData: CoursesApiBody = {
+                const filterPramsObj:Record<string, string[] | null> = {
                     category_types: [],
-                    course_types: courseTypeOpt ? [courseTypeOpt] : [],
+                    course_types: courseTypeOpt ? [ courseTypeOpt ] : [],
                     difficulties: [],
                     price_types: [],
                 };
-
-                const bodyDataKeys: (keyof CoursesApiBody)[] = [
-                    'category_types',
-                    'course_types',
-                    'difficulties',
-                    'price_types'
-                ];
-
                 searchParams.forEach((value, key) => {
-                    if (!bodyDataKeys.includes(key as keyof CoursesApiBody)) return;
-
-                    const typedKey = key as keyof CoursesApiBody;
-
-                    if (!bodyData[typedKey]) bodyData[typedKey] = [];
-
-                    switch (typedKey) {
-                        case 'category_types':
-                        bodyData[typedKey].push(value as CategoryType);
-                        break;
-                        case 'course_types':
-                        bodyData[typedKey].push(value as CourseType);
-                        break;
-                        case 'difficulties':
-                        bodyData[typedKey].push(value as DifficultyType);
-                        break;
-                        case 'price_types':
-                        bodyData[typedKey].push(value as PriceType);
-                        break;
-                    }
-                });
+                    filterPramsObj[key]
+                    ? filterPramsObj[key] = [...filterPramsObj[key], value]
+                    : filterPramsObj[key] = [value]
+                    console.log(filterPramsObj);
+                })
 
                 const params: CoursesApiParams= {
                     keyword: searchParams.get("keyword") || undefined,
                     page_size: cardCount && cardCount > 20 ? cardCount : undefined,
+                    ...filterPramsObj
                 };
 
-                const coursesData = await fetchCourses({ params, bodyData });
+                const coursesData = await fetchCourses(params);
 
                 setCourses(coursesData);
             } catch (err) {
