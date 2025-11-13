@@ -32,19 +32,3 @@ export const StyledMainContainer = styled.main`
     width: calc(100% - 3.2rem);
     margin: 0 auto;
 `;
-
-// const Wrapper = ({ children }: { children: React.ReactNode }) => {
-//     return (
-//         <StyledWrapper>
-//             {children}
-//         </StyledWrapper>
-//     );
-// }
-
-// const MainContainer = ({ children }: { children: React.ReactNode }) => {
-//     return (
-//        <StyledMainContainer>
-//             {children}
-//         </StyledMainContainer>
-//     );
-// }

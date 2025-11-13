@@ -76,7 +76,7 @@ export default function MainPage() {
     const navigate = useNavigate();
 
     const goCategoryList = (categry?: string) => {
-        const queryString = categry ? `?category=${categry}` : "";
+        const queryString = categry ? `?category_types=${categry}` : "";
         navigate(ROUTES.LECTURE_LIST + queryString);
     }
 

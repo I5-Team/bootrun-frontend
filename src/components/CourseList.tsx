@@ -165,8 +165,11 @@ export const FilterCourseList = ({
                     filterPramsObj[key]
                     ? filterPramsObj[key] = [...filterPramsObj[key], value]
                     : filterPramsObj[key] = [value]
-                    console.log(filterPramsObj);
                 })
+
+            if (searchParams.getAll('course_types').length > 0) {
+                filterPramsObj.course_types = searchParams.getAll('course_types');
+            }
 
                 const params: CoursesApiParams= {
                     ...filterPramsObj,
