@@ -22,7 +22,8 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
     <S.Section ref={ref} id="curriculum">
       <S.SectionHeader>
         <S.SectionTitle>커리큘럼</S.SectionTitle>
-        <S.SectionSubtitle>4주간 진행하는 견고한 커리큘럼</S.SectionSubtitle>
+        {/* 임시 처리 */}
+        <S.SectionSubtitle>{chapterData?.[0]?.description ?? '커리큘럼 소개'}</S.SectionSubtitle>
       </S.SectionHeader>
 
       <Curr.Container>
