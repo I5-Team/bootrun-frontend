@@ -6,6 +6,10 @@ export type PriceType = 'free' | 'paid' | 'national_support';
  
 export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
+export type EnrollmentState = 'None' | 'available' | 'expired';
+
+export type LearningState = 'None' | 'not_started' | 'in_progress' | 'completed';
+
 // 타입별 라벨
 export const courseTypeLabel : Record<CourseType, string> = {
     boost_community : '부스트 커뮤니티',
@@ -103,27 +107,31 @@ export type LectureItem = {
 
 // [GET] /enrollments/my
 export interface MyEnrollmentsApiParams {
-  category_id?: number,
-  difficulty?: DifficultyType,
-  is_active?: boolean,
+  enrollment_status?: EnrollmentState | null,
+  learning_status?: LearningState | null,
+  course_type?: CourseType | null,
+  category_type?: CategoryType | null,
+  difficulty?: DifficultyType | null,
   page?: number,
-  page_size?: number;
+  page_size?: number,
 }
 
 export type MyEnrollmentItem = {
   id: number,
-  user_id: number,
-  course_id: number,
-  course_type: CourseType, // Swagger에 없음
-  course_title: string,
-  course_thumbnail: string,
-  category_name: CategoryType,
-  difficulty: DifficultyType,
-  enrolled_at: string,
-  expires_at: string,
-  is_active: boolean,
-  progress_rate: number,
-  days_until_expiry: number,
+  title: string,
+  thumbnail_url: string,
+  course_type: CourseType
+  category_type: CategoryType
+  difficulty: DifficultyType
+  instructor_name: string,
   total_lectures: number,
-  completed_lectures: number
+  completed_lectures: number,
+  progress_rate: number,
+  enrollment_status: EnrollmentState,
+  learning_status: LearningState,
+  enrolled_at: string,
+  expires_at?: string | null,
+  last_watched_chapter?: string | null,
+  last_watched_lecture?: string | null,
+  last_watched_at?: string | null,
 }
