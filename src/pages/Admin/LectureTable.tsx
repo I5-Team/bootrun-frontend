@@ -9,6 +9,9 @@ import { Button } from '../../components/Button';
 
 interface LectureTableProps {
   courses: CourseListItem[];
+  totalCount: number; // 전체 강의 개수
+  currentPage: number; // 현재 페이지 번호
+  pageSize: number; // 페이지 크기
   onCourseClick?: (courseId: number) => void;
   onEditClick: (courseId: number) => void;
   onDeleteClick: (courseId: number) => void;
@@ -43,24 +46,6 @@ const getDifficultyLabel = (difficulty: string): string => {
 };
 
 /**
- * 가격 유형 한글 변환
- */
-const getPriceTypeLabel = (priceType: string, price: number): string => {
-  if (priceType === 'free') return '무료';
-  if (priceType === 'national_support') return '국비지원';
-  return `${price.toLocaleString()}원`;
-};
-
-/**
- * 초를 시간:분 형식으로 변환
- */
-const formatDuration = (seconds: number): string => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${hours}시간 ${minutes}분`;
-};
-
-/**
  * 날짜 포맷팅
  */
 const formatDate = (dateString: string): string => {
@@ -71,32 +56,41 @@ const formatDate = (dateString: string): string => {
       month: '2-digit',
       day: '2-digit',
     });
-  } catch (e) {
+  } catch {
     return 'N/A';
   }
 };
 
 const LectureTable: React.FC<LectureTableProps> = ({
   courses,
+  totalCount,
+  currentPage,
+  pageSize,
   onCourseClick,
   onEditClick,
   onDeleteClick,
   onTogglePublish,
 }) => {
+  // 페이지네이션을 고려한 순번 계산 함수
+  // ID 기준 내림차순 정렬 (ID 12 → 순번 12, ID 1 → 순번 1)
+  const getRowNumber = (index: number): number => {
+    return totalCount - (currentPage - 1) * pageSize - index;
+  };
   return (
     <S.TableWrapper>
       <S.StyledTable role="table" aria-label="강의 목록">
         <thead>
           <tr>
-            <th scope="col">ID</th>
+            <th scope="col">순번</th>
+            <th scope="col">강의 ID</th>
             <th scope="col">강의명</th>
             <th scope="col">카테고리</th>
             <th scope="col">강사명</th>
             <th scope="col">난이도</th>
-            <th scope="col">가격</th>
-            <th scope="col">재생시간</th>
-            <th scope="col">챕터</th>
             <th scope="col">수강생</th>
+            <th scope="col">매출</th>
+            <th scope="col">평균 진행률</th>
+            <th scope="col">완료율</th>
             <th scope="col">공개</th>
             <th scope="col">생성일</th>
             <th scope="col">관리</th>
@@ -105,10 +99,10 @@ const LectureTable: React.FC<LectureTableProps> = ({
         <tbody>
           {courses.length === 0 ? (
             <tr>
-              <td colSpan={12}>등록된 강의가 없습니다.</td>
+              <td colSpan={13}>등록된 강의가 없습니다.</td>
             </tr>
           ) : (
-            courses.map((course) => (
+            courses.map((course, index) => (
               <tr
                 key={course.id}
                 onClick={() => onCourseClick?.(course.id)}
@@ -123,6 +117,7 @@ const LectureTable: React.FC<LectureTableProps> = ({
                 aria-label={`${course.title} 강의 상세보기`}
                 style={{ cursor: onCourseClick ? 'pointer' : 'default' }}
               >
+                <td>{getRowNumber(index)}</td>
                 <td>{course.id}</td>
                 <td>
                   <S.TitleCell>
@@ -130,8 +125,8 @@ const LectureTable: React.FC<LectureTableProps> = ({
                   </S.TitleCell>
                 </td>
                 <td>
-                  <S.CategoryBadge $category={course.category_type}>
-                    {getCategoryLabel(course.category_type)}
+                  <S.CategoryBadge $category={course.category_name}>
+                    {getCategoryLabel(course.category_name)}
                   </S.CategoryBadge>
                 </td>
                 <td>{course.instructor_name}</td>
@@ -140,10 +135,10 @@ const LectureTable: React.FC<LectureTableProps> = ({
                     {getDifficultyLabel(course.difficulty)}
                   </S.DifficultyBadge>
                 </td>
-                <td>{getPriceTypeLabel(course.price_type, course.price)}</td>
-                <td>{formatDuration(course.total_duration)}</td>
-                <td>{course.total_chapters || 0}개</td>
-                <td>{course.total_enrollments || 0}명</td>
+                <td>{course.enrollment_count || 0}명</td>
+                <td>{course.total_revenue?.toLocaleString()}원</td>
+                <td>{course.avg_progress}%</td>
+                <td>{course.completion_rate}%</td>
                 <td>
                   <S.PublishToggle
                     $isPublished={course.is_published}

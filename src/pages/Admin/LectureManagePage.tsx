@@ -2,13 +2,16 @@
  * 강의 관리 페이지 - 강의 목록 조회, 추가, 수정, 삭제 기능 제공
  * 필터/검색, 페이지네이션, 모달을 통한 CRUD 작업 관리
  */
-import { useState, useEffect, useCallback } from 'react';
-import type {
-  CourseApiParams,
-  CourseListItem,
-  CreateCourseRequest,
-} from '../../types/AdminCourseType';
-import { getPaginatedCourses } from '../../data/mockAdminCourseData';
+import { useState, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import type { CourseApiParams, CreateCourseRequest } from '../../types/AdminCourseType';
+import { fetchCourses, createChapter } from '../../api/adminApi';
+import {
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+  useDeleteCourseMutation,
+} from '../../queries/useCourseQueries';
+import { DEFAULT_THUMBNAIL_URL, DEFAULT_INSTRUCTOR_IMAGE } from '../../constants/apiConfig';
 import { Button } from '../../components/Button';
 
 // 하위 컴포넌트 임포트
@@ -16,16 +19,13 @@ import AdminPageLayout from './AdminPageLayout';
 import LectureFilterBar from './LectureFilterBar';
 import LectureTable from './LectureTable';
 import Pagination from '../../components/Pagination';
-import LectureAddModal from './LectureAddModal';
-import LectureDetailModal from './LectureDetailModal';
+import LectureFormModal from './LectureFormModal'; // 통합 모달
 import { AdminPageStyles as S } from './AdminPageStyles';
 
 export default function LectureManagePage() {
   // 1. 상태 정의
-  const [courses, setCourses] = useState<CourseListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [formModalMode, setFormModalMode] = useState<'add' | 'edit'>('add');
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
 
   // API 쿼리 파라미터 상태
@@ -38,39 +38,24 @@ export default function LectureManagePage() {
     is_published: null,
   });
 
-  // API 응답의 페이지네이션 정보 상태
-  const [pagination, setPagination] = useState({
-    total: 0,
-    totalPages: 1,
+  // React Query Mutation 훅
+  const createCourseMutation = useCreateCourseMutation();
+  const updateCourseMutation = useUpdateCourseMutation();
+  const deleteCourseMutation = useDeleteCourseMutation();
+
+  // 2. React Query로 강의 목록 조회 (apiParams 변경되면 자동 재호출)
+  const { data: coursesData, isLoading } = useQuery({
+    queryKey: ['courses', apiParams], // apiParams 변경 시 자동으로 새로 fetch
+    queryFn: () => fetchCourses(apiParams),
+    staleTime: 0, // invalidateQueries 실행 시 즉시 갱신
   });
 
-  // 2. 데이터 흐름 (useEffect)
-  useEffect(() => {
-    const loadCourses = async () => {
-      setLoading(true);
-      try {
-        // 목업 데이터 사용
-        const response = getPaginatedCourses(apiParams.page, apiParams.page_size, {
-          keyword: apiParams.keyword,
-          category_type: apiParams.category_type,
-          difficulty: apiParams.difficulty,
-          is_published: apiParams.is_published,
-        });
-
-        setCourses(response.items);
-        setPagination({
-          total: response.total,
-          totalPages: response.total_pages,
-        });
-      } catch (error) {
-        console.error('강의 목록 로딩 실패:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCourses();
-  }, [apiParams]);
+  // 편의상 변수명 단순화
+  const courses = coursesData?.items ?? [];
+  const pagination = {
+    total: coursesData?.total ?? 0,
+    totalPages: coursesData?.total_pages ?? 1,
+  };
 
   // 3. 핸들러 구현
 
@@ -91,57 +76,169 @@ export default function LectureManagePage() {
     }));
   }, []);
 
-  // 강의 클릭 핸들러 (상세 보기)
+  // 강의 클릭 핸들러 (상세 보기/수정)
   const handleCourseClick = useCallback((courseId: number) => {
     setSelectedCourseId(courseId);
-    setIsDetailModalOpen(true);
+    setFormModalMode('edit');
+    setIsFormModalOpen(true);
   }, []);
 
   // 강의 추가 핸들러
   const handleAddCourse = useCallback(() => {
-    setIsAddModalOpen(true);
+    setSelectedCourseId(null);
+    setFormModalMode('add');
+    setIsFormModalOpen(true);
   }, []);
 
   // 강의 추가 제출 핸들러
-  const handleAddCourseSubmit = useCallback((data: CreateCourseRequest) => {
-    console.log('새 강의 데이터:', data);
-    alert('강의가 추가되었습니다! (목업 데이터는 실제로 추가되지 않습니다)');
-    setIsAddModalOpen(false);
-    // TODO: API 호출 후 목록 갱신
-  }, []);
+  const handleAddCourseSubmit = useCallback(
+    async (data: CreateCourseRequest) => {
+      console.log('새 강의 데이터:', data);
+
+      // 1단계: 강의 생성 (chapters와 missions 제외)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { chapters, missions, ...rest } = data;
+      const courseData: CreateCourseRequest = {
+        ...rest,
+        thumbnail_url: rest.thumbnail_url || DEFAULT_THUMBNAIL_URL, // 빈 값이면 디폴트 이미지
+        instructor_image: rest.instructor_image || DEFAULT_INSTRUCTOR_IMAGE, // 빈 값이면 디폴트 프로필
+        chapters: [], // 빈 배열로 전송
+        missions: [], // 빈 배열로 전송
+      };
+
+      createCourseMutation.mutate(courseData, {
+        onSuccess: async (courseResponse) => {
+          const courseId = courseResponse.id;
+          console.log('강의 생성 성공! ID:', courseId);
+
+          // 2단계: 챕터 순차 생성
+          if (chapters && chapters.length > 0) {
+            console.log(`챕터 ${chapters.length}개 생성 시작...`);
+            try {
+              for (const chapter of chapters) {
+                const chapterData = {
+                  title: chapter.title,
+                  description: chapter.description,
+                  order_number: chapter.order_number,
+                };
+                await createChapter(courseId, chapterData);
+                console.log(`챕터 "${chapter.title}" 생성 완료`);
+              }
+              console.log('모든 챕터 생성 완료!');
+            } catch (chapterError) {
+              console.error('챕터 생성 실패:', chapterError);
+              alert(
+                '강의는 생성되었으나 일부 챕터 추가에 실패했습니다. 강의 수정에서 챕터를 추가해주세요.'
+              );
+              setIsFormModalOpen(false);
+              return;
+            }
+          }
+
+          // 3단계: 미션 생성 (TODO: 미션 API 구현 후 추가)
+          // if (missions && missions.length > 0) { ... }
+
+          alert('강의와 챕터가 성공적으로 추가되었습니다!');
+          setIsFormModalOpen(false);
+          // 목록 새로고침 (React Query가 자동으로 invalidateQueries 처리)
+        },
+        onError: (error) => {
+          console.error('강의 추가 실패:', error);
+          alert('강의 추가에 실패했습니다. 다시 시도해주세요.');
+        },
+      });
+    },
+    [createCourseMutation]
+  );
 
   // 강의 수정 핸들러 (테이블 내 수정 버튼)
   const handleEditCourse = useCallback((courseId: number) => {
     setSelectedCourseId(courseId);
-    setIsDetailModalOpen(true);
+    setFormModalMode('edit');
+    setIsFormModalOpen(true);
   }, []);
 
   // 강의 삭제 핸들러
-  const handleDeleteCourse = useCallback((courseId: number) => {
-    const confirmed = window.confirm('정말 이 강의를 삭제하시겠습니까?');
-    if (confirmed) {
-      console.log('강의 삭제:', courseId);
-      // TODO: 삭제 API 호출 후 목록 갱신
-      alert('강의가 삭제되었습니다. (목업 데이터는 실제로 삭제되지 않습니다)');
-    }
-  }, []);
+  const handleDeleteCourse = useCallback(
+    (courseId: number) => {
+      const confirmed = window.confirm('정말 이 강의를 삭제하시겠습니까?');
+      if (confirmed) {
+        console.log('강의 삭제:', courseId);
+
+        // Mutation 실행
+        deleteCourseMutation.mutate(courseId, {
+          onSuccess: () => {
+            alert('강의가 성공적으로 삭제되었습니다!');
+            // 목록 새로고침 (React Query가 자동으로 invalidateQueries 처리)
+          },
+          onError: (error) => {
+            console.error('강의 삭제 실패:', error);
+            alert('강의 삭제에 실패했습니다. 다시 시도해주세요.');
+          },
+        });
+      }
+    },
+    [deleteCourseMutation]
+  );
 
   // 공개/비공개 토글 핸들러
-  const handleTogglePublish = useCallback((courseId: number, currentStatus: boolean) => {
-    console.log('공개 상태 변경:', courseId, currentStatus);
-    // TODO: 공개 상태 변경 API 호출
-    alert(
-      `강의를 ${currentStatus ? '비공개' : '공개'}로 변경합니다. (목업 데이터는 실제로 변경되지 않습니다)`
+  const handleTogglePublish = (courseId: number, currentStatus: boolean) => {
+    const course = courses.find((c) => c.id === courseId);
+    if (!course) return;
+
+    updateCourseMutation.mutate(
+      {
+        courseId,
+        courseData: {
+          is_published: !currentStatus,
+        },
+      },
+      {
+        onSuccess: () => {
+          alert('공개 상태가 변경되었습니다!');
+        },
+        onError: (error) => {
+          console.error('공개 상태 변경 실패:', error);
+          alert('상태 변경에 실패했습니다. 다시 시도해주세요.');
+        },
+      }
     );
-  }, []);
+  };
 
   // 강의 수정 제출 핸들러
-  const handleUpdateCourse = useCallback((courseId: number, data: CreateCourseRequest) => {
-    console.log('강의 수정 데이터:', courseId, data);
-    alert('강의가 수정되었습니다! (목업 데이터는 실제로 수정되지 않습니다)');
-    setIsDetailModalOpen(false);
-    // TODO: API 호출 후 목록 갱신
-  }, []);
+  const handleUpdateCourse = useCallback(
+    (courseId: number, data: CreateCourseRequest) => {
+      console.log('강의 수정 데이터:', courseId, data);
+
+      // chapters와 missions 제외 (강의 수정 API에서 받지 않음)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { chapters, missions, ...rest } = data;
+
+      // 빈 값이면 디폴트 이미지 사용
+      const courseData = {
+        ...rest,
+        thumbnail_url: rest.thumbnail_url || DEFAULT_THUMBNAIL_URL,
+        instructor_image: rest.instructor_image || DEFAULT_INSTRUCTOR_IMAGE,
+      };
+
+      updateCourseMutation.mutate(
+        { courseId, courseData },
+        {
+          onSuccess: () => {
+            console.log('강의 수정 성공!');
+            alert('강의가 성공적으로 수정되었습니다!');
+            setIsFormModalOpen(false);
+            // 목록 새로고침 (React Query가 자동으로 invalidateQueries 처리)
+          },
+          onError: (error) => {
+            console.error('강의 수정 실패:', error);
+            alert('강의 수정에 실패했습니다. 다시 시도해주세요.');
+          },
+        }
+      );
+    },
+    [updateCourseMutation]
+  );
 
   return (
     <AdminPageLayout
@@ -160,11 +257,14 @@ export default function LectureManagePage() {
           <span>총 {pagination.total}개의 강의</span>
         </S.TableHeader>
 
-        {loading ? (
+        {isLoading ? (
           <S.LoadingContainer>로딩 중...</S.LoadingContainer>
         ) : (
           <LectureTable
             courses={courses}
+            totalCount={pagination.total}
+            currentPage={apiParams.page}
+            pageSize={apiParams.page_size}
             onCourseClick={handleCourseClick}
             onEditClick={handleEditCourse}
             onDeleteClick={handleDeleteCourse}
@@ -181,21 +281,16 @@ export default function LectureManagePage() {
         </S.PaginationWrapper>
       </S.CardBox>
 
-      {/* 강의 추가 모달 */}
-      <LectureAddModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddCourseSubmit}
-      />
-
-      {/* 강의 상세/수정 모달 */}
-      <LectureDetailModal
-        isOpen={isDetailModalOpen}
+      {/* 강의 추가/수정 통합 모달 */}
+      <LectureFormModal
+        isOpen={isFormModalOpen}
+        mode={formModalMode}
         courseId={selectedCourseId}
         onClose={() => {
-          setIsDetailModalOpen(false);
+          setIsFormModalOpen(false);
           setSelectedCourseId(null);
         }}
+        onSubmit={handleAddCourseSubmit}
         onUpdate={handleUpdateCourse}
       />
     </AdminPageLayout>
