@@ -34,7 +34,11 @@ const ProgressWrapper = styled.div<{ $variant: Variant }>`
 
 const ProgressFill = styled.div<{ $value: number; $max: number; $variant: Variant }>`
     width: ${({ $value, $max }) =>
-    `${Math.min(100, Math.max(0, ($value / $max) * 100))}%`};
+    $max > 0
+        ? `${Math.min(100, Math.max(0, ($value / $max) * 100))}%`
+        : '0%'
+    };
+    
     height: 100%;
     background-color: ${({ theme }) => theme.colors.primary300};
     transition: width 0.3s;
