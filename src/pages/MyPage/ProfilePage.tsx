@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../hooks/useApiData';
-import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import SvgProfileImage from '../../assets/images/profile-user-default.png';
+import { useProfile } from '../../queries/useUserQueries';
 
 const ProfilePage: React.FC = () => {
-  const { data, loading, error } = useApiData(mockProfileData, 500);
+  const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
 
   const [name, setName] = useState('');
   const [gender, setGender] = useState('none');
@@ -18,11 +17,11 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      setName(data.name);
-      setGender(data.gender);
-      setBirthdate(data.birthdate || '');
-      setImagePreview(null); // 초기 프리뷰 없음
-      setSelectedFile(null); // 초기 선택 파일 없음
+      // 프로필 데이터가 로드되면 상태 초기화
+      setName(data.data?.nickname || '');
+      setGender(data.data?.gender || 'none');
+      setBirthdate(data.data?.birth_date || '');
+      setImagePreview(data.data?.profile_image_url || null);
     }
   }, [data]);
 
@@ -44,11 +43,9 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (isLoading) return <LoadingSpinner />;
+  if (isError) return <ErrorMessage message="프로필 정보를 불러오는 중 오류가 발생했습니다." />;
   if (!data) return null;
-  console.log('프로필 데이터:', data.profileImageUrl);
-  const displayImageUrl = imagePreview || data.profileImageUrl;
 
   return (
     <S.Form onSubmit={handleSubmit}>
@@ -57,8 +54,8 @@ const ProfilePage: React.FC = () => {
         <S.ProfileContainer>
           <S.ImageWrapper>
             <S.ImagePreview>
-              {displayImageUrl ? (
-                <img src={displayImageUrl} alt="현재 프로필 이미지" />
+              {imagePreview ? (
+                <img src={imagePreview} alt="현재 프로필 이미지" />
               ) : (
                 <img src={SvgProfileImage} alt="기본 프로필 이미지" />
               )}

@@ -7,6 +7,7 @@ import LectureDetailLayout from "../layouts/LectureDetailLayout";
 const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
 const SignUpPage = lazy(() => import("../pages/Auth/SignUpPage"));
 const MainLayout = lazy(() => import("../layouts/MainLayout"));
+const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
 const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
 const DashBoardPage = lazy(() => import("../pages/Admin/DashBoardPage"));
 const LectureManagePage = lazy(() => import("../pages/Admin/LectureManagePage"));
@@ -56,12 +57,6 @@ export default function AppRouter() {
                     <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
                     <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
                     {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
-                    
-                    {/* 관리자용 페이지 개발 후에는 일바 */}
-                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
-                    <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
-                    <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
-                    <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
 
                     <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}> {/* (ROUTES.MYPAGE = "/mypage" 라고 가정) */}
                         <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
@@ -74,6 +69,14 @@ export default function AppRouter() {
                 <Route element={<LectureDetailLayout/>}>
                     <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
                     <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
+                </Route>
+
+                {/* 관리자 전용 레이아웃 */}
+                <Route element={<AdminLayout />}>
+                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
+                    <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
+                    <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
+                    <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
                 </Route>
 
                 {/* LectureRoom 전용 레이아웃 */}

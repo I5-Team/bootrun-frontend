@@ -1,9 +1,11 @@
-// src/components/common/Pagination.tsx
-
+/**
+ * 페이지네이션 공통 컴포넌트
+ * 관리자 페이지 및 기타 목록 페이지에서 사용
+ */
 import React from 'react';
 import styled from 'styled-components';
 
-// (임시) 좌우 화살표 아이콘
+// 좌우 화살표 아이콘
 const PrevIcon = () => <>＜</>;
 const NextIcon = () => <>＞</>;
 
@@ -14,21 +16,14 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   // 렌더링할 페이지가 없거나 1페이지뿐이면 아무것도 표시하지 않음
   if (totalPages <= 1) {
     return null;
   }
 
-  // (추후 확장) 페이지 번호 목록을 렌더링하는 로직
-  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   return (
-    <S.Nav>
+    <S.Nav role="navigation" aria-label="페이지네이션">
       <S.PageButton
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
@@ -37,7 +32,8 @@ const Pagination: React.FC<PaginationProps> = ({
         <PrevIcon />
       </S.PageButton>
 
-      <S.PageInfo>
+      <S.PageInfo aria-live="polite" aria-atomic="true">
+        <span className="sr-only">현재 페이지: </span>
         <strong>{currentPage}</strong> / {totalPages}
       </S.PageInfo>
 
@@ -80,6 +76,11 @@ const S = {
 
     &:not(:disabled):hover {
       background: ${({ theme }) => theme.colors.gray100};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
+      outline-offset: 2px;
     }
   `,
   PageInfo: styled.span`

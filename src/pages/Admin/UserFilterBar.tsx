@@ -56,7 +56,9 @@ const UserFilterBar: React.FC<UserFilterBarProps> = ({
   return (
     <S.CardBox as="form" onSubmit={handleSubmit}>
       <S.FilterGroup>
+        <label htmlFor="keyword-filter">검색</label>
         <S.Input
+          id="keyword-filter"
           type="text"
           name="keyword"
           placeholder="이메일, 닉네임 검색"

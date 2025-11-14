@@ -26,9 +26,7 @@ const StatsCardArea: React.FC<StatsCardAreaProps> = ({ stats, dailyStats }) => {
 
   // Swagger 기준, '신규 회원 수'는 dailyStats의 마지막 항목(오늘)에서 가져옵니다.
   const todayNewUsers =
-    dailyStats && dailyStats.length > 0
-      ? dailyStats[dailyStats.length - 1].new_users
-      : 0;
+    dailyStats && dailyStats.length > 0 ? dailyStats[dailyStats.length - 1].new_users : 0;
 
   return (
     <S.StatsGrid>
@@ -63,13 +61,20 @@ const StatsCardArea: React.FC<StatsCardAreaProps> = ({ stats, dailyStats }) => {
 const S = {
   StatsGrid: styled.section`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    @media (${({ theme }) => theme.devices.laptop}) {
-      grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.6rem, 3vw, 2.4rem);
+    align-items: stretch;
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    @media (${({ theme }) => theme.devices.mobile}) {
-      grid-template-columns: 1fr;
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+      gap: 1.4rem;
+    }
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+      gap: 1.2rem;
     }
   `,
 };

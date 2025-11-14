@@ -9,10 +9,7 @@ interface LectureFilterBarProps {
   onFilterChange: (newFilters: Partial<CourseApiParams>) => void;
 }
 
-const LectureFilterBar: React.FC<LectureFilterBarProps> = ({
-  initialFilters,
-  onFilterChange,
-}) => {
+const LectureFilterBar: React.FC<LectureFilterBarProps> = ({ initialFilters, onFilterChange }) => {
   // 1. 컴포넌트 내부에서 사용할 필터 상태 (props와 분리)
   const [filters, setFilters] = useState(initialFilters);
 
@@ -22,23 +19,20 @@ const LectureFilterBar: React.FC<LectureFilterBarProps> = ({
   }, [initialFilters]);
 
   // 3. input, select 변경 시 내부 상태만 업데이트
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target;
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
 
-      // 'is_published'는 boolean 또는 null로 변환
-      let finalValue: string | boolean | null = value;
-      if (name === 'is_published') {
-        finalValue = value === 'null' ? null : value === 'true';
-      }
+    // 'is_published'는 boolean 또는 null로 변환
+    let finalValue: string | boolean | null = value;
+    if (name === 'is_published') {
+      finalValue = value === 'null' ? null : value === 'true';
+    }
 
-      setFilters((prev) => ({
-        ...prev,
-        [name]: finalValue,
-      }));
-    },
-    []
-  );
+    setFilters((prev) => ({
+      ...prev,
+      [name]: finalValue,
+    }));
+  }, []);
 
   // 4. "검색" 버튼 클릭 시, 부모(LectureManagePage)에게 변경 사항 전송
   const handleSubmit = useCallback(
@@ -153,7 +147,7 @@ const S = {
   `,
   Select: styled.select`
     height: 4.2rem;
-    padding: 0 1.2rem;
+    padding: 0 2rem 0 1.2rem;
     border: 1px solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.sm};
     font-size: 1.4rem;
