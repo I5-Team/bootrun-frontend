@@ -41,6 +41,7 @@ export const login = async (payload: LoginPayload): Promise<TokenResponseData> =
     // [핵심] 토큰 저장
     localStorage.setItem('accessToken', response.data.data.access_token);
     localStorage.setItem('refreshToken', response.data.data.refresh_token);
+    localStorage.setItem('role', response.data.data.user.role);
     return response.data.data;
   } else {
     // 오류 시 목업 반환

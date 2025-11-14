@@ -4,6 +4,8 @@ import { ROUTES } from './RouteConfig';
 import { LoadingSpinner } from '../components/HelperComponents';
 import LectureDetailLayout from '../layouts/LectureDetailLayout';
 import PublicOnly from './PublicOnly';
+import RequireAuth from './RequierAuth';
+import RequireAdmin from './RequireAdmin';
 
 const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
@@ -42,55 +44,56 @@ export default function AppRouter() {
     <BrowserRouter basename="/bootrun-frontend">
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          {/* 비인증용 페이지 */}
+          {/* 그룹 1: 비로그인 사용자만 접근 (로그인, 회원가입) */}
           <Route element={<PublicOnly />}>
             <Route element={<AuthLayout />}>
               <Route path={ROUTES.LOGIN} element={<LoginPage />} />
               <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
-              {/* 인증 사용자용 페이지 */}
             </Route>
           </Route>
+          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세) 
+          MainLayout/Header에서 인증 여부에 따라 접근 제어 처리
+            */}
           <Route element={<MainLayout />}>
             <Route path={ROUTES.HOME} element={<MainPage />} />
-
-            {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
             <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
             <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />
-            <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
-            <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
-            {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
+          </Route>
+          <Route element={<LectureDetailLayout />}>
+            <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
+          </Route>
 
-            <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}>
-              {' '}
-              {/* (ROUTES.MYPAGE = "/mypage" 라고 가정) */}
-              <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
-              <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} />{' '}
-              {/* /mypage/orders */}
-              <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} />{' '}
-              {/* /mypage/account */}
+          {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
+          <Route element={<RequireAuth />}>
+            <Route element={<MainLayout />}>
+              <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
+              <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
+              <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
+
+              <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}>
+                <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
+                <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} />{' '}
+                <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} />{' '}
+              </Route>
+              <Route element={<LectureRoomLayout />}>
+                <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
+              </Route>
             </Route>
           </Route>
 
-          {/* LectureDetail 전용 레이아웃 */}
-          <Route element={<LectureDetailLayout />}>
-            <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
-            <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
+          <Route element={<RequireAuth />}>
+            <Route element={<RequireAdmin />}>
+              {/* 그룹 4: 관리자 전용 레이아웃 (대시보드, 강의 관리, 결제 관리, 사용자 관리) */}
+              <Route element={<AdminLayout />}>
+                <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
+                <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
+                <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
+                <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
+              </Route>
+            </Route>
           </Route>
 
-          {/* 관리자 전용 레이아웃 */}
-          <Route element={<AdminLayout />}>
-            <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
-            <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
-            <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
-            <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
-          </Route>
-
-          {/* LectureRoom 전용 레이아웃 */}
-          <Route element={<LectureRoomLayout />}>
-            <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
-          </Route>
-
-          {/* 404 페이지 */}
+          {/* 그룹 5: 에러 페이지 */}
           <Route element={<ErrorLayout />}>
             <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
           </Route>
