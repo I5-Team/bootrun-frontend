@@ -5,7 +5,7 @@ import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents'
 
 // Props 타입 정의
 interface TableAreaProps {
-  courseStats: CourseStat[] | null;
+  courseStats?: CourseStat[] | null;
 }
 
 const TableArea: React.FC<TableAreaProps> = ({ courseStats }) => {
