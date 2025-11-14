@@ -49,27 +49,10 @@ const StyledCardGrid = styled.ul`
 
 // components
 const NoResultPage = () => {
-    const navigate = useNavigate();
-
-    const handleGoToLectures = () => {
-        navigate(ROUTES.LECTURE_LIST);
-    };
-
     return (
         <EmptyState
             icon={<SvgAlert />}
-            title="검색 결과가 없어요"
-            description="다른 키워드로 다시 검색해보세요."
-            buttons={
-                <Button
-                    variant="primary"
-                    size="md"
-                    onClick={handleGoToLectures}
-                    ariaLabel="강의 보러가기"
-                >
-                    강의 보러가기
-                </Button>
-            }
+            subTitle="찾는 조건의 강의가 없습니다."
         />
     );
 }

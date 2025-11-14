@@ -2,7 +2,8 @@ import * as S from './EmptyState.styled';
 
 export type EmptyStateProps = {
   icon: React.ReactNode;
-  title: string;
+  title?: string;
+  subTitle?: string;
   description?: string;
   buttons?: React.ReactNode;
   className?: string;
@@ -12,6 +13,7 @@ export type EmptyStateProps = {
 export default function EmptyState({
   icon,
   title,
+  subTitle, 
   description,
   buttons,
   className,
@@ -23,7 +25,8 @@ export default function EmptyState({
         <S.IconWrapper $animation={iconAnimation}>{icon}</S.IconWrapper>
 
         <S.TextGroup>
-          <S.Title>{title}</S.Title>
+          {title && <S.Title>{title}</S.Title>}
+          {subTitle && <S.SubTitle>{subTitle}</S.SubTitle>}
           {description && <S.Description>{description}</S.Description>}
         </S.TextGroup>
 
