@@ -114,11 +114,11 @@
 
 // ##  관리자 - 대시보드 (Admin Dashboard) - /admin/dashboard
 
-// - [ ] [ ] [ ] 1. GET /admin/dashboard/stats - 대시보드 통계 [필수]
-// - [ ] [ ] [ ] 2. GET /admin/dashboard/daily-stats - 일별 통계 (접속자, 조회수) [필수]
-// - [ ] [ ] [ ] 3. GET /admin/dashboard/revenue-stats - 매출 통계 [필수]
-// - [ ] [ ] [ ] 4. GET /admin/dashboard/course-stats - 강의별 통계 [필수]
-// - [ ] [ ] [ ] 5. GET /admin/dashboard/category-stats - 카테고리별 통계 [추가]
+// - [x] [v] [ ] 1. GET /admin/dashboard/stats - 대시보드 통계 [필수]
+// - [x] [v] [ ] 2. GET /admin/dashboard/daily-stats - 일별 통계 (접속자, 조회수) [필수]
+// - [x] [v] [ ] 3. GET /admin/dashboard/revenue-stats - 매출 통계 [필수]
+// - [x] [v] [ ] 4. GET /admin/dashboard/course-stats - 강의별 통계 [필수]
+// - [x] [v] [ ] 5. GET /admin/dashboard/category-stats - 카테고리별 통계 [추가]
 // - [ ] [ ] [ ] 6. GET /admin/dashboard/settings - 시스템 설정 조회 [추가]
 // - [ ] [ ] [ ] 7. PATCH /admin/dashboard/settings - 시스템 설정 수정 [추가]
 
@@ -126,8 +126,8 @@
 
 // ##  관리자 - 사용자 관리 (Admin Users) - /admin/users
 
-// - [ ] [ ] [ ] 1. GET /admin/users - 사용자 목록 조회 [필수]
-// - [ ] [ ] [ ] 2. GET /admin/users/{user_id} - 사용자 상세 조회 [필수]
+// - [x] [] [ ] 1. GET /admin/users - 사용자 목록 조회 [필수]
+// - [x] [ ] [ ] 2. GET /admin/users/{user_id} - 사용자 상세 조회 [필수]
 // - [ ] [ ] [ ] 3. PATCH /admin/users/{user_id}/activate - 사용자 활성화 [추가]
 // - [ ] [ ] [ ] 4. PATCH /admin/users/{user_id}/deactivate - 사용자 비활성화 [추가]
 // - [ ] [ ] [ ] 5. GET /admin/users/{user_id}/learning-report - 사용자 학습 리포트 [선택]
@@ -136,15 +136,18 @@
 
 // ##  관리자 - 강의 관리 (Admin Courses) - /admin/courses
 
-// - [ ] [ ] [ ] 1. GET /admin/courses - 강의 목록 조회 [필수]
-// - [ ] [ ] [ ] 2. POST /admin/courses - 강의 생성 [필수]
-// - [ ] [ ] [ ] 3. PATCH /admin/courses/{course_id} - 강의 수정 [필수]
-// - [ ] [ ] [ ] 4. DELETE /admin/courses/{course_id} - 강의 삭제 [필수]
-// - [ ] [ ] [ ] 5. POST /admin/courses/{course_id}/chapters - 챕터 추가 [필수]
-// - [ ] [ ] [ ] 6. PATCH /admin/courses/{course_id}/chapters/{chapter_id} - 챕터 수정 [필수]
-// - [ ] [ ] [ ] 7. DELETE /admin/courses/{course_id}/chapters/{chapter_id} - 챕터 삭제 [추가]
-// - [ ] [ ] [ ] 8. POST /admin/courses/{course_id}/chapters/{chapter_id}/lectures - 강의 영상 추가 [필수]
-// - [ ] [ ] [ ] 9. PATCH /admin/courses/{course_id}/chapters/{chapter_id}/lectures/{lecture_id} - 강의 영상 수정 [필수]
+// - [x] [x] [ ] 1. GET /admin/courses - 강의 목록 조회 [필수]
+// - [x] [x] [ ] 1. GET /admin/courses/{course_id} - 강의 상세 조회 [추가]
+// - [x] [x] [ ] 2. POST /admin/courses - 강의 생성 [필수]
+// - [x] [x] [ ] 3. PATCH /admin/courses/{course_id} - 강의 수정 [필수]
+// - [x] [x] [ ] 4. DELETE /admin/courses/{course_id} - 강의 삭제 [필수]
+// - [x] [x] [ ] ?. GET /admin/courses/{course_id}/chapters - 챕터 목록 조회 [?]
+// - [x] [x] [ ] 5. POST /admin/courses/{course_id}/chapters - 챕터 추가 [필수]
+// - [x] [x] [ ] 6. PATCH /admin/courses/{course_id}/chapters/{chapter_id} - 챕터 수정 [필수]
+// - [x] [x] [ ] 7. DELETE /admin/courses/{course_id}/chapters/{chapter_id} - 챕터 삭제 [추가]
+// - [x] [x] [ ] ?. GET /admin/courses/{course_id}/chapters/{chapter_id}/lectures - 강의 영상 목록 조회 [?]
+// - [x] [x] [ ] 8. POST /admin/courses/{course_id}/chapters/{chapter_id}/lectures - 강의 영상 추가 [필수]
+// - [x] [x] [ ] 9. PATCH /admin/courses/{course_id}/chapters/{chapter_id}/lectures/{lecture_id} - 강의 영상 수정 [필수]
 // - [ ] [ ] [ ] 10. DELETE /admin/courses/{course_id}/chapters/{chapter_id}/lectures/{lecture_id} - 강의 영상 삭제 [추가]
 // - [ ] [ ] [ ] 11. POST /admin/courses/{course_id}/publish - 강의 공개 [추가]
 // - [ ] [ ] [ ] 12. POST /admin/courses/{course_id}/unpublish - 강의 비공개 [추가]
@@ -204,8 +207,10 @@ export const API_URL = {
     CHANGE_PASSWORD: '/users/me/change-password', // 비밀번호 변경       (POST)
     DELETE_ACCOUNT: '/users/me', // 회원 탈퇴          (DELETE)
     NOTIFICATIONS: '/users/me/notifications', // 내 알림 목록        (GET)
+
     PROFILE_IMAGE: '/users/me/profile-image', // 프로필 이미지 업로드 (POST)
     PROFILE_IMAGE_DELETE: '/users/me/profile-image', // 프로필 이미지 삭제  (DELETE)
+
   },
   /* 강의 */
   COURSE: {
@@ -281,17 +286,29 @@ export const API_URL = {
     DEACTIVATE_USER: (userId: number) => `/admin/users/${userId}/deactivate`, // 사용자 비활성화   (PATCH)
     LEARNING_REPORT: (userId: number) => `/admin/users/${userId}/learning-report`, // 사용자 학습 리포트 (GET)
   },
-  /* 관리자 - 강의 관리 */
+  /* 관리자 - 강의 관리(겹치는 부분 삭제 필요) */
   ADMIN_COURSES: {
     COURSE_LIST: '/admin/courses', // 강의 목록 조회          (GET)
+
+    COURSE_DETAIL: (courseId: number) => `/admin/courses/${courseId}`, // 강의 상세 조회   (GET)
     CREATE_COURSE: '/admin/courses', // 강의 생성              (POST)
     UPDATE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 수정              (PATCH)
     DELETE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 삭제              (DELETE)
+    GET_CHAPTERS: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 목록 조회  (GET)
+
+    CREATE_COURSE: '/admin/courses', // 강의 생성              (POST)
+    UPDATE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 수정              (PATCH)
+    DELETE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 삭제              (DELETE)
+
     ADD_CHAPTER: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 추가        (POST)
     UPDATE_CHAPTER: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}`, // 챕터 수정 (PATCH)
     DELETE_CHAPTER: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}`, // 챕터 삭제 (DELETE)
+
+    GET_LECTURES: (courseId: number, chapterId: number) =>
+      `/admin/courses/${courseId}/chapters/${chapterId}/lectures`, // 강의 영상 목록 조회 (GET)
+
     ADD_LECTURE: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}/lectures`, // 강의 영상 추가 (POST)
     UPDATE_LECTURE: (courseId: number, chapterId: number, lectureId: number) =>
@@ -341,3 +358,7 @@ export const API_URL = {
     DELETE_MISSION: (missionId: number) => `/admin/missions/${missionId}`, // 미션 삭제 (DELETE)
   },
 };
+// 이미지 처리(디폴트 이미지)
+export const DEFAULT_THUMBNAIL_URL = '/assets/images/OG.jpg';
+export const DEFAULT_INSTRUCTOR_IMAGE = '/assets/images/profile-default.jpg';
+

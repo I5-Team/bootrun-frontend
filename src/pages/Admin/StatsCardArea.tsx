@@ -16,8 +16,8 @@ const formatView = (amount: number) => `${amount.toLocaleString()}회`;
 
 // Props 타입 정의
 interface StatsCardAreaProps {
-  stats: AdminStats | null;
-  dailyStats: DailyStat[] | null;
+  stats?: AdminStats | null;
+  dailyStats?: DailyStat[] | null;
 }
 
 const StatsCardArea: React.FC<StatsCardAreaProps> = ({ stats, dailyStats }) => {

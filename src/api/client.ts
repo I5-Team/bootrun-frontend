@@ -1,3 +1,4 @@
+
 import qs from 'qs';
 import axios, { AxiosError } from 'axios';
 import { logout, refreshToken } from './authApi';
@@ -10,6 +11,7 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+
   paramsSerializer: {
     serialize: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
   },
@@ -22,10 +24,12 @@ apiClient.interceptors.request.use(
     // token 이 유효한지 확인
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 추가
+
     }
     return config;
   },
   (error) => {
+
     return Promise.reject(error); //
   }
 );
@@ -73,5 +77,6 @@ apiClient.interceptors.response.use(
       }
       return Promise.reject(refreshError); // 갱신 오류 반환
     }
+
   }
 );

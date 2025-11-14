@@ -52,6 +52,8 @@ export const AdminPageStyles = {
     display: flex;
     flex-direction: column;
     gap: clamp(1.6rem, 3vw, 2.4rem);
+    min-height: auto;
+    width: 100%;
   `,
 
   CardBox: styled.div`

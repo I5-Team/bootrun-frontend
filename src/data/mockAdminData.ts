@@ -33,7 +33,7 @@ const createChartData = (days: number) => {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     const dateString = date.toISOString().split('T')[0];
-    
+
     data.push({
       date: dateString,
       visitors: Math.floor(Math.random() * 100) + 50,
@@ -41,24 +41,29 @@ const createChartData = (days: number) => {
       revenue: Math.floor(Math.random() * 500000) + 100000,
       enrollments: Math.floor(Math.random() * 10) + 1,
       new_users: Math.floor(Math.random() * 5) + 1, // StatsCardArea ④
-      
+
       payment_count: Math.floor(Math.random() * 20),
       refund_amount: Math.floor(Math.random() * 50000),
       refund_count: Math.floor(Math.random() * 3),
-      get net_revenue() { return this.revenue - this.refund_amount; }
+      get net_revenue() {
+        return this.revenue - this.refund_amount;
+      },
     });
   }
   return data;
 };
 
-// 7일치 동적 데이터 생성
+// 기간별 동적 데이터 생성
+const chartData1Day = createChartData(1);
 const chartData7Days = createChartData(7);
+const chartData30Days = createChartData(30);
+const chartData365Days = createChartData(365);
 
 /**
  * /admin/dashboard/daily-stats
  * (ChartArea - 일별 접속, 조회, 매출 차트 데이터)
  */
-export const mockDailyStats: DailyStat[] = chartData7Days.map(d => ({
+export const mockDailyStats: DailyStat[] = chartData7Days.map((d) => ({
   date: d.date,
   visitors: d.visitors,
   views: d.views,
@@ -69,9 +74,10 @@ export const mockDailyStats: DailyStat[] = chartData7Days.map(d => ({
 
 /**
  * /admin/dashboard/revenue-stats
- * (매출 상세 차트용 데이터 - 필요시 사용)
+ * (매출 상세 차트용 데이터 - 기간별)
  */
-export const mockRevenueStats: RevenueStat[] = chartData7Days.map(d => ({
+// 1일 데이터
+export const mockRevenueStats1Day: RevenueStat[] = chartData1Day.map((d) => ({
   date: d.date,
   revenue: d.revenue,
   payment_count: d.payment_count,
@@ -79,6 +85,39 @@ export const mockRevenueStats: RevenueStat[] = chartData7Days.map(d => ({
   refund_count: d.refund_count,
   net_revenue: d.net_revenue,
 }));
+
+// 7일 데이터 (기본값)
+export const mockRevenueStats7Days: RevenueStat[] = chartData7Days.map((d) => ({
+  date: d.date,
+  revenue: d.revenue,
+  payment_count: d.payment_count,
+  refund_amount: d.refund_amount,
+  refund_count: d.refund_count,
+  net_revenue: d.net_revenue,
+}));
+
+// 30일 데이터
+export const mockRevenueStats30Days: RevenueStat[] = chartData30Days.map((d) => ({
+  date: d.date,
+  revenue: d.revenue,
+  payment_count: d.payment_count,
+  refund_amount: d.refund_amount,
+  refund_count: d.refund_count,
+  net_revenue: d.net_revenue,
+}));
+
+// 365일 데이터
+export const mockRevenueStats365Days: RevenueStat[] = chartData365Days.map((d) => ({
+  date: d.date,
+  revenue: d.revenue,
+  payment_count: d.payment_count,
+  refund_amount: d.refund_amount,
+  refund_count: d.refund_count,
+  net_revenue: d.net_revenue,
+}));
+
+// 기본 export (하위 호환성)
+export const mockRevenueStats: RevenueStat[] = mockRevenueStats7Days;
 
 /**
  * /admin/dashboard/course-stats

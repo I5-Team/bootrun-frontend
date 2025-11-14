@@ -18,8 +18,8 @@ const COLORS = ['#0066FF', '#2E6FF2', '#B5CEFF', '#DEE8FF', '#8B38FF'];
 
 // Props 타입 정의
 interface ProgressAreaProps {
-  categoryStats: CategoryStat[] | null;
-  courseStats: CourseStat[] | null;
+  categoryStats?: CategoryStat[] | null;
+  courseStats?: CourseStat[] | null;
 }
 
 const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats }) => {
@@ -81,11 +81,9 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats 
           {!loading && !categoryStats && <ErrorMessage message="데이터 없음" />}
           {categoryStats && (
             <S.ChartContent aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={320} minHeight={320}>
                 <PieChart>
                   <Pie
-                    // 3. recharts의 타입 정의가 엄격하지 않아 any[] 캐스팅이 필요할 수 있으나,
-                    //    우선 캐스팅 없이 시도합니다. 오류 시 'as any[]'가 필요합니다.
                     data={categoryStats}
                     cx="50%"
                     cy="50%"
@@ -108,7 +106,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats 
         </S.ChartWrapper>
       </S.CardBox>
 
-      {/* (차트 2: 전체 강좌 평균 진도율 - RadialBarChart) */}
+      {/* 차트 2: 전체 강좌 평균 진도율 - RadialBarChart */}
       <S.CardBox
         role="group"
         aria-labelledby={progressTitleId}
@@ -122,7 +120,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats 
           {loading && <LoadingSpinner />}
           {courseStats && (
             <S.ChartContent aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={320} minHeight={320}>
                 <RadialBarChart
                   cx="50%"
                   cy="50%"
@@ -191,14 +189,14 @@ const S = {
   ChartWrapper: styled.div`
     position: relative;
     width: 100%;
+    height: clamp(24rem, 45vw, 32rem);
     max-width: 100%;
-    min-height: clamp(24rem, 45vw, 32rem);
     display: flex;
     align-items: center;
     justify-content: center;
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      min-height: 24rem;
+      height: 24rem;
     }
   `,
   ChartContent: styled.div`

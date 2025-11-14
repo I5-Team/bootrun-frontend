@@ -68,23 +68,59 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message="정보를 불러올 수 없습니다." />}
       {detail && (
-        <S.DetailGrid>
-           
-          <dt>이메일</dt> <dd>{detail.email}</dd>
-          <dt>닉네임</dt> <dd>{detail.nickname}</dd>
-          <dt>가입일</dt> <dd>{new Date(detail.created_at).toLocaleString()}</dd>
-          <dt>최근 접속</dt> <dd>{new Date(detail.last_login).toLocaleString()}</dd>
-          <dt>총 수강</dt> <dd>{detail.total_enrollments}건</dd>
-          <dt>총 결제액</dt> <dd>{detail.total_spent.toLocaleString()}원</dd>
-           <dt>
-            상태
-            </dt>
-            <dd>
+        <S.DetailContainer>
+          {/* 기본 정보 섹션 */}
+          <S.Section>
+            <S.SectionTitle>기본 정보</S.SectionTitle>
+            <S.DetailGrid>
+              <dt>이메일</dt> <dd>{detail.email}</dd>
+              <dt>닉네임</dt> <dd>{detail.nickname}</dd>
+              <dt>성별</dt> <dd>{detail.gender || '-'}</dd>
+              <dt>생년월일</dt> <dd>{detail.birth_date || '-'}</dd>
+              <dt>권한</dt> <dd>{detail.role}</dd>
+              <dt>로그인 제공자</dt> <dd>{detail.provider || 'local'}</dd>
+              <dt>가입일</dt> <dd>{new Date(detail.created_at).toLocaleString()}</dd>
+              <dt>최근 접속</dt> <dd>{new Date(detail.last_login).toLocaleString()}</dd>
+              <dt>상태</dt>
+              <dd>
                 <S.StatusBadge $active={detail.is_active}>
-                    {detail.is_active ? '활성' : '비활성'}
-                  </S.StatusBadge>
-            </dd>
-        </S.DetailGrid>
+                  {detail.is_active ? '활성' : '비활성'}
+                </S.StatusBadge>
+              </dd>
+            </S.DetailGrid>
+          </S.Section>
+
+          {/* 학습 통계 섹션 */}
+          <S.Section>
+            <S.SectionTitle>학습 통계</S.SectionTitle>
+            <S.DetailGrid>
+              <dt>총 학습 시간</dt> <dd>{detail.total_study_time}분</dd>
+              <dt>총 수강 강의</dt> <dd>{detail.total_enrollments}건</dd>
+              <dt>진행 중 강의</dt> <dd>{detail.active_enrollments}건</dd>
+              <dt>완료한 강의</dt> <dd>{detail.completed_courses}건</dd>
+              <dt>평균 진행률</dt> <dd>{detail.avg_progress_rate}%</dd>
+            </S.DetailGrid>
+          </S.Section>
+
+          {/* 결제 통계 섹션 */}
+          <S.Section>
+            <S.SectionTitle>결제 통계</S.SectionTitle>
+            <S.DetailGrid>
+              <dt>총 결제 횟수</dt> <dd>{detail.total_payments}건</dd>
+              <dt>총 결제액</dt> <dd>{detail.total_spent.toLocaleString()}원</dd>
+              <dt>총 환불액</dt> <dd>{detail.total_refunds.toLocaleString()}원</dd>
+            </S.DetailGrid>
+          </S.Section>
+
+          {/* 활동 통계 섹션 */}
+          <S.Section>
+            <S.SectionTitle>활동 통계</S.SectionTitle>
+            <S.DetailGrid>
+              <dt>작성한 질문</dt> <dd>{detail.total_questions}개</dd>
+              <dt>작성한 댓글</dt> <dd>{detail.total_comments}개</dd>
+            </S.DetailGrid>
+          </S.Section>
+        </S.DetailContainer>
       )}
     </BaseModal>
   );
@@ -92,18 +128,40 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
 
 // --- Styles ---
 const S = {
+  DetailContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    max-height: 60vh;
+    overflow-y: auto;
+  `,
+  Section: styled.section`
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  `,
+  SectionTitle: styled.h3`
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.gray400};
+    margin: 0;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+  `,
   DetailGrid: styled.dl`
     display: grid;
     grid-template-columns: 10rem 1fr;
     gap: 1.2rem;
     font-size: 1.4rem;
-    
+    margin: 0;
+
     dt {
       font-weight: 600;
       color: ${({ theme }) => theme.colors.gray300};
     }
     dd {
       color: ${({ theme }) => theme.colors.surface};
+      margin: 0;
     }
   `,
   Button: styled.button<{ $danger?: boolean }>`

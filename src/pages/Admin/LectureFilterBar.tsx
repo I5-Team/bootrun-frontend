@@ -22,10 +22,16 @@ const LectureFilterBar: React.FC<LectureFilterBarProps> = ({ initialFilters, onF
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
-    // 'is_published'는 boolean 또는 null로 변환
+    // 'null' 문자열을 실제 null로 변환
     let finalValue: string | boolean | null = value;
-    if (name === 'is_published') {
-      finalValue = value === 'null' ? null : value === 'true';
+
+    // 'null' 문자열 → null로 변환
+    if (value === 'null') {
+      finalValue = null;
+    }
+    // 'is_published'는 boolean으로 변환
+    else if (name === 'is_published') {
+      finalValue = value === 'true';
     }
 
     setFilters((prev) => ({

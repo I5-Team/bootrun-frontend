@@ -1,10 +1,16 @@
+
+// 관리자 - 사용자 관리 훅 모음
+
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { activateUser, deactivateUser, fetchUsers, fetchUserDetail } from '../api/adminApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { activateUser, deactivateUser, fetchUsers } from '../api/adminApi';
+
 import type { UserApiParams } from '../types/AdminUserType';
 import { deleteAccount, fetchProfile, updateProfile, uploadProfileImage } from '../api/userApi';
 import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
 import { useNavigate } from 'react-router-dom';
 import { adminUserKeys, userKeys } from './queryKeys';
+
 
 /**
  * [Query] 내 프로필 정보 조회
@@ -79,6 +85,7 @@ export const useDeleteAccount = () => {
   });
 };
 
+
 /**
  * 사용자 목록 조회 쿼리 훅
  */
@@ -89,6 +96,19 @@ export const useUserListQuery = (params: UserApiParams) => {
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
 };
+
+
+/**
+ * 사용자 상세 조회 쿼리 훅
+ */
+export const useUserDetailQuery = (userId: number) => {
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => fetchUserDetail(userId),
+    enabled: !!userId, // userId가 있을 때만 쿼리 실행
+  });
+};
+
 
 /**
  * 사용자 활성화/비활성화 훅

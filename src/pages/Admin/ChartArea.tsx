@@ -33,7 +33,7 @@ interface CustomTooltipProps {
 
 // 3. Props 타입 정의
 interface ChartAreaProps {
-  dailyStats: DailyStat[] | null;
+  dailyStats?: DailyStat[] | null;
 }
 
 // 4. 헬퍼 함수
@@ -141,7 +141,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
           {!loading && !dailyStats && <ErrorMessage message="데이터 없음" />}
           {dailyStats && (
             <S.ChartContent aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <LineChart data={dailyStats}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="date" fontSize="1.2rem" />
@@ -178,7 +178,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
           {loading && <LoadingSpinner />}
           {dailyStats && (
             <S.ChartContent aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <BarChart data={dailyStats}>
                   {/* ... (XAxis, YAxis, Tooltip, Legend) ... */}
                   <Bar dataKey="views" name="조회수" fill="#B5CEFF" />
@@ -205,7 +205,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
           {loading && <LoadingSpinner />}
           {dailyStats && (
             <S.ChartContent aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <LineChart data={dailyStats}>
                   {/* ... (XAxis, Tooltip, Legend) ... */}
                   <YAxis fontSize="1.2rem" tickFormatter={formatCurrency} />
