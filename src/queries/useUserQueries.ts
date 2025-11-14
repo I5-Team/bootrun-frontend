@@ -3,8 +3,6 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { activateUser, deactivateUser, fetchUsers, fetchUserDetail } from '../api/adminApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import type { UserApiParams } from '../types/AdminUserType';
 import { deleteAccount, fetchProfile, updateProfile, uploadProfileImage } from '../api/userApi';
 import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
