@@ -1,20 +1,29 @@
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { login, logout, verifyToken } from '../api/authApi';
-import type { LoginPayload } from '../types/AuthType';
+import {
+  confirmEmailVerification,
+  login,
+  logout,
+  register,
+  requestEmailVerification,
+  verifyToken,
+} from '../api/authApi';
+import type {
+  EmailVerificationConfirmPayload,
+  EmailVerificationRequestPayload,
+  LoginPayload,
+  RegisterPayload,
+} from '../types/AuthType';
 import type { ResponseError } from '../types/UserType';
 import { useNavigate } from 'react-router-dom';
-
-export const authKeys = {
-  all: ['auth'] as const,
-  me: ['auth', 'me'] as const,
-};
+import { authKeys, userKeys } from './queryKeys';
 
 export const useVerifyAuth = () => {
   const queryClient = useQueryClient();
+  // 토큰 검증 쿼리
 
   const query = useQuery({
-    queryKey: authKeys.me, // 고정된 쿼리 키
+    queryKey: authKeys.verify, // 고정된 쿼리 키
     queryFn: verifyToken, // API 함수
     retry: false, // 토큰 검증 실패 시 재시도하지 않음
   });
@@ -24,12 +33,15 @@ export const useVerifyAuth = () => {
       // 토큰이 유효할 때
       console.log('토큰 검증 성공:', query.data);
 
-      queryClient.setQueryData(['users', 'me'], query.data); // 사용자 데이터 캐시에 저장
+      queryClient.setQueryData(userKeys.me, query.data); // 사용자 데이터 캐시에 저장
     }
     if (query.error) {
       // 토큰이 유효하지 않을 때
       console.error('토큰 검증 실패:', query.error);
-      queryClient.removeQueries({ queryKey: authKeys.me }); // 사용자 데이터 캐시 삭제
+      queryClient.removeQueries({ queryKey: userKeys.me }); // 사용자 데이터 캐시 삭제
+      localStorage.removeItem('accessToken'); // 로컬 스토리지에서 토큰 삭제
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('role');
     }
   }, [query.data, query.error, queryClient]);
 
@@ -48,9 +60,8 @@ export const useLogin = () => {
     mutationFn: (payload: LoginPayload) => login(payload), // API 함수
     onSuccess: (data) => {
       console.log('로그인 성공:', data);
-      queryClient.setQueryData(authKeys.me, data.user); // 사용자 데이터 캐시에 저장
-      // TODO: 로그인 후 리다이렉트 처리
-      navigate('/'); // 예: 홈 페이지로 이동
+      queryClient.setQueryData(userKeys.me, data.user); // 사용자 데이터 캐시에 저장
+      navigate('/'); // 로그인 성공 시 메인 페이지로 이동
     },
     onError: (error: ResponseError) => {
       console.error('로그인 실패:', error);
@@ -70,6 +81,55 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.clear(); // 모든 캐시 삭제
       navigate('/login'); // 로그아웃 및 로그인 페이지로 이동
+    },
+  });
+};
+
+/**
+ * [Mutation] 이메일 인증 코드 요청
+ */
+export const useRequestEmailVerification = () => {
+  return useMutation({
+    mutationFn: (payload: EmailVerificationRequestPayload) => requestEmailVerification(payload),
+    onSuccess: (data) => {
+      console.log('이메일 인증 코드 요청 성공:', data);
+      alert(data.detail);
+    },
+    onError: (error: ResponseError) => {
+      alert(error.response?.data?.detail || '인증 코드 발송에 실패했습니다.');
+    },
+  });
+};
+
+/**
+ * [Mutation] 이메일 인증 코드 확인
+ */
+export const useConfirmEmailVerification = () => {
+  return useMutation({
+    mutationFn: (payload: EmailVerificationConfirmPayload) => confirmEmailVerification(payload),
+    onSuccess: (data) => {
+      alert(data.message);
+      // (인증 성공 시 로직 추가, 예: isEmailVerified 상태 변경)
+    },
+    onError: (error: ResponseError) => {
+      alert(error.response?.data?.detail || '인증 코드가 올바르지 않습니다.');
+    },
+  });
+};
+
+/**
+ * [Mutation] 회원가입
+ */
+export const useRegister = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: (payload: RegisterPayload) => register(payload),
+    onSuccess: () => {
+      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      navigate('/login'); // ◀ 회원가입 성공 시 로그인 페이지로
+    },
+    onError: (error: ResponseError) => {
+      alert(error.response?.data?.detail || '회원가입에 실패했습니다.');
     },
   });
 };
