@@ -1,9 +1,12 @@
+
 // 관리자 - 강의 관리 훅 모음
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCourse, updateCourse, deleteCourse } from '../api/adminApi';
 import type { CreateCourseRequest } from '../types/AdminCourseType';
-
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchCourses, fetchCoursesDetail } from "../api/coursesApi";
+import type { CoursesApiParams } from "../types/CourseType";
 /**
  * 강의 생성 Mutation 훅
  */
@@ -61,3 +64,29 @@ export const useDeleteCourseMutation = () => {
     },
   });
 };
+
+
+/**
+ * GET /courses
+ * 강의 목록 조회
+ */
+export const useCoursesQuery = (params: CoursesApiParams) => {
+  return useQuery({
+    queryKey: ['courses', params],
+    queryFn: () => fetchCourses(params),
+    placeholderData: keepPreviousData,
+  });
+};
+
+/**
+ * GET /courses/{course_id}
+ * 강의 상세 조회
+ */
+export const useCourseDetailQuery = (course_id: number) => {
+  return useQuery({
+    queryKey: ['courseDetial', course_id],
+    queryFn: () => fetchCoursesDetail(course_id),
+    placeholderData: keepPreviousData,
+  });
+};
+

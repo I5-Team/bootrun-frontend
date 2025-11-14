@@ -1,6 +1,6 @@
 // src/components/common/BaseModal.tsx
 
-import React, { type ReactNode } from 'react';
+import React, { useEffect, type ReactNode } from 'react';
 import styled from 'styled-components';
 // import CloseIcon from '../../assets/icons/icon-close.svg?react';
 
@@ -13,20 +13,28 @@ interface BaseModalProps {
   /** 닫기 버튼 또는 오버레이 클릭 시 호출될 함수 */
   onClose: () => void;
   /** 모달의 제목 (선택 사항) */
-  title?: string;
+  title: string;
   /** 모달의 본문 내용 (React 컴포넌트) */
   children: ReactNode;
   /** 모달의 하단 버튼 영역 (React 컴포넌트) */
   footer?: ReactNode;
 }
 
-const BaseModal: React.FC<BaseModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  footer,
-}) => {
+const BaseModal: React.FC<BaseModalProps> = ({ isOpen, onClose, title, children, footer }) => {
+  const titleId = 'base-modal-title';
+  const descriptionId = 'base-modal-description';
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) {
     return null;
   }
@@ -40,16 +48,21 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
   return (
     <S.Overlay onClick={handleOverlayClick}>
-      <S.ModalContainer>
+      <S.ModalContainer
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+      >
         <S.Header>
-          {title && <S.Title>{title}</S.Title>}
+          <S.Title id={titleId}>{title}</S.Title>
           <S.CloseButton onClick={onClose} aria-label="모달 닫기">
             <CloseIcon />
           </S.CloseButton>
         </S.Header>
 
         {/* 1. 본문(children)이 주입되는 곳 */}
-        <S.Content>{children}</S.Content>
+        <S.Content id={descriptionId}>{children}</S.Content>
 
         {/* 2. 푸터(footer)가 주입되는 곳 */}
         {footer && <S.Footer>{footer}</S.Footer>}

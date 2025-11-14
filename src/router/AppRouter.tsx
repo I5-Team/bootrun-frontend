@@ -1,95 +1,104 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { ROUTES } from "./RouteConfig";
+import { ROUTES } from './RouteConfig';
 import { LoadingSpinner } from '../components/HelperComponents';
-import LectureDetailLayout from "../layouts/LectureDetailLayout";
+import LectureDetailLayout from '../layouts/LectureDetailLayout';
+import PublicOnly from './PublicOnly';
+import RequireAuth from './RequierAuth';
+import RequireAdmin from './RequireAdmin';
 
-const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
-const SignUpPage = lazy(() => import("../pages/Auth/SignUpPage"));
-const MainLayout = lazy(() => import("../layouts/MainLayout"));
-const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
-const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
-const DashBoardPage = lazy(() => import("../pages/Admin/DashBoardPage"));
-const LectureManagePage = lazy(() => import("../pages/Admin/LectureManagePage"));
-const PaymentManagePage = lazy(() => import("../pages/Admin/PaymentManagePage"));
-const UserManagePage = lazy(() => import("../pages/Admin/UserManagePage"));
-const LectureListPage = lazy(() => import("../pages/Lecture/LectureListPage"));
-const LectureSearchPage = lazy(() => import("../pages/Lecture/LectureSearchPage"));
-const LectureDetailPage = lazy(() => import("../pages/Lecture/LectureDetailPage"));
-const ProfilePage = lazy(() => import("../pages/MyPage/ProfilePage"));
-const LecturePaymentPage = lazy(() => import("../pages/Lecture/LecturePaymentPage"));
-const PaymentResultPage = lazy(() => import("../pages/Lecture/PaymentResultPage"));
-const MyLecturePage = lazy(() => import("../pages/Lecture/MyLecturePage"));
-const LectureRoomPage = lazy(() => import("../pages/Lecture/LectureRoomPage"));
-const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
-const ErrorLayout = lazy(() => import("../layouts/ErrorLayout"));
-const MainPage = lazy(() => import("../pages/MainPage"));
-const MyPageLayout = lazy(() => import("../layouts/MypageLayout"));
-const OrderHistorySection = lazy(() => import("../pages/MyPage/OrderHistorySection"));
-const AccountSection = lazy(() => import("../pages/MyPage/AccountSection"));
-const LectureRoomLayout = lazy(() => import("../layouts/LectureRoomLayout"));
-
+const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
+const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
+const MainLayout = lazy(() => import('../layouts/MainLayout'));
+const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
+const AuthLayout = lazy(() => import('../layouts/AuthLayout'));
+const DashBoardPage = lazy(() => import('../pages/Admin/DashBoardPage'));
+const LectureManagePage = lazy(() => import('../pages/Admin/LectureManagePage'));
+const PaymentManagePage = lazy(() => import('../pages/Admin/PaymentManagePage'));
+const UserManagePage = lazy(() => import('../pages/Admin/UserManagePage'));
+const LectureListPage = lazy(() => import('../pages/Lecture/LectureListPage'));
+const LectureSearchPage = lazy(() => import('../pages/Lecture/LectureSearchPage'));
+const LectureDetailPage = lazy(() => import('../pages/Lecture/LectureDetailPage'));
+const ProfilePage = lazy(() => import('../pages/MyPage/ProfilePage'));
+const LecturePaymentPage = lazy(() => import('../pages/Lecture/LecturePaymentPage'));
+const PaymentResultPage = lazy(() => import('../pages/Lecture/PaymentResultPage'));
+const MyLecturePage = lazy(() => import('../pages/Lecture/MyLecturePage'));
+const LectureRoomPage = lazy(() => import('../pages/Lecture/LectureRoomPage'));
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const ErrorLayout = lazy(() => import('../layouts/ErrorLayout'));
+const MainPage = lazy(() => import('../pages/MainPage'));
+const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
+const OrderHistorySection = lazy(() => import('../pages/MyPage/OrderHistorySection'));
+const AccountSection = lazy(() => import('../pages/MyPage/AccountSection'));
+const LectureRoomLayout = lazy(() => import('../layouts/LectureRoomLayout'));
 
 // 사용자 타입별 페이지 인증 처리 예시
 /*
-* 1. 비인증 사용자: 로그인, 회원가입 페이지 (AuthLayout)
-* 2. 인증 사용자: 강의 목록, 강의 상세, 내 강의, 프로필 등 (MainLayout)
-* 3. 관리자 사용자: 관리자 대시보드, 강의 관리, 결제 관리, 사용자 관리 등 (MainLayout)
-*/
+ * 1. 비인증 사용자: 로그인, 회원가입 페이지 (AuthLayout)
+ * 2. 인증 사용자: 강의 목록, 강의 상세, 내 강의, 프로필 등 (MainLayout)
+ * 3. 관리자 사용자: 관리자 대시보드, 강의 관리, 결제 관리, 사용자 관리 등 (MainLayout)
+ */
 
 export default function AppRouter() {
-    return (
-        <BrowserRouter basename="/bootrun-frontend">
-            <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-                {/* 비인증용 페이지 */}
-                <Route element={<AuthLayout/>}>
-                    <Route path={ROUTES.LOGIN} element={<LoginPage/>} />
-                    <Route path={ROUTES.SIGNUP} element={<SignUpPage/>} />
-                    {/* 인증 사용자용 페이지 */}
-                </Route>
-                <Route element={<MainLayout/>}>
-                    <Route path={ROUTES.HOME} element={<MainPage />} />
+  return (
+    <BrowserRouter basename="/bootrun-frontend">
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          {/* 그룹 1: 비로그인 사용자만 접근 (로그인, 회원가입) */}
+          <Route element={<PublicOnly />}>
+            <Route element={<AuthLayout />}>
+              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+              <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
+            </Route>
+          </Route>
+          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세) 
+          MainLayout/Header에서 인증 여부에 따라 접근 제어 처리
+            */}
+          <Route element={<MainLayout />}>
+            <Route path={ROUTES.HOME} element={<MainPage />} />
+            <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
+            <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />
+          </Route>
+          <Route element={<LectureDetailLayout />}>
+            <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
+          </Route>
 
-                    {/* 로그인 여부에 따라 다르게 표시되는 페이지 */}
-                    <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
-                    <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />  
-                    <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
-                    <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
-                    {/* <Route path={ROUTES.PROFILE} element={<ProfilePage />} /> */}
+          {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
+          <Route element={<RequireAuth />}>
+            <Route element={<MainLayout />}>
+              <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
+              <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
+              <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
 
-                    <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}> {/* (ROUTES.MYPAGE = "/mypage" 라고 가정) */}
-                        <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
-                        <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} /> {/* /mypage/orders */}
-                        <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} /> {/* /mypage/account */}
-                    </Route>
-                </Route>
+              <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}>
+                <Route index element={<ProfilePage />} /> {/* /mypage (기본) */}
+                <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} />{' '}
+                <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} />{' '}
+              </Route>
+              <Route element={<LectureRoomLayout />}>
+                <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
+              </Route>
+            </Route>
+          </Route>
 
-                {/* LectureDetail 전용 레이아웃 */}
-                <Route element={<LectureDetailLayout/>}>
-                    <Route path={ROUTES.LECTURE_DETAIL} element={<LectureDetailPage />} />
-                    <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
-                </Route>
+          <Route element={<RequireAuth />}>
+            <Route element={<RequireAdmin />}>
+              {/* 그룹 4: 관리자 전용 레이아웃 (대시보드, 강의 관리, 결제 관리, 사용자 관리) */}
+              <Route element={<AdminLayout />}>
+                <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
+                <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
+                <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
+                <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
+              </Route>
+            </Route>
+          </Route>
 
-                {/* 관리자 전용 레이아웃 */}
-                <Route element={<AdminLayout />}>
-                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<DashBoardPage />} />
-                    <Route path={ROUTES.ADMIN_LECTURE_MANAGE} element={<LectureManagePage />} />
-                    <Route path={ROUTES.ADMIN_PAYMENT_MANAGE} element={<PaymentManagePage />} />
-                    <Route path={ROUTES.ADMIN_USER_MANAGE} element={<UserManagePage />} />
-                </Route>
-
-                {/* LectureRoom 전용 레이아웃 */}
-                <Route element={<LectureRoomLayout/>}>
-                    <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
-                </Route>
-
-                {/* 404 페이지 */}
-                <Route element={<ErrorLayout/>}>
-                    <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
-                </Route>
-            </Routes>
-            </Suspense>
-        </BrowserRouter>
-    )
+          {/* 그룹 5: 에러 페이지 */}
+          <Route element={<ErrorLayout />}>
+            <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  );
 }

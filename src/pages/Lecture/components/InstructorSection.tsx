@@ -1,15 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockInstructorData } from '../../../data/mockLectureData';
-import type { Instructor } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import Profile from '../../../components/Profile';
+import type { CoursesDetailItem } from '../../../types/CourseType';
+import { mockInstructorData } from "../../../data/mockLectureData";
 
+type InstructorSectionProps = {
+  data: CoursesDetailItem;
+}
 
-const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
-  const { data, loading, error } = useApiData<Instructor>(mockInstructorData, 800);
+const InstructorSection = React.forwardRef<HTMLElement, InstructorSectionProps>(({ data }, ref) => {
+  const { instructor_name, instructor_bio, instructor_image } = data;
+  const mockData = mockInstructorData;
 
   return (
     <S.Section ref={ref} id="instructor">
@@ -20,37 +22,37 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
         </S.SectionSubtitle>
       </S.SectionHeader>
 
-      {loading && <LoadingSpinner />}
-      {error && <ErrorMessage message={error.message} />}
       {data && (
         <Instructor.InfoBox>
-          <Profile size={24} src={data.imageUrl} alt={data.title}></Profile>
+          <Profile size={24} src={instructor_image} alt={`${instructor_name} 강사 프로필`}></Profile>
 
           <Instructor.ContentContainer>
             <Instructor.Header>
-              <Instructor.Title>{data.title}</Instructor.Title>
-              <Instructor.SubName>{data.subName}</Instructor.SubName>
+              <Instructor.Name>{instructor_name}</Instructor.Name>
+              <Instructor.SubName>{instructor_bio}</Instructor.SubName>
             </Instructor.Header>
 
-              <Instructor.PositionList>
-                {data.positions.map(pos => (
-                  <li key={pos.text}>
-                    <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
-                      {pos.type === 'current' ? '現' : '前'}
-                    </Instructor.PositionLabel>
-                    <span>{pos.text}</span>
-                  </li>
-                ))}
-              </Instructor.PositionList>
-  
-              {data.experiences.map(exp => (
-                <div key={exp.title}>
-                  <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
-                  <Instructor.ExperienceList>
-                    {exp.items.map(item => <li key={item}>{item}</li>)}
-                  </Instructor.ExperienceList>
-                </div>
+            {/* 임시 데이터로 대체 */}
+            <Instructor.PositionList>
+              {mockData.positions.map(pos => (
+                <li key={pos.text}>
+                  <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
+                    {pos.type === 'current' ? '現' : '前'}
+                  </Instructor.PositionLabel>
+                  <span>{pos.text}</span>
+                </li>
               ))}
+            </Instructor.PositionList>
+
+            {/* 임시 데이터로 대체 */}    
+            {mockData.experiences.map(exp => (
+              <div key={exp.title}>
+                <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
+                <Instructor.ExperienceList>
+                  {exp.items.map(item => <li key={item}>{item}</li>)}
+                </Instructor.ExperienceList>
+              </div>
+            ))}
           </Instructor.ContentContainer>
 
         </Instructor.InfoBox>
@@ -91,20 +93,28 @@ const Instructor = {
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    flex-wrap: wrap;
 
     @media ${({ theme }) => theme.devices.tablet} {
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.8rem;
     }
   `,
-  Title: styled.p`
+  Name: styled.p`
+    white-space: nowrap;
     font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
   `,
   SubName: styled.span`
+    word-break: keep-all;
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray300};
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      width: 75%;
+      text-align: center;
+    }
   `,
   PositionList: styled.ul`
     display: flex;
