@@ -378,7 +378,7 @@ const S = {
   SectionTitle: styled.h2`
     font-size: 1.8rem;
     font-weight: 600;
-    color: ${({ theme }) => theme.colors.gray900};
+    color: ${({ theme }) => theme.colors.surface};
     margin: 0;
     min-width: fit-content;
   `,
