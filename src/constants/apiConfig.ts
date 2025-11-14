@@ -295,7 +295,6 @@ export const API_URL = {
     UPDATE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 수정              (PATCH)
     DELETE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 삭제              (DELETE)
     GET_CHAPTERS: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 목록 조회  (GET)
-
     ADD_CHAPTER: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 추가        (POST)
     UPDATE_CHAPTER: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}`, // 챕터 수정 (PATCH)
