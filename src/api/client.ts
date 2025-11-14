@@ -1,3 +1,4 @@
+import qs from "qs";
 import axios, { AxiosError } from 'axios';
 import { logout, refreshToken } from './authApi';
 
@@ -5,12 +6,13 @@ import { logout, refreshToken } from './authApi';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const apiClient = axios.create({
-  // Axios 인스턴스 생성
-  baseURL: BASE_URL, // 기본 API URL
-  headers: {
-    // 기본 헤더 설정
-    'Content-Type': 'application/json',
-  },
+    baseURL: BASE_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    paramsSerializer: {
+        serialize: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
+    },
 });
 
 // 요청 인터셉터: 모든 요청에 인증 토큰 자동 추가

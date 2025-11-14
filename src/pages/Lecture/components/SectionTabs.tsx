@@ -3,12 +3,16 @@ import type { RefObject } from 'react';
 import type { SectionRefs } from '../../../types/LectureType'; 
 import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailPage.styled";
 import useMediaQuery from '../../../hooks/useMediaQuery';
+import { ROUTES } from '../../../router/RouteConfig';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface StickyNavProps {
   refs: SectionRefs;
 }
 
 export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
+  const { id } = useParams<{id: string}>();
+  const navigate = useNavigate();
   const { isTablet } = useMediaQuery();
   const [activeTab, setActiveTab] = useState('강의 소개');
 
@@ -20,7 +24,7 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
     { name: 'FAQ', ref: refs.faqRef, id: 'faq' },
   ];
   
-  const ctaItem = { name: '수강신청', href: '/payment/1' }; 
+  const ctaItem = { name: '수강신청', href: '#' }; 
 
   const handleNavClick = (
     e: React.MouseEvent, 
@@ -34,6 +38,13 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
       block: 'start', 
     });
   };
+
+  const handleEnrollCourse = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
+    console.log(path);
+    navigate(path);
+  }
   
   return (
     <StickyNavWrapper>
@@ -53,8 +64,8 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
         {!isTablet && 
           <NavCta
             key={ctaItem.name}
-            href={ctaItem.href} // 실제 링크로 이동
-            // onClick={handleCtaClick} (페이지 이동이므로 onClick 제거)
+            href='#' // 실제 링크로 이동
+            onClick={handleEnrollCourse}
           >
             {ctaItem.name}
           </NavCta>

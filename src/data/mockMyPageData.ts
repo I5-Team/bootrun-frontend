@@ -1,4 +1,4 @@
-import type { OrderData } from '../types/ProfileType';
+import type { AccountData, OrderData } from '../types/ProfileType';
 import type { UserProfile } from '../types/UserType';
 
 // 1. ProfilePage용 목업 데이터
@@ -20,7 +20,7 @@ export const mockProfileData: UserProfile = {
   profile_image_url: 'https://via.placeholder.com/150', // 목업 프로필 이미지 URL
 };
 
-// 2. OrderHistoryPage용 목업 데이터
+// // 2. OrderHistoryPage용 목업 데이터
 export const mockOrderData: OrderData = {
   orders: [
     {
@@ -49,7 +49,7 @@ export const mockOrderData: OrderData = {
 };
 
 // // 3. AccountPage용 목업 데이터
-// export const mockAccountData: AccountData = {
-//   email: 'paul-lab@naver.com',
-//   githubEmail: null, // null이면 "GitHub 계정 로그인" 링크 표시
-// };
+export const mockAccountData: AccountData = {
+  email: 'paul-lab@naver.com',
+  githubEmail: null, // null이면 "GitHub 계정 로그인" 링크 표시
+};

@@ -111,3 +111,26 @@ export interface InfoBoxProps {
     error: Error | null;
   }
 }
+
+// 
+export interface TagData {
+    category_type: string,
+    course_type: string,
+    difficulty: string, 
+}
+
+export interface InfoData {
+    title: string,
+    description: string,
+    price: number,
+    // 수강 기한
+    // 모집 인원 
+    // 모집 기간
+    // 교육 기간
+}
+
+export interface InstructorData {
+    instructor_name: string,
+    instructor_bio: string,
+    instructor_image: string,
+}
