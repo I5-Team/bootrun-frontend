@@ -9,6 +9,7 @@ import type {
 import type { UserProfile } from '../types/UserType';
 import { API_URL } from '../constants/apiConfig';
 
+const useMock = false;
 /**
  * POST /auth/login
  * 로그인
@@ -34,16 +35,15 @@ export const login = async (payload: LoginPayload): Promise<TokenResponseData> =
     },
   };
 
-  try {
+  if (!useMock) {
     // 실제 API 호출 시도
     const response = await apiClient.post<{ data: TokenResponseData }>(API_URL.AUTH.LOGIN, payload);
     // [핵심] 토큰 저장
     localStorage.setItem('accessToken', response.data.data.access_token);
     localStorage.setItem('refreshToken', response.data.data.refresh_token);
     return response.data.data;
-  } catch (error) {
+  } else {
     // 오류 시 목업 반환
-    console.error('Error during login, returning mock response:', error);
     localStorage.setItem('accessToken', mockResponse.access_token);
     localStorage.setItem('refreshToken', mockResponse.refresh_token);
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
@@ -55,16 +55,15 @@ export const login = async (payload: LoginPayload): Promise<TokenResponseData> =
  * 로그아웃
  */
 export const logout = async (): Promise<void> => {
-  try {
+  if (!useMock) {
     // 실제 API 호출 시도
     console.log('Logging out user');
     await apiClient.post('/auth/logout');
     // [핵심] 토큰 삭제
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-  } catch (error) {
+  } else {
     // 오류 시 로그 출력
-    console.error('Error during logout:', error);
     // [핵심] 토큰 삭제
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -76,13 +75,12 @@ export const logout = async (): Promise<void> => {
  * (앱 로드 시 사용)
  */
 export const verifyToken = async (): Promise<UserProfile> => {
-  try {
+  if (!useMock) {
     // 실제 API 호출 시도
     const response = await apiClient.get<{ data: UserProfile }>(API_URL.AUTH.VERIFY);
     return response.data.data;
-  } catch (error) {
+  } else {
     // 오류 시 목업 반환
-    console.error('Error during token verification:', error);
     const mockUser: UserProfile = {
       id: 1,
       email: 'mockuser@example.com',
@@ -110,7 +108,7 @@ export const refreshToken = async (): Promise<TokenResponseData> => {
   if (!currentRefreshToken) {
     throw new Error('리프레시 토큰이 없습니다.');
   }
-  try {
+  if (!useMock) {
     // 실제 API 호출 시도
     const response = await apiClient.post<{ data: TokenResponseData }>(API_URL.AUTH.REFRESH, {
       refresh_token: currentRefreshToken,
@@ -119,9 +117,8 @@ export const refreshToken = async (): Promise<TokenResponseData> => {
     localStorage.setItem('accessToken', response.data.data.access_token);
     localStorage.setItem('refreshToken', response.data.data.refresh_token);
     return response.data.data;
-  } catch (error) {
+  } else {
     // 오류 시 목업 반환
-    console.error('Error during token refresh:', error);
     const mockResponse: TokenResponseData = {
       access_token: 'mock-access-token-12345',
       refresh_token: 'mock-refresh-token-67890',
@@ -168,11 +165,10 @@ export const register = async (payload: RegisterPayload): Promise<UserProfile> =
     social_provider: 'email',
   };
 
-  try {
+  if (!useMock) {
     const response = await apiClient.post<{ data: UserProfile }>(API_URL.AUTH.REGISTER, payload);
     return response.data.data;
-  } catch (error) {
-    console.warn('[MOCK FALLBACK] register', error);
+  } else {
     return new Promise((resolve) => setTimeout(() => resolve(mockUser), 500));
   }
 };
@@ -190,11 +186,12 @@ export const requestEmailVerification = async (
     detail: '개발 환경에서 인증 코드: 123456', // (Swagger 예시)
   };
 
-  try {
+  if (!useMock) {
+    console.log('Requesting email verification for:', payload);
     const response = await apiClient.post(API_URL.AUTH.EMAIL_VERIFICATION_REQUEST, payload);
+    console.log('Email verification request response:', response);
     return response.data; // (data.data가 아닌 data로 추정)
-  } catch (error) {
-    console.warn('[MOCK FALLBACK] requestEmailVerification', error);
+  } else {
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
   }
 };
@@ -211,11 +208,10 @@ export const confirmEmailVerification = async (
     message: '이메일 인증이 완료되었습니다',
   };
 
-  try {
+  if (!useMock) {
     const response = await apiClient.post(API_URL.AUTH.EMAIL_VERIFICATION_CONFIRM, payload);
     return response.data;
-  } catch (error) {
-    console.warn('[MOCK FALLBACK] confirmEmailVerification', error);
+  } else {
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
   }
 };
