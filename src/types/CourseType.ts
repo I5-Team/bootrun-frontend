@@ -60,7 +60,8 @@ export type CourseItem = {
   price: number,
   difficulty: DifficultyType,
   total_duration: number,
-  faq: string,
+  student_reviews?: string,
+  faq?: string,
   is_published: boolean,
   enrollment_count?: number,
   created_at: string,
@@ -69,13 +70,16 @@ export type CourseItem = {
 
 // [GET] /courses/{course_id}
 export type CoursesDetailItem = CourseItem & {
-  chapters?: ChapterItem[] | null,
+  instructor_description?: string,
+  access_duration_days?: number,
+  max_students?: number,
+  recruitment_start_date?: string,
+  recruitment_end_date?: string,
+  course_start_date?: string,
+  course_end_date?: string,
   is_enrolled?: boolean,
   my_progress?: number | null,
-  schedule?: {
-    enrollment: { label: string, start: string, end: string },
-    learning: { label: string, start: string, end: string }
-  }, // 임시
+  chapters?: ChapterItem[] | null,
 }
 
 export type ChapterItem = {

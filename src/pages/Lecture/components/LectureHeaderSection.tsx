@@ -11,7 +11,7 @@ const LectureHeaderSection = ({ data }: { data: CoursesDetailItem }) => {
   const { category_type, course_type, difficulty } = data;
   const { title, description } = data;
   const { instructor_name, instructor_bio, instructor_image } = data;
-  const { schedule } = data;
+  const { recruitment_start_date, recruitment_end_date, course_start_date, course_end_date } = data;
 
   const tags = [courseTypeLabel[course_type], categoryLabel[category_type], difficultyLabel[difficulty]];
   
@@ -43,17 +43,22 @@ const LectureHeaderSection = ({ data }: { data: CoursesDetailItem }) => {
           
       <S.ScheduleContainer>
         <strong>교육 일정</strong>
-        {schedule && 
+        {data && 
         <ul>
-          <S.ScheduleItem>
-            <S.ScheduleLabel>{schedule.enrollment.label}</S.ScheduleLabel>
-            <span>{formatDate(schedule.enrollment.start)} ~ {formatDate(schedule.enrollment.end)}</span>
-          </S.ScheduleItem>
+          {(recruitment_start_date && recruitment_end_date) && (
+            <S.ScheduleItem>
+              <S.ScheduleLabel>모집 기간</S.ScheduleLabel>
+              <span>{formatDate(recruitment_start_date)} ~ {formatDate(recruitment_end_date)}</span>
+            </S.ScheduleItem>
+          )}
 
-          <S.ScheduleItem>
-            <S.ScheduleLabel>{schedule.learning.label}</S.ScheduleLabel>
-            <span>{formatDate(schedule.learning.start)} ~ {formatDate(schedule.learning.end)}</span>
-          </S.ScheduleItem>
+          {(course_start_date && course_end_date) && (
+            <S.ScheduleItem>
+              <S.ScheduleLabel>교육 기간</S.ScheduleLabel>
+              <span>{formatDate(course_start_date)} ~ {formatDate(course_end_date)}</span>
+            </S.ScheduleItem>
+          )}
+
         </ul>
         }
       </S.ScheduleContainer>

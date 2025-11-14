@@ -7,9 +7,9 @@ import { formatDate } from '../LectureDetailPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../../router/RouteConfig';
 
-export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetailItem, enrollmentStatus?: boolean }) => {
-  const { schedule, course_type, category_type, difficulty } = data;
-  console.log( schedule );
+export const InfoBoxContent = ({ data, recruitmentStatus }: { data: CoursesDetailItem, recruitmentStatus?: boolean }) => {
+  const { course_type, category_type, difficulty } = data;
+  const { recruitment_end_date, course_start_date, course_end_date } = data;
 
   const calculateDdayFrom = (targetDateString: string) => {
     const targetDate = new Date(targetDateString);
@@ -53,11 +53,11 @@ export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetail
             <li>
               <S.InfoLabel>모집 기간</S.InfoLabel>
               <S.InfoValue>
-                <span>~ {formatDate(schedule?.enrollment.end ?? '미정')}</span>
-                {schedule && 
+                <span>~ {recruitment_end_date ? formatDate(recruitment_end_date) : '미정'}</span>
+                {(course_end_date && course_start_date) && 
                   <>
-                    {enrollmentStatus
-                    ? <S.DdayTag $variant="open">{calculateDdayFrom(schedule.learning.end)}</S.DdayTag>
+                    {recruitmentStatus
+                    ? <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
                     : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
                     }
                   </>
@@ -67,8 +67,8 @@ export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetail
             <li>
               <S.InfoLabel>교육 기간</S.InfoLabel>
               <S.InfoValue>
-                { schedule
-                  ? <span>{formatDate(schedule.learning.start)} ~ {formatDate(schedule.learning.end).slice(5)}</span>
+                { course_start_date && course_end_date
+                  ? <span>{formatDate(course_start_date)} ~ {formatDate(course_end_date).slice(5)}</span>
                   : <span>미정</span>
                 }
               </S.InfoValue>
@@ -83,7 +83,7 @@ export const InfoBoxContent = ({ data, enrollmentStatus }: { data: CoursesDetail
   )
 }
 
-export const InfoBoxButtons = ({ enrollmentStatus }: { enrollmentStatus?: boolean }) => {
+export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
   const { isLaptop } = useMediaQuery();
   const navigate = useNavigate();
   const { id } = useParams<{id: string}>();
@@ -102,7 +102,7 @@ export const InfoBoxButtons = ({ enrollmentStatus }: { enrollmentStatus?: boolea
 
   return (
     <S.ButtonContainer>
-      {enrollmentStatus
+      {recruitmentStatus
         ? <Button size="lg" fullWidth={!isLaptop} onClick={handleEnrollCourse}>수강신청 하기</Button>
         : <Button size="lg" fullWidth={!isLaptop} disabled={true}>수강신청 마감</Button>  
       } 
@@ -112,22 +112,22 @@ export const InfoBoxButtons = ({ enrollmentStatus }: { enrollmentStatus?: boolea
 }
 
 export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
-  const { title, schedule } = data;
-    const enrollmentStatus = schedule 
-      ? (new Date(schedule.enrollment.end)) > new Date() ? true : false
+  const { title } = data;
+  const { recruitment_end_date } = data;
+
+    const recruitmentStatus = recruitment_end_date 
+      ? (new Date(recruitment_end_date.replace('T', ''))) > new Date() ? true : false
       : false;
 
   return (
     <S.FloatingCardWrapper>
-      {/* {loading && <LoadingSpinner />} */}
-      {/* {error && <ErrorMessage message={error.message} />} */}
       {data && (
         <>
           <S.Title>{title}</S.Title>
 
-          <InfoBoxContent data={data} enrollmentStatus={enrollmentStatus}/>
+          <InfoBoxContent data={data} recruitmentStatus={recruitmentStatus}/>
 
-          <InfoBoxButtons enrollmentStatus={enrollmentStatus}/>
+          <InfoBoxButtons recruitmentStatus={recruitmentStatus}/>
         </>
       )}
     </S.FloatingCardWrapper>

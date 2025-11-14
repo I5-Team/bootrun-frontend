@@ -7,8 +7,13 @@ import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponen
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgStar from "../../../assets/icons/icon-star.svg?react";
 
-const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
+type ReviewSectionProps = {
+  data?: string | undefined;
+}
+
+const ReviewSection = React.forwardRef<HTMLElement, ReviewSectionProps>(({ data: reviewData }, ref) => {
   const { data, loading, error } = useApiData<ReviewData>(mockReviewData, 1200);
+
 
   return (
     <S.Section ref={ref} id="reviews">

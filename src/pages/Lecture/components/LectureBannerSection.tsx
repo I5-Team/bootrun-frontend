@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import type { CoursesDetailItem } from '../../../types/CourseType';
 
-const LectureBannerSection = ({ data }: { data: CoursesDetailItem}) => {
+const LectureBannerSection = ({ data }: { data: CoursesDetailItem }) => {
   const { title, thumbnail_url } = data;
 
   return (
@@ -17,11 +17,10 @@ const LectureBannerSection = ({ data }: { data: CoursesDetailItem}) => {
 const S = {
   BannerWrapper: styled.section`
     width: 100%;
-    /* 로딩 중에도 레이아웃이 밀리지 않도록 높이를 지정합니다. */
     height: 41.6rem; 
     border-radius: ${({ theme }) => theme.radius.lg};
     overflow: hidden;
-    background-color: ${({ theme }) => theme.colors.gray200}; // 로딩 중 배경색
+    background-color: ${({ theme }) => theme.colors.gray200};
     display: flex;
     align-items: center;
     justify-content: center;
