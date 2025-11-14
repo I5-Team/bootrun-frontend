@@ -27,8 +27,11 @@ import {
   SocialButtonGroup,
   OriginalColorIcon,
 } from './LoginPage.styled.ts';
+import { useLogin } from '../../queries/useAuthQueries.ts';
 
 const LoginPage: React.FC = () => {
+  const { mutate: login, isPending } = useLogin();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState<string | boolean>(false);
@@ -72,6 +75,8 @@ const LoginPage: React.FC = () => {
 
     // TODO: 실제 로그인 API 호출
     console.log('로그인 시도:', { email, password });
+
+    login({ email, password }); // 로그인 뮤테이션 호출
   };
 
   // 이메일 변경 핸들러
@@ -153,7 +158,7 @@ const LoginPage: React.FC = () => {
             variant="primary"
             size="md"
             fullWidth
-            disabled={!isFormValid}
+            disabled={!isFormValid || isPending}
             ariaLabel="로그인"
           >
             로그인
