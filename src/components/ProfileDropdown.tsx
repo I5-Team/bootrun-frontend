@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { ROUTES } from '../router/RouteConfig';
-import { logout } from '../api/authApi';
+import { useLogout } from '../queries/useAuthQueries';
 
 // profile dropdown
 export const StyledDropdownWrapper = styled.div`
@@ -80,10 +80,12 @@ export const ProfileDropdown = ({
   isOpen?: boolean;
   variant?: 'dropdown' | 'sidebar';
 }) => {
-  const isLoggedIn = true;
+  const token = localStorage.getItem('accessToken');
+  const isLoggedIn = Boolean(token);
+  const { mutate: logoutMutate } = useLogout();
   const handleLogout = () => {
     console.log('로그아웃');
-    logout();
+    logoutMutate();
   };
 
   return (

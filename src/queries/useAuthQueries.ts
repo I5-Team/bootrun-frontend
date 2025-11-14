@@ -90,12 +90,8 @@ export const useRequestEmailVerification = () => {
   return useMutation({
     mutationFn: (payload: EmailVerificationRequestPayload) => requestEmailVerification(payload),
     onSuccess: (data) => {
-      // (개발 환경) 목업 코드를 alert으로 표시
-      if (data.detail) {
-        alert(`[개발용 목업] 인증 코드: ${data.detail.split(': ')[1]}`);
-      } else {
-        alert(data.message);
-      }
+      console.log('이메일 인증 코드 요청 성공:', data);
+      alert(data.detail);
     },
     onError: (error: ResponseError) => {
       alert(error.response?.data?.detail || '인증 코드 발송에 실패했습니다.');
