@@ -105,6 +105,24 @@ export type LectureItem = {
   updated_at: string,
 }
 
+// [POST] /enrollments
+export type EnrollmentResponse = { 
+  id: number,
+  user_id: number,
+  course_id: number,
+  course_title: string,
+  course_thumbnail: string,
+  category_name: string,
+  difficulty: DifficultyType,
+  enrolled_at: string,
+  expires_at: string,
+  is_active: boolean,
+  progress_rate: number,
+  days_until_expiry: number,
+  total_lectures: number,
+  completed_lectures: number,
+}
+
 // [GET] /enrollments/my
 export interface MyEnrollmentsApiParams {
   enrollment_status?: EnrollmentState | null,
@@ -134,4 +152,114 @@ export type MyEnrollmentItem = {
   last_watched_chapter?: string | null,
   last_watched_lecture?: string | null,
   last_watched_at?: string | null,
+}
+
+// [GET] /enrollments/dashboard
+export type EnrollmentDashboadItem = {
+    total_enrollments: number,
+    active_enrollments: number,
+    completed_courses: number,
+    total_study_time: number,
+    avg_progress_rate: number,
+    recent_activities?: Array<{[key: string]: any}>,
+    upcoming_expiries?: Array<{[key: string]: any}>,
+}
+
+// GET /enrollments/{enrollment_id}
+export type EnrollmentDetailItem = {
+    id: number,
+    category_type: CategoryType,
+    course_type: CourseType,
+    title: string,
+    description: string,
+    thumbnail_url: string,
+    instructor_name: string,
+    instructor_bio: string,
+    instructor_description?: string,
+    instructor_image: string,
+    price_type: PriceType,
+    price: number,
+    difficulty: DifficultyType,
+    total_duration: number,
+    enrollment_status: EnrollmentState,
+    learning_status: LearningState,
+    enrolled_at: string,
+    expires_at?: string,
+    total_lectures: number,
+    completed_lectures: number,
+    progress_rate: number,
+    last_watched_chapter_id?: number,
+    last_watched_lecture_id?: number,
+    last_watched_at?: string,
+    chapters?: ChapterItem[],
+    created_at: string,
+    updated_at: string
+}
+
+// POST /enrollments/progress
+export interface EnrollmentProgressBodyData {
+  lecture_id: number,
+  watched_seconds: number,
+  last_position: number,
+  is_completed?: boolean,
+}
+
+export type EnrollmentProgressResponse = {
+    id: number,
+    user_id: number,
+    lecture_id: number,
+    lecture_title: string,
+    watched_seconds: number,
+    last_position: number,
+    is_completed: boolean,
+    completion_rate: number,
+    last_watched_at: string,
+    completed_at: string
+}
+
+// PATCH /enrollments/progress/lecture/{lecture_id}
+export interface LectureProgressBodyData {
+  watched_seconds: number,
+  last_position: number,
+  is_completed?: boolean,
+}
+
+export type LectureProgressResponse = {
+    id: number,
+    user_id: number,
+    lecture_id: number,
+    lecture_title: string,
+    watched_seconds: number,
+    last_position: number,
+    is_completed: boolean,
+    completion_rate: number,
+    last_watched_at: string,
+    completed_at: string
+}
+
+// GET /enrollments/progress/course/{course_id}
+export type CourseProgressItem = {
+  course_id: number,
+  course_title: string,
+  total_duration: number,
+  watched_duration: number,
+  progress_rate: number,
+  total_lectures: number,
+  completed_lectures: number,
+  last_watched_at: string | null,
+  chapters?: ChapterItem[],
+}
+
+// GET /enrollments/progress/lecture/{lecture_id}
+export type LectureProgressItem = {
+    id: number,
+    user_id: number,
+    lecture_id: number,
+    lecture_title: string,
+    watched_seconds: number,
+    last_position: number,
+    is_completed: boolean,
+    completion_rate: number,
+    last_watched_at: string,
+    completed_at: string | null,
 }
