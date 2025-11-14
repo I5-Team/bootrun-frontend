@@ -47,6 +47,7 @@ export const login = async (payload: LoginPayload): Promise<TokenResponseData> =
     // 오류 시 목업 반환
     localStorage.setItem('accessToken', mockResponse.access_token);
     localStorage.setItem('refreshToken', mockResponse.refresh_token);
+    localStorage.setItem('role', mockResponse.user.role);
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
   }
 };
@@ -63,11 +64,13 @@ export const logout = async (): Promise<void> => {
     // [핵심] 토큰 삭제
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
   } else {
     // 오류 시 로그 출력
     // [핵심] 토큰 삭제
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
   }
 };
 

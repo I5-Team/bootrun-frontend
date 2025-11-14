@@ -39,6 +39,9 @@ export const useVerifyAuth = () => {
       // 토큰이 유효하지 않을 때
       console.error('토큰 검증 실패:', query.error);
       queryClient.removeQueries({ queryKey: userKeys.me }); // 사용자 데이터 캐시 삭제
+      localStorage.removeItem('accessToken'); // 로컬 스토리지에서 토큰 삭제
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('role');
     }
   }, [query.data, query.error, queryClient]);
 
@@ -58,8 +61,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       console.log('로그인 성공:', data);
       queryClient.setQueryData(userKeys.me, data.user); // 사용자 데이터 캐시에 저장
-      // TODO: 로그인 후 리다이렉트 처리
-      navigate('/'); // 예: 홈 페이지로 이동
+      navigate('/'); // 로그인 성공 시 메인 페이지로 이동
     },
     onError: (error: ResponseError) => {
       console.error('로그인 실패:', error);

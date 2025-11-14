@@ -6,6 +6,7 @@ import { useProfile } from '../../queries/useUserQueries';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
+  console.log('ProfilePage data:', data);
 
   const [name, setName] = useState('');
   const [gender, setGender] = useState('none');
@@ -18,10 +19,10 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (data) {
       // 프로필 데이터가 로드되면 상태 초기화
-      setName(data.data?.nickname || '');
-      setGender(data.data?.gender || 'none');
-      setBirthdate(data.data?.birth_date || '');
-      setImagePreview(data.data?.profile_image_url || null);
+      setName(data.nickname || '');
+      setGender(data.gender || 'none');
+      setBirthdate(data.birth_date || '');
+      setImagePreview(data.profile_image_url || null);
     }
   }, [data]);
 

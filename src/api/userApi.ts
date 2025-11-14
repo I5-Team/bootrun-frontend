@@ -5,6 +5,7 @@ import type {
   ProfileUpdatePayload,
   ProfileImageResponse,
   AccountDeleteParams,
+  UserProfile,
 } from '../types/UserType';
 import { mockProfileData } from '../data/mockMyPageData';
 
@@ -12,7 +13,7 @@ const useMock = false;
 /**
  * GET /users/me - 내 프로필 정보 조회
  */
-export const fetchProfile = async (): Promise<ProfileResponse> => {
+export const fetchProfile = async (): Promise<UserProfile> => {
   const mockResponse = {
     success: true,
     message: '프로필 조회 성공 (Mock)',
@@ -23,10 +24,10 @@ export const fetchProfile = async (): Promise<ProfileResponse> => {
     // 실제 API 호출 시도
     const response = await apiClient.get<ProfileResponse>(API_URL.USER.PROFILE);
     console.log('B, fetchProfile response:', response);
-    return response.data;
+    return response.data.data!;
   } else {
     // 오류 시 목업 반환
-    return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
+    return new Promise((resolve) => setTimeout(() => resolve(mockResponse.data), 500));
   }
 };
 

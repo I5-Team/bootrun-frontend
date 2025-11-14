@@ -82,6 +82,8 @@ export const ProfileDropdown = ({
 }) => {
   const token = localStorage.getItem('accessToken');
   const isLoggedIn = Boolean(token);
+  const role = localStorage.getItem('role');
+  const isAdmin = role === 'admin';
   const { mutate: logoutMutate } = useLogout();
   const handleLogout = () => {
     console.log('로그아웃');
@@ -90,7 +92,22 @@ export const ProfileDropdown = ({
 
   return (
     <StyledProfileDropdown $variant={variant} $isOpen={isOpen}>
-      {variant === 'dropdown' ? (
+      {isAdmin ? (
+        <StyledItemWrapper>
+          <StyledItem as={Link} to={ROUTES.ADMIN_DASHBOARD}>
+            관리자 대시보드
+          </StyledItem>
+          <StyledItem as={Link} to={ROUTES.ADMIN_LECTURE_MANAGE}>
+            강의 관리
+          </StyledItem>
+          <StyledItem as={Link} to={ROUTES.ADMIN_PAYMENT_MANAGE}>
+            결제 관리
+          </StyledItem>
+          <StyledItem as={Link} to={ROUTES.ADMIN_USER_MANAGE}>
+            사용자 관리
+          </StyledItem>
+        </StyledItemWrapper>
+      ) : variant === 'dropdown' ? (
         <StyledItemWrapper>
           <StyledItem as={Link} to={ROUTES.MY_LECTURES}>
             내 강의 목록

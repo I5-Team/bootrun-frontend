@@ -10,10 +10,13 @@ import { adminUserKeys, userKeys } from './queryKeys';
  * [Query] 내 프로필 정보 조회
  */
 export const useProfile = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  const isLoggedIn = Boolean(accessToken);
   return useQuery({
     queryKey: userKeys.me,
     queryFn: fetchProfile,
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
+    enabled: isLoggedIn, // 로그인 상태에서만 쿼리 활성화
   });
 };
 
