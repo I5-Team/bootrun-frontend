@@ -1,22 +1,14 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockBannerData } from '../../../data/mockLectureData';
-import type { BannerData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import type { CoursesDetailItem } from '../../../types/CourseType';
 
-const LectureBannerSection: React.FC = () => {
-  // 1. API가 개발되면 mockBannerData를 API 호출 함수(e.g., fetchBanner)로 교체합니다.
-  const { data, loading, error } = useApiData<BannerData>(mockBannerData, 300);
+const LectureBannerSection = ({ data }: { data: CoursesDetailItem}) => {
+  const { title, thumbnail_url } = data;
 
   return (
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
-      {/* 2. 로딩 및 에러 상태 처리 */}
-      {loading && <LoadingSpinner />}
-      {error && <ErrorMessage message={error.message} />}
       {data && (
-        <img alt={data.altText} src={data.imageUrl} />
+        <img alt={title} src={thumbnail_url} />
       )}
     </S.BannerWrapper>
   );
