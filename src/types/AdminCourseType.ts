@@ -15,29 +15,21 @@ export interface FaqItem {
 // ========== 강의 목록 관련 ==========
 
 /**
- * 강의 목록 아이템
+ * 강의 목록 아이템 (관리자용 - GET /admin/courses 응답)
  */
 export interface CourseListItem {
   id: number;
-  category_type: 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'design' | 'other';
-  course_type: 'vod' | 'boost_community' | 'kdc';
+  category_name: string; // 'frontend', 'backend' 등
   title: string;
-  description: string;
-  thumbnail_url: string;
   instructor_name: string;
-  instructor_bio: string;
-  instructor_image: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  price_type: 'free' | 'paid' | 'national_support';
-  price: number;
-  total_duration: number; // 초 단위
-  faq: string; // JSON 문자열
   is_published: boolean;
+  enrollment_count: number; // 수강생 수
+  total_revenue: number; // 매출
+  avg_progress: number; // 평균 진행률
+  completion_rate: number; // 완료율
   created_at: string;
   updated_at: string;
-  // 추가 정보 (JOIN 또는 계산)
-  total_chapters?: number;
-  total_enrollments?: number;
 }
 
 /**
@@ -77,6 +69,7 @@ export interface Lecture {
   video_type: 'vod' | 'youtube';
   duration_seconds: number;
   order_number: number;
+  material_url?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -93,6 +86,70 @@ export interface Chapter {
   lectures: Lecture[];
   created_at?: string;
   updated_at?: string;
+}
+
+/**
+ * 챕터 생성/수정 요청 데이터
+ */
+export interface ChapterRequest {
+  title: string;
+  description: string;
+  order_number: number;
+}
+
+/**
+ * 챕터 API 응답 데이터
+ */
+export interface ChapterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    course_id: number;
+    title: string;
+    description: string;
+    order_number: number;
+    total_duration: number;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+/**
+ * 강의 영상 생성/수정 요청 데이터
+ */
+export interface LectureRequest {
+  title: string;
+  description: string;
+  video_url: string;
+  video_type: 'vod' | 'youtube';
+  duration_seconds: number;
+  order_number: number;
+  material_url?: string;
+}
+
+/**
+ * 강의 영상 API 응답 데이터
+ */
+export interface LectureResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    chapter_id: number;
+    title: string;
+    description: string;
+    video_url: string;
+    video_type: 'vod' | 'youtube';
+    duration_seconds: number;
+    order_number: number;
+    material_url?: string;
+    is_completed: boolean;
+    last_position: number;
+    watched_seconds: number;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 // ========== 미션 ==========
@@ -155,4 +212,28 @@ export interface CreateCourseRequest {
  */
 export interface UpdateCourseRequest extends CreateCourseRequest {
   id: number;
+}
+
+/**
+ * 강의 생성/수정 응답 데이터
+ */
+export interface CourseResponse {
+  id: number;
+  category_type: string;
+  course_type: string;
+  title: string;
+  description: string;
+  thumbnail_url: string;
+  instructor_name: string;
+  instructor_bio: string;
+  instructor_image: string;
+  price_type: string;
+  price: number;
+  difficulty: string;
+  total_duration: number;
+  faq: string;
+  is_published: boolean;
+  enrollment_count: number;
+  created_at: string;
+  updated_at: string;
 }
