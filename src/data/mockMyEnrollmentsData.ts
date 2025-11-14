@@ -1,9 +1,7 @@
-{
-  "total": 10,
-  "page": 1,
-  "page_size": 10,
-  "total_pages": 1,
-  "items": [
+import type { MyEnrollmentItem, MyEnrollmentsApiParams } from "../types/CourseType";
+
+// [GET] /enrollments/my
+export const mockMyEnrollments: MyEnrollmentItem[] = ([
     {
       "id": 1001,
       "user_id": 999,
@@ -11,7 +9,7 @@
       "course_title": "파이썬으로 배우는 데이터 분석 입문",
       "course_thumbnail": "https://picsum.photos/seed/python1/600/400",
       "category_name": "data_analysis",
-      "course_type": "vod",
+      "course_type": "vod", // 임시로 추가
       "difficulty": "beginner",
       "enrolled_at": "2025-10-08T07:39:11Z",
       "expires_at": "2026-04-08T07:39:11Z",
@@ -174,5 +172,9 @@
       "total_lectures": 15,
       "completed_lectures": 6
     }
-  ]
-}
+  ]);
+
+
+export const getMockMyEnrollments = (_: MyEnrollmentsApiParams): MyEnrollmentItem[] => {
+  return mockMyEnrollments;
+};

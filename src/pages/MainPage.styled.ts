@@ -82,11 +82,13 @@ export const StyledCategoryBtn = styled.button`
 `;
 
 // section
-export const StyledSection = styled.section`
+export const StyledSection = styled.section<{ $isVisible: boolean }>`
     width: 100%;
     &:not(:last-child) {
         margin-bottom: 6rem;
     }
+
+    display: ${({ $isVisible }) => $isVisible ? 'block' : 'none'};
 `;
 
 export const StyledSectionHead = styled.div`

@@ -1,24 +1,20 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockHeaderData } from '../../../data/mockLectureData';
-import type { InfoBoxProps, LectureHeaderData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import Tag from '../../../components/Tag';
 import Profile from '../../../components/Profile';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
+import { categoryLabel, courseTypeLabel, difficultyLabel, type CoursesDetailItem } from '../../../types/CourseType';
+import { formatDate } from '../LectureDetailPage';
 
-const LectureHeaderSection: React.FC<InfoBoxProps> = ({ cardData }) => {
+const LectureHeaderSection = ({ data }: { data: CoursesDetailItem }) => {
   const { isLaptop } = useMediaQuery();
-  const { data, loading, error } = useApiData<LectureHeaderData>(mockHeaderData, 300);
+  const { category_type, course_type, difficulty } = data;
+  const { title, description } = data;
+  const { instructor_name, instructor_bio, instructor_image } = data;
+  const { schedule } = data;
 
-  if (loading) return <S.HeaderWrapper><LoadingSpinner /></S.HeaderWrapper>;
-  if (error) return <S.HeaderWrapper><ErrorMessage message={error.message} /></S.HeaderWrapper>;
-  if (!data) return null;
-
-  const { tags, title, description, instructor, schedule } = data;
-
+  const tags = [courseTypeLabel[course_type], categoryLabel[category_type], difficultyLabel[difficulty]];
+  
   return (
     <S.HeaderWrapper>
       <S.LectureInfo>
@@ -28,7 +24,6 @@ const LectureHeaderSection: React.FC<InfoBoxProps> = ({ cardData }) => {
               {tag}
             </Tag>
           ))}
-          
         </S.TagContainer>
         <S.Title>{title}</S.Title>
         <S.Description>{description}</S.Description>
@@ -36,27 +31,33 @@ const LectureHeaderSection: React.FC<InfoBoxProps> = ({ cardData }) => {
       
       <S.InstructorContainer>
         <S.Profile>
-          <Profile size={4.6} src={instructor.imageUrl} alt={`${instructor.name} 강사 프로필`} />
+          <Profile size={4.6} src={instructor_image} alt={`${instructor_name} 강사 프로필`} />
           <S.ProfileInfo>
-            <S.ProfileName>{instructor.name} 강사님</S.ProfileName>
-            <S.ProfileRole>{instructor.role}</S.ProfileRole>
+            <S.ProfileName>{instructor_name} 강사님</S.ProfileName>
+            <S.ProfileRole>{instructor_bio}</S.ProfileRole>
           </S.ProfileInfo>
         </S.Profile>
       </S.InstructorContainer>
 
-      {isLaptop && <InfoBoxContent cardData={cardData}/>}
+      {isLaptop && <InfoBoxContent data={data}/>}
           
       <S.ScheduleContainer>
         <strong>교육 일정</strong>
+        {schedule && 
         <ul>
-          {schedule.map(item => (
-            <S.ScheduleItem key={item.label}>
-              <S.ScheduleLabel>{item.label}</S.ScheduleLabel>
-              <span>{item.value}</span>
-            </S.ScheduleItem>
-          ))}
+          <S.ScheduleItem>
+            <S.ScheduleLabel>{schedule.enrollment.label}</S.ScheduleLabel>
+            <span>{formatDate(schedule.enrollment.start)} ~ {formatDate(schedule.enrollment.end)}</span>
+          </S.ScheduleItem>
+
+          <S.ScheduleItem>
+            <S.ScheduleLabel>{schedule.learning.label}</S.ScheduleLabel>
+            <span>{formatDate(schedule.learning.start)} ~ {formatDate(schedule.learning.end)}</span>
+          </S.ScheduleItem>
         </ul>
+        }
       </S.ScheduleContainer>
+
     </S.HeaderWrapper>
   );
 };

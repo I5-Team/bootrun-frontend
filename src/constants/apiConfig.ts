@@ -207,6 +207,10 @@ export const API_URL = {
     CHANGE_PASSWORD: '/users/me/change-password', // 비밀번호 변경       (POST)
     DELETE_ACCOUNT: '/users/me', // 회원 탈퇴          (DELETE)
     NOTIFICATIONS: '/users/me/notifications', // 내 알림 목록        (GET)
+
+    PROFILE_IMAGE: '/users/me/profile-image', // 프로필 이미지 업로드 (POST)
+    PROFILE_IMAGE_DELETE: '/users/me/profile-image', // 프로필 이미지 삭제  (DELETE)
+
   },
   /* 강의 */
   COURSE: {
@@ -282,21 +286,29 @@ export const API_URL = {
     DEACTIVATE_USER: (userId: number) => `/admin/users/${userId}/deactivate`, // 사용자 비활성화   (PATCH)
     LEARNING_REPORT: (userId: number) => `/admin/users/${userId}/learning-report`, // 사용자 학습 리포트 (GET)
   },
-  /* 관리자 - 강의 관리 */
+  /* 관리자 - 강의 관리(겹치는 부분 삭제 필요) */
   ADMIN_COURSES: {
     COURSE_LIST: '/admin/courses', // 강의 목록 조회          (GET)
+
     COURSE_DETAIL: (courseId: number) => `/admin/courses/${courseId}`, // 강의 상세 조회   (GET)
     CREATE_COURSE: '/admin/courses', // 강의 생성              (POST)
     UPDATE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 수정              (PATCH)
     DELETE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 삭제              (DELETE)
     GET_CHAPTERS: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 목록 조회  (GET)
+
+    CREATE_COURSE: '/admin/courses', // 강의 생성              (POST)
+    UPDATE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 수정              (PATCH)
+    DELETE_COURSE: (courseId: number) => `/admin/courses/${courseId}`, // 강의 삭제              (DELETE)
+
     ADD_CHAPTER: (courseId: number) => `/admin/courses/${courseId}/chapters`, // 챕터 추가        (POST)
     UPDATE_CHAPTER: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}`, // 챕터 수정 (PATCH)
     DELETE_CHAPTER: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}`, // 챕터 삭제 (DELETE)
+
     GET_LECTURES: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}/lectures`, // 강의 영상 목록 조회 (GET)
+
     ADD_LECTURE: (courseId: number, chapterId: number) =>
       `/admin/courses/${courseId}/chapters/${chapterId}/lectures`, // 강의 영상 추가 (POST)
     UPDATE_LECTURE: (courseId: number, chapterId: number, lectureId: number) =>
@@ -346,7 +358,7 @@ export const API_URL = {
     DELETE_MISSION: (missionId: number) => `/admin/missions/${missionId}`, // 미션 삭제 (DELETE)
   },
 };
-
 // 이미지 처리(디폴트 이미지)
 export const DEFAULT_THUMBNAIL_URL = '/assets/images/OG.jpg';
 export const DEFAULT_INSTRUCTOR_IMAGE = '/assets/images/profile-default.jpg';
+

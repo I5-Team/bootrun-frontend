@@ -1,4 +1,7 @@
-[
+import type { CourseItem, CoursesApiParams } from "../types/CourseType";
+
+// [GET] /courses
+export const mockCourses: CourseItem[] = ([
   {
     "id": 1,
     "category_type": "data_analysis",
@@ -16,7 +19,8 @@
     "faq": "{\"Q1\":\"사전 지식이 필요한가요?\",\"A1\":\"없어도 수강 가능합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-01T09:00:00",
-    "updated_at": "2025-10-02T10:00:00"
+    "updated_at": "2025-10-02T10:00:00",
+    "enrollment_count": 345
   },
   {
     "id": 2,
@@ -35,7 +39,8 @@
     "faq": "{\"Q1\":\"디자인 시안이 포함되어 있나요?\",\"A1\":\"네, Figma 파일이 제공됩니다.\"}",
     "is_published": true,
     "created_at": "2025-09-20T12:00:00",
-    "updated_at": "2025-09-30T14:00:00"
+    "updated_at": "2025-09-30T14:00:00",
+    "enrollment_count": 182
   },
   {
     "id": 3,
@@ -54,7 +59,8 @@
     "faq": "{\"Q1\":\"실습 환경은 어떻게 준비하나요?\",\"A1\":\"강의 내에서 자세히 안내드립니다.\"}",
     "is_published": true,
     "created_at": "2025-09-10T15:00:00",
-    "updated_at": "2025-09-15T09:00:00"
+    "updated_at": "2025-09-15T09:00:00",
+    "enrollment_count": 277
   },
   {
     "id": 4,
@@ -73,7 +79,8 @@
     "faq": "{\"Q1\":\"코딩 경험이 없어도 되나요?\",\"A1\":\"네, 기초부터 진행합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-02T11:00:00",
-    "updated_at": "2025-10-04T09:00:00"
+    "updated_at": "2025-10-04T09:00:00",
+    "enrollment_count": 491
   },
   {
     "id": 5,
@@ -92,7 +99,8 @@
     "faq": "{\"Q1\":\"React와 함께 사용할 수 있나요?\",\"A1\":\"물론입니다. 실습 예제가 포함됩니다.\"}",
     "is_published": true,
     "created_at": "2025-08-25T10:30:00",
-    "updated_at": "2025-09-01T10:30:00"
+    "updated_at": "2025-09-01T10:30:00",
+    "enrollment_count": 125
   },
   {
     "id": 6,
@@ -111,7 +119,8 @@
     "faq": "{\"Q1\":\"배포까지 다루나요?\",\"A1\":\"네, Vercel을 이용한 배포 방법을 설명합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-15T10:00:00",
-    "updated_at": "2025-09-20T09:00:00"
+    "updated_at": "2025-09-20T09:00:00",
+    "enrollment_count": 310
   },
   {
     "id": 7,
@@ -130,7 +139,8 @@
     "faq": "{\"Q1\":\"디자이너도 수강 가능한가요?\",\"A1\":\"네, 개발자와 디자이너 모두 가능합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-05T12:00:00",
-    "updated_at": "2025-09-12T12:00:00"
+    "updated_at": "2025-09-12T12:00:00",
+    "enrollment_count": 98
   },
   {
     "id": 8,
@@ -149,7 +159,8 @@
     "faq": "{\"Q1\":\"무료로 사용할 수 있나요?\",\"A1\":\"네, 기본 플랜은 무료로 사용 가능합니다.\"}",
     "is_published": true,
     "created_at": "2025-08-15T11:00:00",
-    "updated_at": "2025-08-20T11:00:00"
+    "updated_at": "2025-08-20T11:00:00",
+    "enrollment_count": 403
   },
   {
     "id": 9,
@@ -168,7 +179,8 @@
     "faq": "{\"Q1\":\"ECMAScript 버전은 무엇인가요?\",\"A1\":\"ES6 기준으로 설명합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-03T09:00:00",
-    "updated_at": "2025-10-05T09:00:00"
+    "updated_at": "2025-10-05T09:00:00",
+    "enrollment_count": 420
   },
   {
     "id": 10,
@@ -187,7 +199,8 @@
     "faq": "{\"Q1\":\"Windows에서도 가능한가요?\",\"A1\":\"네, 전 운영체제에서 가능합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-12T12:00:00",
-    "updated_at": "2025-09-15T12:00:00"
+    "updated_at": "2025-09-15T12:00:00",
+    "enrollment_count": 361
   },
   {
     "id": 11,
@@ -206,7 +219,8 @@
     "faq": "{\"Q1\":\"Vue 2 경험이 필요한가요?\",\"A1\":\"아닙니다. 기초부터 시작합니다.\"}",
     "is_published": true,
     "created_at": "2025-08-01T14:00:00",
-    "updated_at": "2025-08-10T11:00:00"
+    "updated_at": "2025-08-10T11:00:00",
+    "enrollment_count": 255
   },
   {
     "id": 12,
@@ -225,7 +239,8 @@
     "faq": "{\"Q1\":\"클라우드 계정이 필요한가요?\",\"A1\":\"AWS, GCP 등 클라우드 실습 환경을 안내합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-25T16:00:00",
-    "updated_at": "2025-10-01T16:00:00"
+    "updated_at": "2025-10-01T16:00:00",
+    "enrollment_count": 140
   },
   {
     "id": 13,
@@ -244,7 +259,8 @@
     "faq": "{\"Q1\":\"수학적 배경이 필수인가요?\",\"A1\":\"고등학교 수준의 기초 통계 지식이 있으면 좋습니다.\"}",
     "is_published": true,
     "created_at": "2025-08-05T09:00:00",
-    "updated_at": "2025-08-15T12:00:00"
+    "updated_at": "2025-08-15T12:00:00",
+    "enrollment_count": 218
   },
   {
     "id": 14,
@@ -263,7 +279,8 @@
     "faq": "{\"Q1\":\"백엔드 테스트도 다루나요?\",\"A1\":\"주로 프론트엔드에 중점을 둡니다.\"}",
     "is_published": true,
     "created_at": "2025-09-01T10:00:00",
-    "updated_at": "2025-09-08T10:00:00"
+    "updated_at": "2025-09-08T10:00:00",
+    "enrollment_count": 105
   },
   {
     "id": 15,
@@ -282,7 +299,8 @@
     "faq": "{\"Q1\":\"어떤 툴을 사용하나요?\",\"A1\":\"Figma, Sketch, Adobe XD를 모두 안내합니다.\"}",
     "is_published": true,
     "created_at": "2025-08-18T13:00:00",
-    "updated_at": "2025-08-25T13:00:00"
+    "updated_at": "2025-08-25T13:00:00",
+    "enrollment_count": 388
   },
   {
     "id": 16,
@@ -301,7 +319,8 @@
     "faq": "{\"Q1\":\"React나 Vue 경험이 필요한가요?\",\"A1\":\"아닙니다. Svelte 고유의 방식으로 진행합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-05T10:00:00",
-    "updated_at": "2025-10-06T10:00:00"
+    "updated_at": "2025-10-06T10:00:00",
+    "enrollment_count": 289
   },
   {
     "id": 17,
@@ -320,7 +339,8 @@
     "faq": "{\"Q1\":\"결제 없이 실습 가능한가요?\",\"A1\":\"네, 프리 티어(Free Tier) 범위 내에서 실습합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-08T11:00:00",
-    "updated_at": "2025-09-18T11:00:00"
+    "updated_at": "2025-09-18T11:00:00",
+    "enrollment_count": 472
   },
   {
     "id": 18,
@@ -339,7 +359,8 @@
     "faq": "{\"Q1\":\"특정 DB만 다루나요?\",\"A1\":\"MySQL을 기본으로 PostgreSQL도 간략히 다룹니다.\"}",
     "is_published": true,
     "created_at": "2025-07-20T10:00:00",
-    "updated_at": "2025-08-01T10:00:00"
+    "updated_at": "2025-08-01T10:00:00",
+    "enrollment_count": 399
   },
   {
     "id": 19,
@@ -358,7 +379,8 @@
     "faq": "{\"Q1\":\"법적 준수 사항도 다루나요?\",\"A1\":\"네, 한국형 웹 콘텐츠 접근성 지침을 포함합니다.\"}",
     "is_published": true,
     "created_at": "2025-09-03T14:30:00",
-    "updated_at": "2025-09-10T14:30:00"
+    "updated_at": "2025-09-10T14:30:00",
+    "enrollment_count": 234
   },
   {
     "id": 20,
@@ -377,7 +399,8 @@
     "faq": "{\"Q1\":\"유료 플랜이 필요한가요?\",\"A1\":\"기능 대부분은 무료 플랜으로 충분합니다.\"}",
     "is_published": true,
     "created_at": "2025-10-10T09:00:00",
-    "updated_at": "2025-10-12T09:00:00"
+    "updated_at": "2025-10-12T09:00:00",
+    "enrollment_count": 456
   },
   {
     "id": 21,
@@ -396,7 +419,8 @@
     "faq": "{\"Q1\":\"Hooks 기반인가요?\",\"A1\":\"네, Redux Toolkit과 Hooks 기반으로 진행합니다.\"}",
     "is_published": true,
     "created_at": "2025-08-20T11:00:00",
-    "updated_at": "2025-08-28T11:00:00"
+    "updated_at": "2025-08-28T11:00:00",
+    "enrollment_count": 169
   },
   {
     "id": 22,
@@ -415,7 +439,8 @@
     "faq": "{\"Q1\":\"C/C++ 경험이 필요한가요?\",\"A1\":\"아닙니다. Go 언어의 기본 문법부터 시작합니다.\"}",
     "is_published": true,
     "created_at": "2025-07-25T15:00:00",
-    "updated_at": "2025-08-05T15:00:00"
+    "updated_at": "2025-08-05T15:00:00",
+    "enrollment_count": 301
   },
   {
     "id": 23,
@@ -434,7 +459,8 @@
     "faq": "{\"Q1\":\"어떤 개발 환경을 사용하나요?\",\"A1\":\"Google Colab을 이용해 실습합니다.\"}",
     "is_published": true,
     "created_at": "2025-08-10T10:00:00",
-    "updated_at": "2025-08-20T10:00:00"
+    "updated_at": "2025-08-20T10:00:00",
+    "enrollment_count": 78
   },
   {
     "id": 24,
@@ -453,7 +479,8 @@
     "faq": "{\"Q1\":\"SPA와 MPA 모두 다루나요?\",\"A1\":\"네, 두 가지 유형 모두에 적용 가능한 기법을 다룹니다.\"}",
     "is_published": true,
     "created_at": "2025-09-28T10:00:00",
-    "updated_at": "2025-10-08T10:00:00"
+    "updated_at": "2025-10-08T10:00:00",
+    "enrollment_count": 133
   },
   {
     "id": 25,
@@ -472,6 +499,33 @@
     "faq": "{\"Q1\":\"기획 템플릿이 제공되나요?\",\"A1\":\"네, 핵심 기획 문서 템플릿이 제공됩니다.\"}",
     "is_published": true,
     "created_at": "2025-07-01T10:00:00",
-    "updated_at": "2025-07-15T10:00:00"
+    "updated_at": "2025-07-15T10:00:00",
+    "enrollment_count": 374
   }
-]
+])
+
+export const getMockCourses = (
+  params: CoursesApiParams = {},
+): CourseItem[] => {
+  const filtered = mockCourses.filter(course => {
+    // 카테고리, 코스 타입, 가격, 난이도 필터
+    if (params.category_types?.length && !params.category_types.includes(course.category_type)) return false;
+    if (params.course_types?.length && !params.course_types.includes(course.course_type)) return false;
+    if (params.price_types?.length && !params.price_types.includes(course.price_type)) return false;
+    if (params.difficulties?.length && !params.difficulties.includes(course.difficulty)) return false;
+
+    // 키워드 필터
+    if (params.keyword && !course.title.toLowerCase().includes(params.keyword.toLowerCase())) return false;
+
+    // 공개 여부 필터
+    if (params.is_published !== undefined && params.is_published !== course.is_published) return false;
+
+    return true;
+  });
+
+  const page = params.page || 1;
+  const pageSize = params.page_size || 20;
+
+  return filtered.slice((page - 1) * pageSize, page * pageSize);
+};
+

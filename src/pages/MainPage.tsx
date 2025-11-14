@@ -10,11 +10,13 @@ import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
 import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledTitle } from "./MainPage.styled";
-import { FilterCourseList, type CourseType } from "../components/CourseList";
+import { FilterCourseList } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import type { CourseType } from "../types/CourseType";
+import { useState } from "react";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -47,6 +49,7 @@ const SectionHead = ({ title }: { title:string }) => {
 }
 
 const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
+    const [resultCount, setResultCount] = useState(0);
     const { isLaptop } = useMediaQuery();
     const cardCount = isLaptop ? 4 : 3;
 
@@ -57,11 +60,12 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     }
 
     return (
-        <StyledSection>
+        <StyledSection $isVisible={resultCount > 0 ? true : false}>
             <SectionHead title={titleByType[courseType]}/>
             <FilterCourseList 
                 courseTypeOpt={courseType}
                 cardCount={cardCount}
+                onCountChange={setResultCount}
             />
         </StyledSection>
     )
@@ -72,7 +76,7 @@ export default function MainPage() {
     const navigate = useNavigate();
 
     const goCategoryList = (categry?: string) => {
-        const queryString = categry ? `?category=${categry}` : "";
+        const queryString = categry ? `?category_types=${categry}` : "";
         navigate(ROUTES.LECTURE_LIST + queryString);
     }
 
