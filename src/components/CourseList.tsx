@@ -1,13 +1,11 @@
 import styled from "styled-components";
 
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
 import CourseCard from "../components/CourseCard/CourseCard";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 import EmptyState from "../components/EmptyState/EmptyState";
-import { Button } from "../components/Button";
-import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type MyEnrollmentsApiParams, type PriceType } from "../types/CourseType";
 import { SkeletonCard, SkeletonMyCourseCard } from "./Skeleton";

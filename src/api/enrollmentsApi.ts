@@ -13,9 +13,10 @@ export const fetchMyEnrollments = async (
 ): Promise<MyEnrollmentItem[]> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
-        if (response?.data?.items) {
+        console.log('response', response);
+        if (response?.data?.data?.items) {
             console.log('[API 요청 성공]');
-            return response.data.items;
+            return response.data.data.items;
         }
         console.warn('[API 데이터 없음] mock 데이터로 대체');
         const data = getMockMyEnrollments(params);

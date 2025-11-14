@@ -160,7 +160,7 @@ const CardStudyContent = ({ value = 0, max = 1, lectureId, isActive }: StudyCont
     <StyledLectureContentWrapper>
         <StyledProgressWrapper>
           <ProgressBar value={value} max={max}/>
-          <span>{value}/{max}강 ({formatPercent(value/max)}%)</span>
+          <span>{value}/{max}강 ({isNaN(value/max) ? 0 : formatPercent(value/max)}%)</span>
         </StyledProgressWrapper>
         <StyledButtonList>
           {isActive ? (
