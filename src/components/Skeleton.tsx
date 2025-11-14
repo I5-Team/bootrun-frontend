@@ -3,8 +3,8 @@ import styled, { css, keyframes } from "styled-components";
 import { StyledCardArticle, StyledThumbnailWrapper } from "./CourseCard/CourseCard.styled";
 
 const shimmer = keyframes`
-  0% { background-position: -300% 0; }
-  100% { background-position: 300% 0; }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 `;
 
 const skeletonShimmer = css`
@@ -15,8 +15,8 @@ const skeletonShimmer = css`
     )`
     )};
 
-    background-size: 300% 100%;
-    animation: ${shimmer} 6s infinite linear;
+    background-size: 200% 100%;
+    animation: ${shimmer} 3s infinite linear;
     border-radius: ${({ theme }) => theme.radius.sm};
     margin: 0;
     padding: 0;
@@ -66,9 +66,15 @@ const SkeletonTextShort = styled(SkeletonText)`
     width: 10rem;
 `;
 
-const SkeletonBox = styled.div`
+const SkeletonBox = styled.div<{ $height?: number }>`
     ${skeletonShimmer} 
-    height: 8.4rem;
+    height: ${({ $height }) => $height ? `${$height}rem` : '8.4rem'};
+`;
+
+const SkeletonButton = styled.div`
+    ${skeletonShimmer}
+    width: 11.2rem;
+    height: 4.2rem;
 `;
 
 export function SkeletonCard() {
@@ -93,6 +99,30 @@ export function SkeletonCard() {
             <SkeletonBox/>
 
             <SkeletonTextShort/>
+        </SkeletonCardArticle>
+    );
+}
+
+export function SkeletonMyCourseCard() {
+    return (
+        <SkeletonCardArticle>
+            <SkeletonThumbnail/>
+
+            <SkeletonRowWapper>
+                <SkeletonTag/>
+                <SkeletonTag/>
+                <SkeletonTag/>
+            </SkeletonRowWapper>
+            
+
+            <SkeletonText/>
+
+            <SkeletonBox $height={4.4} />
+
+            <SkeletonRowWapper>
+                <SkeletonButton/>
+                <SkeletonButton/>
+            </SkeletonRowWapper>
         </SkeletonCardArticle>
     );
 }

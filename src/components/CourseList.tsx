@@ -10,7 +10,7 @@ import { Button } from "../components/Button";
 import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type MyEnrollmentsApiParams, type PriceType } from "../types/CourseType";
-import { SkeletonCard } from "./Skeleton";
+import { SkeletonCard, SkeletonMyCourseCard } from "./Skeleton";
 import { useCoursesQuery } from "../queries/useCourseQueries";
 import { useMyEnrollmentQuery } from "../queries/useEnrollmentQueries";
 
@@ -75,6 +75,7 @@ const NoResultPage = () => {
 }
 
 type BaseCourseListProps<T> = {
+    variant: 'info' | 'study';
     data: T[];
     filterFn?: (item: T) => boolean;
     sortFn?: (a: T, b: T) => number;
@@ -85,6 +86,7 @@ type BaseCourseListProps<T> = {
 }
 
 const BaseCourseList = <T,>({
+    variant = 'info',
     data,
     filterFn,
     sortFn,
@@ -105,17 +107,25 @@ const BaseCourseList = <T,>({
 
     return (
         <div className="card-list">
-            {(!isLoading && refinedList.length === 0)
-            ? 
-            <NoResultPage/>
-            : 
-            <>
+            {isLoading || !refinedList ? (
                 <StyledCardGrid>
-                    {refinedList.map(courseCard)}
+                    {Array(9).fill(0).map((_, index) => 
+                        variant === "info"
+                            ? <SkeletonCard key={index}/>
+                            : <SkeletonMyCourseCard key={index}/>
+                    )}
                 </StyledCardGrid>
-                <ScrollToTopButton/>
-            </>
-            }
+            ) : (
+                refinedList.length === 0  
+                ? <NoResultPage/>
+                : <>
+                    <StyledCardGrid>
+                        {refinedList.map(courseCard)}
+                    </StyledCardGrid>
+                    <ScrollToTopButton/>
+                 </>
+                
+            )}            
         </div>
     )
 }
@@ -157,9 +167,7 @@ export const FilterCourseList = ({
 
     const courseCardItem = (course: CourseItem) => (
         <li key={course.id}>
-            {isLoading 
-            ? <SkeletonCard/>
-            : <CourseCard
+             <CourseCard
                 variant="info"
                 lectureId={course.id}
                 thumbnail={course.thumbnail_url}
@@ -175,12 +183,12 @@ export const FilterCourseList = ({
                 description={course.description}
                 price={course.price}
             />
-            }
         </li>
     )
 
     return (
         <BaseCourseList
+            variant="info"
             data={courses}
             sortFn={sortFn}
             sliceFn={sliceFn}
@@ -215,10 +223,8 @@ export const FilterMyCourseList = ({
     }
 
     const myCourseCardItem = (course: MyEnrollmentItem) => (
-        <li key={course.id}>{
-            isLoading 
-            ? <SkeletonCard/>
-            : <CourseCard
+        <li key={course.id}>
+            <CourseCard
                 variant="study"
                 thumbnail={course.thumbnail_url}
                 title={course.title}
@@ -234,16 +240,17 @@ export const FilterMyCourseList = ({
                 isActive={course.enrollment_status === 'available' ? true: false}
                 isCompleted={course.learning_status === 'completed' ? true : false}
             />
-        }
         </li>
      );
 
     return (
         <BaseCourseList
+            variant="study"
             data={myEnrollments}
             sortFn={sortFn}
             courseCard={myCourseCardItem}
             onCountChange={onCountChange}
+            isLoading={isLoading}
         />
     )
 }
