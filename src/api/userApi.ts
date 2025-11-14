@@ -57,7 +57,7 @@ export const updateProfile = async (payload: ProfileUpdatePayload): Promise<Prof
 export const uploadProfileImage = async (formData: FormData): Promise<ProfileImageResponse> => {
   const file = formData.get('file') as File;
   const mockUrl = file ? URL.createObjectURL(file) : '';
-  mockProfileData.profileImageUrl = mockUrl;
+  mockProfileData.profile_image_url = mockUrl;
   const mockResponse = {
     success: true,
     message: '이미지 업로드 성공 (Mock Fallback)',
