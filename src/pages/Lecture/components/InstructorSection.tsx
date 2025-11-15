@@ -1,13 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import { StyledBaseSection as S } from '../LectureDetailPage.styled';
 import Profile from '../../../components/Profile';
 
-import type { CoursesDetailItem } from '../../../types/CourseType';
-import { mockInstructorData } from "../../../data/mockLectureData";
 import { getProfileImageUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
-
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();
@@ -24,7 +21,11 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
 
       {data && (
         <Instructor.InfoBox>
-          <Profile size={24} src={getProfileImageUrl(instructor_image)} alt={`${instructor_name} 강사 프로필`}></Profile>
+          <Profile
+            size={24}
+            src={getProfileImageUrl(instructor_image)}
+            alt={`${instructor_name} 강사 프로필`}
+          ></Profile>
 
           <Instructor.ContentContainer>
             <Instructor.Header>
@@ -34,7 +35,6 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
 
             <Instructor.Description>{instructor_description}</Instructor.Description>
           </Instructor.ContentContainer>
-
         </Instructor.InfoBox>
       )}
     </S.Section>
@@ -108,7 +108,6 @@ const Instructor = {
     }
   `,
   Description: styled.p`
-
     word-break: keep-all;
     line-height: 1.5;
 
@@ -120,20 +119,21 @@ const Instructor = {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    
-    li { 
-      display: flex; 
-      color: ${({ theme }) => theme.colors.gray400}; 
+
+    li {
+      display: flex;
+      color: ${({ theme }) => theme.colors.gray400};
       font-weight: 500;
     }
-    
+
     @media ${({ theme }) => theme.devices.mobile} {
       font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
   PositionLabel: styled.span<{ $isCurrent: boolean }>`
     font-weight: 500;
-    color: ${({ $isCurrent, theme }) => ($isCurrent ? theme.colors.primary300 : theme.colors.gray300)};
+    color: ${({ $isCurrent, theme }) =>
+      $isCurrent ? theme.colors.primary300 : theme.colors.gray300};
     width: 2.4rem;
   `,
   ExperienceTitle: styled.p`
@@ -149,8 +149,8 @@ const Instructor = {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    
-    li { 
+
+    li {
       font-size: ${({ theme }) => theme.fontSize.md};
       color: ${({ theme }) => theme.colors.gray400};
       font-weight: 500;

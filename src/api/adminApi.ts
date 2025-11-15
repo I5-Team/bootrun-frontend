@@ -316,15 +316,60 @@ export const updateSettings = (newSettings: Partial<AdminSettings>): Promise<Adm
   "detail": "서버 오류가 발생했습니다"
 }
  */
+/**
+ * GET /admin/users
+ * 사용자 목록 조회 (필터링, 페이지네이션)
+ *
+ * @param params - page, page_size, role, is_active, keyword, start_date, end_date
+ * @response 200 OK
+ * {
+ *   "total": 12,
+ *   "page": 1,
+ *   "page_size": 20,
+ *   "total_pages": 1,
+ *   "items": [
+ *     {
+ *       "id": 13,
+ *       "email": "test05@test.com",
+ *       "nickname": "김밥",
+ *       "role": "student",
+ *       "is_active": false,
+ *       "total_enrollments": 0,
+ *       "total_payments": 0,
+ *       "total_spent": 0,
+ *       "created_at": "2025-11-15T16:44:50.710281",
+ *       "last_login": "2025-11-15T16:46:07.899195"
+ *     }
+ *   ]
+ * }
+ */
 export const fetchUsers = async (params: UserApiParams): Promise<UserListResponse> => {
+  console.log('Fetching users with params:', params);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
   if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for user list');
     const data = getMockUsers(params);
     return simulateFetch(data, API_DELAY);
-  } else {
+  }
+
+  try {
+    console.log('  🔗 Calling real API: GET /admin/users');
+
+    // null이거나 빈 문자열인 파라미터 제거
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== null && value !== '')
+    );
+    console.log('  🔍 Cleaned params:', cleanParams);
+
     const response = await apiClient.get<UserListResponse>(API_URL.ADMIN_USERS.USER_LIST, {
-      params,
+      params: cleanParams,
     });
+    console.log('  ✅ API response:', response.data);
     return response.data;
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    throw error;
   }
 };
 
@@ -377,31 +422,31 @@ export const deactivateUser = async (userId: number): Promise<{ message: string 
  * GET /admin/users/{user_id}
  * 특정 사용자 상세 정보 조회
  *
- * @response
- * 200 OK (정상 응답)
-{
-  "id": 0,
-  "email": "string",
-  "nickname": "string",
-  "gender": "string",
-  "birth_date": "2025-11-13",
-  "role": "string",
-  "is_active": true,
-  "provider": "string",
-  "created_at": "2025-11-13T06:09:28.921Z",
-  "last_login": "2025-11-13T06:09:28.921Z",
-  "total_study_time": 0,
-  "total_enrollments": 0,
-  "active_enrollments": 0,
-  "completed_courses": 0,
-  "avg_progress_rate": 0,
-  "total_payments": 0,
-  "total_spent": 0,
-  "total_refunds": 0,
-  "total_questions": 0,
-  "total_comments": 0,
-  "enrollments": []
-}
+ * @param userId - 사용자 ID
+ * @response 200 OK (정상 응답)
+ * {
+ *   "id": 13,
+ *   "email": "test05@test.com",
+ *   "nickname": "김밥",
+ *   "gender": "female",
+ *   "birth_date": "1990-01-15",
+ *   "role": "student",
+ *   "is_active": false,
+ *   "provider": "email",
+ *   "created_at": "2025-11-15T16:44:50.710281",
+ *   "last_login": "2025-11-15T16:46:07.899195",
+ *   "total_study_time": 3600,
+ *   "total_enrollments": 2,
+ *   "active_enrollments": 1,
+ *   "completed_courses": 1,
+ *   "avg_progress_rate": 75,
+ *   "total_payments": 100000,
+ *   "total_spent": 100000,
+ *   "total_refunds": 0,
+ *   "total_questions": 5,
+ *   "total_comments": 10,
+ *   "enrollments": []
+ * }
  */
 export const fetchUserDetail = async (userId: number): Promise<UserDetail> => {
   console.log(`Fetching user detail for user ${userId}...`);
@@ -416,14 +461,25 @@ export const fetchUserDetail = async (userId: number): Promise<UserDetail> => {
       return new Promise((_, reject) => setTimeout(() => reject(new Error('USER_NOT_FOUND')), 300));
     }
 
-    return simulateFetch(data, 400);
+    return simulateFetch(data, API_DELAY);
   }
 
   try {
     console.log(`  🔗 Calling real API: GET /admin/users/${userId}`);
-    const response = await apiClient.get<UserDetail>(API_URL.ADMIN_USERS.USER_DETAIL(userId));
+    // 백엔드 응답 형식: { success: boolean; message: string | null; data: UserDetail }
+    const response = await apiClient.get<{
+      success: boolean;
+      message: string | null;
+      data: UserDetail;
+    }>(API_URL.ADMIN_USERS.USER_DETAIL(userId));
     console.log('  ✅ API response:', response.data);
-    return response.data;
+
+    // data 필드만 추출해서 반환
+    if (response.data.data) {
+      return response.data.data;
+    }
+
+    throw new Error('Invalid API response: missing data field');
   } catch (error) {
     console.error('  ❌ API Error:', error);
     console.log('  📦 Falling back to MOCK data');
@@ -433,7 +489,7 @@ export const fetchUserDetail = async (userId: number): Promise<UserDetail> => {
       throw new Error('USER_NOT_FOUND');
     }
 
-    return simulateFetch(data, 400);
+    return simulateFetch(data, API_DELAY);
   }
 };
 

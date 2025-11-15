@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 
-import type { CoursesDetailItem } from '../../../types/CourseType';
 import { getThumbnailUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 import { useState } from 'react';
 import { SkeletonImage } from '../../../components/Skeleton';
 
 const LectureBannerSection = () => {
-  const { data } = useLectureContext()
+  const { data } = useLectureContext();
   const { title, thumbnail_url } = data;
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -15,14 +14,15 @@ const LectureBannerSection = () => {
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
 
-      {!imgLoaded && <SkeletonImage/>}
-        <img 
-          src={getThumbnailUrl(thumbnail_url)}
-          alt={title}
-          onLoad={() => {setImgLoaded(false)}}
-          style={{ display: imgLoaded ? 'block' : 'none'}}
-        />
-
+      {!imgLoaded && <SkeletonImage />}
+      <img
+        src={getThumbnailUrl(thumbnail_url)}
+        alt={title}
+        onLoad={() => {
+          setImgLoaded(false);
+        }}
+        style={{ display: imgLoaded ? 'block' : 'none' }}
+      />
     </S.BannerWrapper>
   );
 };
@@ -31,7 +31,7 @@ const S = {
   BannerWrapper: styled.section`
     position: relative;
     width: 100%;
-    height: 41.6rem; 
+    height: 41.6rem;
     border-radius: ${({ theme }) => theme.radius.lg};
     overflow: hidden;
     background-color: ${({ theme }) => theme.colors.gray200};
@@ -40,7 +40,7 @@ const S = {
     justify-content: center;
 
     margin-top: 6rem;
-    
+
     img {
       width: 100%;
       height: 100%;
@@ -52,7 +52,7 @@ const S = {
       aspect-ratio: 342 / 180;
       height: auto;
     }
-  `
+  `,
 };
 
 export default LectureBannerSection;
