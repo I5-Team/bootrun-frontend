@@ -6,15 +6,14 @@ export const PageContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   height: 100%;
-  padding: 2rem 2rem 0 2rem;
+  padding-inline: 2rem;
+  padding-bottom: 8rem;
+  padding-top: 8rem;
   background-color: ${({ theme }) => theme.colors.white};
 
-  @media ${({ theme }) => theme.devices.tablet} {
-    padding: 1.6rem 1.6rem 0 1.6rem;
-  }
-
   @media ${({ theme }) => theme.devices.mobile} {
-    padding: 1.6rem 1.6rem 0 1.6rem;
+    padding-top: 6rem;
+    padding-inline: 1.6rem;
   }
 `;
 
@@ -39,16 +38,7 @@ export const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 6rem;
   margin-bottom: 0.4rem;
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    margin-top: 4rem;
-  }
-
-  @media ${({ theme }) => theme.devices.mobile} {
-    margin-top: 2rem;
-  }
 `;
 
 export const LogoIcon = styled.div`
@@ -60,29 +50,33 @@ export const LogoIcon = styled.div`
   overflow: hidden;
 
   svg {
-    width: 8rem;
-    height: 8rem;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    width: 6.4rem;
+    height: 6.4rem;
   }
 `;
 
-export const Title = styled.h1`
+export const Title = styled.h2`
   font-family: 'Pretendard', sans-serif;
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: 600;
-  line-height: 3.6rem;
+  line-height: 1.6;
   text-align: center;
   color: ${({ theme }) => theme.colors.surface};
   margin-bottom: 4rem;
 
   @media ${({ theme }) => theme.devices.tablet} {
     font-size: ${({ theme }) => theme.fontSize.lg};
-    line-height: 2.8rem;
+    line-height: 1.4;
     margin-bottom: 4.4rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.fontSize.lg};
-    line-height: 3.2rem;
+    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
     margin-bottom: 4.8rem;
   }
 `;
