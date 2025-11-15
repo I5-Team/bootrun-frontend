@@ -233,11 +233,26 @@ export const StyledDescriptionBox = styled.div`
 export const StyledPrice = styled.div`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
-  line-height: 2.2rem;
+  line-height: 1.4;
   color: ${({ theme }) => theme.colors.surface};
 
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.mobileFontSize.lg};
+  }
+`;
+
+export const StyledLearning = styled.div`
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.8rem;
+
+  svg {
+    width: 1.8rem;
+    path {
+      fill: currentColor;
+    }
   }
 `;
 

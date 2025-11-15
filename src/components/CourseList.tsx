@@ -150,7 +150,7 @@ export const FilterCourseList = ({
         <li key={course.id}>
              <CourseCard
                 variant="info"
-                lectureId={course.id}
+                courseId={course.id}
                 thumbnail={course.thumbnail_url}
                 tags={[
                     {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
@@ -216,7 +216,7 @@ export const FilterMyCourseList = ({
                 ]}
                 value={course.completed_lectures || 0} 
                 max={course.total_lectures || 0} 
-                lectureId={course.id}
+                courseId={course.id}
                 
                 isActive={course.enrollment_status === 'available' ? true: false}
                 isCompleted={course.learning_status === 'completed' ? true : false}
