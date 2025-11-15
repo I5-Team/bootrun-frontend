@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 import { useIsEnrolled } from '../../hooks/useIsEnrolled';
@@ -15,7 +15,6 @@ import SvgHeart from '../../assets/icons/icon-heart.svg?react';
 import SvgPlay from "../../assets/icons/icon-play.svg?react";
 import SvgPlayDark from "../../assets/icons/icon-play-dark.svg?react";
 import SvgCertificate from "../../assets/icons/icon-certificate.svg?react";
-import { SkeletonImage } from '../Skeleton';
 
 // import - utils
 import { getThumbnailUrl, getProfileImageUrl } from '../../utils/imageUtils';
@@ -51,8 +50,6 @@ type StudyContentProps = {
 
 // components
 const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCompleted }: BaseProps & { variant: VariantType }) => {
-  const [imgLoaded, setImgLoaded] = useState(false);
-  console.log(imgLoaded);
    
   const linkTo = variant === 'info' 
       ? `${ROUTES.LECTURE_LIST}/${courseId}`
@@ -68,20 +65,12 @@ const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCom
           {isActive === false && 
             <StlyedThumbnailNotice>수강 기간이 종료되었습니다.</StlyedThumbnailNotice>
           }
-          {!imgLoaded && <SkeletonImage/>}
           <StyledThumbnailLink
             to={linkTo}
             aria-label={linkLabel}
             onClick={(e) => (isActive === false) && e.preventDefault()}
           >
-
-            <StyledThumbnailImage 
-              src={getThumbnailUrl(thumbnail)}
-              alt=""
-              onLoad={() => setImgLoaded(true)}
-              style={{ display: imgLoaded ? 'block' : 'none'}}
-              />
-
+            <StyledThumbnailImage src={getThumbnailUrl(thumbnail)} alt=""/>
           </StyledThumbnailLink>
           {variant === "info" && 
             <LikeButton courseId={courseId}/>
@@ -107,7 +96,7 @@ const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCom
 
 const CardTagList = ({ tags }: {tags: BaseProps["tags"] }) => {
   return (
-      <StyledTagList role="list" aria-label="강의 태그">
+      <StyledTagList aria-label="강의 태그">
         {tags.map((tag) => (
           <li key={tag.label}>
             <Tag variant={tag.variant}>{tag.label}</Tag>
@@ -143,13 +132,12 @@ const CardInfoContent = ({ courseId, teacherImage, teacherName, teacherRole, des
         <StyledTeacherInfo>
           <Profile size={4.6} src={getProfileImageUrl(teacherImage)} alt={`${teacherName} 강사 프로필`}/>
           <StyledTeacherDetails>
-            <span className="sr-only">강사</span>
             <StyledTeacherName>{teacherName}</StyledTeacherName>
-            <StyledTeacherRole aria-label="강사 전문 분야:">{teacherRole}</StyledTeacherRole>
+            <StyledTeacherRole>{teacherRole}</StyledTeacherRole>
           </StyledTeacherDetails>
         </StyledTeacherInfo>
 
-        <StyledDescriptionBox role="blockquote" aria-label="강의 소개:">
+        <StyledDescriptionBox>
           <p>{description}</p>
         </StyledDescriptionBox>
       </StyledTeacherSection>
@@ -199,7 +187,6 @@ const CardStudyContent = ({ value = 0, max = 1, courseId, isActive }: StudyConte
 
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
   const { variant, courseId, thumbnail, tags, title, isActive, isCompleted } = props;
-  console.log('courseId', courseId);
   return (
     <StyledCardArticle>
       <CardHeader 

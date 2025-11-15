@@ -46,7 +46,7 @@ const SectionHead = ({ courseType }: { courseType: CourseType }) => {
     return (
         <StyledSectionHead>
             <StyledTitle>{title}</StyledTitle>
-            <Link to={showMorePath} aria-label={`${title} 강의 리스트 더보기`}>
+            <Link to={showMorePath} aria-label={`강의 목록 더보기`}>
                 <StyledShowMore>
                     더 보기
                     <SvgArrowRight/>

@@ -41,12 +41,9 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
 `
 
 export const Tag: React.FC<TagProps> = ({ children, variant = 'light', hasDelete }) => {
-  const tagName = typeof children === 'string' ? children : '';
-
   return (
     <StyledTag 
       $variant={variant}
-      aria-label={hasDelete ? `${tagName} 조건 삭제` : tagName}
     >
       {children}
       {hasDelete && <SvgDelete aria-hidden="true" />}
