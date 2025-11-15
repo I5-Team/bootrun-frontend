@@ -20,11 +20,9 @@ import NoticeSection from './components/NoticeSection';
 import ReviewSection from './components/ReviewSection';
 import { SectionTabs } from './components/SectionTabs';
 import { LectureInfoBox, InfoBoxButtons } from './components/LectureInfoBox';
-import { useLectureContext } from '../../layouts/LectureDetailLayout';
 
 // 함수
 export const formatDate = (dateString: string): string => {
-  const { } = useLectureContext();
   const [datePart] = dateString.split("T");
   const [year, month, day] = datePart.split("-");
 

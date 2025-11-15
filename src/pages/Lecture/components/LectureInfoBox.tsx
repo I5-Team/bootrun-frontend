@@ -12,6 +12,7 @@ import SvgPlay from "../../../assets/icons/icon-play.svg?react";
 import ProgressBar from '../../../components/ProgressBar';
 import { useEnrollmentDetailQuery } from '../../../queries/useEnrollmentQueries';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { LoadingSpinner } from '../../../components/HelperComponents';
 
 
 export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
@@ -19,7 +20,7 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
   const { course_type, category_type, difficulty } = data;
   const { recruitment_end_date, course_start_date, course_end_date } = data;
   const { access_duration_days, max_students } = data;
-  const { data: enrollmentData } = useEnrollmentDetailQuery(courseId);
+  const { data: enrollmentData, isLoading: isEnrollmentLoading } = useEnrollmentDetailQuery(courseId);
 
   const learningStatusMap: Record<string, string> = {
     not_started: "학습 예정",
@@ -28,7 +29,6 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
   };
 
   const learningStatusLabel = learningStatusMap[enrollmentData?.learning_status ?? 'not_started'];
-
 
   const calculateDdayFrom = (targetDateString: string) => {
     const targetDate = new Date(targetDateString);
@@ -92,7 +92,9 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
               </li>
   
             </S.LectureInfoList>
-            {isEnrolled && enrollmentData ? (
+
+          {isEnrollmentLoading ? <LoadingSpinner/> : (
+            isEnrolled && enrollmentData ? (
               <S.LearingProgress>
                 <S.ProgressTitle>
                   <S.InfoLabel>진행 상황</S.InfoLabel>
@@ -106,7 +108,8 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
               </S.LearingProgress>
             ) : (
               <S.Price>₩{data.price.toLocaleString()}</S.Price>
-            )}
+            )
+          )}
           </>
   )
 }
@@ -179,15 +182,9 @@ export const LectureInfoBox = () => {
 
   return (
     <S.FloatingCardWrapper>
-      {data && (
-        <>
           <S.Title>강의 정보</S.Title>
-
-          <InfoBoxContent recruitmentStatus={recruitmentStatus}/>
-
-          <InfoBoxButtons recruitmentStatus={recruitmentStatus}/>
-        </>
-      )}
+              <InfoBoxContent recruitmentStatus={recruitmentStatus}/>
+              <InfoBoxButtons recruitmentStatus={recruitmentStatus}/>
     </S.FloatingCardWrapper>
   );
 };

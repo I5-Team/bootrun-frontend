@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 import { useIsEnrolled } from '../../hooks/useIsEnrolled';
@@ -15,6 +15,7 @@ import SvgHeart from '../../assets/icons/icon-heart.svg?react';
 import SvgPlay from "../../assets/icons/icon-play.svg?react";
 import SvgPlayDark from "../../assets/icons/icon-play-dark.svg?react";
 import SvgCertificate from "../../assets/icons/icon-certificate.svg?react";
+import { SkeletonImage } from '../Skeleton';
 
 // types
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
@@ -47,9 +48,12 @@ type StudyContentProps = {
 
 // components
 const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCompleted }: BaseProps & { variant: VariantType }) => {
-const linkTo = variant === 'info' 
-    ? `${ROUTES.LECTURE_LIST}/${courseId}`
-    : `${ROUTES.LECTURE_LIST}/${courseId}/room`;
+  const [imgLoaded, setImgLoaded] = useState(false);
+  console.log(imgLoaded);
+   
+  const linkTo = variant === 'info' 
+      ? `${ROUTES.LECTURE_LIST}/${courseId}`
+      : `${ROUTES.LECTURE_LIST}/${courseId}/room`;
 
   const linkLabel = variant === 'info'
     ? `${title} 강의상세 바로가기`
@@ -61,12 +65,18 @@ const linkTo = variant === 'info'
           {isActive === false && 
             <StlyedThumbnailNotice>수강 기간이 종료되었습니다.</StlyedThumbnailNotice>
           }
+          {!imgLoaded && <SkeletonImage/>}
           <StyledThumbnailLink
             to={linkTo}
             aria-label={linkLabel}
             onClick={(e) => (isActive === false) && e.preventDefault()}
           >
-            <StyledThumbnailImage src={thumbnail} alt=""/>
+            <StyledThumbnailImage 
+              src={thumbnail} 
+              alt=""
+              onLoad={() => setImgLoaded(true)}
+              style={{ display: imgLoaded ? 'block' : 'none'}}
+              />
           </StyledThumbnailLink>
           {variant === "info" && 
             <LikeButton courseId={courseId}/>

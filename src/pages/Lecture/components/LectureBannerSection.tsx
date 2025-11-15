@@ -1,20 +1,30 @@
 import styled from 'styled-components';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useState } from 'react';
+import { SkeletonImage } from '../../../components/Skeleton';
 
 const LectureBannerSection = () => {
   const { data } = useLectureContext()
   const { title, thumbnail_url } = data;
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
-      <img alt={title} src={thumbnail_url} />
+      {!imgLoaded && <SkeletonImage/>}
+        <img 
+          src={thumbnail_url}
+          alt={title}
+          onLoad={() => {setImgLoaded(false)}}
+          style={{ display: imgLoaded ? 'block' : 'none'}}
+        />
     </S.BannerWrapper>
   );
 };
 
 const S = {
   BannerWrapper: styled.section`
+    position: relative;
     width: 100%;
     height: 41.6rem; 
     border-radius: ${({ theme }) => theme.radius.lg};
