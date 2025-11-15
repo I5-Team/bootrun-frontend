@@ -8,6 +8,7 @@ import type {
   UserProfile,
 } from '../types/UserType';
 import { mockProfileData } from '../data/mockMyPageData';
+import type { ApiResponse } from '../types/api';
 
 const useMock = false;
 /**
@@ -57,7 +58,7 @@ export const updateProfile = async (payload: ProfileUpdatePayload): Promise<Prof
 export const uploadProfileImage = async (formData: FormData): Promise<ProfileImageResponse> => {
   const file = formData.get('file') as File;
   const mockUrl = file ? URL.createObjectURL(file) : '';
-  mockProfileData.profile_image_url = mockUrl;
+  mockProfileData.profile_image = mockUrl;
   const mockResponse = {
     success: true,
     message: '이미지 업로드 성공 (Mock Fallback)',
@@ -78,6 +79,15 @@ export const uploadProfileImage = async (formData: FormData): Promise<ProfileIma
     // 오류 시 목업 반환
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 1000));
   }
+};
+
+/**
+ * DELETE /users/me/profile-image - 프로필 이미지 삭제
+ */
+export const deleteProfileImage = async (): Promise<ApiResponse<null>> => {
+  // (ApiResponse<null> 또는 { success: boolean; message: string } 타입을 사용)
+  const response = await apiClient.delete<ApiResponse<null>>(API_URL.USER.PROFILE_IMAGE);
+  return response.data;
 };
 
 /**

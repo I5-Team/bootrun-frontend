@@ -1,13 +1,18 @@
-
 // 관리자 - 사용자 관리 훅 모음
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { activateUser, deactivateUser, fetchUsers, fetchUserDetail } from '../api/adminApi';
 import type { UserApiParams } from '../types/AdminUserType';
-import { deleteAccount, fetchProfile, updateProfile, uploadProfileImage } from '../api/userApi';
+import {
+  deleteAccount,
+  deleteProfileImage,
+  fetchProfile,
+  updateProfile,
+  uploadProfileImage,
+} from '../api/userApi';
 import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
 import { useNavigate } from 'react-router-dom';
 import { adminUserKeys, userKeys } from './queryKeys';
-
+import type { ResponseError } from '../types/api';
 
 /**
  * [Query] 내 프로필 정보 조회
@@ -47,17 +52,22 @@ export const useUpdateProfile = () => {
 };
 
 /**
+ * POST /users/me/profile-image - 프로필 이미지 업로드
  * [Mutation] 프로필 이미지 업로드
  */
 export const useUploadProfileImage = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (formData: FormData) => uploadProfileImage(formData),
     onSuccess: (data) => {
-      // 프로필 이미지 URL을 프로필 데이터에 반영
+      const newImageUrl = data.data?.image_url;
+      console.log('업로드된 이미지 URL:', newImageUrl);
+
       queryClient.setQueryData<UserProfile | undefined>(userKeys.me, (oldData) => {
+        console.log('기존 프로필 이미지 URL:', oldData?.profile_image);
         if (oldData) {
-          return { ...oldData, profile_image_url: data.data?.image_url };
+          return { ...oldData, profile_image: newImageUrl };
         }
         return oldData;
       });
@@ -65,6 +75,35 @@ export const useUploadProfileImage = () => {
     },
     onError: () => {
       alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+    },
+  });
+};
+
+/**
+ * DELETE /users/me/profile-image - 프로필 이미지 삭제
+ * [Mutation] 프로필 이미지 삭제
+ */
+export const useDeleteProfileImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProfileImage(),
+    onSuccess: () => {
+      // 1. [즉각적 UX] 'me' 쿼리 캐시에서 이미지 URL을 null 또는 undefined로 제거
+      queryClient.setQueryData<UserProfile | undefined>(userKeys.me, (oldData) => {
+        if (oldData) {
+          return { ...oldData, profile_image: undefined }; // 👈 기본 이미지로
+        }
+        return oldData;
+      });
+
+      // 2. [데이터 동기화] 백그라운드에서 'me' 쿼리 재조회
+      queryClient.invalidateQueries({ queryKey: userKeys.me });
+
+      alert('프로필 이미지가 삭제되었습니다.');
+    },
+    onError: (error: ResponseError) => {
+      alert(error.response?.data?.detail?.detail || '이미지 삭제에 실패했습니다.');
     },
   });
 };
@@ -88,7 +127,6 @@ export const useDeleteAccount = () => {
   });
 };
 
-
 /**
  * 사용자 목록 조회 쿼리 훅
  */
@@ -97,10 +135,8 @@ export const useUserListQuery = (params: UserApiParams) => {
     queryKey: adminUserKeys.list(params),
     queryFn: () => fetchUsers(params),
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
-
   });
 };
-
 
 /**
  * 사용자 상세 조회 쿼리 훅
@@ -112,7 +148,6 @@ export const useUserDetailQuery = (userId: number) => {
     enabled: !!userId, // userId가 있을 때만 쿼리 실행
   });
 };
-
 
 /**
  * 사용자 활성화/비활성화 훅

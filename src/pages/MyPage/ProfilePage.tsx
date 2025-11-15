@@ -1,17 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import SvgProfileImage from '../../assets/images/profile-user-default.png';
-import { useProfile, useUpdateProfile, useUploadProfileImage } from '../../queries/useUserQueries';
+import {
+  useDeleteProfileImage,
+  useProfile,
+  useUpdateProfile,
+  useUploadProfileImage,
+} from '../../queries/useUserQueries';
 import type { ProfileUpdatePayload } from '../../types/UserType';
+import {
+  Container,
+  Form,
+  FormContent,
+  FormGroup,
+  FormRow,
+  ImagePreview,
+  ImageActionButton,
+  ImageWrapper,
+  Input,
+  ProfileContainer,
+  Select,
+  SubmitButton,
+  SubmitButtonWrapper,
+  Title,
+} from './ProfilePage.styled';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
   console.log('ProfilePage data:', data);
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: uploadProfileImage, isPending: isUploadingImage } = useUploadProfileImage();
+  const { mutate: deleteProfileImage, isPending: isDeletingImage } = useDeleteProfileImage();
 
-  const [name, setName] = useState('');
+  const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState('none');
   const [birthdate, setBirthdate] = useState('');
 
@@ -22,12 +45,17 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (data) {
       // 프로필 데이터가 로드되면 상태 초기화
-      setName(data.nickname || '');
+      setNickname(data.nickname || '');
       setGender(data.gender || 'none');
       setBirthdate(data.birth_date || '');
-      setImagePreview(data.profile_image_url || null);
+      const fullImageUrl = data.profile_image ? API_BASE_URL + data.profile_image : null;
+      console.log('fullImageUrl:', fullImageUrl);
+
+      if (!selectedFile) {
+        setImagePreview(fullImageUrl);
+      }
     }
-  }, [data]);
+  }, [data, selectedFile]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +63,7 @@ const ProfilePage: React.FC = () => {
     // TODO: 프로필 수정 API 호출
     // 1. 변경된 텍스트 정보가 있는지 확인
     const payload: ProfileUpdatePayload = {};
-    if (data?.nickname !== name) payload.nickname = name;
+    if (data?.nickname !== nickname) payload.nickname = nickname;
     if (data?.gender !== gender) payload.gender = gender;
     if (data?.birth_date !== birthdate) payload.birth_date = birthdate;
 
@@ -50,7 +78,12 @@ const ProfilePage: React.FC = () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      uploadProfileImage(formData);
+      uploadProfileImage(formData, {
+        onSuccess: () => {
+          // 업로드 성공 시 선택된 파일 초기화
+          setSelectedFile(null);
+        },
+      });
     }
 
     // 4. 아무것도 변경되지 않았을 경우
@@ -70,32 +103,76 @@ const ProfilePage: React.FC = () => {
       setImagePreview(URL.createObjectURL(file)); // 프리뷰용
     }
   };
+  const handleClearImage = () => {
+    if (selectedFile) {
+      // 1. 로컬에서 선택한 파일(blob:)을 '취소'할 때
+      setSelectedFile(null);
+      // 원래 서버 이미지 (있다면) 또는 기본 이미지로 되돌림
+      const originalServerImage = data?.profile_image
+        ? `${API_BASE_URL}${data.profile_image}`
+        : null;
+      setImagePreview(originalServerImage);
+      if (fileInputRef.current) fileInputRef.current.value = ''; // input DOM 초기화
+    } else if (data?.profile_image) {
+      // 2. 서버에 저장된 이미지를 '삭제'할 때 (API 호출)
+      if (window.confirm('프로필 이미지를 삭제하시겠습니까?')) {
+        deleteProfileImage(undefined, {
+          onSuccess: () => {
+            setImagePreview(null);
+            setSelectedFile(null);
+          },
+        });
+      }
+    }
+  };
 
   if (isLoading) return <LoadingSpinner />;
   if (isError) return <ErrorMessage message="프로필 정보를 불러오는 중 오류가 발생했습니다." />;
   if (!data) return null;
 
+  const isPending = isUpdating || isUploadingImage || isDeletingImage;
+
   return (
-    <S.Form onSubmit={handleSubmit}>
-      <S.Title as="h2">프로필 설정</S.Title>
-      <S.Container>
-        <S.ProfileContainer>
-          <S.ImageWrapper>
-            <S.ImagePreview>
+    <Form onSubmit={handleSubmit}>
+      <Title as="h2">프로필 설정</Title>
+      <Container>
+        <ProfileContainer>
+          <ImageWrapper>
+            <ImagePreview>
               {imagePreview ? (
-                <img src={imagePreview} alt="현재 프로필 이미지" />
+                <>
+                  {console.log('imagePreview:', imagePreview)}
+                  <img src={imagePreview} alt="현재 프로필 이미지" />
+                </>
               ) : (
                 <img src={SvgProfileImage} alt="기본 프로필 이미지" />
               )}
-            </S.ImagePreview>
-            <S.ImageUploadButton
-              type="button"
-              onClick={handleImageUploadClick}
-              aria-label="프로필 이미지 변경"
-            >
-              +
-            </S.ImageUploadButton>
-          </S.ImageWrapper>
+            </ImagePreview>
+            {/* ⭐️ (수정) 조건부 버튼 렌더링 */}
+            {imagePreview ? (
+              // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
+              <ImageActionButton
+                type="button"
+                onClick={handleClearImage}
+                aria-label="이미지 제거"
+                disabled={isPending}
+                $isDelete={true}
+              >
+                x
+              </ImageActionButton>
+            ) : (
+              // 2. 이미지가 없으면 -> '업로드' 버튼 (+)
+              <ImageActionButton
+                type="button"
+                onClick={handleImageUploadClick}
+                aria-label="프로필 이미지 변경"
+                disabled={isPending}
+                $isDelete={false}
+              >
+                +
+              </ImageActionButton>
+            )}
+          </ImageWrapper>
 
           <input
             type="file"
@@ -105,23 +182,23 @@ const ProfilePage: React.FC = () => {
             onChange={handleImageChange}
             aria-hidden="true"
           />
-        </S.ProfileContainer>
+        </ProfileContainer>
 
-        <S.FormContent>
-          <S.FormGroup>
-            <label htmlFor="name">이름</label>
-            <S.Input
-              id="name"
+        <FormContent>
+          <FormGroup>
+            <label htmlFor="nickname">닉네임</label>
+            <Input
+              id="nickname"
               type="text"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
-          </S.FormGroup>
-          <S.FormRow>
-            <S.FormGroup>
+          </FormGroup>
+          <FormRow>
+            <FormGroup>
               <label htmlFor="gender">성별</label>
-              <S.Select
+              <Select
                 id="gender"
                 name="gender"
                 value={gender}
@@ -130,12 +207,12 @@ const ProfilePage: React.FC = () => {
                 <option value="none">선택</option>
                 <option value="male">남성</option>
                 <option value="female">여성</option>
-              </S.Select>
-            </S.FormGroup>
-            <S.FormGroup>
+              </Select>
+            </FormGroup>
+            <FormGroup>
               <label htmlFor="birthdate">생년월일</label>
 
-              <S.Input
+              <Input
                 id="birthdate"
                 type="date"
                 name="birthdate"
@@ -143,178 +220,18 @@ const ProfilePage: React.FC = () => {
                 onChange={(e) => setBirthdate(e.target.value)}
                 aria-label="생년월일 입력"
               />
-            </S.FormGroup>
-          </S.FormRow>
-        </S.FormContent>
-      </S.Container>
+            </FormGroup>
+          </FormRow>
+        </FormContent>
+      </Container>
 
-      <S.SubmitButtonWrapper>
-        <S.SubmitButton type="submit" disabled={isUpdating || isUploadingImage}>
+      <SubmitButtonWrapper>
+        <SubmitButton type="submit" disabled={isPending}>
           수정하기
-        </S.SubmitButton>
-      </S.SubmitButtonWrapper>
-    </S.Form>
+        </SubmitButton>
+      </SubmitButtonWrapper>
+    </Form>
   );
-};
-
-// --- Styles (시안 반영, rem/theme 적용) ---
-const S = {
-  Form: styled.form`
-    width: 100%;
-    max-width: 72rem;
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
-  `,
-  Title: styled.h2`
-    font-size: 2.4rem;
-    font-weight: 700;
-    padding: 2.4rem;
-    margin: 0;
-  `,
-  Container: styled.div`
-    display: flex;
-    gap: 3.2rem;
-    padding: 2.4rem;
-    border-top: 1px solid #f0f0f0;
-    border-bottom: 1px solid #f0f0f0;
-  `,
-  ProfileContainer: styled.div`
-    flex-shrink: 0;
-  `,
-  ImageWrapper: styled.div`
-    position: relative; /* ◀ 버튼의 기준점이 됨 */
-    width: 12rem;
-    height: 12rem;
-  `,
-  ImagePreview: styled.div`
-    width: 12rem;
-    height: 12rem;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.colors.gray100};
-    border: 1px solid ${({ theme }) => theme.colors.gray200};
-    overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  `,
-  ImagePlaceholder: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    color: ${({ theme }) => theme.colors.gray300};
-    border-radius: 50%;
-  `,
-  ImageUploadButton: styled.button`
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 3.2rem;
-    height: 3.2rem;
-    border-radius: 50%;
-    background: ${({ theme }) => theme.colors.gray400};
-    color: ${({ theme }) => theme.colors.white};
-    border: 2px solid ${({ theme }) => theme.colors.white};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.6rem;
-  `,
-  FormContent: styled.div`
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  `,
-  FormRow: styled.div`
-    display: flex;
-    gap: 2rem;
-  `,
-  FormGroup: styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-
-    label {
-      font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
-      font-weight: 500;
-    }
-
-    input,
-    select {
-      height: 4.8rem;
-      padding: 0 1.6rem;
-      border: 1px solid ${({ theme }) => theme.colors.gray200};
-      border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
-      font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-
-      &:focus {
-        border-color: ${({ theme }) => theme.colors.primary300};
-        outline: none;
-      }
-    }
-
-    input[type='text'] {
-      border-color: ${({ theme }) => theme.colors.primary300};
-    }
-  `,
-  Input: styled.input`
-    height: 4.8rem;
-    padding: 0 1.6rem;
-    border: 1px solid ${({ theme }) => theme.colors.gray200};
-    border-radius: ${({ theme }) => theme.radius.md};
-    font-size: ${({ theme }) => theme.fontSize.md};
-    min-width: auto;
-
-    &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
-    }
-
-    &[type='text'] {
-      border-color: ${({ theme }) => theme.colors.primary300};
-    }
-  `,
-  Select: styled.select`
-    height: 4.8rem;
-    padding: 0 1.6rem;
-    border: 1px solid ${({ theme }) => theme.colors.gray200};
-    border-radius: ${({ theme }) => theme.radius.md};
-    font-size: ${({ theme }) => theme.fontSize.md};
-    background: white;
-
-    &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
-    }
-  `,
-
-  SubmitButtonWrapper: styled.div`
-    padding: 2.4rem;
-    display: flex;
-    justify-content: flex-end;
-  `,
-  SubmitButton: styled.button`
-    padding: 1.4rem 2.4rem;
-    font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.white};
-    background-color: ${({ theme }) => theme.colors.primary300};
-    border: none;
-    border-radius: ${({ theme }) => theme.radius.md};
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.9;
-    }
-  `,
 };
 
 export default ProfilePage;
