@@ -149,11 +149,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   return (
     <StyledPofileCard $variant={variant}>
       <StyledUserInfo>
-        {isLoggedIn ? (
-          <Profile size={10} src={userInfo?.profile_image_url} />
-        ) : (
-          <Profile size={10} />
-        )}
+        {isLoggedIn ? <Profile size={10} src={userInfo?.profile_image} /> : <Profile size={10} />}
         <StyledInfoText>
           <StyledName>{isLoggedIn ? userInfo?.nickname : '호기심 많은 개발자님'}</StyledName>
           {isLoggedIn && <StyledEmail>{userInfo?.email}</StyledEmail>}

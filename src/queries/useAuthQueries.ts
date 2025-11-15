@@ -64,8 +64,8 @@ export const useLogin = () => {
       navigate('/'); // 로그인 성공 시 메인 페이지로 이동
     },
     onError: (error: ResponseError) => {
-      console.error('로그인 실패:', error);
-      alert(error.response?.data?.detail || '로그인에 실패했습니다.');
+      console.error('로그인 실패:', error.response?.data?.detail?.detail);
+      alert(error.response?.data?.detail?.detail || '로그인에 실패했습니다.');
     },
   });
 };
