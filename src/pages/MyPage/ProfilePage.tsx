@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import SvgProfileImage from '../../assets/images/profile-user-default.png';
-import { useProfile } from '../../queries/useUserQueries';
+import { useProfile, useUpdateProfile, useUploadProfileImage } from '../../queries/useUserQueries';
+import type { ProfileUpdatePayload } from '../../types/UserType';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
   console.log('ProfilePage data:', data);
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
+  const { mutate: uploadProfileImage, isPending: isUploadingImage } = useUploadProfileImage();
 
   const [name, setName] = useState('');
   const [gender, setGender] = useState('none');
@@ -30,6 +33,30 @@ const ProfilePage: React.FC = () => {
     e.preventDefault();
     console.log('수정하기:', { name, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
+    // 1. 변경된 텍스트 정보가 있는지 확인
+    const payload: ProfileUpdatePayload = {};
+    if (data?.nickname !== name) payload.nickname = name;
+    if (data?.gender !== gender) payload.gender = gender;
+    if (data?.birth_date !== birthdate) payload.birth_date = birthdate;
+
+    const didTextChange = Object.keys(payload).length > 0;
+
+    // 2. 텍스트 정보가 변경되었다면, 텍스트 수정 API 호출
+    if (didTextChange) {
+      updateProfile(payload);
+    }
+
+    // 3. 새로운 이미지 파일이 선택되었다면, 이미지 업로드 API 호출
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      uploadProfileImage(formData);
+    }
+
+    // 4. 아무것도 변경되지 않았을 경우
+    if (!didTextChange && !selectedFile) {
+      alert('변경된 내용이 없습니다.');
+    }
   };
 
   const handleImageUploadClick = () => {
@@ -122,7 +149,9 @@ const ProfilePage: React.FC = () => {
       </S.Container>
 
       <S.SubmitButtonWrapper>
-        <S.SubmitButton type="submit">수정하기</S.SubmitButton>
+        <S.SubmitButton type="submit" disabled={isUpdating || isUploadingImage}>
+          수정하기
+        </S.SubmitButton>
       </S.SubmitButtonWrapper>
     </S.Form>
   );

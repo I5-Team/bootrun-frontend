@@ -2,7 +2,7 @@ name: Deploy dev branch to GitHub Pages
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: ['dev']
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-dev"
+  group: 'pages-dev'
   cancel-in-progress: true
 
 jobs:
@@ -24,8 +24,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -33,12 +33,13 @@ jobs:
       - name: Build for dev
         env:
           VITE_BASE: /bootrun-frontend/
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL_DEV }}
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: './dist'
 
   deploy:
     needs: build
