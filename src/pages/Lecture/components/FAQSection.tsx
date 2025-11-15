@@ -3,49 +3,24 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
-import type { CoursesDetailItem } from '../../../types/CourseType';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
-type FAQSectionProps = {
-  data: CoursesDetailItem,
-}
 
 type FaqItem = {
-  id: number;
-  prefix: string;
   question: string;
   answer: string;
 };
 
-const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data }, ref) => {
-  const [openItemId, setOpenItemId] = useState<number | null>(null);
+const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
+  const FAQData = data.faq;
+  const [openItemIndex, setOpenItemIndex] = useState<number | null>(null);
 
-  if (!data) return null;
+  if (!FAQData) return null;
+  const FAQDataArr = JSON.parse(FAQData);
 
-  const faqData: FaqItem[] = [];
-  
-  if (data.faq) {
-    try {
-      const parsed = JSON.parse(data.faq);
-
-      Object.keys(parsed)
-        .filter((key) => key.startsWith('Q'))
-        .forEach((qKey, index) => {
-          const aKey = qKey.replace('Q', 'A');
-
-          faqData.push({
-            id: index,
-            prefix: qKey,
-            question: parsed[qKey],
-            answer: parsed[aKey] || '',
-          });
-        });
-    } catch (e) {
-      console.error('FAQ parsing error', e);
-    }
-  }
-
-  const toggleItem = (id: number) => {
-    setOpenItemId(openItemId === id ? null : id);
+  const toggleItem = (index: number) => {
+    setOpenItemIndex(openItemIndex === index ? null : index);
   };
 
   return (
@@ -56,16 +31,16 @@ const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data }, ref
           </S.SectionHeader>
 
           <FAQ.Container>
-            {faqData.length === 0
-            ? <FAQ.Item $open={openItemId === 1234}>
+            {FAQDataArr.length === 0
+            ? <FAQ.Item $open={openItemIndex === 1234}>
                 <FAQ.Question onClick={() => toggleItem(1234)}>
                   <FAQ.QuestionTitle>
                     <span className="prefix">Q</span>
                     <span>아직 등록된 FAQ가 없습니다.</span>
                   </FAQ.QuestionTitle>
-                  <FAQ.ToggleButton $open={openItemId === 1234}><SvgArrowDown/></FAQ.ToggleButton>
+                  <FAQ.ToggleButton $open={openItemIndex === 1234}><SvgArrowDown/></FAQ.ToggleButton>
                 </FAQ.Question>
-                {openItemId === 1234 && (
+                {openItemIndex === 1234 && (
                   <FAQ.Answer>
                     <p>궁금한 점이 있다면 <FAQ.Anchor href="mailto:">고객센터</FAQ.Anchor>로 문의해주세요.</p>
                   </FAQ.Answer>
@@ -73,13 +48,13 @@ const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data }, ref
               </FAQ.Item>
             :
               <>
-                {faqData.map((item: any) => {
-                  const isOpen = openItemId === item.id;
+                {FAQDataArr.map((item: FaqItem, index: number) => {
+                  const isOpen = openItemIndex === index;
                   return (
-                    <FAQ.Item key={item.id} $open={isOpen}>
-                      <FAQ.Question onClick={() => toggleItem(item.id)}>
+                    <FAQ.Item key={item.question} $open={isOpen}>
+                      <FAQ.Question onClick={() => toggleItem(index)}>
                         <FAQ.QuestionTitle>
-                          <span className="prefix">{item.prefix}</span>
+                          <span className="prefix">Q{index + 1}</span>
                           <span>{item.question}</span>
                         </FAQ.QuestionTitle>
                         <FAQ.ToggleButton $open={isOpen}><SvgArrowDown/></FAQ.ToggleButton>

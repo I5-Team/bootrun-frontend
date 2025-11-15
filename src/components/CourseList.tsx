@@ -1,36 +1,16 @@
 import styled from "styled-components";
 
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 import CourseCard from "../components/CourseCard/CourseCard";
 import SvgAlert from "../assets/icons/icon-status-alert.svg?react";
 import EmptyState from "../components/EmptyState/EmptyState";
-import { Button } from "../components/Button";
-import { ROUTES } from "../router/RouteConfig";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type PriceType } from "../types/CourseType";
-import { SkeletonCard } from "./Skeleton";
-import { fetchMyEnrollments } from "../api/enrollmentsApi";
+import { categoryLabel, courseTypeLabel, difficultyLabel, type CategoryType, type CourseItem, type CoursesApiParams, type CourseType, type DifficultyType, type MyEnrollmentItem, type MyEnrollmentsApiParams, type PriceType } from "../types/CourseType";
+import { SkeletonCard, SkeletonMyCourseCard } from "./Skeleton";
 import { useCoursesQuery } from "../queries/useCourseQueries";
-
-export type MyCourseItem = {
-    id: number;
-    user_id: number;
-    course_id: number;
-    course_type: CourseType,
-    course_title: string;
-    course_thumbnail: string;
-    category_name: CategoryType;
-    difficulty: DifficultyType;
-    enrolled_at: string;
-    expires_at: string;
-    is_active: boolean;
-    progress_rate: number;
-    days_until_expiry: number;
-    total_lectures: number;
-    completed_lectures: number;
-}
+import { useMyEnrollmentQuery } from "../queries/useEnrollmentQueries";
 
 export type CourseFilter = {
     courseTypeOpt?: CourseType,
@@ -67,32 +47,16 @@ const StyledCardGrid = styled.ul`
 
 // components
 const NoResultPage = () => {
-    const navigate = useNavigate();
-
-    const handleGoToLectures = () => {
-        navigate(ROUTES.LECTURE_LIST);
-    };
-
     return (
         <EmptyState
             icon={<SvgAlert />}
-            title="검색 결과가 없어요"
-            description="다른 키워드로 다시 검색해보세요."
-            buttons={
-                <Button
-                    variant="primary"
-                    size="md"
-                    onClick={handleGoToLectures}
-                    ariaLabel="강의 보러가기"
-                >
-                    강의 보러가기
-                </Button>
-            }
+            subTitle="찾는 조건의 강의가 없습니다."
         />
     );
 }
 
 type BaseCourseListProps<T> = {
+    variant: 'info' | 'study';
     data: T[];
     filterFn?: (item: T) => boolean;
     sortFn?: (a: T, b: T) => number;
@@ -103,6 +67,7 @@ type BaseCourseListProps<T> = {
 }
 
 const BaseCourseList = <T,>({
+    variant = 'info',
     data,
     filterFn,
     sortFn,
@@ -123,17 +88,25 @@ const BaseCourseList = <T,>({
 
     return (
         <div className="card-list">
-            {(!isLoading && refinedList.length === 0)
-            ? 
-            <NoResultPage/>
-            : 
-            <>
+            {isLoading || !refinedList ? (
                 <StyledCardGrid>
-                    {refinedList.map(courseCard)}
+                    {Array(9).fill(0).map((_, index) => 
+                        variant === "info"
+                            ? <SkeletonCard key={index}/>
+                            : <SkeletonMyCourseCard key={index}/>
+                    )}
                 </StyledCardGrid>
-                <ScrollToTopButton/>
-            </>
-            }
+            ) : (
+                refinedList.length === 0  
+                ? <NoResultPage/>
+                : <>
+                    <StyledCardGrid>
+                        {refinedList.map(courseCard)}
+                    </StyledCardGrid>
+                    <ScrollToTopButton/>
+                 </>
+                
+            )}            
         </div>
     )
 }
@@ -175,11 +148,9 @@ export const FilterCourseList = ({
 
     const courseCardItem = (course: CourseItem) => (
         <li key={course.id}>
-            {isLoading 
-            ? <SkeletonCard/>
-            : <CourseCard
+             <CourseCard
                 variant="info"
-                lectureId={course.id}
+                courseId={course.id}
                 thumbnail={course.thumbnail_url}
                 tags={[
                     {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
@@ -193,12 +164,12 @@ export const FilterCourseList = ({
                 description={course.description}
                 price={course.price}
             />
-            }
         </li>
     )
 
     return (
         <BaseCourseList
+            variant="info"
             data={courses}
             sortFn={sortFn}
             sliceFn={sliceFn}
@@ -214,46 +185,17 @@ export const FilterMyCourseList = ({
     onCountChange,
 }: CourseFilter ) => {
     const [searchParams] = useSearchParams();
-    const [myEnrollments, setMyEnrollments] = useState<MyEnrollmentItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {   
-        const loadMyEnrollments = async () => {
-            try {
-                setIsLoading(true);
-                const data = await fetchMyEnrollments({});
-                setMyEnrollments(data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        loadMyEnrollments();
-    }, [searchParams]);
-    
-    
-    // query params
-    const courseTypeParam = searchParams.get('courseType');
-    const isActiveParam = searchParams.get('is_active');
-    const progressParam = searchParams.get('progress');
-
-    const courseTypeFilter = courseTypeParam !== "all" ? courseTypeParam : null;
-    const isActiveFilter = isActiveParam !== "all" ? isActiveParam : null;
-    const progressFilter = progressParam !== "all" ? progressParam : null;
-
-    // filterFn
-    const filterFn = (course: MyCourseItem) => { 
-        const matchCourseType = !courseTypeFilter || courseTypeFilter === course.course_type;
-        const matchIsActive = !isActiveFilter ||  isActiveFilter === (course.days_until_expiry ? "true" : "false");
-        const matchProgress = !progressFilter! 
-        || progressFilter === (course.progress_rate === 100 ? "completed" : course.progress_rate > 0 ? "in_progress" : "not_started");
-
-        return matchCourseType && matchIsActive && matchProgress;
+    const filterParams: Partial<MyEnrollmentsApiParams> = {};
+    searchParams.forEach((value, key) => {
+    if (value) {
+        filterParams[key as keyof MyEnrollmentsApiParams] = value as any;
     }
+    });
+    const { data: myEnrollments = [], isLoading } = useMyEnrollmentQuery(filterParams);
 
     // sortFn
-    const sortFn = (a: MyCourseItem, b: MyCourseItem) => {
+    const sortFn = (a: MyEnrollmentItem, b: MyEnrollmentItem) => {
         if (sortOpt === "DATE_ASC") {
             return a.enrolled_at.localeCompare(b.enrolled_at);
         } else {
@@ -261,37 +203,35 @@ export const FilterMyCourseList = ({
         }
     }
 
-    const myCourseCardItem = (course: MyCourseItem) => (
-        <li key={course.course_id}>{
-            isLoading 
-            ? <SkeletonCard/>
-            : <CourseCard
+    const myCourseCardItem = (course: MyEnrollmentItem) => (
+        <li key={course.id}>
+            <CourseCard
                 variant="study"
-                thumbnail={course.course_thumbnail}
-                title={course.course_title}
+                thumbnail={course.thumbnail_url}
+                title={course.title}
                 tags={[
                     {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                    {'label': categoryLabel[course.category_name] || "기타"}, 
+                    {'label': categoryLabel[course.category_type]}, 
                     {'label': difficultyLabel[course.difficulty]},
                 ]}
                 value={course.completed_lectures || 0} 
                 max={course.total_lectures || 0} 
-                lectureId={course.course_id}
+                courseId={course.id}
                 
-                isActive={course.days_until_expiry !== 0 ? true: false}
-                isCompleted={course.progress_rate === 100 ? true : false}
+                isActive={course.enrollment_status === 'available' ? true: false}
+                isCompleted={course.learning_status === 'completed' ? true : false}
             />
-        }
         </li>
      );
 
     return (
         <BaseCourseList
+            variant="study"
             data={myEnrollments}
-            filterFn={filterFn}
             sortFn={sortFn}
             courseCard={myCourseCardItem}
             onCountChange={onCountChange}
+            isLoading={isLoading}
         />
     )
 }

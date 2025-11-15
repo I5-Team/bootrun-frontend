@@ -137,6 +137,9 @@ export const StyledBaseSection = {
     }
   `,
   SectionSubtitle: styled.p`
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
     font-weight: 600;
     font-size: ${({ theme }) => theme.fontSize.md};
     color: ${({ theme }) => theme.colors.primary300};

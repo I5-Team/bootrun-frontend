@@ -2,16 +2,19 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { ROUTES } from './RouteConfig';
 import { LoadingSpinner } from '../components/HelperComponents';
-import LectureDetailLayout from '../layouts/LectureDetailLayout';
 import PublicOnly from './PublicOnly';
 import RequireAuth from './RequierAuth';
 import RequireAdmin from './RequireAdmin';
 
-const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
-const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
 const MainLayout = lazy(() => import('../layouts/MainLayout'));
 const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
 const AuthLayout = lazy(() => import('../layouts/AuthLayout'));
+const LectureDetailLayout = lazy(() => import('../layouts/LectureDetailLayout'));
+const LectureRoomLayout = lazy(() => import('../layouts/LectureRoomLayout'));
+const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
+const ErrorLayout = lazy(() => import('../layouts/ErrorLayout'));
+const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
+const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
 const DashBoardPage = lazy(() => import('../pages/Admin/DashBoardPage'));
 const LectureManagePage = lazy(() => import('../pages/Admin/LectureManagePage'));
 const PaymentManagePage = lazy(() => import('../pages/Admin/PaymentManagePage'));
@@ -25,12 +28,11 @@ const PaymentResultPage = lazy(() => import('../pages/Lecture/PaymentResultPage'
 const MyLecturePage = lazy(() => import('../pages/Lecture/MyLecturePage'));
 const LectureRoomPage = lazy(() => import('../pages/Lecture/LectureRoomPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
-const ErrorLayout = lazy(() => import('../layouts/ErrorLayout'));
 const MainPage = lazy(() => import('../pages/MainPage'));
-const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
+const AboutPage = lazy(() => import('../pages/AboutPage'));
+const ReviewPage = lazy(() => import('../pages/ReviewPage'));
 const OrderHistorySection = lazy(() => import('../pages/MyPage/OrderHistorySection'));
 const AccountSection = lazy(() => import('../pages/MyPage/AccountSection'));
-const LectureRoomLayout = lazy(() => import('../layouts/LectureRoomLayout'));
 
 // 사용자 타입별 페이지 인증 처리 예시
 /*
@@ -51,11 +53,13 @@ export default function AppRouter() {
               <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
             </Route>
           </Route>
-          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세) 
+          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세)
           MainLayout/Header에서 인증 여부에 따라 접근 제어 처리
             */}
           <Route element={<MainLayout />}>
             <Route path={ROUTES.HOME} element={<MainPage />} />
+            <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+            <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
             <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
             <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />
           </Route>

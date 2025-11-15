@@ -1,28 +1,40 @@
 import styled from 'styled-components';
+
 import type { CoursesDetailItem } from '../../../types/CourseType';
 import { getThumbnailUrl } from '../../../utils/imageUtils';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useState } from 'react';
+import { SkeletonImage } from '../../../components/Skeleton';
 
-const LectureBannerSection = ({ data }: { data: CoursesDetailItem}) => {
+const LectureBannerSection = () => {
+  const { data } = useLectureContext()
   const { title, thumbnail_url } = data;
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
-      {data && (
-        <img alt={title} src={getThumbnailUrl(thumbnail_url)} />
-      )}
+
+      {!imgLoaded && <SkeletonImage/>}
+        <img 
+          src={getThumbnailUrl(thumbnail_url)}
+          alt={title}
+          onLoad={() => {setImgLoaded(false)}}
+          style={{ display: imgLoaded ? 'block' : 'none'}}
+        />
+
     </S.BannerWrapper>
   );
 };
 
 const S = {
   BannerWrapper: styled.section`
+    position: relative;
     width: 100%;
-    /* 로딩 중에도 레이아웃이 밀리지 않도록 높이를 지정합니다. */
     height: 41.6rem; 
     border-radius: ${({ theme }) => theme.radius.lg};
     overflow: hidden;
-    background-color: ${({ theme }) => theme.colors.gray200}; // 로딩 중 배경색
+    background-color: ${({ theme }) => theme.colors.gray200};
     display: flex;
     align-items: center;
     justify-content: center;

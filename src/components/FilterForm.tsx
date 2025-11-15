@@ -214,7 +214,7 @@ const FilterForm = ({ filterData, inputType = "checkbox", hasTags = true }: {
 
         const params = new URLSearchParams();
         selectedTags.forEach(({ queryName, value }) => {
-            if (value !== "all") {
+            if (value !== "None") {
                 params.append(queryName, value);
             }
         });
@@ -256,7 +256,7 @@ const FilterForm = ({ filterData, inputType = "checkbox", hasTags = true }: {
                                             onChange={handleRadio}
                                             checked={
                                               selectedTags.some(tag => tag.queryName === item.queryName && tag.value === option.value) ||
-                                              (searchParams.getAll(item.queryName).length === 0 && option.value === 'all')
+                                              (searchParams.getAll(item.queryName).length === 0 && option.value === 'None')
                                             }
                                         />
                                         }

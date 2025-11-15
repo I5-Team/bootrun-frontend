@@ -448,3 +448,15 @@ export const CheckMark = styled.span`
   font-size: 1.4rem;
   font-weight: bold;
 `;
+export const HelperMessage = styled.div<{ $type: 'error' | 'success' | null }>`
+  font-size: 1.4rem;
+  margin-top: 0.8rem;
+  padding-left: 0.4rem;
+
+  color: ${({ $type, theme }) =>
+    $type === 'error'
+      ? theme.colors.alert
+      : $type === 'success'
+        ? theme.colors.primary300
+        : theme.colors.gray400};
+`;

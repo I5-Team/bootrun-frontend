@@ -6,18 +6,18 @@ export default function MyLecturePage() {
 const filterData = [
     {
         label: "상태",
-        queryName: "is_active",
+        queryName: "enrollment_status",
         options: [
-            { label: "전체", value: "all"},
-            { label: "학습 가능", value: "true"},
-            { label: "만료", value: "false"},
+            { label: "전체", value: "None"},
+            { label: "학습 가능", value: "available"},
+            { label: "만료", value: "expired"},
         ],
     },
     {
         label: "학습",
-        queryName: "progress",
+        queryName: "learning_status",
         options: [
-            { label: "전체", value: "all"},
+            { label: "전체", value: "None"},
             { label: "학습 예정", value: "not_started"},
             { label: "학습중", value: "in_progress"},
             { label: "학습 완료", value: "completed"},
@@ -25,9 +25,9 @@ const filterData = [
     },
     {
         label: "유형",
-        queryName: "courseType",
+        queryName: "course_type",
         options: [
-            { label: "전체", value: "all"},
+            { label: "전체", value: "None"},
             { label: "VOD", value: "vod"},
             { label: "부스트 커뮤니티", value: "boost_community"},
             { label: "KDC", value: "kdc"},

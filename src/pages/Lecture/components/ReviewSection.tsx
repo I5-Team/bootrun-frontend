@@ -1,40 +1,75 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../../hooks/useApiData';
-import { mockReviewData } from '../../../data/mockLectureData';
-import type { ReviewData } from '../../../types/LectureType';
-import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents'; // 로딩/에러 컴포넌트 (별도 파일 추천)
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgStar from "../../../assets/icons/icon-star.svg?react";
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+
+type ReviewItem = {
+  student: string,
+  review: string,
+  rating?: number,
+  date?: string,
+}
+
+const getRandomDateString = () => {
+  const start = new Date("2024-01-01");
+  const end = new Date("2024-12-31");
+
+  const randomTime = start.getTime() + Math.random() * (end.getTime() - start.getTime());
+  const date = new Date(randomTime);
+
+  // 날짜 포맷: YYYY. MM. DD.
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+
+  return `${year}. ${month}. ${day}.`;
+};
 
 const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
-  const { data, loading, error } = useApiData<ReviewData>(mockReviewData, 1200);
+  const { data } = useLectureContext();
+  const reviewData = data.student_reviews;
+  const parsedData = reviewData ? JSON.parse(reviewData) : [];
+  const reviewDataArr = parsedData.map((item: ReviewItem) => ({
+    ...item,
+    rating: (3 + (Math.floor(Math.random() * 5) * 0.5)).toFixed(1),
+    date: getRandomDateString(),
+  }));
+
+  const reviewTitleInfo = {
+    averageRating: reviewDataArr.reduce((acc: number, cur: ReviewItem) => 
+      acc + (cur.rating ? cur.rating : 0), 0) / reviewDataArr.length,
+    totalReviews: reviewDataArr.length,
+  }
 
   return (
     <S.Section ref={ref} id="reviews">
       <S.SectionHeader>
         <S.SectionTitle>수강생 후기</S.SectionTitle>
-        {data && (
-        <S.SectionSubtitle>
-          {data.averageRating.toFixed(1)} ({data.totalReviews}개 후기)
-        </S.SectionSubtitle>
+        {reviewDataArr.length > 0 ? (
+          <S.SectionSubtitle>
+            <Review.Rating $size="lg"><SvgStar/>{reviewTitleInfo.averageRating.toFixed(1)}</Review.Rating>
+            <span>({reviewTitleInfo.totalReviews}개 후기)</span>
+          </S.SectionSubtitle>
+        ) : (
+          <S.SectionSubtitle>
+            아직 등록된 후기가 없습니다.
+          </S.SectionSubtitle>
         )}
       </S.SectionHeader>
       
-      {loading && <LoadingSpinner />}
-      {error && <ErrorMessage message={error.message} />}
-      {data && (
+      {reviewDataArr.length > 0 && (
         <Review.Container>
-          {data.reviews.map(review => (
-            <Review.Card key={review.id}>
+          {reviewDataArr.map((review: ReviewItem) => (
+            <Review.Card key={review.review}>
               <Review.CardHeader>
                 <Review.CardAuthor>
-                  <span className="name">{review.author}</span>
-                  <span className="rating"><SvgStar/>{review.rating}</span>
+                  <span className="name">{review.student}</span>
+                  <Review.Rating className="rating"><SvgStar/>{review.rating}</Review.Rating>
                 </Review.CardAuthor>
                 <span className="date">{review.date}</span>
               </Review.CardHeader>
-              <Review.CardComent>{review.comment}</Review.CardComent>
+              <Review.CardComent>{review.review}</Review.CardComent>
             </Review.Card>
           ))}
         </Review.Container>
@@ -77,21 +112,22 @@ const Review = {
     .name { 
       font-weight: 600; 
     }
-    .rating { 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.4rem;
-      color: ${({ theme }) => theme.colors.primary300};
-      font-weight: 500;
-      line-height: 1;
-      svg {
-        position: relative;
-        top: -0.5px;
-        width: 1.24rem;
-        height: auto;
-      }
-    }
+
+  `,
+  Rating: styled.span<{ $size?: string }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    color: ${({ theme }) => theme.colors.primary300};
+    font-weight: ${({ $size }) => $size === "lg" ? 600 : 500};
+    line-height: ${({ $size }) => $size === "lg" ? 1.4 : 1};
+    svg {
+      position: relative;
+      top: -0.5px;
+      width: 1.24rem;
+      height: auto;
+    }  
   `,
   CardComent: styled.p`
     color: ${({ theme }) => theme.colors.gray400};

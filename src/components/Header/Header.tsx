@@ -46,10 +46,10 @@ const NavList = () => {
   return (
     <StyledNavList>
       <li>
-        <Link to="*">부트런 소개</Link>
+        <Link to={ROUTES.ABOUT}>부트런 소개</Link>
       </li>
       <li>
-        <Link to="*">수강생 이야기</Link>
+        <Link to={ROUTES.REVIEW}>수강생 이야기</Link>
       </li>
     </StyledNavList>
   );

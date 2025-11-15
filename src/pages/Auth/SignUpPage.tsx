@@ -23,6 +23,7 @@ import {
   InputLabel,
   EmailInputWrapper,
   VerifyButton,
+  HelperMessage,
 } from './SignUpPage.styled';
 
 const SignUpPage = () => {
@@ -58,6 +59,7 @@ const SignUpPage = () => {
     setShowEmailHelp,
     isSignUpEnabled: isFormValid,
     handleSignUp,
+    apiMessage,
   } = useSignUpForm();
 
   // 약관 동의 로직
@@ -137,6 +139,12 @@ const SignUpPage = () => {
                   {emailVerification.isEmailVerified ? '인증 완료' : '인증'}
                 </VerifyButton>
               </EmailInputWrapper>
+              {errorState.email && <HelperMessage $type="error">{errorState.email}</HelperMessage>}
+              {!errorState.email && apiMessage.message && (
+                <HelperMessage $type={apiMessage.type === 'error' ? 'error' : 'success'}>
+                  {apiMessage.message}
+                </HelperMessage>
+              )}
 
               {/* 인증 코드 입력 섹션 */}
               {emailVerification.isEmailSent && !emailVerification.isEmailVerified && (

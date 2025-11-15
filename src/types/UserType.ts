@@ -1,19 +1,4 @@
-interface ApiResponse<T> {
-  // 공통 응답 형식
-  success: boolean;
-  message: string;
-  data?: T;
-}
-
-export interface ResponseError {
-  // 오류 응답 형식
-  response?: {
-    status: number;
-    data: {
-      detail?: string;
-    };
-  };
-}
+import type { ApiResponse, ResponseError } from './api';
 
 // 1. GET /users/me (프로필 조회)
 export interface UserProfile {
@@ -47,6 +32,7 @@ export interface ProfileUpdatePayload {
   password_confirm?: string;
 }
 export type ProfileUpdateResponse = ApiResponse<UserProfile>; // 프로필 수정 응답
+export type ProfileUpdateError = ResponseError; // 프로필 수정 오류 응답
 
 // 3. POST /users/me/profile-image (이미지 업로드)
 export interface ProfileImageResponseData {

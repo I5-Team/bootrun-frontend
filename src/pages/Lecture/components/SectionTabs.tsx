@@ -4,14 +4,15 @@ import type { SectionRefs } from '../../../types/LectureType';
 import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailPage.styled";
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { ROUTES } from '../../../router/RouteConfig';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 interface StickyNavProps {
   refs: SectionRefs;
 }
 
 export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
-  const { id } = useParams<{id: string}>();
+  const { courseId, data } = useLectureContext();
   const navigate = useNavigate();
   const { isTablet } = useMediaQuery();
   const [activeTab, setActiveTab] = useState('강의 소개');
@@ -25,6 +26,10 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
   ];
   
   const ctaItem = { name: '수강신청', href: '#' }; 
+
+    const recruitmentStatus = data.recruitment_end_date 
+      ? (new Date(data.recruitment_end_date.replace('T', ''))) > new Date() ? true : false
+      : false;
 
   const handleNavClick = (
     e: React.MouseEvent, 
@@ -41,7 +46,7 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
 
   const handleEnrollCourse = (e: React.MouseEvent) => {
     e.preventDefault();
-    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
+    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(courseId));
     console.log(path);
     navigate(path);
   }
@@ -61,10 +66,10 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
         ))}
         
         {/* 수강신청 CTA 버튼 (별도 스타일링) */}
-        {!isTablet && 
+        {(recruitmentStatus && isTablet) && 
           <NavCta
             key={ctaItem.name}
-            href='#' // 실제 링크로 이동
+            href='#'
             onClick={handleEnrollCourse}
           >
             {ctaItem.name}
