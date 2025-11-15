@@ -3,17 +3,30 @@ import { ROUTES } from '../../../router/RouteConfig';
 import styled, { css } from 'styled-components';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 
-import Button from '../../../components/Button';
-import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
 import { formatDate, useLectureContext } from '../LectureDetailPage';
 
+import Button from '../../../components/Button';
+import ShareIcon from '../../../assets/icons/icon-share.svg?react';
+import SvgPlay from "../../../assets/icons/icon-play.svg?react";
+import ProgressBar from '../../../components/ProgressBar';
+import { useEnrollmentDetailQuery } from '../../../queries/useEnrollmentQueries';
+
 
 export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
-  const { data } = useLectureContext();
+  const { courseId, data, isEnrolled } = useLectureContext();
   const { course_type, category_type, difficulty } = data;
   const { recruitment_end_date, course_start_date, course_end_date } = data;
-    const { access_duration_days, max_students } = data;
+  const { access_duration_days, max_students } = data;
+  const { data: enrollmentData } = useEnrollmentDetailQuery(courseId);
+
+  const learningStatusMap: Record<string, string> = {
+    not_started: "학습 예정",
+    in_progress: "학습중",
+    completed: "학습 완료",
+  };
+
+  const learningStatusLabel = learningStatusMap[enrollmentData?.learning_status ?? 'not_started'];
 
 
   const calculateDdayFrom = (targetDateString: string) => {
@@ -31,67 +44,78 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
 };
 
   return (
-      <S.Content>
-        {data &&
-        <>
-          <S.LectureInfoList>
-            <li>
-              <S.InfoLabel>강의 유형</S.InfoLabel>
-              <S.InfoValue>{courseTypeLabel[course_type]}</S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>주제</S.InfoLabel>
-              <S.InfoValue>{categoryLabel[category_type]}</S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>난이도</S.InfoLabel>
-              <S.InfoValue>{difficultyLabel[difficulty]}</S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>수강 기한</S.InfoLabel>
-              <S.InfoValue>{access_duration_days}일</S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>모집 인원</S.InfoLabel>
-              <S.InfoValue>{max_students}명</S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>모집 기간</S.InfoLabel>
-              <S.InfoValue>
-                <span>~ {recruitment_end_date ? formatDate(recruitment_end_date) : '미정'}</span>
-                {(course_end_date && course_start_date) && 
-                  <>
-                    {recruitmentStatus
-                    ? <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
-                    : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
-                    }
-                  </>
-                }
-              </S.InfoValue>
-            </li>
-            <li>
-              <S.InfoLabel>교육 기간</S.InfoLabel>
-              <S.InfoValue>
-                { course_start_date && course_end_date
-                  ? <span>{formatDate(course_start_date)} ~ {formatDate(course_end_date).slice(5)}</span>
-                  : <span>미정</span>
-                }
-              </S.InfoValue>
-              
-            </li>
-
-          </S.LectureInfoList>
-          <S.Price>₩{data.price.toLocaleString()}</S.Price>
-        </>
-        }
-      </S.Content>
+          <>
+            <S.LectureInfoList>
+              <li>
+                <S.InfoLabel>강의 유형</S.InfoLabel>
+                <S.InfoValue>{courseTypeLabel[course_type]}</S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>주제</S.InfoLabel>
+                <S.InfoValue>{categoryLabel[category_type]}</S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>난이도</S.InfoLabel>
+                <S.InfoValue>{difficultyLabel[difficulty]}</S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>수강 기한</S.InfoLabel>
+                <S.InfoValue>{access_duration_days}일</S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>모집 인원</S.InfoLabel>
+                <S.InfoValue>{max_students}명</S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>모집 기간</S.InfoLabel>
+                <S.InfoValue>
+                  <span>~ {recruitment_end_date ? formatDate(recruitment_end_date) : '미정'}</span>
+                  {(course_end_date && course_start_date) && 
+                    <>
+                      {recruitmentStatus
+                      ? <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
+                      : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
+                      }
+                    </>
+                  }
+                </S.InfoValue>
+              </li>
+              <li>
+                <S.InfoLabel>교육 기간</S.InfoLabel>
+                <S.InfoValue>
+                  { course_start_date && course_end_date
+                    ? <span>{formatDate(course_start_date)} ~ {formatDate(course_end_date).slice(5)}</span>
+                    : <span>미정</span>
+                  }
+                </S.InfoValue>
+              </li>
+  
+            </S.LectureInfoList>
+            {isEnrolled && enrollmentData ? (
+              <S.LearingProgress>
+                <S.ProgressTitle>
+                  <S.InfoLabel>진행 상황</S.InfoLabel>
+                  <S.InfoValue>{learningStatusLabel}</S.InfoValue>
+                </S.ProgressTitle>
+                <ProgressBar 
+                  variant="enrollment" 
+                  value={enrollmentData.completed_lectures} 
+                  max={enrollmentData.total_lectures}
+                />
+              </S.LearingProgress>
+            ) : (
+              <S.Price>₩{data.price.toLocaleString()}</S.Price>
+            )}
+          </>
   )
 }
 
 export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
   const { isLaptop } = useMediaQuery();
+  const { isEnrolled } = useLectureContext();
   const navigate = useNavigate();
   const { id } = useParams<{id: string}>();
+
 
   const handleEnrollCourse = () => {
     const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
@@ -104,13 +128,42 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
     .catch(() => alert('주소 복사를 실패하였습니다.'));
   }
 
+  const handleGoToLectureRoom = () => {
+    const path = ROUTES.LECTURE_ROOM.replace(':id', String(id));
+    navigate(path);
+
+  }
+
   return (
     <S.ButtonContainer>
-      {recruitmentStatus
-        ? <Button size="lg" fullWidth={!isLaptop} onClick={handleEnrollCourse}>수강신청 하기</Button>
-        : <Button size="lg" fullWidth={!isLaptop} disabled={true}>수강신청 마감</Button>  
-      } 
-      <Button variant='outline' size="lg" fullWidth={!isLaptop} iconSvg={<ShareIcon/>} onClick={handleShare}>공유하기</Button>
+        {isEnrolled ? (
+          <Button
+            size="lg" 
+            fullWidth={!isLaptop} 
+            iconSvg={<SvgPlay/>}
+            onClick={handleGoToLectureRoom}
+          >학습하기</Button>
+        ) : ( recruitmentStatus ? (
+          <Button 
+            size="lg" 
+            fullWidth={!isLaptop} 
+            onClick={handleEnrollCourse}
+          >수강신청 하기</Button>
+          ) : (
+          <Button 
+            size="lg" 
+            fullWidth={!isLaptop} 
+            disabled={true}
+          >수강신청 마감</Button> 
+          ) 
+        )}
+        <Button 
+          variant='outline' 
+          size="lg" 
+          fullWidth={!isLaptop} 
+          iconSvg={<ShareIcon/>} 
+          onClick={handleShare}
+        >공유하기</Button>
     </S.ButtonContainer>
   )
 }
@@ -146,6 +199,8 @@ const S = {
 
     display: flex;
     flex-direction: column;
+    gap: 2.4rem;
+
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.lg};
     padding: 3.2rem;
@@ -165,38 +220,18 @@ const S = {
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
     margin: 0;
-
-    &::after {
-      content: "";
-      display: block;
-      width: 100%;
-      height: 0.1rem;
-      border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-      margin-block: 2.4rem;
-    }
-  `,
-  Content: styled.div`
-    display: flex;
-    flex-direction: column;
   `,
   LectureInfoList: styled.ul`
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
+    padding-block: 2.4rem;
+    border-block: 0.1rem solid ${({ theme }) => theme.colors.gray200};
 
     li {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    &::after {
-      content: "";
-      display: block;
-      width: 100%;
-      height: 0.1rem;
-      border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-      margin-block: 2.4rem;
     }
   `,
   InfoLabel: styled.span`
@@ -236,16 +271,24 @@ const S = {
     return variants[$variant];
   }}
   `,
-  Price: styled.p`
+  Price: styled.p<{ $status?: string }>`
     font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 600;
-    color: ${({ theme }) => theme.colors.primary300};;
+    color: ${({ $status, theme }) => $status === "learning" ? theme.colors.surface : theme.colors.primary300 };
     text-align: left;
-    margin-bottom: 2.4rem;
-
-    @media ${({ theme }) => theme.devices.laptop} {
-      margin-bottom: 0;
-    }
+  `,
+  LearingProgress: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 1.2rem;
+  `,
+  ProgressTitle: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   `,
   ButtonContainer: styled.div`
     display: flex;

@@ -34,7 +34,6 @@ export const fetchMyEnrollments = async (
 ): Promise<MyEnrollmentItem[]> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
-        console.log('response', response);
         if (response?.data?.data?.items) {
             console.log('[API 요청 성공]');
             return response.data.data.items;
@@ -74,12 +73,12 @@ export const fetchEnrollmentDashboard = async (): Promise<EnrollmentDashboadItem
  */
 export const fetchEnrollmentDetail = async (
     enrollment_id: number,
-): Promise<EnrollmentDetailItem[] | null> => {
+): Promise<EnrollmentDetailItem | null> => {
     try {
         const response = await apiClient.get(API_URL.ENROLLMENT.ENROLLMENT_DETAIL(enrollment_id));
         if(response) {
             console.log('[API 요청 성공]');
-            return response.data;
+            return response.data.data;
         }
         console.log('[API 데이터 없음]');
         return null;

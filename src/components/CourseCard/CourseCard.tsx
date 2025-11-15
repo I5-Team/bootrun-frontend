@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 
 // import - components
-import { StyledButtonList, StyledCardArticle, StyledContentWrapper, StyledDescriptionBox, StyledLectureContentWrapper, StyledLikeButton, StyledPrice, StyledProgressWrapper, StyledTagList, StyledTeacherDetails, StyledTeacherInfo, StyledTeacherName, StyledTeacherRole, StyledTeacherSection, StyledThumbnailImage, StyledThumbnailWrapper, StyledTitle, StyledThumbnailLink, StlyedThumbnailNotice } from './CourseCard.styled';
+import { StyledButtonList, StyledCardArticle, StyledContentWrapper, StyledDescriptionBox, StyledLectureContentWrapper, StyledLikeButton, StyledPrice, StyledTagList, StyledTeacherDetails, StyledTeacherInfo, StyledTeacherName, StyledTeacherRole, StyledTeacherSection, StyledThumbnailImage, StyledThumbnailWrapper, StyledTitle, StyledThumbnailLink, StlyedThumbnailNotice } from './CourseCard.styled';
 import Tag from '../Tag';
 import Profile from '../Profile';
 import ProgressBar from '../ProgressBar';
@@ -152,16 +152,9 @@ const CardStudyContent = ({ value = 0, max = 1, lectureId, isActive }: StudyCont
       navigate(`${ROUTES.LECTURE_LIST}/${lectureId}`);
   }
 
-  const formatPercent = (percent: number) => {
-    return Math.round(percent * 100);
-  }
-
   return (
     <StyledLectureContentWrapper>
-        <StyledProgressWrapper>
           <ProgressBar value={value} max={max}/>
-          <span>{value}/{max}강 ({isNaN(value/max) ? 0 : formatPercent(value/max)}%)</span>
-        </StyledProgressWrapper>
         <StyledButtonList>
           {isActive ? (
             <>

@@ -4,7 +4,7 @@ import type { SectionRefs } from '../../../types/LectureType';
 import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailPage.styled";
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { ROUTES } from '../../../router/RouteConfig';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLectureContext } from '../LectureDetailPage';
 
 interface StickyNavProps {
@@ -12,8 +12,7 @@ interface StickyNavProps {
 }
 
 export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
-  const { data } = useLectureContext();
-  const { id } = useParams<{id: string}>();
+  const { courseId, data } = useLectureContext();
   const navigate = useNavigate();
   const { isTablet } = useMediaQuery();
   const [activeTab, setActiveTab] = useState('강의 소개');
@@ -47,7 +46,7 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
 
   const handleEnrollCourse = (e: React.MouseEvent) => {
     e.preventDefault();
-    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
+    const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(courseId));
     console.log(path);
     navigate(path);
   }

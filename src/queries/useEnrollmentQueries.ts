@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CoursesApiParams, EnrollmentProgressBodyData, LectureProgressBodyData } from "../types/CourseType";
+import type { EnrollmentProgressBodyData, LectureProgressBodyData, MyEnrollmentsApiParams } from "../types/CourseType";
 import { createEnrollmentProgress, fetchCourseProgress, fetchEnrollmentDashboard, fetchEnrollmentDetail, fetchLectureProgress, fetchMyEnrollments, postEnrollments, updateLectureProgress } from "../api/enrollmentsApi";
 
 /**
@@ -23,7 +23,7 @@ export const useEnrollmentMutation = () => {
  * GET /enrollments/my
  * 내 수강 목록 조회
  */
-export const useMyEnrollmentQuery = (params: CoursesApiParams) => {
+export const useMyEnrollmentQuery = (params: MyEnrollmentsApiParams) => {
   return useQuery({
     queryKey: ['myEnrollments', params],
     queryFn: () => fetchMyEnrollments(params),

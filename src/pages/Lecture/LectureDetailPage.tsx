@@ -24,6 +24,7 @@ import { SectionTabs } from './components/SectionTabs';
 import { LectureInfoBox, InfoBoxButtons } from './components/LectureInfoBox';
 import { LoadingSpinner } from '../../components/HelperComponents';
 import type { CoursesDetailItem } from '../../types/CourseType';
+import { useIsEnrolled } from '../../hooks/useIsEnrolled';
 
 // 함수
 export const formatDate = (dateString: string): string => {
@@ -40,16 +41,20 @@ export const formatDate = (dateString: string): string => {
 
 // Context & Provider
 type LectureContextProps = {
-  data: CoursesDetailItem
+  courseId: number,
+  data: CoursesDetailItem,
+  isEnrolled?: boolean,
 }
 
 const LectureContext = createContext<LectureContextProps | undefined>(undefined);
 
-const LectureProvider = ({ data, children }: {
+const LectureProvider = ({ courseId, data, isEnrolled, children }: {
+  courseId: number,
   data: CoursesDetailItem,
+  isEnrolled: boolean,
   children: React.ReactNode,
 }) => (
-  <LectureContext.Provider value={{ data }}>
+  <LectureContext.Provider value={{ courseId, data, isEnrolled }}>
     {children}
   </LectureContext.Provider>
 )
@@ -64,8 +69,9 @@ export const useLectureContext = () => {
 export default function LectureDetailPage() {
   const { isLaptop } = useMediaQuery();
   const params = useParams<{ id: string }>();
-  const coursdId = Number(params.id);
-  const { data: courseData, isLoading } = useCourseDetailQuery(coursdId);
+  const courseId = Number(params.id);
+  const { data: courseData, isLoading } = useCourseDetailQuery(courseId);
+  const { isEnrolled } = useIsEnrolled(courseId);
   
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);
@@ -88,7 +94,8 @@ export default function LectureDetailPage() {
         {isLoading
           ? <LoadingSpinner/>
           : courseData && (
-            <LectureProvider data={courseData}>
+            <LectureProvider 
+              courseId={courseId} data={courseData} isEnrolled={isEnrolled}>
               <LectureBannerSection/>
               <LectureMainLayout>
                 {courseData && 
@@ -97,7 +104,7 @@ export default function LectureDetailPage() {
                     <LectureHeaderSection/>
     
                     {/* 고정 사이드바 (오른쪽) */}
-                    {!isLaptop && <LectureInfoBox />}
+                    {!isLaptop && <LectureInfoBox/>}
                     {isLaptop && <InfoBoxButtons/>}
     
                     {/* 메인 콘텐츠 영역 (왼쪽) */}

@@ -247,15 +247,6 @@ export const StyledLectureContentWrapper = styled.div`
     flex-direction: column;
     gap: 2rem;
 `
-export const StyledProgressWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-
-    span {
-    color: ${({ theme }) => theme.colors.gray400};
-    }
-`
 export const StyledButtonList = styled.div`
     display: flex;
     justify-content: start;
