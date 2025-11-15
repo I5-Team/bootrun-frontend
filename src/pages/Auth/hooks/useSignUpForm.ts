@@ -10,6 +10,7 @@ import {
   useRegister,
   useRequestEmailVerification,
 } from '../../../queries/useAuthQueries';
+import type { ResponseError } from '../../../types/api';
 
 /**
  * 입력값에서 공백을 제거하는 유틸 함수
@@ -78,6 +79,11 @@ interface EmailVerificationState {
   showEmailHelp: boolean;
 }
 
+interface ApiMessageState {
+  type: 'success' | 'error' | null;
+  message: string | null;
+}
+
 // useSignUpForm 훅의 반환 타입
 interface UseSignUpFormReturn {
   // 폼 상태
@@ -95,6 +101,8 @@ interface UseSignUpFormReturn {
   handleVerificationCodeSubmit: () => void;
   handleResendCode: () => void;
   setShowEmailHelp: (show: boolean) => void;
+  // API 메시지 상태
+  apiMessage: ApiMessageState;
 
   // 회원가입 가능 여부
   isSignUpEnabled: boolean;
@@ -131,11 +139,16 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showEmailHelp, setShowEmailHelp] = useState(false);
 
-  const { mutate: requestVerifyMutate, isPending: isSendingCode } = useRequestEmailVerification();
+  // API 메시지 상태
+  const [apiMessage, setApiMessage] = useState<ApiMessageState>({
+    type: null,
+    message: null,
+  });
 
+  // 이메일 인증 요청 훅
+  const { mutate: requestVerifyMutate, isPending: isSendingCode } = useRequestEmailVerification();
   const { mutate: confirmVerifyMutate, isPending: isConfirmingCode } =
     useConfirmEmailVerification();
-
   const { mutate: registerMutate, isPending: isRegistering } = useRegister();
 
   // 이메일 처리 핸들러
@@ -144,6 +157,8 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     // 공백만 제거 (한글은 입력 허용, 유효성 검사에서 에러 처리)
     const sanitizedValue = sanitizeEmail(value);
     setEmail(sanitizedValue);
+
+    setApiMessage({ type: null, message: null });
 
     // 이메일을 수정하면 인증 상태 리셋
     if (isEmailSent || isEmailVerified) {
@@ -239,20 +254,34 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       return;
     }
 
+    setApiMessage({ type: null, message: null });
+
     // TODO: API 호출 - 이메일 중복 확인 및 인증 메일 발송
     requestVerifyMutate(
       { email },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setIsEmailSent(true);
+          const code = data.detail.split(': ')[1] || '???';
+          setApiMessage({
+            type: 'success',
+            message: `인증 코드가 발송되었습니다. (코드: ${code})`,
+          });
         },
-        // (onError는 훅 내부에서 alert 처리)
+        onError: (error) => {
+          const errorResponse = error as ResponseError;
+          const detail = errorResponse.response?.data?.detail.detail;
+          console.error('이메일 인증 요청 오류:', detail);
+
+          setApiMessage({ type: 'error', message: detail || '인증 코드 발송에 실패했습니다.' });
+        },
       }
     );
   };
 
   // 인증번호 확인
   const handleVerificationCodeSubmit = () => {
+    setApiMessage({ type: null, message: null });
     // TODO: API 호출 - 인증번호 확인
     // 임시로 인증 완료 처리
     confirmVerifyMutate(
@@ -260,17 +289,43 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       {
         onSuccess: () => {
           setIsEmailVerified(true);
+          setApiMessage({ type: 'success', message: '이메일 인증이 완료되었습니다.' });
+          alert('이메일 인증이 완료되었습니다.');
         },
-        // (onError는 훅 내부에서 alert 처리)
+        onError: (error) => {
+          const errorResponse = error as ResponseError;
+          const detail = errorResponse.response?.data?.detail.detail;
+          setApiMessage({ type: 'error', message: detail || '인증 코드가 올바르지 않습니다.' });
+        },
       }
     );
   };
 
   // 인증번호 재전송
   const handleResendCode = () => {
+    setApiMessage({ type: null, message: null });
     // TODO: API 호출 - 인증번호 재전송
     console.log('인증번호 재전송');
-    requestVerifyMutate({ email });
+    requestVerifyMutate(
+      { email },
+      {
+        onSuccess: (data) => {
+          setIsEmailSent(true);
+          const code = data.detail.split(': ')[1] || '???';
+          setApiMessage({
+            type: 'success',
+            message: `인증 코드가 재전송되었습니다. (코드: ${code})`,
+          });
+        },
+        onError: (error) => {
+          const errorResponse = error as ResponseError;
+          const detail = errorResponse.response?.data?.detail.detail;
+          console.error('이메일 인증 재전송 오류:', detail);
+
+          setApiMessage({ type: 'error', message: detail || '인증 코드 재전송에 실패했습니다.' });
+        },
+      }
+    );
   };
 
   // 회원가입 버튼 활성화 조건
@@ -331,5 +386,6 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     setShowEmailHelp,
     isSignUpEnabled,
     handleSignUp,
+    apiMessage,
   };
 };
