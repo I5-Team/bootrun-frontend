@@ -17,7 +17,7 @@ export interface UserProfile {
   social_provider: string;
   total_study_time?: number;
   enrollment_expires_at?: string;
-  profile_image_url?: string;
+  profile_image?: string;
 }
 export type ProfileResponse = ApiResponse<UserProfile>; // 프로필 조회 응답
 

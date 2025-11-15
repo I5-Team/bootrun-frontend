@@ -17,7 +17,7 @@ export const mockProfileData: UserProfile = {
   social_provider: 'google',
   total_study_time: 1250, // in hours
   enrollment_expires_at: '2025-12-31T23:59:59Z',
-  profile_image_url: 'https://via.placeholder.com/150', // 목업 프로필 이미지 URL
+  profile_image: '',
 };
 
 // // 2. OrderHistoryPage용 목업 데이터

@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { Button } from '../../components/Button';
 import { InputLogin } from '../../components/InputLogin';
-import { useSignUpForm, validateEmail } from './hooks/useSignUpForm';
+import { useSignUpForm } from './hooks/useSignUpForm';
 import { useTermsAgreement } from './hooks/useTermsAgreement';
 import { EmailVerificationModal } from './components/EmailVerificationModal';
 import { TermsModal } from './components/TermsModal';
@@ -25,6 +25,7 @@ import {
   VerifyButton,
   HelperMessage,
 } from './SignUpPage.styled';
+import { validateEmail } from '../../utils/validation';
 
 const SignUpPage = () => {
   // 각 입력 필드의 focus 상태 관리
