@@ -29,6 +29,8 @@ const MyLecturePage = lazy(() => import('../pages/Lecture/MyLecturePage'));
 const LectureRoomPage = lazy(() => import('../pages/Lecture/LectureRoomPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
+const AboutPage = lazy(() => import('../pages/AboutPage'));
+const ReviewPage = lazy(() => import('../pages/ReviewPage'));
 const OrderHistorySection = lazy(() => import('../pages/MyPage/OrderHistorySection'));
 const AccountSection = lazy(() => import('../pages/MyPage/AccountSection'));
 
@@ -51,11 +53,13 @@ export default function AppRouter() {
               <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
             </Route>
           </Route>
-          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세) 
+          {/* 그룹 2: 일반 사용자 전용 레이아웃 (메인, 강의, 강의 상세)
           MainLayout/Header에서 인증 여부에 따라 접근 제어 처리
             */}
           <Route element={<MainLayout />}>
             <Route path={ROUTES.HOME} element={<MainPage />} />
+            <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+            <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
             <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
             <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />
           </Route>

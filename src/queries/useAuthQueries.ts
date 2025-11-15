@@ -14,7 +14,7 @@ import type {
   LoginPayload,
   RegisterPayload,
 } from '../types/AuthType';
-import type { ResponseError } from '../types/UserType';
+import type { ResponseError } from '../types/api';
 import { useNavigate } from 'react-router-dom';
 import { authKeys, userKeys } from './queryKeys';
 
@@ -91,13 +91,6 @@ export const useLogout = () => {
 export const useRequestEmailVerification = () => {
   return useMutation({
     mutationFn: (payload: EmailVerificationRequestPayload) => requestEmailVerification(payload),
-    onSuccess: (data) => {
-      console.log('이메일 인증 코드 요청 성공:', data);
-      alert(data.detail);
-    },
-    onError: (error: ResponseError) => {
-      alert(error.response?.data?.detail || '인증 코드 발송에 실패했습니다.');
-    },
   });
 };
 
@@ -107,13 +100,6 @@ export const useRequestEmailVerification = () => {
 export const useConfirmEmailVerification = () => {
   return useMutation({
     mutationFn: (payload: EmailVerificationConfirmPayload) => confirmEmailVerification(payload),
-    onSuccess: (data) => {
-      alert(data.message);
-      // (인증 성공 시 로직 추가, 예: isEmailVerified 상태 변경)
-    },
-    onError: (error: ResponseError) => {
-      alert(error.response?.data?.detail || '인증 코드가 올바르지 않습니다.');
-    },
   });
 };
 
@@ -129,7 +115,9 @@ export const useRegister = () => {
       navigate('/login'); // ◀ 회원가입 성공 시 로그인 페이지로
     },
     onError: (error: ResponseError) => {
-      alert(error.response?.data?.detail || '회원가입에 실패했습니다.');
+      const message = error.response?.data?.detail.detail || '회원가입에 실패했습니다.';
+      console.error('회원가입 오류:', error);
+      alert(message);
     },
   });
 };
