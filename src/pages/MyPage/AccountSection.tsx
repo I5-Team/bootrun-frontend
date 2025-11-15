@@ -1,57 +1,45 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../hooks/useApiData';
-import { mockProfileData } from '../../data/mockMyPageData';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import BaseModal from '../../components/BaseModal';
+import { useDeleteAccountHandler } from '../../hooks/useDeleteAccountHandler';
+import { useChangePasswordForm } from '../../hooks/useChangePasswordForm';
+import { useProfile } from '../../queries/useUserQueries';
+import Button from '../../components/Button';
 
 const AccountSection: React.FC = () => {
-  const { data, loading, error } = useApiData(mockProfileData, 400);
+  const { data, isLoading: loading, error } = useProfile();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPwModalOpen, setIsPwModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const [isDeleting, setIsDeleting] = useState(false);
+  const {
+    formState: pwForm,
+    errorState: pwErrorState,
+    apiMessage: pwApiMessage,
+    isPending: isChangingPassword,
+    handleCurrentPasswordChange,
+    handleNewPasswordChange,
+    handleNewPasswordConfirmChange,
+    handleSubmit: handleConfirmPasswordChange,
+  } = useChangePasswordForm({
+    onClose: () => setIsPwModalOpen(false), // 성공 시 모달 닫기 콜백
+  });
 
-  const handlePasswordReset = () => {
-    alert('비밀번호 재설정 메일을 발송합니다.');
-  };
+  const {
+    password: deletePassword,
+    apiMessage: deleteApiMessage,
+    isPending: isDeletingAccount,
+    handlePasswordChange: handleDeletePasswordChange,
+    handleSubmit: handleConfirmWithdrawal,
+  } = useDeleteAccountHandler({
+    onClose: () => setIsDeleteModalOpen(false), // 성공 시 모달 닫기 콜백
+  });
 
-  const handleGithubLink = (e: React.MouseEvent) => {
-    e.preventDefault();
-    alert('GitHub 계정 연동 페이지로 이동합니다.');
-  };
-
-  const openWithdrawalModal = () => setIsModalOpen(true);
-  const closeWithdrawalModal = () => {
-    if (isDeleting) return;
-    setIsModalOpen(false);
-  };
-
-  const handleConfirmWithdrawal = async () => {
-    const isConfirmed = window.confirm('정말로 탈퇴하시겠습니까?\n이 작업은 되돌릴 수 없습니다.');
-
-    if (isConfirmed) {
-      try {
-        // "탈퇴 진행중" 로딩 시작
-        setIsDeleting(true);
-
-        //  TODO: 실제 회원 탈퇴 API 호출 (e.g., useDeleteAccount 훅)
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        // if (apiError) throw new Error("API 실패");
-
-        // "탈퇴 완료" alert
-        alert('회원 탈퇴가 완료되었습니다.');
-        setIsDeleting(false);
-        closeWithdrawalModal();
-        //  TODO: 탈퇴 후 처리 (예: 로그아웃, 메인 페이지 이동 등)
-        window.location.href = '/';
-      } catch (error) {
-        console.error('회원 탈퇴 중 오류 발생:', error);
-        setIsDeleting(false);
-        alert('탈퇴 처리 중 오류가 발생했습니다.');
-      }
-    }
-  };
+  // const handleGithubLink = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   alert('GitHub 계정 연동 페이지로 이동합니다.');
+  // };
 
   if (loading)
     return (
@@ -77,7 +65,7 @@ const AccountSection: React.FC = () => {
             <S.EmailInput id="email" disabled readOnly type="email" value={data.email} />
           </S.FormGroup>
 
-          <S.FormGroup>
+          {/* <S.FormGroup>
             <S.FormLabel>GitHub 계정</S.FormLabel>
             {data.social_provider === 'github' ? (
               <S.GithubLinked>
@@ -95,13 +83,13 @@ const AccountSection: React.FC = () => {
                 * GitHub 계정 로그인
               </S.GithubLink>
             )}
-          </S.FormGroup>
+          </S.FormGroup> */}
 
           <S.FormGroup>
             <S.FormLabel>비밀번호</S.FormLabel>
-            <S.PasswordButton type="button" onClick={handlePasswordReset}>
-              비밀번호 재설정
-            </S.PasswordButton>
+            <Button type="button" onClick={() => setIsPwModalOpen(true)}>
+              비밀번호 변경
+            </Button>
           </S.FormGroup>
         </S.Container>
         <S.DangerZone>
@@ -113,47 +101,119 @@ const AccountSection: React.FC = () => {
             <S.DangerDescription>
               회원 탈퇴 시 계정의 모든 정보가 영구적으로 삭제되며 복구할 수 없습니다.
             </S.DangerDescription>
-            <S.DangerButton type="button" onClick={openWithdrawalModal}>
+            <S.DangerButton type="button" onClick={() => setIsDeleteModalOpen(true)}>
               회원 탈퇴하기
             </S.DangerButton>
           </S.DangerContent>
         </S.DangerZone>
       </S.PageWrapper>
       <BaseModal
-        isOpen={isModalOpen}
-        onClose={closeWithdrawalModal}
+        isOpen={isPwModalOpen}
+        onClose={() => setIsPwModalOpen(false)}
+        title="비밀번호 변경"
+      >
+        <S.ModalFormGroup>
+          <label htmlFor="currentPassword">현재 비밀번호</label>
+          <S.ModalInput
+            id="currentPassword"
+            type="password"
+            value={pwForm.currentPassword}
+            onChange={handleCurrentPasswordChange}
+            disabled={isChangingPassword}
+          />
+        </S.ModalFormGroup>
+        <S.ModalFormGroup>
+          <label htmlFor="newPassword">새 비밀번호</label>
+          <S.ModalInput
+            id="newPassword"
+            type="password"
+            value={pwForm.newPassword}
+            onChange={handleNewPasswordChange}
+            disabled={isChangingPassword}
+          />
+          {pwErrorState.passwordError && (
+            <S.ModalErrorMessage>{pwErrorState.passwordError}</S.ModalErrorMessage>
+          )}
+        </S.ModalFormGroup>
+        <S.ModalFormGroup>
+          <label htmlFor="newPasswordConfirm">새 비밀번호 확인</label>
+          <S.ModalInput
+            id="newPasswordConfirm"
+            type="password"
+            value={pwForm.newPasswordConfirm}
+            onChange={handleNewPasswordConfirmChange}
+            disabled={isChangingPassword}
+          />
+          {pwErrorState.passwordConfirmError && (
+            <S.ModalErrorMessage>{pwErrorState.passwordConfirmError}</S.ModalErrorMessage>
+          )}
+        </S.ModalFormGroup>
+        {pwApiMessage && (
+          <S.ModalErrorMessage $type={pwApiMessage.type || 'error'}>
+            {pwApiMessage.message}
+          </S.ModalErrorMessage>
+        )}
+
+        <S.ModalFooter>
+          <S.ModalButton onClick={() => setIsPwModalOpen(false)} disabled={isChangingPassword}>
+            취소
+          </S.ModalButton>
+          <S.ModalButton
+            $primary={true}
+            onClick={handleConfirmPasswordChange}
+            disabled={isChangingPassword}
+          >
+            {isChangingPassword ? '변경 중...' : '변경하기'}
+          </S.ModalButton>
+        </S.ModalFooter>
+      </BaseModal>
+      <BaseModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
         title="회원 탈퇴"
-        children={
-          isDeleting ? (
-            // "탈퇴 진행중" 로딩 스피너 표시
-            <S.ModalLoadingWrapper>
-              <LoadingSpinner />
-              <p>탈퇴 처리 중입니다. 잠시만 기다려주세요...</p>
-            </S.ModalLoadingWrapper>
-          ) : (
-            // "탈퇴하시겠습니까?" (1차 확인)
-            <p>
-              정말로 탈퇴하시겠습니까?
-              <br />
-              모든 학습 기록 및 프로필 정보가 영구적으로 삭제됩니다.
-            </p>
-          )
-        }
-        footer={
+      >
+        {isDeletingAccount ? (
+          <S.ModalLoadingWrapper>
+            <LoadingSpinner />
+            <p>탈퇴 처리 중입니다...</p>
+          </S.ModalLoadingWrapper>
+        ) : (
           <>
-            <S.ModalButton onClick={closeWithdrawalModal} disabled={isDeleting}>
-              취소
-            </S.ModalButton>
-            <S.ModalButton
-              $danger={true}
-              onClick={handleConfirmWithdrawal} // 2차 확인(alert) 호출
-              disabled={isDeleting}
-            >
-              {isDeleting ? '탈퇴 진행중...' : '탈퇴'}
-            </S.ModalButton>
+            <S.DangerTitle>정말로 탈퇴하시겠습니까?</S.DangerTitle>
+            <S.DangerDescription>
+              탈퇴 시 모든 회원 정보가 영구 삭제되며, 복구할 수 없습니다. <br />
+              탈퇴를 원하시면 비밀번호를 입력해주세요.
+            </S.DangerDescription>
+            <S.ModalFormGroup>
+              <label htmlFor="deletePassword">비밀번호 확인</label>
+              <S.ModalInput
+                id="deletePassword"
+                type="password"
+                value={deletePassword}
+                onChange={handleDeletePasswordChange}
+                disabled={isDeletingAccount}
+              />
+            </S.ModalFormGroup>
+            {deleteApiMessage && (
+              <S.ModalErrorMessage $type={deleteApiMessage.type || 'error'}>
+                {deleteApiMessage.message}
+              </S.ModalErrorMessage>
+            )}
           </>
-        }
-      />
+        )}
+        <S.ModalFooter>
+          <S.ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
+            취소
+          </S.ModalButton>
+          <S.ModalButton
+            $danger={true}
+            onClick={handleConfirmWithdrawal}
+            disabled={isDeletingAccount}
+          >
+            {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
+          </S.ModalButton>
+        </S.ModalFooter>
+      </BaseModal>
     </>
   );
 };
@@ -185,13 +245,13 @@ const S = {
     gap: 0.8rem;
 
     label {
-      font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
+      font-size: ${({ theme }) => theme.fontSize.md}; /* 1.4rem */
       font-weight: 500;
       color: ${({ theme }) => theme.colors.surface};
     }
   `,
   FormLabel: styled.span`
-    font-size: ${({ theme }) => theme.fontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.surface};
   `,
@@ -303,6 +363,87 @@ const S = {
       }
     }
   `,
+  ModalFormGroup: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.6rem;
+
+    label {
+      font-size: 1.4rem;
+      font-weight: 500;
+    }
+  `,
+  ModalInput: styled.input`
+    height: 4.8rem;
+    padding: 0 1.6rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: ${({ theme }) => theme.radius.md};
+    font-size: 1.6rem;
+    &:focus {
+      border-color: ${({ theme }) => theme.colors.primary300};
+      outline: none;
+    }
+  `,
+  ModalErrorMessage: styled.p<{ $type?: 'error' | 'success' }>`
+    font-size: 1.4rem;
+    color: ${({ theme, $type }) =>
+      $type === 'success' ? theme.colors.primary300 : theme.colors.alert};
+    margin: -0.8rem 0 1.6rem 0;
+  `,
+  ModalFooter: styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2.4rem;
+  `,
+
+  ModalButton: styled.button<{ $danger?: boolean; $primary?: boolean }>`
+    padding: 1rem 1.8rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    cursor: pointer;
+
+    // 기본 버튼 (취소)
+    color: ${({ theme }) => theme.colors.gray400};
+    background: ${({ theme }) => theme.colors.white};
+
+    // 확인 버튼 (Primary)
+    ${({ theme, $primary }) =>
+      $primary &&
+      `
+      background: ${theme.colors.primary300};
+      border-color: ${theme.colors.primary300};
+      color: ${theme.colors.white};
+      &:hover:not(:disabled) {
+        background: ${theme.colors.primaryDark}; // (테마에 primary400이 있다고 가정)
+      }
+    `}
+
+    // 위험 버튼 (Danger)
+    ${({ theme, $danger }) =>
+      $danger &&
+      `
+      background: ${theme.colors.alert};
+      border-color: ${theme.colors.alert};
+      color: ${theme.colors.white};
+      &:hover:not(:disabled) {
+        opacity: 0.8;
+      }
+    `}
+
+    &:hover:not(:disabled) {
+      background: ${({ theme, $primary, $danger }) =>
+        !$primary && !$danger ? theme.colors.gray100 : 'auto'};
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  `,
 
   DangerContent: styled.div`
     padding: 2.4rem;
@@ -348,27 +489,6 @@ const S = {
     p {
       font-size: 1.6rem;
       color: ${({ theme }) => theme.colors.gray400};
-    }
-  `,
-
-  ModalButton: styled.button<{ $danger?: boolean }>`
-    padding: 1rem 1.8rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-    border-radius: ${({ theme }) => theme.radius.sm};
-    border: 1px solid
-      ${({ theme, $danger }) => ($danger ? theme.colors.alert : theme.colors.gray200)};
-    color: ${({ theme, $danger }) => ($danger ? theme.colors.alert : theme.colors.gray400)};
-    background: ${({ theme }) => theme.colors.white};
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background: ${({ theme }) => theme.colors.gray100};
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
   `,
 };

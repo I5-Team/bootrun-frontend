@@ -6,6 +6,7 @@ import type {
   ProfileImageResponse,
   AccountDeleteParams,
   UserProfile,
+  PasswordChangePayload,
 } from '../types/UserType';
 import { mockProfileData } from '../data/mockMyPageData';
 import type { ApiResponse } from '../types/api';
@@ -91,19 +92,34 @@ export const deleteProfileImage = async (): Promise<ApiResponse<null>> => {
 };
 
 /**
+ * POST /users/me/change-password - 비밀번호 변경
+ */
+export const changePassword = async (
+  payload: PasswordChangePayload
+): Promise<ApiResponse<null>> => {
+  // (ApiResponse<null> 또는 { success: boolean; message: string } 타입을 사용)
+  const response = await apiClient.post<ApiResponse<null>>(API_URL.USER.CHANGE_PASSWORD, payload);
+  return response.data;
+};
+
+/**
  * DELETE /users/me - 회원 탈퇴
  */
-export const deleteAccount = async (params: AccountDeleteParams): Promise<{ message: string }> => {
-  const mockResponse = { message: '탈퇴 완료 (Mock Fallback)' };
+export const deleteAccount = async (params: AccountDeleteParams): Promise<ApiResponse<null>> => {
+  const mockResponse = {
+    success: true,
+    message: '회원 탈퇴 성공 (Mock Fallback)',
+    data: null,
+  };
 
   if (!useMock) {
     // 실제 API 호출 시도
-    const response = await apiClient.delete<{ message: string }>(API_URL.USER.DELETE_ACCOUNT, {
+    const response = await apiClient.delete<ApiResponse<null>>(API_URL.USER.DELETE_ACCOUNT, {
       params,
     });
     return response.data;
   } else {
     // 오류 시 목업 반환
-    return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 1500));
+    return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 1000));
   }
 };

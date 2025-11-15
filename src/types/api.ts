@@ -17,3 +17,14 @@ export interface ResponseError {
     };
   };
 }
+
+export interface ResponseErrorDeleteAccount {
+  response?: {
+    status: number;
+    data: {
+      detail: {
+        message?: string;
+      };
+    };
+  };
+}

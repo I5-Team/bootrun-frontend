@@ -3,14 +3,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { activateUser, deactivateUser, fetchUsers, fetchUserDetail } from '../api/adminApi';
 import type { UserApiParams } from '../types/AdminUserType';
 import {
+  changePassword,
   deleteAccount,
   deleteProfileImage,
   fetchProfile,
   updateProfile,
   uploadProfileImage,
 } from '../api/userApi';
-import type { ProfileUpdatePayload, UserProfile } from '../types/UserType';
-import { useNavigate } from 'react-router-dom';
+import type {
+  AccountDeleteParams,
+  PasswordChangePayload,
+  ProfileUpdatePayload,
+  UserProfile,
+} from '../types/UserType';
 import { adminUserKeys, userKeys } from './queryKeys';
 import type { ResponseError } from '../types/api';
 
@@ -109,21 +114,20 @@ export const useDeleteProfileImage = () => {
 };
 
 /**
+ * [Mutation] 비밀번호 변경
+ */
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (payload: PasswordChangePayload) => changePassword(payload),
+  });
+};
+
+/**
  * [Mutation] 회원 탈퇴
  */
 export const useDeleteAccount = () => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   return useMutation({
-    mutationFn: (params: { password: string; confirm_deletion: boolean }) => deleteAccount(params),
-    onSuccess: (data) => {
-      alert(data.message);
-      queryClient.clear(); // 모든 캐시 삭제
-      navigate('/'); // 홈으로 이동
-    },
-    onError: () => {
-      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
-    },
+    mutationFn: (params: AccountDeleteParams) => deleteAccount(params),
   });
 };
 
