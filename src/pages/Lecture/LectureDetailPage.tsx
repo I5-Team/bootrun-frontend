@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import type { SectionRefs } from '../../types/LectureType';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { useParams } from 'react-router-dom';
-import type { CoursesDetailItem } from '../../types/CourseType';
 import { useCourseDetailQuery } from '../../queries/useCourseQueries';
 
 // 스타일
@@ -79,13 +78,13 @@ export default function LectureDetailPage() {
     
                     {/* 메인 콘텐츠 영역 (왼쪽) */}
                     <SectionWrapper>
-                      <SectionTabs refs={sectionRefs} />
+                      <SectionTabs refs={sectionRefs}/>
 
-                      <LectureIntroSection ref={introRef} />
+                      <LectureIntroSection ref={introRef} data={courseData}/>
                       <ReviewSection ref={reviewsRef} data={courseData.student_reviews}/>
                       <CurriculumSection ref={curriculumRef} data={courseData.chapters}/>
                       <InstructorSection ref={instructorRef} data={courseData}/>
-                      <FAQSection ref={faqRef} data={courseData}/>
+                      <FAQSection ref={faqRef} data={courseData.faq}/>
                       <NoticeSection />
                     </SectionWrapper>
     

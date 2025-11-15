@@ -1,15 +1,20 @@
-import styled, { css } from 'styled-components';
-import Button from '../../../components/Button';
-import ShareIcon from '../../../assets/icons/icon-share.svg?react';
-import useMediaQuery from '../../../hooks/useMediaQuery';
-import { categoryLabel, courseTypeLabel, difficultyLabel, type CoursesDetailItem } from '../../../types/CourseType';
-import { formatDate } from '../LectureDetailPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../../router/RouteConfig';
+import styled, { css } from 'styled-components';
+import useMediaQuery from '../../../hooks/useMediaQuery';
+
+import Button from '../../../components/Button';
+import ShareIcon from '../../../assets/icons/icon-share.svg?react';
+import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
+import type { CoursesDetailItem } from '../../../types/CourseType';
+import { formatDate } from '../LectureDetailPage';
+
 
 export const InfoBoxContent = ({ data, recruitmentStatus }: { data: CoursesDetailItem, recruitmentStatus?: boolean }) => {
   const { course_type, category_type, difficulty } = data;
   const { recruitment_end_date, course_start_date, course_end_date } = data;
+    const { access_duration_days, max_students } = data;
+
 
   const calculateDdayFrom = (targetDateString: string) => {
     const targetDate = new Date(targetDateString);
@@ -44,11 +49,11 @@ export const InfoBoxContent = ({ data, recruitmentStatus }: { data: CoursesDetai
             </li>
             <li>
               <S.InfoLabel>수강 기한</S.InfoLabel>
-              <S.InfoValue>1년</S.InfoValue>
+              <S.InfoValue>{access_duration_days}일</S.InfoValue>
             </li>
             <li>
               <S.InfoLabel>모집 인원</S.InfoLabel>
-              <S.InfoValue>100명</S.InfoValue>
+              <S.InfoValue>{max_students}명</S.InfoValue>
             </li>
             <li>
               <S.InfoLabel>모집 기간</S.InfoLabel>
@@ -90,7 +95,6 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
 
   const handleEnrollCourse = () => {
     const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
-    console.log(path);
     navigate(path);
   }
 
@@ -112,7 +116,6 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
 }
 
 export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
-  const { title } = data;
   const { recruitment_end_date } = data;
 
     const recruitmentStatus = recruitment_end_date 
@@ -123,7 +126,7 @@ export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
     <S.FloatingCardWrapper>
       {data && (
         <>
-          <S.Title>{title}</S.Title>
+          <S.Title>강의 정보</S.Title>
 
           <InfoBoxContent data={data} recruitmentStatus={recruitmentStatus}/>
 
@@ -134,7 +137,7 @@ export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
   );
 };
 
-// --- Styles (HTML 클래스명 기반으로 재정리) ---
+// --- Styles  ---
 const S = {
   FloatingCardWrapper: styled.aside`
     grid-area: infoBox;

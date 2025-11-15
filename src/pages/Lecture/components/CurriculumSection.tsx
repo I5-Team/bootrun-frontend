@@ -33,7 +33,7 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
                 <SvgArrowDown /> 
               </Curr.ToggleButton>
               <Curr.ChapterTitleText>
-                <span>커리큘럼 준비중 ⋯</span>
+                <span>커리큘럼 준비중</span>
               </Curr.ChapterTitleText>
             </Curr.ChapterHeader>
 

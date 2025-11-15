@@ -86,6 +86,7 @@ const S = {
     gap: 0.8rem;
   `,
   Title: styled.h2`
+    word-break: keep-all;
     font-size: ${({ theme }) => theme.fontSize.xxl};
     line-height: 1.4;
     font-weight: 700;
