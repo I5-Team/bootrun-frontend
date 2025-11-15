@@ -14,7 +14,6 @@ import type {
 } from '../../types/AdminCourseType';
 import { Button } from '../../components/Button';
 import { fetchCourseDetail } from '../../api/adminApi';
-import { DEFAULT_THUMBNAIL_URL } from '../../constants/apiConfig';
 
 interface LectureFormModalProps {
   isOpen: boolean;
@@ -172,10 +171,18 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
             // 수강 관련
             access_duration_days: courseData.access_duration_days || 365,
             max_students: courseData.max_students || 100,
-            recruitment_start_date: courseData.recruitment_start_date ? courseData.recruitment_start_date.slice(0, 16) : '',
-            recruitment_end_date: courseData.recruitment_end_date ? courseData.recruitment_end_date.slice(0, 16) : '',
-            course_start_date: courseData.course_start_date ? courseData.course_start_date.slice(0, 16) : '',
-            course_end_date: courseData.course_end_date ? courseData.course_end_date.slice(0, 16) : '',
+            recruitment_start_date: courseData.recruitment_start_date
+              ? courseData.recruitment_start_date.slice(0, 16)
+              : '',
+            recruitment_end_date: courseData.recruitment_end_date
+              ? courseData.recruitment_end_date.slice(0, 16)
+              : '',
+            course_start_date: courseData.course_start_date
+              ? courseData.course_start_date.slice(0, 16)
+              : '',
+            course_end_date: courseData.course_end_date
+              ? courseData.course_end_date.slice(0, 16)
+              : '',
             // 기타
             student_reviews: courseData.student_reviews || '[]',
             is_published: courseData.is_published || false,
