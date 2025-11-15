@@ -28,10 +28,16 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: (payload: ProfileUpdatePayload) => updateProfile(payload),
     onSuccess: (data) => {
-      queryClient.setQueryData(userKeys.me, data.data);
+      if (data.data) {
+        queryClient.setQueryData(userKeys.me, data.data); // 캐시된 프로필 데이터 갱신
+      }
+      queryClient.invalidateQueries({ queryKey: userKeys.me }); // 프로필 데이터 재조회
+      // 두 기능의 차이점
+
       alert('프로필이 성공적으로 업데이트되었습니다.');
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('프로필 업데이트 오류:', error);
       alert('프로필 업데이트에 실패했습니다. 다시 시도해주세요.');
     },
   });
