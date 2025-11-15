@@ -195,16 +195,26 @@ export interface CreateCourseRequest {
   thumbnail_url: string;
   instructor_name: string;
   instructor_bio: string;
+  instructor_description: string; // 강사 상세 설명 (새로 추가)
   instructor_image: string;
   difficulty: string;
   price_type: string;
   price: number;
-  faq: string;
-  is_published: boolean;
+  // 수강 관련
+  access_duration_days: number; // 수강 기간 (일)
+  max_students: number; // 최대 수강생 수
+  recruitment_start_date: string; // 모집 시작일 (ISO 8601)
+  recruitment_end_date: string; // 모집 종료일 (ISO 8601)
+  course_start_date: string; // 강의 시작일 (ISO 8601)
+  course_end_date: string; // 강의 종료일 (ISO 8601)
+  // 기타
+  student_reviews: string; // 수강생 후기 (JSON 문자열)
+  faq: string; // FAQ (JSON 문자열)
+  is_published?: boolean; // 공개 여부 (수정 시에만 사용)
   // 커리큘럼
-  chapters: Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[];
+  chapters?: Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[];
   // 미션
-  missions: Omit<Mission, 'id' | 'course_id' | 'created_at' | 'updated_at'>[];
+  missions?: Omit<Mission, 'id' | 'course_id' | 'created_at' | 'updated_at'>[];
 }
 
 /**
@@ -226,13 +236,24 @@ export interface CourseResponse {
   thumbnail_url: string;
   instructor_name: string;
   instructor_bio: string;
+  instructor_description: string;
   instructor_image: string;
   price_type: string;
   price: number;
   difficulty: string;
-  total_duration: number;
+  // 수강 관련
+  access_duration_days: number;
+  max_students: number;
+  recruitment_start_date: string;
+  recruitment_end_date: string;
+  course_start_date: string;
+  course_end_date: string;
+  // 기타
+  student_reviews: string;
   faq: string;
   is_published: boolean;
+  // 자동 계산 필드
+  total_duration: number;
   enrollment_count: number;
   created_at: string;
   updated_at: string;

@@ -58,7 +58,17 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
     thumbnail_url: '',
     instructor_name: '',
     instructor_bio: '',
+    instructor_description: '',
     instructor_image: '',
+    // 수강 관련
+    access_duration_days: 365,
+    max_students: 100,
+    recruitment_start_date: '',
+    recruitment_end_date: '',
+    course_start_date: '',
+    course_end_date: '',
+    // 기타
+    student_reviews: '[]',
     is_published: false,
   });
 
@@ -157,7 +167,17 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
             thumbnail_url: courseData.thumbnail_url || '',
             instructor_name: courseData.instructor_name || '',
             instructor_bio: courseData.instructor_bio || '',
+            instructor_description: courseData.instructor_description || '',
             instructor_image: courseData.instructor_image || '',
+            // 수강 관련
+            access_duration_days: courseData.access_duration_days || 365,
+            max_students: courseData.max_students || 100,
+            recruitment_start_date: courseData.recruitment_start_date ? courseData.recruitment_start_date.slice(0, 16) : '',
+            recruitment_end_date: courseData.recruitment_end_date ? courseData.recruitment_end_date.slice(0, 16) : '',
+            course_start_date: courseData.course_start_date ? courseData.course_start_date.slice(0, 16) : '',
+            course_end_date: courseData.course_end_date ? courseData.course_end_date.slice(0, 16) : '',
+            // 기타
+            student_reviews: courseData.student_reviews || '[]',
             is_published: courseData.is_published || false,
           });
 
@@ -208,7 +228,17 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
       thumbnail_url: '',
       instructor_name: '',
       instructor_bio: '',
+      instructor_description: '',
       instructor_image: '',
+      // 수강 관련
+      access_duration_days: 365,
+      max_students: 100,
+      recruitment_start_date: '',
+      recruitment_end_date: '',
+      course_start_date: '',
+      course_end_date: '',
+      // 기타
+      student_reviews: '[]',
       is_published: false,
     });
     setFaqs([]);
@@ -240,13 +270,55 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
   // 최종 제출/수정
   const handleSubmit = useCallback(() => {
+    console.log('=== 제출 시작 ===');
+    console.log('basicInfo 전체:', basicInfo);
+    console.log('날짜 필드:', {
+      recruitment_start_date: basicInfo.recruitment_start_date,
+      recruitment_end_date: basicInfo.recruitment_end_date,
+      course_start_date: basicInfo.course_start_date,
+      course_end_date: basicInfo.course_end_date,
+    });
+
+    // 날짜 변환 + 기본값 설정
+    const toISOStringWithDefault = (dateStr: string, defaultOffsetDays: number = 0) => {
+      // 빈 값 처리: 현재 날짜 기준으로 기본값 생성
+      if (!dateStr || dateStr.trim() === '') {
+        const defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
+        const isoDate = defaultDate.toISOString();
+        console.log(`⚠️ 빈 날짜 감지 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+        return isoDate;
+      }
+
+      try {
+        const isoDate = new Date(dateStr).toISOString();
+        console.log(`✅ 날짜 변환 성공: "${dateStr}" → "${isoDate}"`);
+        return isoDate;
+      } catch (error) {
+        console.error(`❌ 날짜 변환 실패: "${dateStr}"`, error);
+        // 변환 실패 시에도 기본값 사용
+        const defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
+        const isoDate = defaultDate.toISOString();
+        console.log(`⚠️ 변환 실패 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+        return isoDate;
+      }
+    };
+
     const courseData: CreateCourseRequest = {
       ...basicInfo,
-      thumbnail_url: basicInfo.thumbnail_url || DEFAULT_THUMBNAIL_URL,
+      // 날짜 변환 (빈 값이면 기본값 사용)
+      recruitment_start_date: toISOStringWithDefault(basicInfo.recruitment_start_date, 0), // 오늘
+      recruitment_end_date: toISOStringWithDefault(basicInfo.recruitment_end_date, 90), // 90일 후
+      course_start_date: toISOStringWithDefault(basicInfo.course_start_date, 7), // 7일 후
+      course_end_date: toISOStringWithDefault(basicInfo.course_end_date, 365), // 365일 후
+      // JSON 문자열 변환
       faq: JSON.stringify(faqs),
       chapters,
       missions,
     };
+
+    console.log('=== 최종 전송 데이터 ===', courseData);
 
     if (mode === 'add') {
       onSubmit(courseData);
@@ -383,7 +455,17 @@ interface BasicInfoType {
   thumbnail_url: string;
   instructor_name: string;
   instructor_bio: string;
+  instructor_description: string;
   instructor_image: string;
+  // 수강 관련
+  access_duration_days: number;
+  max_students: number;
+  recruitment_start_date: string;
+  recruitment_end_date: string;
+  course_start_date: string;
+  course_end_date: string;
+  // 기타
+  student_reviews: string;
   is_published: boolean;
 }
 
@@ -575,13 +657,27 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
         <S.FormRow>
           <S.FormGroup>
-            <S.Label htmlFor="instructor_bio">강사 소개</S.Label>
+            <S.Label htmlFor="instructor_bio">강사 소개 (짧은 설명)</S.Label>
             <S.Input
               id="instructor_bio"
               type="text"
               value={basicInfo.instructor_bio}
               onChange={(e) => onChange('instructor_bio', e.target.value)}
-              placeholder="강사 소개를 입력하세요"
+              placeholder="예: 10년차 프론트엔드 개발자"
+              disabled={disabled}
+            />
+          </S.FormGroup>
+        </S.FormRow>
+
+        <S.FormRow>
+          <S.FormGroup>
+            <S.Label htmlFor="instructor_description">강사 상세 설명</S.Label>
+            <S.Textarea
+              id="instructor_description"
+              value={basicInfo.instructor_description}
+              onChange={(e) => onChange('instructor_description', e.target.value)}
+              placeholder="강사의 경력, 전문 분야 등을 자세히 입력하세요"
+              rows={4}
               disabled={disabled}
             />
           </S.FormGroup>
@@ -595,7 +691,88 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
               type="text"
               value={basicInfo.instructor_image}
               onChange={(e) => onChange('instructor_image', e.target.value)}
-              placeholder="https://example.com/instructor.jpg"
+              placeholder="https://example.com/instructor.jpg (비워두면 기본 이미지)"
+              disabled={disabled}
+            />
+          </S.FormGroup>
+        </S.FormRow>
+      </S.SectionBox>
+
+      {/* 수강 관련 섹션 */}
+      <S.SectionBox>
+        <S.SectionTitle>수강 설정</S.SectionTitle>
+
+        <S.FormRow>
+          <S.FormGroup>
+            <S.Label htmlFor="access_duration_days">수강 기간 (일)</S.Label>
+            <S.Input
+              id="access_duration_days"
+              type="number"
+              min="1"
+              value={basicInfo.access_duration_days}
+              onChange={(e) => onChange('access_duration_days', parseInt(e.target.value) || 365)}
+              placeholder="365"
+              disabled={disabled}
+            />
+          </S.FormGroup>
+
+          <S.FormGroup>
+            <S.Label htmlFor="max_students">최대 수강생 수</S.Label>
+            <S.Input
+              id="max_students"
+              type="number"
+              min="0"
+              value={basicInfo.max_students}
+              onChange={(e) => onChange('max_students', parseInt(e.target.value) || 0)}
+              placeholder="0 = 무제한"
+              disabled={disabled}
+            />
+          </S.FormGroup>
+        </S.FormRow>
+
+        <S.FormRow>
+          <S.FormGroup>
+            <S.Label htmlFor="recruitment_start_date">모집 시작일</S.Label>
+            <S.Input
+              id="recruitment_start_date"
+              type="datetime-local"
+              value={basicInfo.recruitment_start_date}
+              onChange={(e) => onChange('recruitment_start_date', e.target.value)}
+              disabled={disabled}
+            />
+          </S.FormGroup>
+
+          <S.FormGroup>
+            <S.Label htmlFor="recruitment_end_date">모집 종료일</S.Label>
+            <S.Input
+              id="recruitment_end_date"
+              type="datetime-local"
+              value={basicInfo.recruitment_end_date}
+              onChange={(e) => onChange('recruitment_end_date', e.target.value)}
+              disabled={disabled}
+            />
+          </S.FormGroup>
+        </S.FormRow>
+
+        <S.FormRow>
+          <S.FormGroup>
+            <S.Label htmlFor="course_start_date">강의 시작일</S.Label>
+            <S.Input
+              id="course_start_date"
+              type="datetime-local"
+              value={basicInfo.course_start_date}
+              onChange={(e) => onChange('course_start_date', e.target.value)}
+              disabled={disabled}
+            />
+          </S.FormGroup>
+
+          <S.FormGroup>
+            <S.Label htmlFor="course_end_date">강의 종료일</S.Label>
+            <S.Input
+              id="course_end_date"
+              type="datetime-local"
+              value={basicInfo.course_end_date}
+              onChange={(e) => onChange('course_end_date', e.target.value)}
               disabled={disabled}
             />
           </S.FormGroup>
