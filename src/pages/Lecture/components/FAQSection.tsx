@@ -2,19 +2,18 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+import { useLectureContext } from '../LectureDetailPage';
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
-import type { CoursesDetailItem } from '../../../types/CourseType';
 
-type FAQSectionProps = {
-  data?: CoursesDetailItem['faq'],
-}
 
 type FaqItem = {
   question: string;
   answer: string;
 };
 
-const FAQSection = React.forwardRef<HTMLElement, FAQSectionProps>(({ data: FAQData }, ref) => {
+const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
+  const FAQData = data.faq;
   const [openItemIndex, setOpenItemIndex] = useState<number | null>(null);
 
   if (!FAQData) return null;

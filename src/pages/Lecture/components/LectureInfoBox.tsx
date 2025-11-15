@@ -6,11 +6,11 @@ import useMediaQuery from '../../../hooks/useMediaQuery';
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
-import type { CoursesDetailItem } from '../../../types/CourseType';
-import { formatDate } from '../LectureDetailPage';
+import { formatDate, useLectureContext } from '../LectureDetailPage';
 
 
-export const InfoBoxContent = ({ data, recruitmentStatus }: { data: CoursesDetailItem, recruitmentStatus?: boolean }) => {
+export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
+  const { data } = useLectureContext();
   const { course_type, category_type, difficulty } = data;
   const { recruitment_end_date, course_start_date, course_end_date } = data;
     const { access_duration_days, max_students } = data;
@@ -115,7 +115,8 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
   )
 }
 
-export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
+export const LectureInfoBox = () => {
+  const { data } = useLectureContext();
   const { recruitment_end_date } = data;
 
     const recruitmentStatus = recruitment_end_date 
@@ -128,7 +129,7 @@ export const LectureInfoBox = ({ data }: { data: CoursesDetailItem }) => {
         <>
           <S.Title>강의 정보</S.Title>
 
-          <InfoBoxContent data={data} recruitmentStatus={recruitmentStatus}/>
+          <InfoBoxContent recruitmentStatus={recruitmentStatus}/>
 
           <InfoBoxButtons recruitmentStatus={recruitmentStatus}/>
         </>

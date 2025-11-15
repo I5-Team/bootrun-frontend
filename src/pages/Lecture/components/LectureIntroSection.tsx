@@ -1,13 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
-import type { CoursesDetailItem } from '../../../types/CourseType';
+import { useLectureContext } from '../LectureDetailPage';
 
-type InstructorSectionProps = {
-  data: CoursesDetailItem;
-}
-
-const LectureIntroSection = React.forwardRef<HTMLElement, InstructorSectionProps>(({ data }, ref) => {
+const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
   return (
     <Intro.Section ref={ref} id="description">
         <S.SectionTitle className="sr-only">강의 소개</S.SectionTitle>

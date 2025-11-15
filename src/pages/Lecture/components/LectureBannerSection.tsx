@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import type { CoursesDetailItem } from '../../../types/CourseType';
+import { useLectureContext } from '../LectureDetailPage';
 
-const LectureBannerSection = ({ data }: { data: CoursesDetailItem }) => {
+const LectureBannerSection = () => {
+  const { data } = useLectureContext()
   const { title, thumbnail_url } = data;
 
   return (
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
-      {data && (
-        <img alt={title} src={thumbnail_url} />
-      )}
+      <img alt={title} src={thumbnail_url} />
     </S.BannerWrapper>
   );
 };

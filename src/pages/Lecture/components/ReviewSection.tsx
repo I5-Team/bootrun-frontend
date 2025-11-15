@@ -1,12 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
-import type { CoursesDetailItem } from '../../../types/CourseType';
 import SvgStar from "../../../assets/icons/icon-star.svg?react";
-
-type ReviewSectionProps = {
-  data?: CoursesDetailItem['student_reviews'] | null;
-}
+import { useLectureContext } from '../LectureDetailPage';
 
 type ReviewItem = {
   student: string,
@@ -30,8 +26,9 @@ const getRandomDateString = () => {
   return `${year}. ${month}. ${day}.`;
 };
 
-const ReviewSection = React.forwardRef<HTMLElement, ReviewSectionProps>(({ data: reviewData }, ref) => {
-  
+const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
+  const reviewData = data.student_reviews;
   const parsedData = reviewData ? JSON.parse(reviewData) : [];
   const reviewDataArr = parsedData.map((item: ReviewItem) => ({
     ...item,
@@ -39,14 +36,11 @@ const ReviewSection = React.forwardRef<HTMLElement, ReviewSectionProps>(({ data:
     date: getRandomDateString(),
   }));
 
-
-
   const reviewTitleInfo = {
     averageRating: reviewDataArr.reduce((acc: number, cur: ReviewItem) => 
       acc + (cur.rating ? cur.rating : 0), 0) / reviewDataArr.length,
     totalReviews: reviewDataArr.length,
   }
-
 
   return (
     <S.Section ref={ref} id="reviews">

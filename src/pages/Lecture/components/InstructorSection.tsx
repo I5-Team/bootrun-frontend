@@ -2,16 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import Profile from '../../../components/Profile';
-import type { CoursesDetailItem } from '../../../types/CourseType';
-import { mockInstructorData } from "../../../data/mockLectureData";
+import { useLectureContext } from '../LectureDetailPage';
 
-type InstructorSectionProps = {
-  data: CoursesDetailItem;
-}
-
-const InstructorSection = React.forwardRef<HTMLElement, InstructorSectionProps>(({ data }, ref) => {
+const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
   const { instructor_name, instructor_bio, instructor_image, instructor_description } = data;
-  const mockData = mockInstructorData;
 
   return (
     <S.Section ref={ref} id="instructor">

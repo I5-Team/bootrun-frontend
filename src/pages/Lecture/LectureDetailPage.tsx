@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { createContext, useContext, useRef } from 'react';
 import type { SectionRefs } from '../../types/LectureType';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { useParams } from 'react-router-dom';
@@ -23,6 +23,7 @@ import ReviewSection from './components/ReviewSection';
 import { SectionTabs } from './components/SectionTabs';
 import { LectureInfoBox, InfoBoxButtons } from './components/LectureInfoBox';
 import { LoadingSpinner } from '../../components/HelperComponents';
+import type { CoursesDetailItem } from '../../types/CourseType';
 
 // 함수
 export const formatDate = (dateString: string): string => {
@@ -36,6 +37,28 @@ export const formatDate = (dateString: string): string => {
 
   return `${year}.${month}.${day}(${weekDay})`;
 };
+
+// Context & Provider
+type LectureContextProps = {
+  data: CoursesDetailItem
+}
+
+const LectureContext = createContext<LectureContextProps | undefined>(undefined);
+
+const LectureProvider = ({ data, children }: {
+  data: CoursesDetailItem,
+  children: React.ReactNode,
+}) => (
+  <LectureContext.Provider value={{ data }}>
+    {children}
+  </LectureContext.Provider>
+)
+
+export const useLectureContext = () => {
+  const context = useContext(LectureContext);
+  if (!context) throw new Error('LectureContext를 사용하려면 LectureProvider로 감싸야 합니다.');
+  return context;
+}
 
 //
 export default function LectureDetailPage() {
@@ -65,26 +88,26 @@ export default function LectureDetailPage() {
         {isLoading
           ? <LoadingSpinner/>
           : courseData && (
-            <>
-              <LectureBannerSection data={courseData}/>
+            <LectureProvider data={courseData}>
+              <LectureBannerSection/>
               <LectureMainLayout>
                 {courseData && 
                   <ContentWrapper>
                     {/* 헤더 영역 (왼쪽) */}
-                    <LectureHeaderSection data={courseData}/>
+                    <LectureHeaderSection/>
     
                     {/* 고정 사이드바 (오른쪽) */}
-                    <LectureInfoBox data={courseData} />
+                    <LectureInfoBox />
     
                     {/* 메인 콘텐츠 영역 (왼쪽) */}
                     <SectionWrapper>
                       <SectionTabs refs={sectionRefs}/>
 
-                      <LectureIntroSection ref={introRef} data={courseData}/>
-                      <ReviewSection ref={reviewsRef} data={courseData.student_reviews}/>
-                      <CurriculumSection ref={curriculumRef} data={courseData.chapters}/>
-                      <InstructorSection ref={instructorRef} data={courseData}/>
-                      <FAQSection ref={faqRef} data={courseData.faq}/>
+                      <LectureIntroSection ref={introRef}/>
+                      <ReviewSection ref={reviewsRef}/>
+                      <CurriculumSection ref={curriculumRef}/>
+                      <InstructorSection ref={instructorRef}/>
+                      <FAQSection ref={faqRef}/>
                       <NoticeSection />
                     </SectionWrapper>
     
@@ -92,7 +115,7 @@ export default function LectureDetailPage() {
                   </ContentWrapper>
                 }
               </LectureMainLayout>
-            </>
+            </LectureProvider>
           )
         }
       </>

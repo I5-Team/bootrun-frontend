@@ -3,10 +3,12 @@ import Tag from '../../../components/Tag';
 import Profile from '../../../components/Profile';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
-import { categoryLabel, courseTypeLabel, difficultyLabel, type CoursesDetailItem } from '../../../types/CourseType';
-import { formatDate } from '../LectureDetailPage';
+import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
+import { formatDate, useLectureContext } from '../LectureDetailPage';
 
-const LectureHeaderSection = ({ data }: { data: CoursesDetailItem }) => {
+const LectureHeaderSection = () => {
+  const { data } = useLectureContext()
+
   const { isLaptop } = useMediaQuery();
   const { category_type, course_type, difficulty } = data;
   const { title, description } = data;
@@ -39,7 +41,7 @@ const LectureHeaderSection = ({ data }: { data: CoursesDetailItem }) => {
         </S.Profile>
       </S.InstructorContainer>
 
-      {isLaptop && <InfoBoxContent data={data}/>}
+      {isLaptop && <InfoBoxContent/>}
           
       <S.ScheduleContainer>
         <strong>교육 일정</strong>
