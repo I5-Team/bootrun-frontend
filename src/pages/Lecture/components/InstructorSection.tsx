@@ -2,7 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import Profile from '../../../components/Profile';
+
+import type { CoursesDetailItem } from '../../../types/CourseType';
+import { mockInstructorData } from "../../../data/mockLectureData";
+import { getProfileImageUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();
@@ -19,7 +24,7 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
 
       {data && (
         <Instructor.InfoBox>
-          <Profile size={24} src={instructor_image} alt={`${instructor_name} 강사 프로필`}></Profile>
+          <Profile size={24} src={getProfileImageUrl(instructor_image)} alt={`${instructor_name} 강사 프로필`}></Profile>
 
           <Instructor.ContentContainer>
             <Instructor.Header>

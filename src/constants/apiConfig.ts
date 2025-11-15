@@ -354,6 +354,14 @@ export const API_URL = {
   },
 };
 // 이미지 처리(디폴트 이미지)
-export const DEFAULT_THUMBNAIL_URL = '/assets/images/OG.jpg';
-export const DEFAULT_INSTRUCTOR_IMAGE = '/assets/images/profile-default.jpg';
+// 개발 환경과 프로덕션 환경 모두 지원하는 이미지 경로
+// 개발: /assets/images/OG.jpg
+// 프로덕션: /bootrun-frontend/assets/images/OG.jpg
+const getImagePath = (filename: string): string => {
+  const base = import.meta.env.BASE_URL || '/';
+  return `${base}assets/images/${filename}`.replace(/\/+/g, '/');
+};
+
+export const DEFAULT_THUMBNAIL_URL = getImagePath('OG.jpg');
+export const DEFAULT_INSTRUCTOR_IMAGE = getImagePath('profile-default.jpg');
 

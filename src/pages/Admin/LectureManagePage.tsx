@@ -5,13 +5,12 @@
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { CourseApiParams, CreateCourseRequest } from '../../types/AdminCourseType';
-import { fetchCourses, createChapter } from '../../api/adminApi';
+import { fetchCourses, createChapter, createLecture, updateLecture } from '../../api/adminApi';
 import {
   useCreateCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } from '../../queries/useCourseQueries';
-import { DEFAULT_THUMBNAIL_URL, DEFAULT_INSTRUCTOR_IMAGE } from '../../constants/apiConfig';
 import { Button } from '../../components/Button';
 
 // 하위 컴포넌트 임포트
@@ -95,15 +94,35 @@ export default function LectureManagePage() {
     async (data: CreateCourseRequest) => {
       console.log('새 강의 데이터:', data);
 
-      // 1단계: 강의 생성 (chapters와 missions 제외)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { chapters, missions, ...rest } = data;
+      const { chapters = [] } = data;
+
+      // 1단계: 강의 생성 (모든 필드 명시적으로 전달)
       const courseData: CreateCourseRequest = {
-        ...rest,
-        thumbnail_url: rest.thumbnail_url || DEFAULT_THUMBNAIL_URL, // 빈 값이면 디폴트 이미지
-        instructor_image: rest.instructor_image || DEFAULT_INSTRUCTOR_IMAGE, // 빈 값이면 디폴트 프로필
-        chapters: [], // 빈 배열로 전송
-        missions: [], // 빈 배열로 전송
+        // 기본 정보
+        category_type: data.category_type,
+        course_type: data.course_type,
+        title: data.title,
+        description: data.description,
+        thumbnail_url: data.thumbnail_url?.trim() || '',
+        instructor_name: data.instructor_name,
+        instructor_bio: data.instructor_bio,
+        instructor_description: data.instructor_description,
+        instructor_image: data.instructor_image?.trim() || '',
+        difficulty: data.difficulty,
+        price_type: data.price_type,
+        price: data.price,
+        // 수강 관련
+        access_duration_days: data.access_duration_days,
+        max_students: data.max_students,
+        recruitment_start_date: data.recruitment_start_date,
+        recruitment_end_date: data.recruitment_end_date,
+        course_start_date: data.course_start_date,
+        course_end_date: data.course_end_date,
+        // 기타
+        student_reviews: data.student_reviews,
+        faq: data.faq,
+        chapters: [],
+        missions: [],
       };
 
       createCourseMutation.mutate(courseData, {
@@ -111,7 +130,7 @@ export default function LectureManagePage() {
           const courseId = courseResponse.id;
           console.log('강의 생성 성공! ID:', courseId);
 
-          // 2단계: 챕터 순차 생성
+          // 2단계: 챕터 및 강의 영상 순차 생성
           if (chapters && chapters.length > 0) {
             console.log(`챕터 ${chapters.length}개 생성 시작...`);
             try {
@@ -121,14 +140,34 @@ export default function LectureManagePage() {
                   description: chapter.description,
                   order_number: chapter.order_number,
                 };
-                await createChapter(courseId, chapterData);
-                console.log(`챕터 "${chapter.title}" 생성 완료`);
+                // 챕터 생성
+                const chapterResponse = await createChapter(courseId, chapterData);
+                const chapterId = chapterResponse.data.id;
+                console.log(`챕터 "${chapter.title}" 생성 완료 (ID: ${chapterId})`);
+
+                // 강의 영상 생성 (새로 추가)
+                if (chapter.lectures && chapter.lectures.length > 0) {
+                  console.log(`  └─ 강의 영상 ${chapter.lectures.length}개 생성 시작...`);
+                  for (const lecture of chapter.lectures) {
+                    const lectureData = {
+                      title: lecture.title,
+                      description: lecture.description,
+                      video_url: lecture.video_url,
+                      video_type: lecture.video_type,
+                      duration_seconds: lecture.duration_seconds,
+                      order_number: lecture.order_number,
+                      material_url: lecture.material_url || '',
+                    };
+                    await createLecture(courseId, chapterId, lectureData);
+                    console.log(`    └─ 강의 영상 "${lecture.title}" 생성 완료`);
+                  }
+                }
               }
-              console.log('모든 챕터 생성 완료!');
-            } catch (chapterError) {
-              console.error('챕터 생성 실패:', chapterError);
+              console.log('모든 챕터와 강의 영상 생성 완료!');
+            } catch (error) {
+              console.error('챕터/강의 영상 생성 실패:', error);
               alert(
-                '강의는 생성되었으나 일부 챕터 추가에 실패했습니다. 강의 수정에서 챕터를 추가해주세요.'
+                '강의는 생성되었으나 일부 챕터 또는 강의 영상 추가에 실패했습니다. 강의 수정에서 다시 시도해주세요.'
               );
               setIsFormModalOpen(false);
               return;
@@ -138,7 +177,7 @@ export default function LectureManagePage() {
           // 3단계: 미션 생성 (TODO: 미션 API 구현 후 추가)
           // if (missions && missions.length > 0) { ... }
 
-          alert('강의와 챕터가 성공적으로 추가되었습니다!');
+          alert('강의, 챕터, 강의 영상이 모두 성공적으로 추가되었습니다!');
           setIsFormModalOpen(false);
           // 목록 새로고침 (React Query가 자동으로 invalidateQueries 처리)
         },
@@ -210,22 +249,85 @@ export default function LectureManagePage() {
     (courseId: number, data: CreateCourseRequest) => {
       console.log('강의 수정 데이터:', courseId, data);
 
-      // chapters와 missions 제외 (강의 수정 API에서 받지 않음)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { chapters, missions, ...rest } = data;
-
-      // 빈 값이면 디폴트 이미지 사용
+      // 모든 필드 명시적으로 전달
       const courseData = {
-        ...rest,
-        thumbnail_url: rest.thumbnail_url || DEFAULT_THUMBNAIL_URL,
-        instructor_image: rest.instructor_image || DEFAULT_INSTRUCTOR_IMAGE,
+        // 기본 정보
+        category_type: data.category_type,
+        course_type: data.course_type,
+        title: data.title,
+        description: data.description,
+        thumbnail_url: data.thumbnail_url?.trim() || '',
+        instructor_name: data.instructor_name,
+        instructor_bio: data.instructor_bio,
+        instructor_description: data.instructor_description,
+        instructor_image: data.instructor_image?.trim() || '',
+        difficulty: data.difficulty,
+        price_type: data.price_type,
+        price: data.price,
+        // 수강 관련
+        access_duration_days: data.access_duration_days,
+        max_students: data.max_students,
+        recruitment_start_date: data.recruitment_start_date,
+        recruitment_end_date: data.recruitment_end_date,
+        course_start_date: data.course_start_date,
+        course_end_date: data.course_end_date,
+        // 기타
+        student_reviews: data.student_reviews,
+        faq: data.faq,
+        is_published: data.is_published,
       };
 
       updateCourseMutation.mutate(
         { courseId, courseData },
         {
-          onSuccess: () => {
-            console.log('강의 수정 성공!');
+          onSuccess: async () => {
+            try {
+              const { chapters = [] } = data;
+
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              for (const chapter of chapters as any) {
+                // 각 챕터 내 강의 영상 처리 (id가 있는 경우만 처리)
+                if (chapter.id && chapter.lectures && chapter.lectures.length > 0) {
+                  for (const lecture of chapter.lectures) {
+                    if (!lecture.id) {
+                      // 새로운 강의 영상 → 생성
+                      console.log(`새 강의 영상 "${lecture.title}" 추가 중...`);
+                      const lectureData = {
+                        title: lecture.title,
+                        description: lecture.description,
+                        video_url: lecture.video_url,
+                        video_type: lecture.video_type,
+                        duration_seconds: lecture.duration_seconds,
+                        order_number: lecture.order_number,
+                        material_url: lecture.material_url || '',
+                      };
+                      await createLecture(courseId, chapter.id, lectureData);
+                      console.log(`강의 영상 "${lecture.title}" 추가 완료`);
+                    } else {
+                      // 기존 강의 영상 → 수정
+                      console.log(`기존 강의 영상 "${lecture.title}" 수정 중...`);
+                      const lectureData = {
+                        title: lecture.title,
+                        description: lecture.description,
+                        video_url: lecture.video_url,
+                        video_type: lecture.video_type,
+                        duration_seconds: lecture.duration_seconds,
+                        order_number: lecture.order_number,
+                        material_url: lecture.material_url || '',
+                      };
+                      await updateLecture(courseId, chapter.id, lecture.id, lectureData);
+                      console.log(`강의 영상 "${lecture.title}" 수정 완료`);
+                    }
+                  }
+                }
+              }
+            } catch (lectureError) {
+              console.error('강의 영상 처리 실패:', lectureError);
+              alert('강의 기본정보는 수정되었으나 영상 처리 중 오류가 발생했습니다.');
+              setIsFormModalOpen(false);
+              return;
+            }
+
             alert('강의가 성공적으로 수정되었습니다!');
             setIsFormModalOpen(false);
             // 목록 새로고침 (React Query가 자동으로 invalidateQueries 처리)

@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+
+import type { CoursesDetailItem } from '../../../types/CourseType';
+import { getThumbnailUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 import { useState } from 'react';
 import { SkeletonImage } from '../../../components/Skeleton';
@@ -11,13 +14,15 @@ const LectureBannerSection = () => {
   return (
     <S.BannerWrapper>
       <h2 className="sr-only">강의 소개 배너</h2>
+
       {!imgLoaded && <SkeletonImage/>}
         <img 
-          src={thumbnail_url}
+          src={getThumbnailUrl(thumbnail_url)}
           alt={title}
           onLoad={() => {setImgLoaded(false)}}
           style={{ display: imgLoaded ? 'block' : 'none'}}
         />
+
     </S.BannerWrapper>
   );
 };
