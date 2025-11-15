@@ -25,11 +25,11 @@ const CategoryBtn = ({ icon, title, onClick }: {
     onClick?: () => void
 }) => {
     return (
-        <StyledCategoryBtn onClick={onClick}>
+        <StyledCategoryBtn type="button" onClick={onClick}>
             <StyledCategoryIcon>
                 {icon}
             </StyledCategoryIcon>
-            <p>{title}</p>
+            <span>{title}</span>
         </StyledCategoryBtn>
     )
 }
