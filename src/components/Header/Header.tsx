@@ -134,9 +134,7 @@ const UserActions = () => {
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownWrapper>
       ) : (
-        <Link to={ROUTES.LOGIN}>
-          <Button>로그인</Button>
-        </Link>
+          <Button as={Link} to={ROUTES.LOGIN} type="">로그인</Button>
       )}
     </>
   );

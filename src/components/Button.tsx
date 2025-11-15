@@ -6,15 +6,17 @@ type ButtonVariant = 'primary' | 'outline'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 type ButtonProps = {
-  children: React.ReactNode
-  variant?: ButtonVariant
-  size?: ButtonSize
-  fullWidth?: boolean
-  disabled?: boolean
-  iconSvg?: React.ReactNode
-  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick']
-  type?: 'button' | 'submit' | 'reset'
-  ariaLabel?: string
+  as?: React.ElementType,
+  to?: string,
+  children: React.ReactNode,
+  variant?: ButtonVariant,
+  size?: ButtonSize,
+  fullWidth?: boolean,
+  disabled?: boolean,
+  iconSvg?: React.ReactNode,
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
+  type?: 'button' | 'submit' | 'reset' | '',
+  ariaLabel?: string,
 }
 
 const buttonPadding: Record<ButtonSize, {padding: string}> = {
@@ -99,6 +101,8 @@ const StyledLabel = styled.span`
 `
 
 export const Button: React.FC<ButtonProps> = ({
+  as = 'button',
+  to,
   children,
   variant = 'primary',
   size = 'md',
@@ -111,7 +115,9 @@ export const Button: React.FC<ButtonProps> = ({
 }: ButtonProps) => {
   return (
     <StyledBaseButton
-      type={type}
+      as={as}
+      to={to}
+      {...(type ? { type } : {})}
       onClick={onClick}
       disabled={disabled}
       $variant={variant}
