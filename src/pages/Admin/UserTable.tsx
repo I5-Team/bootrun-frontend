@@ -30,15 +30,13 @@ const formatDateTime = (dateString: string) => {
   }
 };
 
-const UserTable: React.FC<UserTableProps> = ({
-  users,
-  onUserClick,
-}) => {
+const UserTable: React.FC<UserTableProps> = ({ users, onUserClick }) => {
   return (
     <S.TableWrapper>
       <S.StyledTable role="table" aria-label="사용자 목록">
         <thead>
           <tr>
+            <th scope="col">순번</th>
             <th scope="col">ID</th>
             <th scope="col">이메일</th>
             <th scope="col">닉네임</th>
@@ -52,12 +50,12 @@ const UserTable: React.FC<UserTableProps> = ({
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td colSpan={8} role="status" aria-live="polite">
+              <td colSpan={9} role="status" aria-live="polite">
                 검색된 사용자가 없습니다.
               </td>
             </tr>
           ) : (
-            users.map((user) => (
+            users.map((user, index) => (
               <tr
                 key={user.id}
                 onClick={() => onUserClick(user.id)}
@@ -72,6 +70,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 aria-label={`${user.nickname} 사용자 상세보기`}
                 style={{ cursor: 'pointer' }}
               >
+                <td>{users.length - index}</td>
                 <td>{user.id}</td>
                 <td>{user.email}</td>
                 <td>{user.nickname}</td>
@@ -138,7 +137,7 @@ const S = {
     align-items: center;
     gap: 0.6rem;
     font-weight: 500;
-    
+
     // 상태 표시 점(dot)
     &::before {
       content: '';
@@ -149,22 +148,20 @@ const S = {
       background-color: ${({ theme, $active }) =>
         $active ? '#22C55E' : theme.colors.gray300}; // (임시) 녹색
     }
-    
-    color: ${({ theme, $active }) =>
-      $active ? theme.colors.surface : theme.colors.gray300};
+
+    color: ${({ theme, $active }) => ($active ? theme.colors.surface : theme.colors.gray300)};
   `,
   ActionButton: styled.button<{ $danger?: boolean }>`
     padding: 0.6rem 1rem;
     font-size: 1.3rem;
     font-weight: 500;
-    border: 1px solid ${({ theme, $danger }) =>
-      $danger ? theme.colors.alert : theme.colors.gray200};
-    color: ${({ theme, $danger }) =>
-      $danger ? theme.colors.alert : theme.colors.gray400};
+    border: 1px solid
+      ${({ theme, $danger }) => ($danger ? theme.colors.alert : theme.colors.gray200)};
+    color: ${({ theme, $danger }) => ($danger ? theme.colors.alert : theme.colors.gray400)};
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.sm};
     cursor: pointer;
-    
+
     &:hover {
       background: ${({ theme, $danger }) =>
         $danger ? 'rgba(255, 52, 64, 0.05)' : theme.colors.gray100};
