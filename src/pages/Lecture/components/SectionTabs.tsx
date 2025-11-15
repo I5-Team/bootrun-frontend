@@ -5,7 +5,7 @@ import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailP
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { ROUTES } from '../../../router/RouteConfig';
 import { useNavigate } from 'react-router-dom';
-import { useLectureContext } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 interface StickyNavProps {
   refs: SectionRefs;

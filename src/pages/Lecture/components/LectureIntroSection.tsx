@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
-import { useLectureContext } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();

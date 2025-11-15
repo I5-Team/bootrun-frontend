@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgStar from "../../../assets/icons/icon-star.svg?react";
-import { useLectureContext } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 type ReviewItem = {
   student: string,

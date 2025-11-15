@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import Profile from '../../../components/Profile';
-import { useLectureContext } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();

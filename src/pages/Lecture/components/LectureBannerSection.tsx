@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useLectureContext } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const LectureBannerSection = () => {
   const { data } = useLectureContext()

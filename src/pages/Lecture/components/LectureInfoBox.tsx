@@ -4,13 +4,14 @@ import styled, { css } from 'styled-components';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
-import { formatDate, useLectureContext } from '../LectureDetailPage';
+import { formatDate } from '../LectureDetailPage';
 
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import SvgPlay from "../../../assets/icons/icon-play.svg?react";
 import ProgressBar from '../../../components/ProgressBar';
 import { useEnrollmentDetailQuery } from '../../../queries/useEnrollmentQueries';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 
 export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {

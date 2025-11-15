@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
-import { useLectureContext } from '../LectureDetailPage';
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 
 type FaqItem = {

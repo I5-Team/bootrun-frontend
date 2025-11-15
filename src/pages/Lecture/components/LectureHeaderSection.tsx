@@ -4,7 +4,8 @@ import Profile from '../../../components/Profile';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
-import { formatDate, useLectureContext } from '../LectureDetailPage';
+import { formatDate } from '../LectureDetailPage';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const LectureHeaderSection = () => {
   const { data } = useLectureContext()

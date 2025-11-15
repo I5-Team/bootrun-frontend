@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 
 import type { LectureItem } from '../../../types/CourseType';
-import { useLectureContext } from '../LectureDetailPage';
 
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
 import SvgPlay from "../../../assets/icons/icon-play.svg?react";
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 
 const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
