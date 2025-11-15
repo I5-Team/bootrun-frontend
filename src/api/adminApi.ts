@@ -496,8 +496,29 @@ export const fetchCourses = async (params: CourseApiParams): Promise<CourseListR
   }
 
   try {
+    // null 값 필터링: null인 필드는 쿼리 파라미터에서 제외
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cleanParams: Record<string, any> = {
+      page: params.page,
+      page_size: params.page_size,
+    };
+
+    // 선택적 필터 - 값이 있을 떄만 추가
+    if (params.keyword) cleanParams.keyword = params.keyword;
+    if (params.category_type !== null && params.category_type !== undefined) {
+      cleanParams.category_type = params.category_type;
+    }
+    if (params.difficulty !== null && params.difficulty !== undefined) {
+      cleanParams.difficulty = params.difficulty;
+    }
+    if (params.is_published !== null && params.is_published !== undefined) {
+      cleanParams.is_published = params.is_published;
+    }
+
     // 실제 API 호출
-    const response = await apiClient.get<CourseListResponse>('/admin/courses', { params });
+    const response = await apiClient.get<CourseListResponse>('/admin/courses', {
+      params: cleanParams,
+    });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch courses:', error);
@@ -573,9 +594,20 @@ export const fetchCourseDetail = async (courseId: number): Promise<CourseRespons
       thumbnail_url: courseData.thumbnail_url,
       instructor_name: courseData.instructor_name,
       instructor_bio: courseData.instructor_bio,
+      instructor_description: courseData.instructor_description || '',
       instructor_image: courseData.instructor_image,
+      // 수강 관련
+      access_duration_days: courseData.access_duration_days || 365,
+      max_students: courseData.max_students || 0,
+      recruitment_start_date: courseData.recruitment_start_date || '',
+      recruitment_end_date: courseData.recruitment_end_date || '',
+      course_start_date: courseData.course_start_date || '',
+      course_end_date: courseData.course_end_date || '',
+      // 기타
+      student_reviews: courseData.student_reviews || '[]',
+      faq: courseData.faq || '[]',
       is_published: courseData.is_published,
-      faq: courseData.faq,
+      // 자동 계산
       total_duration: courseData.total_duration || 0,
       enrollment_count: courseData.enrollment_count || 0,
       created_at: courseData.created_at,
