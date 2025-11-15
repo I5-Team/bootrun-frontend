@@ -97,7 +97,8 @@ export default function LectureDetailPage() {
                     <LectureHeaderSection/>
     
                     {/* 고정 사이드바 (오른쪽) */}
-                    <LectureInfoBox />
+                    {!isLaptop && <LectureInfoBox />}
+                    {isLaptop && <InfoBoxButtons/>}
     
                     {/* 메인 콘텐츠 영역 (왼쪽) */}
                     <SectionWrapper>
@@ -111,7 +112,6 @@ export default function LectureDetailPage() {
                       <NoticeSection />
                     </SectionWrapper>
     
-                    {isLaptop && <InfoBoxButtons/>}
                   </ContentWrapper>
                 }
               </LectureMainLayout>

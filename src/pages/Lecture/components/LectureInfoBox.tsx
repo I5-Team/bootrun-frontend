@@ -253,25 +253,25 @@ const S = {
     gap: 1.2rem;
 
     @media ${({ theme }) => theme.devices.laptop} {
-    width: 100%;
-    padding-block: 1.1rem 2.8rem;
-    padding-inline: 1.6rem; 
-    flex-direction: row;
+      width: 100%;
+      padding-block: 1.1rem 2.8rem;
+      padding-inline: 1.6rem; 
+      flex-direction: row-reverse;
 
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 1000;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 1000;
 
-    border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    background-color: ${({ theme }) => theme.colors.white};
-      
-    & > button:nth-child(1) {
-      flex: 1 1 70%;
-    }
-    & > button:nth-child(2) {
-      flex: 1 1 30%;
-    }
+      border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+      background-color: ${({ theme }) => theme.colors.white};
+        
+      & > button:nth-child(1) {
+        flex: 1 1 70%;
+      }
+      & > button:nth-child(2) {
+        flex: 1 1 30%;
+      }
     }
   `,
 };
