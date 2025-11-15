@@ -210,7 +210,6 @@ export const API_URL = {
 
     PROFILE_IMAGE: '/users/me/profile-image', // 프로필 이미지 업로드 (POST)
     PROFILE_IMAGE_DELETE: '/users/me/profile-image', // 프로필 이미지 삭제  (DELETE)
-
   },
   /* 강의 */
   COURSE: {
@@ -286,7 +285,7 @@ export const API_URL = {
     DEACTIVATE_USER: (userId: number) => `/admin/users/${userId}/deactivate`, // 사용자 비활성화   (PATCH)
     LEARNING_REPORT: (userId: number) => `/admin/users/${userId}/learning-report`, // 사용자 학습 리포트 (GET)
   },
-  /* 관리자 - 강의 관리(겹치는 부분 삭제 필요) */
+  /* 관리자 - 강의 관리*/
   ADMIN_COURSES: {
     COURSE_LIST: '/admin/courses', // 강의 목록 조회          (GET)
 
@@ -364,4 +363,3 @@ const getImagePath = (filename: string): string => {
 
 export const DEFAULT_THUMBNAIL_URL = getImagePath('OG.jpg');
 export const DEFAULT_INSTRUCTOR_IMAGE = getImagePath('profile-default.jpg');
-
