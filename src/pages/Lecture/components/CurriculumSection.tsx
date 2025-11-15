@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
+
+import type { LectureItem } from '../../../types/CourseType';
+
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
 import SvgPlay from "../../../assets/icons/icon-play.svg?react";
-import type { ChapterItem, LectureItem } from '../../../types/CourseType';
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
-type CurriculumSectionProps = {
-  data?: ChapterItem[] | null;
-}
 
-const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(({ data: chapterData }, ref) => {
-  // 1주차(id: 1)만 기본으로 열도록 설정
+const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
+  const chapterData = data.chapters;
   const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
 
   const toggleChapter = (id: number) => {
@@ -33,7 +34,7 @@ const CurriculumSection = React.forwardRef<HTMLElement, CurriculumSectionProps>(
                 <SvgArrowDown /> 
               </Curr.ToggleButton>
               <Curr.ChapterTitleText>
-                <span>커리큘럼 준비중 ⋯</span>
+                <span>커리큘럼 준비중</span>
               </Curr.ChapterTitleText>
             </Curr.ChapterHeader>
 

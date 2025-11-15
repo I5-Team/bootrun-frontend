@@ -1,9 +1,14 @@
-import styled from "styled-components";
-import { FilterCourseList } from "../../components/CourseList";
-import { useSearchParams } from "react-router-dom";
+import { ROUTES } from "../../router/RouteConfig";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+
+import { FilterCourseList } from "../../components/CourseList";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import SearchForm from "../../components/SearchForm";
+import Button from "../../components/Button";
+import EmptyState from "../../components/EmptyState/EmptyState";
+import SvgAlert from "../../assets/icons/icon-status-alert.svg?react";
 
 const StyledTitleWrapper = styled.div`
     margin-top: 6rem;
@@ -45,11 +50,31 @@ const StyledResult = styled.span`
     }
 `;
 
-const TempNoResultPage = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
+const NoResultPage = () => {
+    const navigate = useNavigate();
+
+    const handleGoToLectures = () => {
+        navigate(ROUTES.LECTURE_LIST);
+    };
+
+    return (
+        <EmptyState
+            icon={<SvgAlert />}
+            title="검색 결과가 없어요"
+            description="다른 키워드로 다시 검색해보세요."
+            buttons={
+                <Button
+                    variant="primary"
+                    size="md"
+                    onClick={handleGoToLectures}
+                    ariaLabel="강의 보러가기"
+                >
+                    강의 보러가기
+                </Button>
+            }
+        />
+    );
+}
 
 export default function LectureSearchPage() {
     const [searchParams] = useSearchParams();
@@ -75,7 +100,7 @@ export default function LectureSearchPage() {
                 }
             </StyledTitleWrapper>
             {keyword === ""
-                ? <TempNoResultPage>검색 키워드를 입력하세요</TempNoResultPage>
+                ? <NoResultPage/>
                 : <FilterCourseList onCountChange={setResultCount}/>
             }
         </>

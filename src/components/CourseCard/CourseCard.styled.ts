@@ -233,11 +233,26 @@ export const StyledDescriptionBox = styled.div`
 export const StyledPrice = styled.div`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
-  line-height: 2.2rem;
+  line-height: 1.4;
   color: ${({ theme }) => theme.colors.surface};
 
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.mobileFontSize.lg};
+  }
+`;
+
+export const StyledLearning = styled.div`
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.8rem;
+
+  svg {
+    width: 1.8rem;
+    path {
+      fill: currentColor;
+    }
   }
 `;
 
@@ -246,15 +261,6 @@ export const StyledLectureContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
-`
-export const StyledProgressWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-
-    span {
-    color: ${({ theme }) => theme.colors.gray400};
-    }
 `
 export const StyledButtonList = styled.div`
     display: flex;

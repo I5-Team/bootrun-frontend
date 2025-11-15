@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
+import { useIsEnrolled } from '../../hooks/useIsEnrolled';
 
 // import - components
-import { StyledButtonList, StyledCardArticle, StyledContentWrapper, StyledDescriptionBox, StyledLectureContentWrapper, StyledLikeButton, StyledPrice, StyledProgressWrapper, StyledTagList, StyledTeacherDetails, StyledTeacherInfo, StyledTeacherName, StyledTeacherRole, StyledTeacherSection, StyledThumbnailImage, StyledThumbnailWrapper, StyledTitle, StyledThumbnailLink, StlyedThumbnailNotice } from './CourseCard.styled';
+import { StyledButtonList, StyledCardArticle, StyledContentWrapper, StyledDescriptionBox, StyledLectureContentWrapper, StyledLikeButton, StyledPrice, StyledTagList, StyledTeacherDetails, StyledTeacherInfo, StyledTeacherName, StyledTeacherRole, StyledTeacherSection, StyledThumbnailImage, StyledThumbnailWrapper, StyledTitle, StyledThumbnailLink, StlyedThumbnailNotice, StyledLearning } from './CourseCard.styled';
 import Tag from '../Tag';
 import Profile from '../Profile';
 import ProgressBar from '../ProgressBar';
@@ -12,14 +13,16 @@ import Button from '../Button';
 // import - assets
 import SvgHeart from '../../assets/icons/icon-heart.svg?react';
 import SvgPlay from "../../assets/icons/icon-play.svg?react";
+import SvgPlayDark from "../../assets/icons/icon-play-dark.svg?react";
 import SvgCertificate from "../../assets/icons/icon-certificate.svg?react";
+import { SkeletonImage } from '../Skeleton';
 
 // types
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
 type VariantType = 'info' | 'study';
 
 type BaseProps = {
-  lectureId: number;
+  courseId: number;
   thumbnail: string;
   tags: Array<{ label: string; variant?: 'dark' | 'light' }>;
   title: string;
@@ -28,6 +31,7 @@ type BaseProps = {
 }
 
 type InfoContentProps = {
+  courseId: number;
   variant: 'info';
   teacherName: string;
   teacherRole: string;
@@ -43,10 +47,13 @@ type StudyContentProps = {
 }
 
 // components
-const CardHeader = ({ lectureId, title, thumbnail, tags, variant, isActive, isCompleted }: BaseProps & { variant: VariantType }) => {
-const linkTo = variant === 'info' 
-    ? `${ROUTES.LECTURE_LIST}/${lectureId}`
-    : `${ROUTES.LECTURE_LIST}/${lectureId}/room`;
+const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCompleted }: BaseProps & { variant: VariantType }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  console.log(imgLoaded);
+   
+  const linkTo = variant === 'info' 
+      ? `${ROUTES.LECTURE_LIST}/${courseId}`
+      : `${ROUTES.LECTURE_LIST}/${courseId}/room`;
 
   const linkLabel = variant === 'info'
     ? `${title} 강의상세 바로가기`
@@ -58,15 +65,21 @@ const linkTo = variant === 'info'
           {isActive === false && 
             <StlyedThumbnailNotice>수강 기간이 종료되었습니다.</StlyedThumbnailNotice>
           }
+          {!imgLoaded && <SkeletonImage/>}
           <StyledThumbnailLink
             to={linkTo}
             aria-label={linkLabel}
             onClick={(e) => (isActive === false) && e.preventDefault()}
           >
-            <StyledThumbnailImage src={thumbnail} alt=""/>
+            <StyledThumbnailImage 
+              src={thumbnail} 
+              alt=""
+              onLoad={() => setImgLoaded(true)}
+              style={{ display: imgLoaded ? 'block' : 'none'}}
+              />
           </StyledThumbnailLink>
           {variant === "info" && 
-            <LikeButton lectureId={lectureId}/>
+            <LikeButton courseId={courseId}/>
           }
           {(variant === "study" && isCompleted) && 
           <Button iconSvg={<SvgCertificate/>} variant="outline" size="sm">수료증</Button>
@@ -100,9 +113,9 @@ const CardTagList = ({ tags }: {tags: BaseProps["tags"] }) => {
 }
 
 
-const LikeButton = ({ lectureId }: { lectureId: number }) => {
+const LikeButton = ({ courseId }: { courseId: number }) => {
   const handleClickLike = () => {
-    console.log(lectureId);
+    console.log(courseId);
   }
 
   return (
@@ -112,7 +125,9 @@ const LikeButton = ({ lectureId }: { lectureId: number }) => {
   ) 
 }
 
-const CardInfoContent = ({ teacherImage, teacherName, teacherRole, description, price }: InfoContentProps) => {
+const CardInfoContent = ({ courseId, teacherImage, teacherName, teacherRole, description, price }: InfoContentProps) => {
+  const { isEnrolled } = useIsEnrolled(Number(courseId));
+
   const formatPrice = (price: number) => {
     return `₩${price.toLocaleString()}`;
   };
@@ -134,34 +149,35 @@ const CardInfoContent = ({ teacherImage, teacherName, teacherRole, description, 
         </StyledDescriptionBox>
       </StyledTeacherSection>
 
-      <StyledPrice aria-label="강의 가격">{formatPrice(price)}</StyledPrice>
+      {isEnrolled ? (
+        <StyledLearning>
+          <SvgPlayDark/>
+          <StyledPrice>학습중</StyledPrice>
+        </StyledLearning>
+      ): (
+        <StyledPrice aria-label="강의 가격">{formatPrice(price)}</StyledPrice>
+      )}
+      
     </StyledContentWrapper>
   )
 }
 
-const CardStudyContent = ({ value = 0, max = 1, lectureId, isActive }: StudyContentProps & { lectureId: number, isActive?: boolean }) => {
+const CardStudyContent = ({ value = 0, max = 1, courseId, isActive }: StudyContentProps & { courseId: number, isActive?: boolean }) => {
   const navigate = useNavigate();
 
   const goLectureRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      navigate(`${ROUTES.LECTURE_LIST}/${lectureId}/room`);
+      navigate(`${ROUTES.LECTURE_LIST}/${courseId}/room`);
   }
 
     const goLectureDetail= (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      navigate(`${ROUTES.LECTURE_LIST}/${lectureId}`);
-  }
-
-  const formatPercent = (percent: number) => {
-    return Math.round(percent * 100);
+      navigate(`${ROUTES.LECTURE_LIST}/${courseId}`);
   }
 
   return (
     <StyledLectureContentWrapper>
-        <StyledProgressWrapper>
           <ProgressBar value={value} max={max}/>
-          <span>{value}/{max}강 ({formatPercent(value/max)}%)</span>
-        </StyledProgressWrapper>
         <StyledButtonList>
           {isActive ? (
             <>
@@ -177,13 +193,13 @@ const CardStudyContent = ({ value = 0, max = 1, lectureId, isActive }: StudyCont
 }
 
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
-  const { variant, lectureId, thumbnail, tags, title, isActive, isCompleted } = props;
-
+  const { variant, courseId, thumbnail, tags, title, isActive, isCompleted } = props;
+  console.log('courseId', courseId);
   return (
     <StyledCardArticle>
       <CardHeader 
         variant={variant}
-        lectureId={lectureId} 
+        courseId={courseId} 
         thumbnail={thumbnail} 
         tags={tags} 
         title={title}
@@ -193,6 +209,7 @@ export const CourseCard: React.FC<CourseCardProps> = (props) => {
 
       {variant === "info" ? (
       <CardInfoContent
+        courseId={courseId}
         variant={variant}
         teacherName={props.teacherName} 
         teacherRole={props.teacherRole} 
@@ -205,7 +222,7 @@ export const CourseCard: React.FC<CourseCardProps> = (props) => {
         variant={variant}
         value={props.value} 
         max={props.max} 
-        lectureId={lectureId}
+        courseId={courseId}
         isActive={isActive}
       />
       )

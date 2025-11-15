@@ -34,26 +34,26 @@ const errorAnimation = keyframes`
 export const Container = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  min-height: 100vh;
-  padding: 2rem;
-  padding-top: 17rem;
+  height: 100%;
+  padding-block: 14rem;
 
   @media ${({ theme }) => theme.devices.tablet} {
     min-height: auto;
     align-items: center;
-    padding-top: 16rem;
+    padding-block: 16rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
     min-height: auto;
     align-items: center;
-    padding-top: 12rem;
+    padding-block: 12rem;
   }
 
   /* 결제 페이지용 상단 여백 조정 */
   &.payment-empty-state {
-    padding-top: 27rem;
+    padding-block: 27rem;
   }
 `;
 
@@ -122,6 +122,17 @@ export const Title = styled.h2`
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.mobileFontSize.xl};
     line-height: 3rem;
+  }
+`;
+
+export const SubTitle = styled.p`
+  font-size: ${({ theme }) => theme.mobileFontSize.xl};
+  font-weight: 600;
+  text-align: center;
+
+  @media ${({ theme }) => theme.devices.laptop} {
+    font-size: ${({ theme }) => theme.fontSize.md};
+    line-height: 4rem;
   }
 `;
 

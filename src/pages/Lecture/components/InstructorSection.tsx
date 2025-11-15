@@ -2,16 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import Profile from '../../../components/Profile';
-import type { CoursesDetailItem } from '../../../types/CourseType';
-import { mockInstructorData } from "../../../data/mockLectureData";
+import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
-type InstructorSectionProps = {
-  data: CoursesDetailItem;
-}
-
-const InstructorSection = React.forwardRef<HTMLElement, InstructorSectionProps>(({ data }, ref) => {
-  const { instructor_name, instructor_bio, instructor_image } = data;
-  const mockData = mockInstructorData;
+const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
+  const { data } = useLectureContext();
+  const { instructor_name, instructor_bio, instructor_image, instructor_description } = data;
 
   return (
     <S.Section ref={ref} id="instructor">
@@ -32,27 +27,7 @@ const InstructorSection = React.forwardRef<HTMLElement, InstructorSectionProps>(
               <Instructor.SubName>{instructor_bio}</Instructor.SubName>
             </Instructor.Header>
 
-            {/* 임시 데이터로 대체 */}
-            <Instructor.PositionList>
-              {mockData.positions.map(pos => (
-                <li key={pos.text}>
-                  <Instructor.PositionLabel $isCurrent={pos.type === 'current'}>
-                    {pos.type === 'current' ? '現' : '前'}
-                  </Instructor.PositionLabel>
-                  <span>{pos.text}</span>
-                </li>
-              ))}
-            </Instructor.PositionList>
-
-            {/* 임시 데이터로 대체 */}    
-            {mockData.experiences.map(exp => (
-              <div key={exp.title}>
-                <Instructor.ExperienceTitle>[{exp.title}]</Instructor.ExperienceTitle>
-                <Instructor.ExperienceList>
-                  {exp.items.map(item => <li key={item}>{item}</li>)}
-                </Instructor.ExperienceList>
-              </div>
-            ))}
+            <Instructor.Description>{instructor_description}</Instructor.Description>
           </Instructor.ContentContainer>
 
         </Instructor.InfoBox>
@@ -65,19 +40,24 @@ const Instructor = {
   InfoBox: styled.div`
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 2.4rem 4rem;
     background: ${({ theme }) => theme.colors.gray100};
     border-radius: ${({ theme }) => theme.radius.xl};
     padding: 4rem;
+    padding-right: 6rem;
     width: 100%;
 
     img {
+      flex-shrink: 0;
+      width: 24rem;
+      height: 24rem;
       width: clamp(17rem, 30%, 24rem);
       height: clamp(17rem, 30%, 24rem);
     }
 
     @media ${({ theme }) => theme.devices.tablet} {
-      padding: 3.2rem;
+      padding: 3.2rem 6rem;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -87,17 +67,23 @@ const Instructor = {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      justify-content: center;
+      align-items: center;
+    }
   `,
   Header: styled.div`
     width: 100%;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
     gap: 0.8rem;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 
     @media ${({ theme }) => theme.devices.tablet} {
-      flex-direction: column;
-      gap: 0.8rem;
+      align-items: center;
     }
   `,
   Name: styled.p`
@@ -113,6 +99,15 @@ const Instructor = {
 
     @media ${({ theme }) => theme.devices.tablet} {
       width: 75%;
+      text-align: center;
+    }
+  `,
+  Description: styled.p`
+
+    word-break: keep-all;
+    line-height: 1.5;
+
+    @media ${({ theme }) => theme.devices.tablet} {
       text-align: center;
     }
   `,

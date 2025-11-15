@@ -38,6 +38,7 @@ const S = {
     align-items: center;
     padding: 60px 0; // 섹션 내부에서 충분한 공간 확보
     width: 100%;
+    height: 100%;
 
     .sr-only {
       position: absolute;
