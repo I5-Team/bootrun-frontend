@@ -12,7 +12,7 @@ export default function MainLayout() {
                 <Outlet />
             </StyledMainContainer>
             {/* 개발용 네비게이션 버튼 추가 */}
-            <DevNavigator/>      
+            {/* <DevNavigator/>       */}
             <Footer/>
         </StyledWrapper>
     );

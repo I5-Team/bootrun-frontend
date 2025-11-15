@@ -8,8 +8,7 @@ import 'swiper/swiper-bundle.css';
 import BannerImg1 from "../assets/images/banner-main-1.png";
 import BannerImg2 from "../assets/images/banner-main-2.png";
 import BannerImg3 from "../assets/images/banner-main-3.png";
-import { ROUTES } from "../router/RouteConfig";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // type
 interface BannerItem {
@@ -23,7 +22,7 @@ interface BannerItem {
 }
 
 // style
-const StyledBannerSwiper = styled.article`
+const StyledBannerSwiper = styled(Swiper)`
     flex: 1;
     width: 100%;
     height: 100%;
@@ -35,11 +34,6 @@ const StyledBannerSwiper = styled.article`
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
-
-    .swiper {
-        width: 100%;
-        height: 100%;
-    }
 
     .swiper-pagination {
         bottom: 1.6rem;
@@ -57,21 +51,15 @@ const StyledBannerSwiper = styled.article`
         background: ${({ theme }) => theme.colors.primary300};
         opacity: 1;
     }
+    &:focus-within {
+    outline: 0.2rem solid ${({ theme }) => theme.colors.focus}
+    }
 `;
 
 const StyledSwiperSlide = styled(SwiperSlide)<{ $bgImageSrc?: string }>`
     width: 100%;
     min-width: 100%;
     height: 100%;
-    padding-block: clamp(4.2rem, 4vw, 5.2rem);
-    padding-inline: clamp(2.4rem, 4vw, 5.2rem);
-
-
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
-    gap: 1.2rem;
 
     background-color: ${({ theme }) => theme.colors.primary200};
     background-repeat: no-repeat;
@@ -86,6 +74,20 @@ const StyledSwiperSlide = styled(SwiperSlide)<{ $bgImageSrc?: string }>`
     @media ${({ theme }) => theme.devices.mobile} {
         justify-content: end;
     }
+`;
+
+const StyledLink = styled(Link)`
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    padding-block: clamp(4.2rem, 4vw, 5.2rem);
+    padding-inline: clamp(2.4rem, 4vw, 5.2rem);
 `;
 
 const StyledTag = styled.span`
@@ -136,12 +138,6 @@ const StyledStrong = styled.span`
 // components
 export default function Banner() {
     const { isMobile } = useMediaQuery();
-    const navigate = useNavigate();
-
-    const goBannerLink = (url: string | null | undefined) => {
-        const path = url ?? ROUTES.HOME;
-        navigate(path);
-    }
 
     const calculateDdayFrom = (targetDateString: string) => {
         const targetDate = new Date(targetDateString);
@@ -165,7 +161,6 @@ export default function Banner() {
             title: "견고한 파이썬\n부스트 커뮤니티 1기",
             desc: "위니브와 함께하는 파이썬 완전 정복 온라인 강의가 출시되었습니다.\n",
             highlight: "얼리버드 20% 할인 혜택을 놓치지 마세요!",
-            linkTo: `${ROUTES.LECTURE_LIST}`,
         }, 
         {
             id: 2,
@@ -185,30 +180,30 @@ export default function Banner() {
     ]
 
     return (
-        <StyledBannerSwiper>
-            <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={0}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-                autoplay={{
-                    delay: 5000,
-                    disableOnInteraction: false,
-                }}
-                loop={true}
-            >
-                {bannerDatas.map((bannerItem) => (
-                    <StyledSwiperSlide onClick={() => goBannerLink(bannerItem.linkTo)}
-                        key={bannerItem.id}
-                        aria-label="메인 배너:" 
-                        $bgImageSrc={bannerItem.imgSrc}
-                        >
-                        {bannerItem.tag && 
-                            <StyledTag>{bannerItem.tag}</StyledTag>
-                        }
+        <StyledBannerSwiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={0}
+            slidesPerView={1}
+            pagination={{ clickable: true }}
+            autoplay={{
+                delay: 5000,
+                disableOnInteraction: false,
+            }}
+            loop={true}
+            wrapperTag="ul"
+            aria-label="메인 배너"    
+        >
+            {bannerDatas.map((bannerItem) => (
+                <StyledSwiperSlide 
+                    key={bannerItem.id}
+                    $bgImageSrc={bannerItem.imgSrc}
+                    tag="li"
+                >
+                    <StyledLink to={bannerItem.linkTo ? bannerItem.linkTo : '#'}>
+                        {bannerItem.tag && <StyledTag>{bannerItem.tag}</StyledTag>}
                         
                         <StyledTitle>{bannerItem.title}</StyledTitle>
-                        { !isMobile && 
+                        {!isMobile && 
                             <StyledDesc>
                                 {bannerItem.desc}
                                 {bannerItem.highlight &&
@@ -216,9 +211,9 @@ export default function Banner() {
                                 }
                             </StyledDesc>
                         }
-                    </StyledSwiperSlide>
-                ))}
-            </Swiper>
+                    </StyledLink>
+                </StyledSwiperSlide>
+            ))}
         </StyledBannerSwiper>
     );
 }
