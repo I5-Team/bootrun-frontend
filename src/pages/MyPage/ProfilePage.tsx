@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
-import SvgProfileImage from '../../assets/images/profile-user-default.png';
+import SvgProfileImage from '../../assets/images/profile-default.jpg';
 import { useProfile } from '../../queries/useUserQueries';
 
 const ProfilePage: React.FC = () => {

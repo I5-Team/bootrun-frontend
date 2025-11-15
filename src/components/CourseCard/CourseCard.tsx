@@ -14,6 +14,9 @@ import SvgHeart from '../../assets/icons/icon-heart.svg?react';
 import SvgPlay from "../../assets/icons/icon-play.svg?react";
 import SvgCertificate from "../../assets/icons/icon-certificate.svg?react";
 
+// import - utils
+import { getThumbnailUrl, getProfileImageUrl } from '../../utils/imageUtils';
+
 // types
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
 type VariantType = 'info' | 'study';
@@ -63,7 +66,7 @@ const linkTo = variant === 'info'
             aria-label={linkLabel}
             onClick={(e) => (isActive === false) && e.preventDefault()}
           >
-            <StyledThumbnailImage src={thumbnail} alt=""/>
+            <StyledThumbnailImage src={getThumbnailUrl(thumbnail)} alt=""/>
           </StyledThumbnailLink>
           {variant === "info" && 
             <LikeButton lectureId={lectureId}/>
@@ -121,7 +124,7 @@ const CardInfoContent = ({ teacherImage, teacherName, teacherRole, description, 
     <StyledContentWrapper>
       <StyledTeacherSection>
         <StyledTeacherInfo>
-          <Profile size={4.6} src={teacherImage} alt={`${teacherName} 강사 프로필`}/>
+          <Profile size={4.6} src={getProfileImageUrl(teacherImage)} alt={`${teacherName} 강사 프로필`}/>
           <StyledTeacherDetails>
             <span className="sr-only">강사</span>
             <StyledTeacherName>{teacherName}</StyledTeacherName>
