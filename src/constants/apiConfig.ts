@@ -318,6 +318,7 @@ export const API_URL = {
     PAYMENT_LIST: '/admin/payments', // 결제 목록 조회         (GET)
     EXPORT_PAYMENTS: '/admin/payments/export', // 결제 내역 엑셀 다운로드 (GET)
     REFUND_LIST: '/admin/payments/refunds', // 환불 목록 조회         (GET)
+    REFUND_DETAIL: (refundId: number) => `/admin/payments/refunds/${refundId}`, // 환불 상세 조회    (GET)
     PROCESS_REFUND: (refundId: number) => `/admin/payments/refunds/${refundId}`, // 환불 승인/거절  (PATCH)
   },
   /* 관리자 - 쿠폰 관리 */
