@@ -26,6 +26,7 @@ import {
 } from './ProfilePage.styled';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
@@ -48,9 +49,15 @@ const ProfilePage: React.FC = () => {
       setNickname(data.nickname || '');
       setGender(data.gender || 'none');
       setBirthdate(data.birth_date || '');
-      const fullImageUrl = data.profile_image ? API_BASE_URL + data.profile_image : null;
-      console.log('fullImageUrl:', fullImageUrl);
 
+      const serverImageUrl = data.profile_image;
+      let fullImageUrl: string | null = null;
+
+      if (serverImageUrl && serverImageUrl !== DEFAULT_PLACEHOLDER_URL) {
+        // 'uploads/...' 형태의 상대 경로이므로, BASE_URL을 붙여줌
+        fullImageUrl = `${API_BASE_URL}${serverImageUrl}`;
+      }
+      console.log('Processed Image URL:', fullImageUrl);
       if (!selectedFile) {
         setImagePreview(fullImageUrl);
       }
@@ -59,7 +66,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('수정하기:', { name, gender, birthdate, selectedFile });
+    console.log('수정하기:', { nickname, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
     // 1. 변경된 텍스트 정보가 있는지 확인
     const payload: ProfileUpdatePayload = {};
@@ -82,6 +89,7 @@ const ProfilePage: React.FC = () => {
         onSuccess: () => {
           // 업로드 성공 시 선택된 파일 초기화
           setSelectedFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = '';
         },
       });
     }
@@ -148,7 +156,6 @@ const ProfilePage: React.FC = () => {
                 <img src={SvgProfileImage} alt="기본 프로필 이미지" />
               )}
             </ImagePreview>
-            {/* ⭐️ (수정) 조건부 버튼 렌더링 */}
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
               <ImageActionButton

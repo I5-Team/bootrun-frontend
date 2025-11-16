@@ -128,13 +128,21 @@ const UserActionList = () => {
 };
 
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
+
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const isLoggedIn = Boolean(token);
   const role = localStorage.getItem('role');
   const isAdmin = role === 'admin';
-  const { data } = useProfile();
-  const userInfo = data;
+
+  const { data: userProfile } = useProfile();
+  let finalImageUrl: string | undefined = undefined;
+
+  if (userProfile?.profile_image && userProfile.profile_image !== DEFAULT_PLACEHOLDER_URL) {
+    finalImageUrl = `${API_BASE_URL}${userProfile.profile_image}`;
+  }
 
   const goLogin = () => {
     navigate(ROUTES.LOGIN);
@@ -149,10 +157,10 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   return (
     <StyledPofileCard $variant={variant}>
       <StyledUserInfo>
-        {isLoggedIn ? <Profile size={10} src={userInfo?.profile_image} /> : <Profile size={10} />}
+        {isLoggedIn ? <Profile size={10} src={finalImageUrl} /> : <Profile size={10} />}
         <StyledInfoText>
-          <StyledName>{isLoggedIn ? userInfo?.nickname : '호기심 많은 개발자님'}</StyledName>
-          {isLoggedIn && <StyledEmail>{userInfo?.email}</StyledEmail>}
+          <StyledName>{isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}</StyledName>
+          {isLoggedIn && <StyledEmail>{userProfile?.email}</StyledEmail>}
         </StyledInfoText>
       </StyledUserInfo>
 
