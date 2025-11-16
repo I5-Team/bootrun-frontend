@@ -23,6 +23,7 @@ import {
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
+  StyledHeaderInnerAdmin,
 } from './Header.styled.ts';
 
 import Button from '../Button.tsx';
@@ -285,16 +286,27 @@ const LectureRoomHeader = () => {
   );
 };
 
+const AdminHeader = () => {
+  return (
+    <StyledHeaderInnerAdmin>
+      <HeaderLogo />
+      <ActionLists />
+    </StyledHeaderInnerAdmin>
+  )
+}
+
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;
   const isSignupPage = location.pathname === ROUTES.SIGNUP;
-  const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
+  const isLectureRoomPage = location.pathname.startsWith(ROUTES.LECTURE_ROOM);
   const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
+  const isAdminPage = location.pathname.startsWith(ROUTES.ADMIN_DASHBOARD);
 
   const renderHeader = () => {
     if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
     if (isLectureRoomPage) return <LectureRoomHeader />;
+    if (isAdminPage) return <AdminHeader/>;
     return <DefaultHeader />;
   };
   return <StyledHeader>{renderHeader()}</StyledHeader>;
