@@ -19,7 +19,7 @@ export default function NotFoundPage() {
   // 페이지 진입 시 문서 제목 동기화
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = '페이지를 찾을 수 없습니다 - Bootrun';
+    document.title = '페이지를 찾을 수 없습니다 | 부트런';
     return () => {
       document.title = previousTitle;
     };
