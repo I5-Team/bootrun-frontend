@@ -5,13 +5,15 @@
 import styled from 'styled-components';
 
 export const AdminPageStyles = {
-  PageWrapper: styled.div`
+  Section: styled.section`
     display: flex;
     flex-direction: column;
     gap: clamp(1.6rem, 3vw, 2.4rem);
-    padding: clamp(1.6rem, 4vw, 2.4rem);
-    background-color: ${({ theme }) => theme.colors.gray100};
-    height: 100%;
+    width: 100%;
+    min-width: 0;
+    border-radius: ${({ theme }) => theme.radius.md};
+    background-color: ${({ theme }) => theme.colors.white};
+    padding: clamp(1.6rem, 3vw, 2.4rem);
   `,
 
   PageHeader: styled.header`
@@ -22,9 +24,12 @@ export const AdminPageStyles = {
     flex-wrap: wrap;
     column-gap: clamp(1.2rem, 2.5vw, 2.4rem);
     row-gap: clamp(0.8rem, 2vw, 1.6rem);
+
+    margin-top: clamp(3.6rem, 3vw, 4.2rem);
+    margin-bottom: clamp(1.6rem, 3vw, 2.4rem);
   `,
 
-  PageTitle: styled.h1`
+  PageTitle: styled.h2`
     font-size: clamp(2.2rem, 4vw, ${({ theme }) => theme.fontSize.xl});
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
@@ -48,7 +53,7 @@ export const AdminPageStyles = {
     }
   `,
 
-  ContentLayout: styled.main`
+  ContentLayout: styled.div`
     display: flex;
     flex-direction: column;
     gap: clamp(1.6rem, 3vw, 2.4rem);
@@ -56,7 +61,7 @@ export const AdminPageStyles = {
     width: 100%;
   `,
 
-  CardBox: styled.div`
+  CardBox: styled.section`
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);

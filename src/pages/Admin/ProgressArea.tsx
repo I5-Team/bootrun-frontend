@@ -206,7 +206,7 @@ const S = {
   RadialLabel: styled.text`
     fill: ${({ theme }) => theme.colors.surface};
     text-anchor: middle;
-    dominant-baseline: central;
+    /* dominant-baseline: central; */
   `,
   VisuallyHidden: styled.span`
     position: absolute;

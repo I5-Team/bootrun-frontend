@@ -16,6 +16,7 @@ import {
 import type { DailyStat } from '../../types/AdminType';
 import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents';
 
+
 // 1. Tooltip의 payload 타입 정의 (any 대신 사용)
 interface TooltipPayload {
   name: string;

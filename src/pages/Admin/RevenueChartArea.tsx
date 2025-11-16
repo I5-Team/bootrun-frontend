@@ -354,7 +354,7 @@ export default RevenueChartArea;
 // ============== STYLED COMPONENTS ==============
 
 const S = {
-  CardBox: styled.div`
+  CardBox: styled.section`
     background: white;
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
@@ -375,7 +375,7 @@ const S = {
     }
   `,
 
-  SectionTitle: styled.h2`
+  SectionTitle: styled.h3`
     font-size: 1.8rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.surface};
