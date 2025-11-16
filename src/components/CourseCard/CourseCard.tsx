@@ -50,6 +50,7 @@ type StudyContentProps = {
 
 // components
 const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCompleted }: BaseProps & { variant: VariantType }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
    
   const linkTo = variant === 'info' 
       ? `${ROUTES.LECTURE_LIST}/${courseId}`
@@ -70,7 +71,14 @@ const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCom
             aria-label={linkLabel}
             onClick={(e) => (isActive === false) && e.preventDefault()}
           >
-            <StyledThumbnailImage src={getThumbnailUrl(thumbnail)} alt=""/>
+
+            <StyledThumbnailImage 
+              src={getThumbnailUrl(thumbnail)}
+              alt=""
+              onLoad={() => setImgLoaded(true)}
+              style={{ display: imgLoaded ? 'block' : 'none'}}
+              />
+
           </StyledThumbnailLink>
           {variant === "info" && 
             <LikeButton courseId={courseId}/>
@@ -96,7 +104,7 @@ const CardHeader = ({ courseId, title, thumbnail, tags, variant, isActive, isCom
 
 const CardTagList = ({ tags }: {tags: BaseProps["tags"] }) => {
   return (
-      <StyledTagList aria-label="강의 태그">
+      <StyledTagList role="list" aria-label="강의 태그">
         {tags.map((tag) => (
           <li key={tag.label}>
             <Tag variant={tag.variant}>{tag.label}</Tag>
