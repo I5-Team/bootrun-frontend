@@ -69,6 +69,7 @@ export default function AppRouter() {
 
           {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
           <Route element={<RequireAuth />}>
+          
             <Route element={<MainLayout />}>
               <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
               <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
@@ -79,9 +80,10 @@ export default function AppRouter() {
                 <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} />{' '}
                 <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} />{' '}
               </Route>
-              <Route element={<LectureRoomLayout />}>
-                <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
-              </Route>
+            </Route>
+
+            <Route element={<LectureRoomLayout />}>
+              <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
             </Route>
           </Route>
 
