@@ -1,105 +1,42 @@
 /**
- * 결제 관리 페이지 - 결제 내역 조회, 환불 승인/거절 기능 제공
+ * 결제 관리 페이지 - 결제 내역 조회, 환불 관리 (탭 분리)
  * 필터/검색, 페이지네이션, 엑셀 다운로드 기능
  */
 import { useState, useEffect, useCallback } from 'react';
-import type { PaymentApiParams, PaymentListItem } from '../../types/AdminPaymentType';
-import { getPaginatedPayments } from '../../data/mockPaymentData';
+import styled from 'styled-components';
+import type {
+  PaymentApiParams,
+  PaymentListItem,
+  RefundApiParams,
+  RefundListItem,
+} from '../../types/AdminPaymentType';
+import { fetchPayments, fetchRefunds, updateRefundStatus, exportPayments } from '../../api/adminApi';
 import { Button } from '../../components/Button';
 
 // 하위 컴포넌트 임포트
 import AdminPageLayout from './AdminPageLayout';
 import PaymentFilterBar from './PaymentFilterBar';
 import PaymentTable from './PaymentTable';
+import RefundFilterBar from './RefundFilterBar';
+import RefundTable from './RefundTable';
 import Pagination from '../../components/Pagination';
 import PaymentDetailModal from './PaymentDetailModal';
+import RefundDetailModal from './RefundDetailModal';
 import { LoadingSpinner } from '../../components/HelperComponents';
 import { AdminPageStyles as S } from './AdminPageStyles';
 
-/**
- * 엑셀(CSV) 다운로드 함수
- */
-const downloadExcel = (payments: PaymentListItem[]) => {
-  // CSV 헤더
-  const headers = [
-    'ID',
-    '결제일',
-    '사용자 이메일',
-    '사용자 닉네임',
-    '강의명',
-    '결제 방식',
-    '원래 가격',
-    '할인 금액',
-    '최종 결제 금액',
-    '결제 상태',
-    '환불 금액',
-    '환불 상태',
-    '환불 사유',
-    '거래 ID',
-  ];
-
-  // CSV 데이터 생성
-  const rows = payments.map((p) => [
-    p.id,
-    new Date(p.paid_at).toLocaleString('ko-KR'),
-    p.user_email,
-    p.user_nickname,
-    p.course_title,
-    p.payment_method === 'card'
-      ? '카드'
-      : p.payment_method === 'transfer'
-        ? '계좌이체'
-        : '간편결제',
-    p.amount,
-    p.discount_amount,
-    p.final_amount,
-    p.status === 'pending'
-      ? '대기'
-      : p.status === 'completed'
-        ? '완료'
-        : p.status === 'failed'
-          ? '실패'
-          : '환불',
-    p.refund?.amount || '',
-    p.refund?.status === 'pending'
-      ? '대기중'
-      : p.refund?.status === 'approved'
-        ? '승인'
-        : p.refund?.status === 'rejected'
-          ? '거절'
-          : '',
-    p.refund?.reason || '',
-    p.transaction_id,
-  ]);
-
-  // CSV 문자열 생성 (BOM 추가로 엑셀에서 한글 깨짐 방지)
-  const csvContent =
-    '\uFEFF' +
-    [headers.join(','), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(','))].join('\n');
-
-  // Blob 생성 및 다운로드
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  const now = new Date();
-  const padNumber = (value: number) => value.toString().padStart(2, '0');
-  const timestamp = `${now.getFullYear()}-${padNumber(now.getMonth() + 1)}-${padNumber(
-    now.getDate()
-  )}-Time-${padNumber(now.getHours())}-${padNumber(now.getMinutes())}-${padNumber(now.getSeconds())}`;
-  link.href = url;
-  link.download = `payments_${timestamp}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
-};
+type TabType = 'payments' | 'refunds';
 
 export default function PaymentManagePage() {
-  // 1. 상태 정의
-  const [payments, setPayments] = useState<PaymentListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedPayment, setSelectedPayment] = useState<PaymentListItem | null>(null);
+  // 1. 탭 상태
+  const [activeTab, setActiveTab] = useState<TabType>('payments');
 
-  // API 쿼리 파라미터 상태
-  const [apiParams, setApiParams] = useState<PaymentApiParams>({
+  // 2. 결제 내역 상태
+  const [payments, setPayments] = useState<PaymentListItem[]>([]);
+  const [paymentLoading, setPaymentLoading] = useState(true);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentListItem | null>(null);
+  const [paymentParams, setPaymentParams] = useState<PaymentApiParams>({
     page: 1,
     page_size: 20,
     keyword: '',
@@ -107,159 +44,356 @@ export default function PaymentManagePage() {
     status: null,
     start_date: '',
     end_date: '',
-    refund_status: null,
   });
-
-  // API 응답의 페이지네이션 정보 상태
-  const [pagination, setPagination] = useState({
+  const [paymentPagination, setPaymentPagination] = useState({
     total: 0,
     totalPages: 1,
   });
 
-  // 2. 데이터 흐름 (useEffect)
+  // 3. 환불 관리 상태
+  const [refunds, setRefunds] = useState<RefundListItem[]>([]);
+  const [refundLoading, setRefundLoading] = useState(true);
+  const [selectedRefund, setSelectedRefund] = useState<RefundListItem | null>(null);
+  const [refundParams, setRefundParams] = useState<RefundApiParams>({
+    page: 1,
+    page_size: 20,
+    keyword: '',
+    status: null,
+    start_date: '',
+    end_date: '',
+  });
+  const [refundPagination, setRefundPagination] = useState({
+    total: 0,
+    totalPages: 1,
+  });
+
+  // 4. 결제 데이터 로드
   useEffect(() => {
+    if (activeTab !== 'payments') return;
+
     const loadPayments = async () => {
-      setLoading(true);
+      setPaymentLoading(true);
       try {
-        // 목업 데이터 로드
-        const response = getPaginatedPayments(apiParams);
+        const response = await fetchPayments(paymentParams);
         setPayments(response.items);
-        setPagination({
+        setPaymentPagination({
           total: response.total,
           totalPages: response.total_pages,
         });
       } catch (error) {
         console.error('결제 내역 로딩 실패:', error);
       } finally {
-        setLoading(false);
+        setPaymentLoading(false);
       }
     };
     loadPayments();
-  }, [apiParams]);
+  }, [paymentParams, activeTab]);
 
-  // 3. 핸들러 구현
+  // 5. 환불 데이터 로드
+  useEffect(() => {
+    if (activeTab !== 'refunds') return;
 
-  // 필터/검색 핸들러
-  const handleFilterChange = useCallback((newFilters: Partial<PaymentApiParams>) => {
-    setApiParams((prevParams) => ({
+    const loadRefunds = async () => {
+      setRefundLoading(true);
+      try {
+        const response = await fetchRefunds(refundParams);
+        setRefunds(response.items);
+        setRefundPagination({
+          total: response.total,
+          totalPages: response.total_pages,
+        });
+      } catch (error) {
+        console.error('환불 내역 로딩 실패:', error);
+      } finally {
+        setRefundLoading(false);
+      }
+    };
+    loadRefunds();
+  }, [refundParams, activeTab]);
+
+  // 6. 핸들러 구현
+
+  // 탭 전환
+  const handleTabChange = useCallback((tab: TabType) => {
+    setActiveTab(tab);
+  }, []);
+
+  // 결제 필터 변경
+  const handlePaymentFilterChange = useCallback((newFilters: Partial<PaymentApiParams>) => {
+    setPaymentParams((prevParams) => ({
       ...prevParams,
       ...newFilters,
-      page: 1, // 필터 변경 시 1페이지로 리셋
+      page: 1,
     }));
   }, []);
 
-  // 페이지 이동 핸들러
-  const handlePageChange = useCallback((newPage: number) => {
-    setApiParams((prevParams) => ({
+  // 결제 페이지 변경
+  const handlePaymentPageChange = useCallback((newPage: number) => {
+    setPaymentParams((prevParams) => ({
       ...prevParams,
       page: newPage,
     }));
-    // 페이지 최상단으로 스크롤
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // 환불 승인 핸들러
-  const handleApproveRefund = useCallback((payment: PaymentListItem) => {
-    if (!payment.refund) return;
+  // 환불 필터 변경
+  const handleRefundFilterChange = useCallback((newFilters: Partial<RefundApiParams>) => {
+    setRefundParams((prevParams: RefundApiParams) => ({
+      ...prevParams,
+      ...newFilters,
+      page: 1,
+    }));
+  }, []);
 
+  // 환불 페이지 변경
+  const handleRefundPageChange = useCallback((newPage: number) => {
+    setRefundParams((prevParams: RefundApiParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // 환불 승인 (환불 테이블에서 호출)
+  const handleApproveRefund = useCallback(async (refund: RefundListItem) => {
     const confirmed = window.confirm(
-      `결제 ID ${payment.id}의 환불을 승인하시겠습니까?\n환불 금액: ${payment.refund.amount.toLocaleString()}원`
+      `환불 ID ${refund.id}를 승인하시겠습니까?\n환불 금액: ${refund.amount.toLocaleString()}원`
+    );
+    if (!confirmed) return;
+
+    // 승인 시에도 메모 입력 받기 (선택사항)
+    const adminNote = window.prompt(
+      '승인 메모를 입력하세요 (선택사항):',
+      '환불 조건 충족하여 승인 처리'
     );
 
-    if (confirmed) {
-      console.log('환불 승인:', {
-        refund_id: payment.refund.id,
-        payment_id: payment.refund.payment_id,
-        action: 'approve',
-      });
-      // TODO: API 호출
+    try {
+      await updateRefundStatus(refund.id, 'approved', adminNote || undefined);
       alert('환불이 승인되었습니다.');
+
       // 목록 새로고침
-      setApiParams((prev) => ({ ...prev }));
+      setRefundParams((prev: RefundApiParams) => ({ ...prev }));
+    } catch (error) {
+      console.error('환불 승인 실패:', error);
+      alert('환불 승인에 실패했습니다. 다시 시도해주세요.');
     }
   }, []);
 
-  // 환불 거절 핸들러
-  const handleRejectRefund = useCallback((payment: PaymentListItem) => {
-    if (!payment.refund) return;
+  // 환불 거절 (환불 테이블에서 호출)
+  const handleRejectRefund = useCallback(async (refund: RefundListItem) => {
+    const adminNote = window.prompt('환불 거절 사유를 입력해주세요:');
+    if (!adminNote) return; // 거절 시에는 사유 필수
 
-    const reason = window.prompt('환불 거절 사유를 입력해주세요:');
-    if (!reason) return;
+    try {
+      await updateRefundStatus(refund.id, 'rejected', adminNote);
+      alert('환불이 거절되었습니다.');
 
-    console.log('환불 거절:', {
-      refund_id: payment.refund.id,
-      payment_id: payment.refund.payment_id,
-      action: 'reject',
-      admin_note: reason,
-    });
-    // TODO: API 호출
-    alert('환불이 거절되었습니다.');
-    // 목록 새로고침
-    setApiParams((prev) => ({ ...prev }));
+      // 목록 새로고침
+      setRefundParams((prev: RefundApiParams) => ({ ...prev }));
+    } catch (error) {
+      console.error('환불 거절 실패:', error);
+      alert('환불 거절에 실패했습니다. 다시 시도해주세요.');
+    }
   }, []);
 
-  // 엑셀 다운로드 핸들러
-  const handleDownloadExcel = useCallback(() => {
-    if (payments.length === 0) {
-      alert('다운로드할 데이터가 없습니다.');
-      return;
-    }
-    downloadExcel(payments);
-  }, [payments]);
+  // 엑셀 다운로드
+  const handleDownloadExcel = useCallback(async () => {
+    if (activeTab === 'payments') {
+      try {
+        setDownloadLoading(true);
 
-  // 결제 상세 모달 열기 핸들러
-  const handleRowClick = useCallback((payment: PaymentListItem) => {
+        // 페이지네이션 제외한 필터 파라미터만 전달
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { page, page_size, ...exportParams } = paymentParams;
+
+        // 백엔드 API 호출하여 파일 다운로드
+        const blob = await exportPayments(exportParams);
+
+        // Blob을 파일로 다운로드
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const now = new Date();
+        const padNumber = (value: number) => value.toString().padStart(2, '0');
+        const timestamp = `${now.getFullYear()}-${padNumber(now.getMonth() + 1)}-${padNumber(
+          now.getDate()
+        )}-Time-${padNumber(now.getHours())}-${padNumber(now.getMinutes())}-${padNumber(now.getSeconds())}`;
+        link.href = url;
+        link.download = `payments_${timestamp}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('엑셀 다운로드 실패:', error);
+        alert('엑셀 다운로드에 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setDownloadLoading(false);
+      }
+    } else {
+      // 환불 관리 탭 (추후 백엔드 API 추가 시 구현)
+      alert('환불 관리 엑셀 다운로드는 준비 중입니다.');
+    }
+  }, [activeTab, paymentParams]);
+
+  // 결제 상세 모달
+  const handlePaymentRowClick = useCallback((payment: PaymentListItem) => {
     setSelectedPayment(payment);
   }, []);
 
-  // 결제 상세 모달 닫기 핸들러
-  const handleCloseModal = useCallback(() => {
+  const handleClosePaymentModal = useCallback(() => {
     setSelectedPayment(null);
+  }, []);
+
+  // 환불 상세 모달
+  const handleRefundRowClick = useCallback((refund: RefundListItem) => {
+    setSelectedRefund(refund);
+  }, []);
+
+  const handleCloseRefundModal = useCallback(() => {
+    setSelectedRefund(null);
   }, []);
 
   return (
     <AdminPageLayout
       title="결제 관리"
       rightElement={
-        <Button size="md" onClick={handleDownloadExcel} ariaLabel="엑셀 다운로드">
-          엑셀 다운로드
+        <Button
+          size="md"
+          onClick={handleDownloadExcel}
+          disabled={downloadLoading}
+          ariaLabel="엑셀 다운로드"
+        >
+          {downloadLoading ? '다운로드 중...' : '엑셀 다운로드'}
         </Button>
       }
     >
-      <PaymentFilterBar onFilterChange={handleFilterChange} initialFilters={apiParams} />
+      {/* 탭 네비게이션 */}
+      <TabContainer>
+        <Tab $active={activeTab === 'payments'} onClick={() => handleTabChange('payments')}>
+          결제 내역
+        </Tab>
+        <Tab $active={activeTab === 'refunds'} onClick={() => handleTabChange('refunds')}>
+          환불 관리
+        </Tab>
+      </TabContainer>
 
-      {/* 테이블과 페이지네이션을 카드에 함께 표시 */}
-      <S.CardBox>
-        <S.TableHeader>
-          <span>총 {pagination.total.toLocaleString()}건의 결제 내역</span>
-        </S.TableHeader>
-
-        {loading ? (
-          <S.LoadingContainer>
-            <LoadingSpinner />
-          </S.LoadingContainer>
-        ) : (
-          <PaymentTable
-            payments={payments}
-            onApproveRefund={handleApproveRefund}
-            onRejectRefund={handleRejectRefund}
-            onRowClick={handleRowClick}
+      {/* 결제 내역 탭 */}
+      {activeTab === 'payments' && (
+        <>
+          <PaymentFilterBar
+            onFilterChange={handlePaymentFilterChange}
+            initialFilters={paymentParams}
           />
-        )}
 
-        <S.PaginationWrapper>
-          <Pagination
-            currentPage={apiParams.page}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
+          <S.CardBox>
+            <S.TableHeader>
+              <span>총 {paymentPagination.total.toLocaleString()}건의 결제 내역</span>
+            </S.TableHeader>
+
+            {paymentLoading ? (
+              <S.LoadingContainer>
+                <LoadingSpinner />
+              </S.LoadingContainer>
+            ) : (
+              <PaymentTable
+                payments={payments}
+                onRowClick={handlePaymentRowClick}
+                currentPage={paymentParams.page}
+                pageSize={paymentParams.page_size}
+                totalCount={paymentPagination.total}
+              />
+            )}
+
+            <S.PaginationWrapper>
+              <Pagination
+                currentPage={paymentParams.page}
+                totalPages={paymentPagination.totalPages}
+                onPageChange={handlePaymentPageChange}
+              />
+            </S.PaginationWrapper>
+          </S.CardBox>
+        </>
+      )}
+
+      {/* 환불 관리 탭 */}
+      {activeTab === 'refunds' && (
+        <>
+          <RefundFilterBar
+            onFilterChange={handleRefundFilterChange}
+            initialFilters={refundParams}
           />
-        </S.PaginationWrapper>
-      </S.CardBox>
+
+          <S.CardBox>
+            <S.TableHeader>
+              <span>총 {refundPagination.total.toLocaleString()}건의 환불 내역</span>
+            </S.TableHeader>
+
+            {refundLoading ? (
+              <S.LoadingContainer>
+                <LoadingSpinner />
+              </S.LoadingContainer>
+            ) : (
+              <RefundTable
+                refunds={refunds}
+                onApproveRefund={handleApproveRefund}
+                onRejectRefund={handleRejectRefund}
+                onRowClick={handleRefundRowClick}
+                currentPage={refundParams.page}
+                pageSize={refundParams.page_size}
+                totalCount={refundPagination.total}
+              />
+            )}
+
+            <S.PaginationWrapper>
+              <Pagination
+                currentPage={refundParams.page}
+                totalPages={refundPagination.totalPages}
+                onPageChange={handleRefundPageChange}
+              />
+            </S.PaginationWrapper>
+          </S.CardBox>
+        </>
+      )}
 
       {/* 결제 상세 모달 */}
       {selectedPayment && (
-        <PaymentDetailModal payment={selectedPayment} onClose={handleCloseModal} />
+        <PaymentDetailModal payment={selectedPayment} onClose={handleClosePaymentModal} />
+      )}
+
+      {/* 환불 상세 모달 */}
+      {selectedRefund && (
+        <RefundDetailModal refund={selectedRefund} onClose={handleCloseRefundModal} />
       )}
     </AdminPageLayout>
   );
 }
+
+// --- 탭 스타일 ---
+const TabContainer = styled.div`
+  display: flex;
+  gap: 0.4rem;
+  background: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: 0.8rem;
+  box-shadow: ${({ theme }) => theme.colors.shadow};
+  margin-bottom: 2rem;
+`;
+
+const Tab = styled.button<{ $active: boolean }>`
+  flex: 1;
+  padding: 1.2rem 2.4rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+  background: ${({ theme, $active }) => ($active ? theme.colors.primary300 : theme.colors.gray100)};
+  color: ${({ theme, $active }) => ($active ? theme.colors.white : theme.colors.gray400)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: ${({ theme, $active }) =>
+      $active ? theme.colors.primaryDark : theme.colors.gray100};
+  }
+`;
