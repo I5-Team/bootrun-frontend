@@ -32,7 +32,9 @@ const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
       <Curr.Container>
         {!chapterData || chapterData.length === 0
         ? <Curr.Chapter $isOpen={true}>
-            <Curr.ChapterHeaderButton>
+            <Curr.ChapterHeaderButton
+              style={{cursor: 'default'}}            
+            >
               <Curr.ToggleIcon $isOpen={true}>
                 <SvgArrowDown /> 
               </Curr.ToggleIcon>
