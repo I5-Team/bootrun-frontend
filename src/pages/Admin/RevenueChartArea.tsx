@@ -371,7 +371,6 @@ const S = {
     background: white;
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   `,
 
   HeaderWithFilters: styled.div`

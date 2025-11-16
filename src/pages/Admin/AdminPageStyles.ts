@@ -16,11 +16,12 @@ export const AdminPageStyles = {
     padding: clamp(1.6rem, 3vw, 2.4rem);
   `,
 
-  PageHeader: styled.header`
+  PageHeader: styled.section`
+    width: 100%;
+    height: 4.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     flex-wrap: wrap;
     column-gap: clamp(1.2rem, 2.5vw, 2.4rem);
     row-gap: clamp(0.8rem, 2vw, 1.6rem);
@@ -65,7 +66,6 @@ export const AdminPageStyles = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: ${({ theme }) => theme.colors.shadow};
   `,
 
   TableHeader: styled.div`

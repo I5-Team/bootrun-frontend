@@ -73,7 +73,6 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: ${({ theme }) => theme.colors.shadow};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
