@@ -83,7 +83,7 @@ const SidebarOpenBtn = ({
   );
 };
 
-const UserActions = () => {
+const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const token = localStorage.getItem('accessToken');
@@ -167,7 +167,7 @@ const ActionLists = () => {
         <>
           <NavList />
           <SearchForm />
-          <UserActions />
+          <UserProfileBtn />
         </>
       )}
     </StyledActionList>
@@ -279,9 +279,7 @@ const LectureRoomHeader = () => {
         <QnaBtn />
         <HomeBackBtn />
         <DiscordBtn />
-        <Link to={ROUTES.PROFILE}>
-          <Profile />
-        </Link>
+        <UserProfileBtn/>
       </StyledActionList>
     </StyledHeaderInnerLecture>
   );
