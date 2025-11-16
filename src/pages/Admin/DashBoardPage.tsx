@@ -81,7 +81,6 @@ export default function DashboardPage() {
         <ProgressArea courseStats={courseStats} categoryStats={categoryStats} />
 
         <TableArea courseStats={courseStats} />
-        
     </AdminPageLayout>
   );
 }

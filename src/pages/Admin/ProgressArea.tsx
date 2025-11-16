@@ -189,7 +189,6 @@ const S = {
   ChartWrapper: styled.div`
     position: relative;
     width: 100%;
-    height: clamp(24rem, 45vw, 32rem);
     max-width: 100%;
     display: flex;
     align-items: center;

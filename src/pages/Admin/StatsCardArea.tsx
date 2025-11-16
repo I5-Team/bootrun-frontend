@@ -68,14 +68,6 @@ const S = {
     @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-      gap: 1.4rem;
-    }
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      gap: 1.2rem;
-    }
   `,
 };
 

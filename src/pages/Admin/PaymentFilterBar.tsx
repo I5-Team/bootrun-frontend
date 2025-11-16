@@ -146,7 +146,7 @@ const PaymentFilterBar: React.FC<PaymentFilterBarProps> = ({ initialFilters, onF
 };
 
 // --- Styles ---
-const S = {
+export const S = {
   CardBox: styled.form`
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};

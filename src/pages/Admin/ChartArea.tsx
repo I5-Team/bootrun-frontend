@@ -284,7 +284,6 @@ const S = {
   `,
   ChartWrapper: styled.div`
     width: 100%;
-    height: clamp(24rem, 42vw, 34rem);
     max-width: 100%;
     overflow: hidden;
     position: relative;
