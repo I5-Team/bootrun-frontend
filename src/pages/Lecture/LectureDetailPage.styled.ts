@@ -4,18 +4,8 @@ export const LectureDetailContainer = styled.div`
   margin-top: 6rem;
 `;
 
-export const LectureMainLayout = styled.div`
-  width: 100%;
-  margin-top: 3.2rem;
-
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  gap: 4rem;
-  flex-wrap: wrap;
-`;
-
 export const ContentWrapper = styled.div`
+  margin-top: 3.2rem;
   width: 100%;
   display: grid;
   grid-template-columns: 2fr minmax(34rem, 1fr);
@@ -63,7 +53,7 @@ export const StickyNavWrapper = styled.nav`
   }
 `;
 
-export const NavContent = styled.ul`
+export const NavList = styled.ul`
   width: 100%;
   height: 100%;
   display: flex;

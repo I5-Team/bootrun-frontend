@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { RefObject } from 'react';
 import type { SectionRefs } from '../../../types/LectureType'; 
-import { NavContent, NavItem, StickyNavWrapper, NavCta } from "../LectureDetailPage.styled";
+import { NavItem, StickyNavWrapper, NavCta, NavList } from "../LectureDetailPage.styled";
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { ROUTES } from '../../../router/RouteConfig';
 import { useNavigate } from 'react-router-dom';
@@ -52,30 +52,32 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
   }
   
   return (
-    <StickyNavWrapper>
-      <NavContent>
+    <StickyNavWrapper aria-label="강의 상세 정보 탐색">
+      <NavList>
         {navItems.map((item) => (
-          <NavItem
-            key={item.name}
-            href={`#${item.id}`} // HTML의 id와 일치
-            $active={activeTab === item.name}
-            onClick={(e) => handleNavClick(e, item.name, item.ref)}
-          >
-            {item.name}
-          </NavItem>
+          <li key={item.name}>
+            <NavItem
+              href={`#${item.id}`} // HTML의 id와 일치
+              $active={activeTab === item.name}
+              onClick={(e) => handleNavClick(e, item.name, item.ref)}
+            >
+              {item.name}
+            </NavItem>
+          </li>
         ))}
         
         {/* 수강신청 CTA 버튼 (별도 스타일링) */}
         {(recruitmentStatus && isTablet) && 
-          <NavCta
-            key={ctaItem.name}
-            href='#'
-            onClick={handleEnrollCourse}
-          >
-            {ctaItem.name}
-          </NavCta>
+          <li key={ctaItem.name}>
+            <NavCta
+              href='#'
+              onClick={handleEnrollCourse}
+            >
+              {ctaItem.name}
+            </NavCta>
+          </li>
         }
-      </NavContent>
+      </NavList>
     </StickyNavWrapper>
   );
 }

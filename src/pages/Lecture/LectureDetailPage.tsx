@@ -4,7 +4,6 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 
 // 스타일
 import {
-  LectureMainLayout,
   ContentWrapper,
   SectionWrapper,
 } from './LectureDetailPage.styled';
@@ -57,29 +56,28 @@ export default function LectureDetailPage() {
   return (
       <>
         <LectureBannerSection/>
-        <LectureMainLayout>
-            <ContentWrapper>
-              {/* 헤더 영역 (왼쪽) */}
-              <LectureHeaderSection/>
 
-              {/* 고정 사이드바 (오른쪽) */}
-              {!isLaptop && <LectureInfoBox/>}
-              {isLaptop && <InfoBoxButtons/>}
+        <ContentWrapper>
+          {/* 헤더 영역 (왼쪽) */}
+          <LectureHeaderSection/>
 
-              {/* 메인 콘텐츠 영역 (왼쪽) */}
-              <SectionWrapper>
-                <SectionTabs refs={sectionRefs}/>
+          {/* 고정 사이드바 (오른쪽) */}
+          {!isLaptop && <LectureInfoBox/>}
+          {isLaptop && <InfoBoxButtons/>}
 
-                <LectureIntroSection ref={introRef}/>
-                <ReviewSection ref={reviewsRef}/>
-                <CurriculumSection ref={curriculumRef}/>
-                <InstructorSection ref={instructorRef}/>
-                <FAQSection ref={faqRef}/>
-                <NoticeSection />
-              </SectionWrapper>
+          {/* 메인 콘텐츠 영역 (왼쪽) */}
+          <SectionWrapper>
+            <SectionTabs refs={sectionRefs}/>
 
-            </ContentWrapper>
-        </LectureMainLayout>
+            <LectureIntroSection ref={introRef}/>
+            <ReviewSection ref={reviewsRef}/>
+            <CurriculumSection ref={curriculumRef}/>
+            <InstructorSection ref={instructorRef}/>
+            <FAQSection ref={faqRef}/>
+            <NoticeSection />
+          </SectionWrapper>
+
+        </ContentWrapper>
       </>
   );
 }
