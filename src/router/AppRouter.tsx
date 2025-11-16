@@ -79,9 +79,11 @@ export default function AppRouter() {
                 <Route path={ROUTES.MYPAGE_ORDERS} element={<OrderHistorySection />} />{' '}
                 <Route path={ROUTES.MYPAGE_ACCOUNT} element={<AccountSection />} />{' '}
               </Route>
-              <Route element={<LectureRoomLayout />}>
-                <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
-              </Route>
+            </Route>
+
+            {/* 강의실은 독립적인 레이아웃 사용 */}
+            <Route element={<LectureRoomLayout />}>
+              <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
             </Route>
           </Route>
 
