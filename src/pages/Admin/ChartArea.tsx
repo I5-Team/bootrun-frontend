@@ -80,7 +80,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
   const hasDailyStats = Boolean(dailyStats && dailyStats.length > 0);
 
   const chartSummary = useMemo(() => {
-    if (!dailyStats || dailyStats.length === 0) {
+    if (!dailyStats || !Array.isArray(dailyStats) || dailyStats.length === 0) {
       return {
         visitors: '일별 접속자 수 데이터가 없어 차트 설명을 제공하지 못했습니다.',
         views: '일별 조회수 데이터가 없어 차트 설명을 제공하지 못했습니다.',
@@ -89,6 +89,9 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
     }
 
     const getExtremes = (key: keyof DailyStat) => {
+      if (dailyStats.length === 0) {
+        return { max: dailyStats[0], min: dailyStats[0] };
+      }
       const sorted = [...dailyStats].sort((a, b) => (b[key] as number) - (a[key] as number));
       const max = sorted[0];
       const min = sorted[sorted.length - 1];
@@ -139,7 +142,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
           )}
           {loading && <LoadingSpinner />}
           {!loading && !dailyStats && <ErrorMessage message="데이터 없음" />}
-          {dailyStats && (
+          {hasDailyStats && Array.isArray(dailyStats) && (
             <S.ChartContent aria-hidden="true">
               <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <LineChart data={dailyStats}>
@@ -176,7 +179,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
             <S.VisuallyHidden id={viewsSummaryId}>{chartSummary.views}</S.VisuallyHidden>
           )}
           {loading && <LoadingSpinner />}
-          {dailyStats && (
+          {hasDailyStats && Array.isArray(dailyStats) && (
             <S.ChartContent aria-hidden="true">
               <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <BarChart data={dailyStats}>
@@ -203,7 +206,7 @@ const ChartArea: React.FC<ChartAreaProps> = ({ dailyStats }) => {
             <S.VisuallyHidden id={revenueSummaryId}>{chartSummary.revenue}</S.VisuallyHidden>
           )}
           {loading && <LoadingSpinner />}
-          {dailyStats && (
+          {hasDailyStats && Array.isArray(dailyStats) && (
             <S.ChartContent aria-hidden="true">
               <ResponsiveContainer width="100%" height={300} minHeight={300}>
                 <LineChart data={dailyStats}>

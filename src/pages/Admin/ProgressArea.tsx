@@ -27,13 +27,13 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats 
 
   // 전체 강좌 평균 진도율 계산
   const totalAvgProgress = useMemo(() => {
-    if (!courseStats || courseStats.length === 0) return 0;
+    if (!courseStats || !Array.isArray(courseStats) || courseStats.length === 0) return 0;
     const sum = courseStats.reduce((acc, course) => acc + course.avg_progress, 0);
     return parseFloat((sum / courseStats.length).toFixed(1));
   }, [courseStats]);
 
   const categorySummary = useMemo(() => {
-    if (!categoryStats || categoryStats.length === 0) {
+    if (!categoryStats || !Array.isArray(categoryStats) || categoryStats.length === 0) {
       return '카테고리별 매출 데이터가 없어 차트 설명을 제공하지 못했습니다.';
     }
 
@@ -45,7 +45,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({ categoryStats, courseStats 
   }, [categoryStats]);
 
   const progressSummary = useMemo(() => {
-    if (!courseStats || courseStats.length === 0) {
+    if (!courseStats || !Array.isArray(courseStats) || courseStats.length === 0) {
       return '강좌 진도율 데이터가 없어 차트 설명을 제공하지 못했습니다.';
     }
     return `전체 ${courseStats.length}개 강좌의 평균 진도율은 ${totalAvgProgress}%입니다.`;
