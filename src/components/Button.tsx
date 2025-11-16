@@ -13,6 +13,7 @@ type ButtonProps = {
   size?: ButtonSize,
   fullWidth?: boolean,
   disabled?: boolean,
+  isActive?: boolean,
   iconSvg?: React.ReactNode,
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
   type?: 'button' | 'submit' | 'reset' | '',

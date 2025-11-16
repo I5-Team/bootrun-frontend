@@ -7,6 +7,7 @@ import {
   useUpdateProfile,
   useUploadProfileImage,
 } from '../../queries/useUserQueries';
+import SvgImage from "../../assets/icons/icon-image.svg?react";
 import type { ProfileUpdatePayload } from '../../types/UserType';
 import {
   Container,
@@ -24,6 +25,10 @@ import {
   SubmitButtonWrapper,
   Title,
 } from './ProfilePage.styled';
+import styled from 'styled-components';
+import Button from '../../components/Button';
+import Profile from '../../components/Profile';
+import MyPage from './MyPage.styled';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -133,21 +138,16 @@ const ProfilePage: React.FC = () => {
   const isPending = isUpdating || isUploadingImage || isDeletingImage;
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Title as="h2">프로필 설정</Title>
-      <Container>
-        <ProfileContainer>
-          <ImageWrapper>
-            <ImagePreview>
-              {imagePreview ? (
-                <>
-                  {console.log('imagePreview:', imagePreview)}
-                  <img src={imagePreview} alt="현재 프로필 이미지" />
-                </>
-              ) : (
-                <img src={SvgProfileImage} alt="기본 프로필 이미지" />
-              )}
-            </ImagePreview>
+    <MyPage.Form onSubmit={handleSubmit}>
+      <MyPage.Container>
+        <MyPage.Title as="h2">프로필 설정</MyPage.Title>
+        <S.ProfileFormContainer>
+          <S.ProfileContainer>
+            {imagePreview ? (
+              <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지"/>
+            ) : (
+              <Profile size={14.6} src={SvgProfileImage}  alt="기본 프로필 이미지"/>
+            )}
             {/* ⭐️ (수정) 조건부 버튼 렌더링 */}
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
@@ -172,66 +172,160 @@ const ProfilePage: React.FC = () => {
                 +
               </ImageActionButton>
             )}
-          </ImageWrapper>
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            aria-hidden="true"
-          />
-        </ProfileContainer>
-
-        <FormContent>
-          <FormGroup>
-            <label htmlFor="nickname">닉네임</label>
-            <Input
-              id="nickname"
-              type="text"
-              name="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+            {/* <S.ImageUploadButton
+              type="button"
+              onClick={handleImageUploadClick}
+              aria-label="프로필 이미지 변경"
+            >
+              <SvgImage/>
+            </S.ImageUploadButton> */}
+  
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              aria-hidden="true"
             />
-          </FormGroup>
-          <FormRow>
-            <FormGroup>
-              <label htmlFor="gender">성별</label>
-              <Select
-                id="gender"
-                name="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="none">선택</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-              </Select>
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="birthdate">생년월일</label>
-
-              <Input
-                id="birthdate"
-                type="date"
-                name="birthdate"
-                value={birthdate}
-                onChange={(e) => setBirthdate(e.target.value)}
-                aria-label="생년월일 입력"
+          </S.ProfileContainer>
+  
+          <S.FormContent>
+            <S.FormGroup>
+              <label htmlFor="nickname">닉네임</label>
+              <MyPage.Input
+                id="nickname"
+                type="text"
+                name="nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
               />
-            </FormGroup>
-          </FormRow>
-        </FormContent>
-      </Container>
+            </S.FormGroup>
+            <S.FormRow>
+              <S.FormGroup>
+                <label htmlFor="gender">성별</label>
+                <MyPage.Select
+                  id="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="none">선택</option>
+                  <option value="male">남성</option>
+                  <option value="female">여성</option>
+                </MyPage.Select>
+              </S.FormGroup>
+              <S.FormGroup>
+                <label htmlFor="birthdate">생년월일</label>
+                <MyPage.Input
+                  id="birthdate"
+                  type="date"
+                  name="birthdate"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                  aria-label="생년월일 입력"
+                />
+              </S.FormGroup>
+            </S.FormRow>
+          </S.FormContent>
+        </S.ProfileFormContainer>
+      </MyPage.Container>
 
-      <SubmitButtonWrapper>
-        <SubmitButton type="submit" disabled={isPending}>
+      <S.SubmitButtonWrapper>
+        <Button 
+          fullWidth
+          size="md"
+          type="submit"
+          disabled={isPending}
+        >
           수정하기
-        </SubmitButton>
-      </SubmitButtonWrapper>
-    </Form>
+        </Button>
+      </S.SubmitButtonWrapper>
+    </MyPage.Form>
   );
+};
+
+// --- Styles (시안 반영, rem/theme 적용) ---
+const S = {
+  ProfileFormContainer: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: clamp(2.4rem, 4vw, 5.2rem);
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  `,
+
+  ProfileContainer: styled.div`
+    flex-shrink: 0;
+    position: relative; /* ◀ 버튼의 기준점이 됨 */
+    width: 14.6rem;
+    height: 14.6rem;
+
+  `,
+  ImageUploadButton: styled.button`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 4.6rem;
+    height: 4.6rem;
+    padding: 1.2rem;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.colors.gray400};
+    color: ${({ theme }) => theme.colors.white};
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  `,
+  FormContent: styled.div`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+  `,
+  FormRow: styled.div`
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+  `,
+  FormGroup: styled.div`
+    flex-grow: 1;
+    min-width: 16.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    label {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+      font-weight: 700;
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      width: 100%;
+    }
+  `,
+  SubmitButtonWrapper: styled.div`
+    width: 24rem;
+  `,
 };
 
 export default ProfilePage;
