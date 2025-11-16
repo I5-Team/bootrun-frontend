@@ -38,10 +38,16 @@ const StyledFieldset = styled.fieldset`
     justify-content: start;
     align-items: start;
 
-
     &:not(:last-child) {
         border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     }
+`;
+
+const StyledLegend = styled.legend`
+    all: unset;
+    display: contents;
+    margin: 0;
+    padding: 0;
 
     span {
         font-weight: 700;
@@ -100,7 +106,7 @@ const StyledTagWrapper = styled.div`
     margin-bottom: 5.2rem;
 `;
 
-const StyledTagList = styled.div`
+const StyledTagList = styled.ul`
     display: flex;
     justify-content: start;
     align-items: center;
@@ -142,15 +148,22 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
     };
     
     return (
-        <StyledTagWrapper aria-label="필터링 조건 태그 목록">
+        <StyledTagWrapper>
             <Button variant="outline" iconSvg={<SvgReset/>} onClick={handleReset}>
                 필터 초기화
             </Button>
-            <StyledTagList>
+            <StyledTagList aria-label="선택된 필터">
                 {selectedTags.map(tag => (
-                    <button key={tag.value} data-label={tag.label} onClick={handleDelete}>
-                        <Tag variant="dark" hasDelete={true}>{tag.label}</Tag>
-                    </button>
+                    <li>
+                        <button 
+                            key={tag.value} 
+                            data-label={tag.label} 
+                            onClick={handleDelete}
+                            aria-label={`${tag.label} 필터 제거`}
+                        >
+                            <Tag variant="dark" hasDelete={true} ariaHidden={true}>{tag.label}</Tag>
+                        </button>
+                    </li>
                 ))}
             </StyledTagList>
         </StyledTagWrapper>
@@ -225,12 +238,11 @@ const FilterForm = ({ filterData, inputType = "checkbox", hasTags = true }: {
 
     return (
         <>
-            <StyledFilterForm aria-label="필터링 선택 폼">
+            <StyledFilterForm aria-label="강의 검색 필터">
                 {filterData.map(item => (
                     <StyledFieldset key={item.label}>
-                        <legend className="sr-only">{item.label}</legend>
-                        <span>{item.label}</span>
-
+                        <StyledLegend><span>{item.label}</span></StyledLegend>
+                        
                         <StyledFilterList>
                             {item.options.map((option) => (
                                 <StyledFilterItem key={option.value}>
