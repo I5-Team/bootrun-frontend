@@ -13,8 +13,10 @@ export default function PaymentResultPage() {
   // hooks
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>('pending');
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isMinTimeElapsed, setIsMinTimeElapsed] = useState(false);
+  const MIN_DELAY_MS = 300;
 
 
   // paymentId 유효성 검사
@@ -63,6 +65,13 @@ export default function PaymentResultPage() {
     }
   }, [isValidPaymentId, paymentDetailData]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMinTimeElapsed(true);
+    }, MIN_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // 이벤트 핸들러: 이동 버튼
   const handleGoToLectureRoom = () => {
@@ -78,8 +87,7 @@ export default function PaymentResultPage() {
   };
 
   // 조건부 렌더링: 예외 처리
-  if (isLoading) return <LoadingSpinner />;
-  if (paymentStatus === 'pending') return <LoadingSpinner/>;
+  if (isLoading || paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed) return <LoadingSpinner />;
 
   const isSuccess = paymentStatus === 'completed';
 
