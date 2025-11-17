@@ -15,10 +15,10 @@ const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
 const ErrorLayout = lazy(() => import('../layouts/ErrorLayout'));
 const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
-const DashBoardPage = lazy(() => import('../pages/Admin/DashBoardPage'));
-const LectureManagePage = lazy(() => import('../pages/Admin/LectureManagePage'));
-const PaymentManagePage = lazy(() => import('../pages/Admin/PaymentManagePage'));
-const UserManagePage = lazy(() => import('../pages/Admin/UserManagePage'));
+const DashBoardPage = lazy(() => import('../pages/Admin/pages/DashBoardPage'));
+const LectureManagePage = lazy(() => import('../pages/Admin/pages/LectureManagePage'));
+const PaymentManagePage = lazy(() => import('../pages/Admin/pages/PaymentManagePage'));
+const UserManagePage = lazy(() => import('../pages/Admin/pages/UserManagePage'));
 const LectureListPage = lazy(() => import('../pages/Lecture/LectureListPage'));
 const LectureSearchPage = lazy(() => import('../pages/Lecture/LectureSearchPage'));
 const LectureDetailPage = lazy(() => import('../pages/Lecture/LectureDetailPage'));
@@ -69,7 +69,6 @@ export default function AppRouter() {
 
           {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
           <Route element={<RequireAuth />}>
-          
             <Route element={<MainLayout />}>
               <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
               <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
