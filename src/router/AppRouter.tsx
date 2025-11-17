@@ -22,7 +22,7 @@ const UserManagePage = lazy(() => import('../pages/Admin/UserManagePage'));
 const LectureListPage = lazy(() => import('../pages/Lecture/LectureListPage'));
 const LectureSearchPage = lazy(() => import('../pages/Lecture/LectureSearchPage'));
 const LectureDetailPage = lazy(() => import('../pages/Lecture/LectureDetailPage'));
-const ProfilePage = lazy(() => import('../pages/MyPage/ProfilePage'));
+const ProfilePage = lazy(() => import('../pages/MyPage/pages/ProfilePage'));
 const LecturePaymentPage = lazy(() => import('../pages/Lecture/LecturePaymentPage'));
 const PaymentResultPage = lazy(() => import('../pages/Lecture/PaymentResultPage'));
 const MyLecturePage = lazy(() => import('../pages/Lecture/MyLecturePage'));
@@ -31,8 +31,8 @@ const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ReviewPage = lazy(() => import('../pages/ReviewPage'));
-const OrderHistorySection = lazy(() => import('../pages/MyPage/OrderHistorySection'));
-const AccountSection = lazy(() => import('../pages/MyPage/AccountSection'));
+const OrderHistorySection = lazy(() => import('../pages/MyPage/components/OrderHistorySection'));
+const AccountSection = lazy(() => import('../pages/MyPage/components/AccountSection'));
 
 // 사용자 타입별 페이지 인증 처리 예시
 /*
@@ -69,7 +69,6 @@ export default function AppRouter() {
 
           {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
           <Route element={<RequireAuth />}>
-          
             <Route element={<MainLayout />}>
               <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
               <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
