@@ -420,6 +420,7 @@ export default function LectureManagePage() {
         isOpen={isFormModalOpen}
         mode={formModalMode}
         courseId={selectedCourseId}
+        isSaving={updateCourseMutation.isPending || createCourseMutation.isPending}
         onClose={() => {
           setIsFormModalOpen(false);
           setSelectedCourseId(null);

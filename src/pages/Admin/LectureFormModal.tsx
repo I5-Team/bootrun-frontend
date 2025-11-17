@@ -19,6 +19,7 @@ interface LectureFormModalProps {
   isOpen: boolean;
   mode: 'add' | 'edit'; // 추가 vs 수정 모드
   courseId?: number | null; // 수정 모드일 때만 필요
+  isSaving?: boolean;
   onClose: () => void;
   onSubmit: (data: CreateCourseRequest) => void;
   onUpdate?: (courseId: number, data: CreateCourseRequest, originalChapters: Chapter[]) => void;
@@ -36,6 +37,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   isOpen,
   mode,
   courseId,
+  isSaving = false,
   onClose,
   onSubmit,
   onUpdate,
@@ -43,6 +45,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const prevSavingRef = useRef(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // 기본 정보 상태
@@ -221,6 +224,14 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
     }
   }, [isOpen, mode, courseId]);
 
+  // 저장 완료 시 모달 자동 닫기
+  useEffect(() => {
+    if (prevSavingRef.current && !isSaving && isOpen) {
+      handleClose();
+    }
+    prevSavingRef.current = isSaving || false;
+  }, [isSaving, isOpen]);
+
   // 모달 닫기 + 초기화
   const handleClose = useCallback(() => {
     setCurrentStep(1);
@@ -332,8 +343,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
     } else if (mode === 'edit' && courseId) {
       onUpdate?.(courseId, courseData, originalChapters);
     }
-
-    handleClose();
   }, [
     basicInfo,
     faqs,
@@ -403,7 +412,11 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         </S.StepIndicator>
 
         <S.ModalBody>
-          {isLoading && mode === 'edit' ? (
+          {isSaving ? (
+            <S.LoadingContainer>
+              <S.LoadingText>강의를 저장하는 중입니다...</S.LoadingText>
+            </S.LoadingContainer>
+          ) : isLoading && mode === 'edit' ? (
             <S.LoadingContainer>
               <S.LoadingText>강의 정보를 불러오는 중...</S.LoadingText>
             </S.LoadingContainer>
@@ -430,18 +443,18 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
         <S.ModalFooter>
           {currentStep > 1 && (
-            <Button variant="outline" size="md" onClick={handlePrev}>
+            <Button variant="outline" size="md" onClick={handlePrev} disabled={isSaving}>
               이전
             </Button>
           )}
           <S.Spacer />
           {currentStep < 3 ? (
-            <Button size="md" onClick={handleNext}>
+            <Button size="md" onClick={handleNext} disabled={isSaving}>
               다음
             </Button>
           ) : (
-            <Button size="md" onClick={handleSubmit}>
-              {submitButtonText}
+            <Button size="md" onClick={handleSubmit} disabled={isSaving}>
+              {isSaving ? '저장 중...' : submitButtonText}
             </Button>
           )}
         </S.ModalFooter>
