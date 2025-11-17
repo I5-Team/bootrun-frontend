@@ -8,7 +8,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery';
 import SearchForm from '../../../components/SearchForm';
 import Button from '../../../components/Button';
 import EmptyState from '../../../components/EmptyState/EmptyState';
-import SvgAlert from '../../assets/icons/icon-status-alert.svg?react';
+import SvgAlert from '../../../assets/icons/icon-status-alert.svg?react';
 
 const StyledTitleWrapper = styled.div`
   margin-top: 6rem;
