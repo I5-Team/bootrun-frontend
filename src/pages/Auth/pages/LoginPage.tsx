@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
-import { InputLogin } from '../../components/InputLogin';
-import { Button } from '../../components/Button';
-import { ROUTES } from '../../router/RouteConfig';
+import { InputLogin } from '../../../components/InputLogin.tsx';
+import { Button } from '../../../components/Button.tsx';
+import { ROUTES } from '../../../router/RouteConfig.ts';
 import LogoSymbol from '../../assets/logos/logo-symbol.svg?react';
 import GithubIcon from '../../assets/icons/icon-oatuth-github.svg?react';
 import GoogleIcon from '../../assets/icons/icon-oauth-google.svg?react';
@@ -26,8 +26,8 @@ import {
   SocialLoginSection,
   SocialButtonGroup,
   OriginalColorIcon,
-} from './styles/LoginPage.styled.ts';
-import { useLogin } from '../../queries/useAuthQueries.ts';
+} from '../styles/LoginPage.styled.ts';
+import { useLogin } from '../../../queries/useAuthQueries.ts';
 
 const LoginPage: React.FC = () => {
   const { mutate: login, isPending } = useLogin();

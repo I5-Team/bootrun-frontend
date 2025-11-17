@@ -13,8 +13,8 @@ const LectureDetailLayout = lazy(() => import('../layouts/LectureDetailLayout'))
 const LectureRoomLayout = lazy(() => import('../layouts/LectureRoomLayout'));
 const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
 const ErrorLayout = lazy(() => import('../layouts/ErrorLayout'));
-const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
-const SignUpPage = lazy(() => import('../pages/Auth/SignUpPage'));
+const LoginPage = lazy(() => import('../pages/Auth/pages/LoginPage'));
+const SignUpPage = lazy(() => import('../pages/Auth/pages/SignUpPage'));
 const DashBoardPage = lazy(() => import('../pages/Admin/DashBoardPage'));
 const LectureManagePage = lazy(() => import('../pages/Admin/LectureManagePage'));
 const PaymentManagePage = lazy(() => import('../pages/Admin/PaymentManagePage'));
