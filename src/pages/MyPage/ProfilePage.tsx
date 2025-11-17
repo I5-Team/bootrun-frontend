@@ -9,8 +9,7 @@ import {
 } from '../../queries/useUserQueries';
 import SvgImage from "../../assets/icons/icon-image.svg?react";
 import type { ProfileUpdatePayload } from '../../types/UserType';
-import { FormContent, FormGroup, FormRow, ImageActionButton, ImagePreview, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
-import styled from 'styled-components';
+import { FormContent, FormGroup, FormRow, ImageActionButton, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
 import Button from '../../components/Button';
 import Profile from '../../components/Profile';
 import MyPage from './MyPage.styled';
@@ -144,7 +143,6 @@ const ProfilePage: React.FC = () => {
               ) : (
                 <Profile size={14.6} src={SvgProfileImage}  alt="기본 프로필 이미지"/>
               )}
-            </ImagePreview>
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
               <ImageActionButton
