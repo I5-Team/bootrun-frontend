@@ -3,9 +3,9 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { InputLogin } from '../../../components/InputLogin.tsx';
 import { Button } from '../../../components/Button.tsx';
 import { ROUTES } from '../../../router/RouteConfig.ts';
-import LogoSymbol from '../../assets/logos/logo-symbol.svg?react';
-import GithubIcon from '../../assets/icons/icon-oatuth-github.svg?react';
-import GoogleIcon from '../../assets/icons/icon-oauth-google.svg?react';
+import LogoSymbol from '../../../assets/logos/logo-symbol.svg?react';
+import GithubIcon from '../../../assets/icons/icon-oatuth-github.svg?react';
+import GoogleIcon from '../../../assets/icons/icon-oauth-google.svg?react';
 import {
   PageContainer,
   LoginContainer,
