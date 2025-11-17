@@ -3,7 +3,7 @@
  * - 페이지 레이아웃, 폼, 입력 필드, 약관 동의 관련 스타일
  */
 import styled from 'styled-components';
-import { Button } from '../../components/Button';
+import { Button } from '../../../components/Button';
 
 // 페이지 레이아웃 스타일
 export const PageContainer = styled.div`
