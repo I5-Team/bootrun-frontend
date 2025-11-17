@@ -11,9 +11,6 @@ const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
       
           <Intro.Title>{data.title}</Intro.Title>
           <Intro.Desc>{data.description}</Intro.Desc>
-          <Intro.ContentContainer>
-            강의 소개에 대한 콘텐츠
-          </Intro.ContentContainer>
     </Intro.Section>
   );
 });
@@ -43,21 +40,14 @@ const Intro = {
   `,
   Desc: styled.p`
     word-break: keep-all;
-    font-size: ${({ theme }) => theme.fontSize.lg}; 
+    font-size: ${({ theme }) => theme.mobileFontSize.xl}; 
     color: ${({ theme }) => theme.colors.gray400}; 
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
 
     @media ${({ theme }) => theme.devices.mobile} {
       font-size: ${({ theme }) => theme.fontSize.md};
     }
-  `,
-  ContentContainer: styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 40rem;
   `,
 };
 
