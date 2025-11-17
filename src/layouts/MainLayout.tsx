@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
-import DevNavigator from '../components/DevNavigator';
+// import DevNavigator from '../components/DevNavigator';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
@@ -11,8 +11,7 @@ export default function MainLayout() {
             <StyledMainContainer>
                 <Outlet />
             </StyledMainContainer>
-            {/* 개발용 네비게이션 버튼 추가 */}
-            <DevNavigator/>      
+            {/* <DevNavigator/>    */}
             <Footer/>
         </StyledWrapper>
     );
