@@ -5,7 +5,13 @@
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { CourseApiParams, CreateCourseRequest } from '../../types/AdminCourseType';
-import { fetchCourses, createChapter, createLecture, updateLecture } from '../../api/adminApi';
+import {
+  fetchCourses,
+  createChapter,
+  updateChapter,
+  createLecture,
+  updateLecture,
+} from '../../api/adminApi';
 import {
   useCreateCourseMutation,
   useUpdateCourseMutation,
@@ -286,12 +292,38 @@ export default function LectureManagePage() {
 
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               for (const chapter of chapters as any) {
-                // 각 챕터 내 강의 영상 처리 (id가 있는 경우만 처리)
-                if (chapter.id && chapter.lectures && chapter.lectures.length > 0) {
+                let chapterId = chapter.id;
+
+                // 챕터 생성 또는 수정
+                if (!chapter.id) {
+                  // 새로운 챕터 → 생성
+                  console.log(`새 챕터 "${chapter.title}" 추가 중...`);
+                  const chapterData = {
+                    title: chapter.title,
+                    description: chapter.description,
+                    order_number: chapter.order_number,
+                  };
+                  const chapterResponse = await createChapter(courseId, chapterData);
+                  chapterId = chapterResponse.data.id;
+                  console.log(`챕터 "${chapter.title}" 생성 완료 (ID: ${chapterId})`);
+                } else {
+                  // 기존 챕터 → 수정
+                  console.log(`기존 챕터 "${chapter.title}" 수정 중...`);
+                  const chapterData = {
+                    title: chapter.title,
+                    description: chapter.description,
+                    order_number: chapter.order_number,
+                  };
+                  await updateChapter(courseId, chapter.id, chapterData);
+                  console.log(`챕터 "${chapter.title}" 수정 완료`);
+                }
+
+                // 각 챕터 내 강의 영상 처리
+                if (chapter.lectures && chapter.lectures.length > 0) {
                   for (const lecture of chapter.lectures) {
                     if (!lecture.id) {
                       // 새로운 강의 영상 → 생성
-                      console.log(`새 강의 영상 "${lecture.title}" 추가 중...`);
+                      console.log(`  └─ 새 강의 영상 "${lecture.title}" 추가 중...`);
                       const lectureData = {
                         title: lecture.title,
                         description: lecture.description,
@@ -301,11 +333,11 @@ export default function LectureManagePage() {
                         order_number: lecture.order_number,
                         material_url: lecture.material_url || '',
                       };
-                      await createLecture(courseId, chapter.id, lectureData);
-                      console.log(`강의 영상 "${lecture.title}" 추가 완료`);
+                      await createLecture(courseId, chapterId, lectureData);
+                      console.log(`    └─ 강의 영상 "${lecture.title}" 추가 완료`);
                     } else {
                       // 기존 강의 영상 → 수정
-                      console.log(`기존 강의 영상 "${lecture.title}" 수정 중...`);
+                      console.log(`  └─ 기존 강의 영상 "${lecture.title}" 수정 중...`);
                       const lectureData = {
                         title: lecture.title,
                         description: lecture.description,
@@ -315,15 +347,15 @@ export default function LectureManagePage() {
                         order_number: lecture.order_number,
                         material_url: lecture.material_url || '',
                       };
-                      await updateLecture(courseId, chapter.id, lecture.id, lectureData);
-                      console.log(`강의 영상 "${lecture.title}" 수정 완료`);
+                      await updateLecture(courseId, chapterId, lecture.id, lectureData);
+                      console.log(`    └─ 강의 영상 "${lecture.title}" 수정 완료`);
                     }
                   }
                 }
               }
-            } catch (lectureError) {
-              console.error('강의 영상 처리 실패:', lectureError);
-              alert('강의 기본정보는 수정되었으나 영상 처리 중 오류가 발생했습니다.');
+            } catch (error) {
+              console.error('챕터/강의 영상 처리 실패:', error);
+              alert('강의 기본정보는 수정되었으나 챕터/강의 영상 처리 중 오류가 발생했습니다.');
               setIsFormModalOpen(false);
               return;
             }
