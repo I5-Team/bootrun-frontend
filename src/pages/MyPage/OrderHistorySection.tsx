@@ -24,15 +24,16 @@ const formattedDate = (date: string) => new Date(date).toLocaleString('ko-KR', {
 });
 
 // 주문 내역 아이템 카드 컴포넌트
-const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined }> = ({ 
+const OrderCard: React.FC<{ order: PaymentsItem, refundStatus: string | null }> = ({ 
   order, 
-  isRefunded
+  refundStatus
 }) => {
   const isCompleted = order.status === 'completed';
 
   const { mutate: refundPayment } = usePostPaymentRefund();
   
   const handleRefund = (id: number) => {
+    if (refundStatus === 'pending' || refundStatus === 'approved') return;
     const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
     if (reason.length < 10) {
         alert('환불 사유를 최소 10자 이상 입력해주세요.');
@@ -55,6 +56,10 @@ const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined
     })
   }
 
+  let refundButtonText = '환불 신청';
+  if (refundStatus === 'pending') refundButtonText = '환불 신청중';
+  if (refundStatus === 'approved') refundButtonText = '환불 완료';
+
   return (
     <S.Card>
       <S.CardHeader>
@@ -63,9 +68,9 @@ const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined
           <Button 
             size="sm" 
             variant='outline' 
-            disabled={isRefunded} 
+            disabled={refundStatus === 'pending' || refundStatus === 'approved'}
             onClick={() => handleRefund(order.id)}
-          >{isRefunded ? '환불 신청중' : '환불 신청'}</Button>
+          >{refundButtonText}</Button>
 
       </S.CardHeader>
       <S.CardBody>
@@ -186,13 +191,16 @@ const OrderHistoryPage: React.FC = () => {
 
       <S.OrderList>
         {filteredOrders.length > 0 ? (
-            filteredOrders.map(order => (
+            filteredOrders.map(order => {
+              const refund = safeRefundList?.find(refund => +refund.payment_id === +order.id);
+              const refundStatus = refund ? refund.status : null;
+              return (
                 <OrderCard 
                   key={order.id} 
                   order={order}  
-                  isRefunded={safeRefundList.some(refund => +refund.payment_id === +order.id)}
+                  refundStatus={refundStatus}
                 />
-              )
+              )}
             )
           ) : (
             <S.EmptyState>결제 내역이 없습니다.</S.EmptyState>
@@ -272,7 +280,7 @@ const S = {
     margin: 0;
   `,
   CardBody: styled.div`
-    padding: 0 2.4rem 2.4rem;
+    padding: 0 2.4rem 2.8rem;
   `,
   InfoGrid: styled.dl`
     display: grid;
