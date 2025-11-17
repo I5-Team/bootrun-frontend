@@ -180,25 +180,20 @@ export default function LecturePaymentPage() {
     postPaymentMutation.mutate(paymentBodyData, {
 
       onSuccess: (data) => {
-        console.log('결제 완료', data);
+        const paymentId = data ? data.id : null;
         navigate({
           pathname: resultPath,
-          search: '?status=success'
+          search: `?paymentId=${paymentId}`
         });
       },
       onError: (err: any) => {
         console.error('결제 실패', err);
         navigate({
           pathname: resultPath,
-          search: '?status=fail'
+          search: `?status=fail`
         });
       }
     })
-    console.log('결제 진행:', {
-      coupon: selectedCoupon,
-      totalPrice,
-      paymentMethod: selectedPaymentMethod,
-    });
   };
 
   const handleRemoveCoupon = () => {
