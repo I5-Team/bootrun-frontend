@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import Button from '../../../components/Button';
-import * as S from './CouponModal.styled';
-import type { Coupon } from '../LecturePaymentPage';
+import * as S from '../styles/CouponModal.styled';
+import type { Coupon } from '../pages/LecturePaymentPage';
 import {
   calculateCouponDiscount,
   isCouponAvailable,
   isCouponVisible,
   formatPrice,
 } from '../../../utils/couponUtils';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface CouponModalProps {
   isOpen: boolean;
@@ -29,44 +30,12 @@ export default function CouponModal({
   const [tempSelectedCoupon, setTempSelectedCoupon] = useState<Coupon | null>(selectedCoupon);
   const modalRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLDivElement>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  // ESC 키로 모달 닫기, 포커스 트랩, 방향키 네비게이션
+  // 포커스 트랩 Hook 사용 (ESC, Tab 키 처리)
+  useFocusTrap(modalRef, onClose, isOpen);
+
+  // 방향키 네비게이션 (CouponModal 고유 기능)
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        // ESC로 닫을 때도 포커스 복원
-        setTimeout(() => {
-          previousActiveElementRef.current?.focus();
-        }, 100);
-      }
-    };
-
-    const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !modalRef.current) return;
-
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), [tabindex="0"]'
-      );
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        // Shift + Tab
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        // Tab
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
     const handleArrowKeys = (e: KeyboardEvent) => {
       if (!modalRef.current) return;
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
@@ -91,12 +60,6 @@ export default function CouponModal({
     };
 
     if (isOpen) {
-      // 모달 열릴 때 현재 포커스된 요소 저장
-      previousActiveElementRef.current = document.activeElement as HTMLElement;
-
-      document.addEventListener('keydown', handleEscape);
-      document.addEventListener('keydown', handleTab);
-      document.addEventListener('keydown', handleArrowKeys);
       // 모달 열릴 때 body 스크롤 방지
       document.body.style.overflow = 'hidden';
 
@@ -104,15 +67,15 @@ export default function CouponModal({
       setTimeout(() => {
         firstFocusableRef.current?.focus();
       }, 100);
+
+      document.addEventListener('keydown', handleArrowKeys);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.removeEventListener('keydown', handleTab);
       document.removeEventListener('keydown', handleArrowKeys);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -130,19 +93,10 @@ export default function CouponModal({
   const handleApply = () => {
     onSelectCoupon(tempSelectedCoupon);
     onClose();
-
-    // 모달 닫힌 후 포커스 복원
-    setTimeout(() => {
-      previousActiveElementRef.current?.focus();
-    }, 100);
   };
 
   const handleClose = () => {
     onClose();
-    // 모달 닫힌 후 포커스 복원
-    setTimeout(() => {
-      previousActiveElementRef.current?.focus();
-    }, 100);
   };
 
   const visibleCoupons = coupons.filter((coupon) => isCouponVisible(coupon));
@@ -194,35 +148,35 @@ export default function CouponModal({
                   }
                 }}
               >
-                  <S.RadioWrapper>
-                    <S.RadioInput
-                      type="radio"
-                      name="coupon"
-                      value={coupon.id}
-                      checked={isSelected}
-                      onChange={() => {}}
-                      disabled={!available}
-                      aria-hidden="true"
-                      tabIndex={-1}
-                    />
-                  </S.RadioWrapper>
-                  <S.CouponContent>
-                    <S.CouponName $available={available}>{coupon.name}</S.CouponName>
-                    <S.CouponDescription $available={available}>
-                      {coupon.description}
-                    </S.CouponDescription>
-                    {!available && (
-                      <S.CouponWarning role="alert" aria-live="polite">
-                        사용 불가능한 쿠폰입니다
-                      </S.CouponWarning>
-                    )}
-                  </S.CouponContent>
-                  <S.DiscountAmount $available={available} aria-hidden="true">
-                    {discountAmount === 0 ? formatPrice(0) : `-${formatPrice(discountAmount)}`}
-                  </S.DiscountAmount>
-                </S.CouponItem>
-              );
-            })}
+                <S.RadioWrapper>
+                  <S.RadioInput
+                    type="radio"
+                    name="coupon"
+                    value={coupon.id}
+                    checked={isSelected}
+                    onChange={() => {}}
+                    disabled={!available}
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+                </S.RadioWrapper>
+                <S.CouponContent>
+                  <S.CouponName $available={available}>{coupon.name}</S.CouponName>
+                  <S.CouponDescription $available={available}>
+                    {coupon.description}
+                  </S.CouponDescription>
+                  {!available && (
+                    <S.CouponWarning role="alert" aria-live="polite">
+                      사용 불가능한 쿠폰입니다
+                    </S.CouponWarning>
+                  )}
+                </S.CouponContent>
+                <S.DiscountAmount $available={available} aria-hidden="true">
+                  {discountAmount === 0 ? formatPrice(0) : `-${formatPrice(discountAmount)}`}
+                </S.DiscountAmount>
+              </S.CouponItem>
+            );
+          })}
         </S.CouponList>
 
         <S.ModalFooter>

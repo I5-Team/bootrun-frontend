@@ -1,9 +1,9 @@
 /**
  * 비디오 플레이어 컴포넌트 - YouTube 및 VOD 재생, 이어보기 기능
  */
-import { useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import * as S from './styles/VideoPlayer.styled';
+import * as S from '../styles/VideoPlayer.styled';
+import { useVideoProgress } from '../hooks/useVideoProgress';
 
 interface VideoPlayerProps {
   url: string;
@@ -19,33 +19,8 @@ export default function VideoPlayer({
   onProgress,
   onEnded,
 }: VideoPlayerProps) {
-  const playerRef = useRef<ReactPlayer>(null);
-  const lastSavedTimeRef = useRef<number>(0);
-  const SAVE_INTERVAL = 10; // 10초마다 저장
-
-  // 컴포넌트 언마운트 시 진행률 저장
-  useEffect(() => {
-    const player = playerRef.current;
-    return () => {
-      const currentTime = player?.getCurrentTime() || 0;
-      const duration = player?.getDuration() || 0;
-      if (currentTime > 0 && duration > 0) {
-        onProgress?.(currentTime, duration);
-      }
-    };
-  }, [onProgress]);
-
-  const handleProgress = (state: { played: number; playedSeconds: number }) => {
-    const currentTime = state.playedSeconds;
-    const duration = playerRef.current?.getDuration() || 0;
-
-    // 10초마다 진행률 저장
-    if (currentTime - lastSavedTimeRef.current >= SAVE_INTERVAL) {
-      lastSavedTimeRef.current = currentTime;
-      console.log(`[VideoPlayer] 진행률 저장: ${Math.floor(currentTime)}초 / ${Math.floor(duration)}초`);
-      onProgress?.(currentTime, duration);
-    }
-  };
+  // 비디오 진행률 추적 Hook 사용
+  const { playerRef, handleProgress } = useVideoProgress(onProgress, 10);
 
   return (
     <S.Container>

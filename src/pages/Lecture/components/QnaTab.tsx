@@ -5,7 +5,7 @@ import { useState } from 'react';
 import iconWarning from '../../../assets/icons/icon-category-FE.svg';
 import iconSearch from '../../../assets/icons/icon-search.svg';
 import Button from '../../../components/Button';
-import * as S from './styles/QnaTab.styled';
+import * as S from '../styles/QnaTab.styled';
 
 interface Question {
   id: number;

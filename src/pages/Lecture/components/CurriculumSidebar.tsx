@@ -8,7 +8,7 @@ import iconQuiz from '../../../assets/icons/icon-quiz.svg';
 import iconDownArrow from '../../../assets/icons/icon-down.svg';
 import iconCheckCircleActive from '../../../assets/icons/icon-check-circle-active.svg';
 import iconCheckCircleDefault from '../../../assets/icons/icon-check-circle-default.svg';
-import * as S from './styles/CurriculumSidebar.styled';
+import * as S from '../styles/CurriculumSidebar.styled';
 
 interface LectureItem {
   id: number;
@@ -96,8 +96,12 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
                       <img src={getLectureIcon(lecture.lecture_type)} alt="" />
                     </S.LectureIconWrapper>
                     <S.LectureInfo>
-                      <S.LectureTitle $isCurrent={lecture.is_current}>{lecture.title}</S.LectureTitle>
-                      <S.LectureDuration>{formatDuration(lecture.duration_seconds)}</S.LectureDuration>
+                      <S.LectureTitle $isCurrent={lecture.is_current}>
+                        {lecture.title}
+                      </S.LectureTitle>
+                      <S.LectureDuration>
+                        {formatDuration(lecture.duration_seconds)}
+                      </S.LectureDuration>
                     </S.LectureInfo>
                     <S.CompletionBadge aria-label={lecture.is_completed ? '완료' : '미완료'}>
                       <img
