@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/apiConfig";
-import type { PaymentConfirmResponse, PaymentDetailItem, PaymentsBodyData, PaymentsItem, PaymentsParams, PaymentsResponse } from "../types/PaymentsType";
+import type { PaymentCancelResponse, PaymentConfirmResponse, PaymentDetailItem, PaymentRefundBodyData, PaymentRefundResponse, PaymentsBodyData, PaymentsItem, PaymentsParams, PaymentsResponse } from "../types/PaymentsType";
 import { apiClient } from "./client";
 
 /**
@@ -75,6 +75,51 @@ export const postPaymentConfirm = async (
         if(response.data.data) {
             console.log('[API 요청 성공]');
             return response.data.data;
+        }
+        console.log('[API 데이터 없음]');
+        return null;
+    } catch (err) {
+        console.error('[API 요청 실패]', err);
+        return null;
+    }
+};
+
+/**
+ * POST /payments/{payment_id}/confirm
+ * 결제 취소
+ */
+export const postPaymentCancel= async (
+    payment_id: number
+): Promise<PaymentCancelResponse | null> => {
+    try {
+        const response = await apiClient.post(API_URL.PAYMENT.CANCEL_PAYMENT(payment_id));
+
+        if (response.data.success) {
+            alert('결제 취소 완료');
+            return response.data;
+        } else {
+            alert(response.data.detail || '결제 취소 실패');
+            return null;
+        }
+    } catch (err) {
+        console.error('[API 요청 실패]', err);
+        return null;
+    }
+};
+
+/**
+ * POST /payments/refunds
+ * 환불 요청
+ */
+export const postPaymentRefund = async (
+    bodyData: PaymentRefundBodyData
+): Promise<PaymentRefundResponse | null> => {
+    try {
+        const response = await apiClient.post(API_URL.REFUND.REQUEST_REFUND, bodyData);
+
+        if(response.data) {
+            console.log('[API 요청 성공]');
+            return response.data;
         }
         console.log('[API 데이터 없음]');
         return null;

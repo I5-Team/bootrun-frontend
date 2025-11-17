@@ -75,3 +75,33 @@ export type PaymentConfirmResponse = {
     paid_at: string | null,
     created_at: string
 }
+
+// POST /payments/{payment_id}/cancel
+export type PaymentCancelResponse = {
+    success?: boolean,
+    error?: string,
+    message: string,
+    detail: string,
+}
+
+// POST /payments/refunds
+export interface PaymentRefundBodyData {
+  payment_id: number,
+  reason: string,
+}
+
+export type PaymentRefundResponse = {
+    idi: number,
+    payment_idi: number,
+    user_idi: number,
+    user_nickname: string,
+    amounti: number,
+    reason: string,
+    statusExpand: string,
+    admin_noteExpand: string | null,
+    requested_at: string,
+    processed_at: string | null,
+    payment_date: string,
+    course_title: string,
+    progress_rate: number,
+}
