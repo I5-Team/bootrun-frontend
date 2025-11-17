@@ -144,7 +144,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   // 수정 모드에서 강의 데이터 로드
   useEffect(() => {
     if (isOpen && mode === 'edit' && courseId) {
-      console.log(`Loading course data for edit mode: ${courseId}`);
       setIsLoading(true);
 
       // 강의 기본 정보와 챕터 정보를 병렬로 로드
@@ -155,9 +154,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
           .catch(() => []),
       ])
         .then(([courseData, chaptersData]) => {
-          console.log('Course data loaded:', courseData);
-          console.log('Chapters data loaded:', chaptersData);
-
           setBasicInfo({
             title: courseData.title || '',
             description: courseData.description || '',
@@ -197,7 +193,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
               const parsedFaq = JSON.parse(courseData.faq);
               setFaqs(Array.isArray(parsedFaq) ? parsedFaq : []);
             } catch {
-              console.warn('Failed to parse FAQ data:', courseData.faq);
               setFaqs([]);
             }
           }
@@ -288,15 +283,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
   // 최종 제출/수정
   const handleSubmit = useCallback(() => {
-    console.log('=== 제출 시작 ===');
-    console.log('basicInfo 전체:', basicInfo);
-    console.log('날짜 필드:', {
-      recruitment_start_date: basicInfo.recruitment_start_date,
-      recruitment_end_date: basicInfo.recruitment_end_date,
-      course_start_date: basicInfo.course_start_date,
-      course_end_date: basicInfo.course_end_date,
-    });
-
     // 날짜 변환 + 기본값 설정
     const toISOStringWithDefault = (dateStr: string, defaultOffsetDays: number = 0) => {
       // 빈 값 처리: 현재 날짜 기준으로 기본값 생성
@@ -304,13 +290,13 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         const defaultDate = new Date();
         defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
         const isoDate = defaultDate.toISOString();
-        console.log(`⚠️ 빈 날짜 감지 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+
         return isoDate;
       }
 
       try {
         const isoDate = new Date(dateStr).toISOString();
-        console.log(`✅ 날짜 변환 성공: "${dateStr}" → "${isoDate}"`);
+
         return isoDate;
       } catch (error) {
         console.error(`❌ 날짜 변환 실패: "${dateStr}"`, error);
@@ -318,7 +304,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         const defaultDate = new Date();
         defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
         const isoDate = defaultDate.toISOString();
-        console.log(`⚠️ 변환 실패 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+
         return isoDate;
       }
     };
@@ -335,8 +321,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
       chapters,
       missions,
     };
-
-    console.log('=== 최종 전송 데이터 ===', courseData);
 
     if (mode === 'add') {
       onSubmit(courseData);

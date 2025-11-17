@@ -98,8 +98,6 @@ export default function LectureManagePage() {
   // 강의 추가 제출 핸들러
   const handleAddCourseSubmit = useCallback(
     async (data: CreateCourseRequest) => {
-      console.log('새 강의 데이터:', data);
-
       const { chapters = [] } = data;
 
       // 1단계: 강의 생성 (모든 필드 명시적으로 전달)
@@ -134,11 +132,9 @@ export default function LectureManagePage() {
       createCourseMutation.mutate(courseData, {
         onSuccess: async (courseResponse) => {
           const courseId = courseResponse.id;
-          console.log('강의 생성 성공! ID:', courseId);
 
           // 2단계: 챕터 및 강의 영상 순차 생성
           if (chapters && chapters.length > 0) {
-            console.log(`챕터 ${chapters.length}개 생성 시작...`);
             try {
               for (const chapter of chapters) {
                 const chapterData = {
@@ -149,11 +145,9 @@ export default function LectureManagePage() {
                 // 챕터 생성
                 const chapterResponse = await createChapter(courseId, chapterData);
                 const chapterId = chapterResponse.data.id;
-                console.log(`챕터 "${chapter.title}" 생성 완료 (ID: ${chapterId})`);
 
-                // 강의 영상 생성 (새로 추가)
+                // 강의 영상 생성
                 if (chapter.lectures && chapter.lectures.length > 0) {
-                  console.log(`  └─ 강의 영상 ${chapter.lectures.length}개 생성 시작...`);
                   for (const lecture of chapter.lectures) {
                     const lectureData = {
                       title: lecture.title,
@@ -165,11 +159,9 @@ export default function LectureManagePage() {
                       material_url: lecture.material_url || '',
                     };
                     await createLecture(courseId, chapterId, lectureData);
-                    console.log(`    └─ 강의 영상 "${lecture.title}" 생성 완료`);
                   }
                 }
               }
-              console.log('모든 챕터와 강의 영상 생성 완료!');
             } catch (error) {
               console.error('챕터/강의 영상 생성 실패:', error);
               alert(
@@ -208,8 +200,6 @@ export default function LectureManagePage() {
     (courseId: number) => {
       const confirmed = window.confirm('정말 이 강의를 삭제하시겠습니까?');
       if (confirmed) {
-        console.log('강의 삭제:', courseId);
-
         // Mutation 실행
         deleteCourseMutation.mutate(courseId, {
           onSuccess: () => {
@@ -253,8 +243,6 @@ export default function LectureManagePage() {
   // 강의 수정 제출 핸들러
   const handleUpdateCourse = useCallback(
     (courseId: number, data: CreateCourseRequest) => {
-      console.log('강의 수정 데이터:', courseId, data);
-
       // 모든 필드 명시적으로 전달
       const courseData = {
         // 기본 정보
@@ -297,7 +285,6 @@ export default function LectureManagePage() {
                 // 챕터 생성 또는 수정
                 if (!chapter.id) {
                   // 새로운 챕터 → 생성
-                  console.log(`새 챕터 "${chapter.title}" 추가 중...`);
                   const chapterData = {
                     title: chapter.title,
                     description: chapter.description,
@@ -305,17 +292,14 @@ export default function LectureManagePage() {
                   };
                   const chapterResponse = await createChapter(courseId, chapterData);
                   chapterId = chapterResponse.data.id;
-                  console.log(`챕터 "${chapter.title}" 생성 완료 (ID: ${chapterId})`);
                 } else {
                   // 기존 챕터 → 수정
-                  console.log(`기존 챕터 "${chapter.title}" 수정 중...`);
                   const chapterData = {
                     title: chapter.title,
                     description: chapter.description,
                     order_number: chapter.order_number,
                   };
                   await updateChapter(courseId, chapter.id, chapterData);
-                  console.log(`챕터 "${chapter.title}" 수정 완료`);
                 }
 
                 // 각 챕터 내 강의 영상 처리
@@ -323,7 +307,6 @@ export default function LectureManagePage() {
                   for (const lecture of chapter.lectures) {
                     if (!lecture.id) {
                       // 새로운 강의 영상 → 생성
-                      console.log(`  └─ 새 강의 영상 "${lecture.title}" 추가 중...`);
                       const lectureData = {
                         title: lecture.title,
                         description: lecture.description,
@@ -334,10 +317,8 @@ export default function LectureManagePage() {
                         material_url: lecture.material_url || '',
                       };
                       await createLecture(courseId, chapterId, lectureData);
-                      console.log(`    └─ 강의 영상 "${lecture.title}" 추가 완료`);
                     } else {
                       // 기존 강의 영상 → 수정
-                      console.log(`  └─ 기존 강의 영상 "${lecture.title}" 수정 중...`);
                       const lectureData = {
                         title: lecture.title,
                         description: lecture.description,
@@ -348,7 +329,6 @@ export default function LectureManagePage() {
                         material_url: lecture.material_url || '',
                       };
                       await updateLecture(courseId, chapterId, lecture.id, lectureData);
-                      console.log(`    └─ 강의 영상 "${lecture.title}" 수정 완료`);
                     }
                   }
                 }
