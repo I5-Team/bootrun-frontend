@@ -105,3 +105,20 @@ export type PaymentRefundResponse = {
     course_title: string,
     progress_rate: number,
 }
+
+// POST /payments/refunds/my
+export type MyRefundItem = {
+    id: number,
+    payment_id: number,
+    user_id: number,
+    user_nickname: string,
+    amount: number,
+    reason: string,
+    status: PaymentStatus,
+    admin_note: string,
+    requested_at: string, 
+    processed_at: string, 
+    payment_date: string, 
+    course_title: string,
+    progress_rate: number,
+}

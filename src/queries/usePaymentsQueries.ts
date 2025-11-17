@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
+import { fetchMyRefunds, fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
 import type { PaymentsParams, PaymentsItem, PaymentsBodyData, PaymentRefundBodyData } from "../types/PaymentsType";
 
 const useToken = () => localStorage.getItem('accessToken');
@@ -114,5 +114,19 @@ export const usePostPaymentRefund = () => {
     onError: (err: any) => {
       console.error('환불 요청 실패', err);
     }
+  });
+};
+
+/**
+ * POST /payments/refunds/my
+ * 내 환불 요청 목록
+ */
+export const useMyRefunds = () => {
+  const token = useToken();
+
+  return useQuery({
+    queryKey: ["myRefunds"],
+    queryFn: () => fetchMyRefunds(),
+    enabled: !!token,
   });
 };

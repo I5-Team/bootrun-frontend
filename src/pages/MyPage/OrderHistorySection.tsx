@@ -1,46 +1,96 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useApiData } from '../../hooks/useApiData';
-import { mockOrderData } from '../../data/mockMyPageData';
-import type { OrderData, OrderItem } from '../../types/ProfileType';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
 import MyPage from './MyPage.styled';
 import Tag from '../../components/Tag';
 import Button from '../../components/Button';
+import { useMyRefunds, usePaymentsQuery, usePostPaymentRefund } from '../../queries/usePaymentsQueries';
+import type { PaymentsItem } from '../../types/PaymentsType';
+
+  const paymentLabels: Record<string, string> = {
+  card: '카드결제',
+  toss: '토스결제',
+  transfer: '계좌이체',
+};
+
+const formattedDate = (date: string) => new Date(date).toLocaleString('ko-KR', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+});
 
 // 주문 내역 아이템 카드 컴포넌트
-const OrderCard: React.FC<{ order: OrderItem }> = ({ order }) => {
+const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined }> = ({ 
+  order, 
+  isRefunded
+}) => {
   const isCompleted = order.status === 'completed';
+
+  const { mutate: refundPayment } = usePostPaymentRefund();
+  
+  const handleRefund = (id: number) => {
+    const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
+    if (reason.length < 10) {
+        alert('환불 사유를 최소 10자 이상 입력해주세요.');
+        return;
+    }
+
+    const confirmed = window.confirm('정말 환불을 진행하시겠습니까?');
+    if (!confirmed) return;
+
+    refundPayment({
+      payment_id: id,
+      reason,
+    }, {
+      onSuccess: () => {
+        alert('환불 요청이 완료되었습니다.');
+      },
+      onError: (err: any) => {
+        alert(err?.response?.data?.detail || '환불 요청이 실패하였습니다. 다시 시도해 주세요.');
+      }
+    })
+  }
 
   return (
     <S.Card>
       <S.CardHeader>
         <Tag variant={isCompleted ? 'primary' : 'dark'}>{isCompleted ? '결제 완료' : '결제 대기'}</Tag>
-        <S.CourseName>{order.courseName}</S.CourseName>
+        <S.CourseName>{order.course_title}</S.CourseName>
+          <Button 
+            size="sm" 
+            variant='outline' 
+            disabled={isRefunded} 
+            onClick={() => handleRefund(order.id)}
+          >{isRefunded ? '환불 신청중' : '환불 신청'}</Button>
+
       </S.CardHeader>
       <S.CardBody>
         <S.InfoGrid>
           <S.InfoItem>
             <dt>결제 금액</dt>
-            <dd className="price">{order.price}</dd>
+            <dd className="price">{order.amount.toLocaleString()}원</dd>
           </S.InfoItem>
           <S.InfoItem>
             <dt>주문 번호</dt>
-            <dd>{order.orderNumber}</dd>
+            <dd>{order.transaction_id}</dd>
           </S.InfoItem>
           <S.InfoItem>
             <dt>주문 일시</dt>
-            <dd>{order.orderDate}</dd>
+            <dd>{formattedDate(order.paid_at ? order.paid_at : '0')}</dd>
           </S.InfoItem>
           <S.InfoItem>
             <dt>승인 일시</dt>
-            <dd>{order.paymentDate}</dd>
+            <dd>{formattedDate(order.created_at ? order.created_at : '0')}</dd>
           </S.InfoItem>
           <S.InfoItem>
             <dt>결제 수단</dt>
             <S.PaymentInfo as="dd">
-              <span>{order.paymentMethod}</span>
-              <a href={order.receiptUrl} target="_blank" rel="noopener noreferrer">
+              <span>{paymentLabels[order.payment_method]}</span>
+              <a href={order.receipt_url ?? '#'} target="_blank" rel="noopener noreferrer">
                 영수증 보기 <span aria-hidden="true">↗</span>
                 <span className="sr-only">(새 창)</span>
               </a>
@@ -55,27 +105,55 @@ const OrderCard: React.FC<{ order: OrderItem }> = ({ order }) => {
 type FilterStatus = 'all' | 'pending' | 'completed';
 
 const OrderHistoryPage: React.FC = () => {
-  const { data, loading, error } = useApiData<OrderData>(mockOrderData, 500);
   const [filter, setFilter] = useState<FilterStatus>('all');
+  
+  // 결제 내역 
+  const { data: orderHistory, isLoading: isLoadingOrders, error: ordersError } = usePaymentsQuery({});
+  // 환불 내역
+  const { data: refundList, isLoading: isLoadingRefunds, error: refundsError } = useMyRefunds();
 
-  const filteredOrders = useMemo(() => {
-    if (!data) return [];
-    if (filter === 'all') return data.orders;
-    return data.orders.filter((order) => order.status === filter);
-  }, [data, filter]);
-
-  if (loading)
+  // 로딩 상태 체크
+  if (isLoadingOrders || isLoadingRefunds) {
     return (
       <MyPage.Container>
         <LoadingSpinner />
       </MyPage.Container>
     );
-  if (error)
+  }
+
+  // 에러 체크
+  if (ordersError) {
     return (
       <MyPage.Container>
-        <ErrorMessage message={error.message} />
+        <ErrorMessage message={ordersError.message} />
       </MyPage.Container>
     );
+  }
+
+  if (refundsError) {
+    return (
+      <MyPage.Container>
+        <ErrorMessage message={refundsError.message} />
+      </MyPage.Container>
+    );
+  }
+
+  // 데이터가 없는 경우
+  if (!orderHistory || !Array.isArray(orderHistory) || !refundList) {
+    return (
+      <MyPage.Container>
+        <ErrorMessage message="결제 내역을 불러올 수 없습니다." />
+      </MyPage.Container>
+    );
+  }
+
+  // 
+  const safeRefundList = Array.isArray(refundList) ? refundList : [];
+
+  // 필터링
+  const filteredOrders = orderHistory.filter(
+    order => filter === 'all' || order.status === filter
+  );
 
   return (
     <S.MainContainer>
@@ -108,14 +186,21 @@ const OrderHistoryPage: React.FC = () => {
 
       <S.OrderList>
         {filteredOrders.length > 0 ? (
-          filteredOrders.map((order) => <OrderCard key={order.id} order={order} />)
-        ) : (
-          <S.EmptyState>결제 내역이 없습니다.</S.EmptyState>
+            filteredOrders.map(order => (
+                <OrderCard 
+                  key={order.id} 
+                  order={order}  
+                  isRefunded={safeRefundList.some(refund => +refund.payment_id === +order.id)}
+                />
+              )
+            )
+          ) : (
+            <S.EmptyState>결제 내역이 없습니다.</S.EmptyState>
         )}
       </S.OrderList>
     </S.MainContainer>
   );
-};
+}
 
 // --- Styles (시안 반영, rem/theme 적용) ---
 const S = {
@@ -158,9 +243,13 @@ const S = {
   CardHeader: styled.div`
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: center;
     gap: 1.2rem;
     padding: 2.4rem 2.4rem 1.6rem;
+
+    button { 
+      margin-left: auto;
+    }
 
     @media ${({ theme }) => theme.devices.tablet} {
       flex-direction: column;
