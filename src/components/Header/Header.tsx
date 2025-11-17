@@ -24,6 +24,7 @@ import {
   StyledHeaderInnerLogo,
   StyledIconBtn,
   StyledHeaderInnerAdmin,
+  StyledDevBadge,
 } from './Header.styled.ts';
 
 import Button from '../Button.tsx';
@@ -36,6 +37,7 @@ import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
 import { useProfile } from '../../queries/useUserQueries.ts';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const APP_ENV = import.meta.env.VITE_APP_ENV;
 const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 const HeaderLogo = () => {
@@ -43,6 +45,9 @@ const HeaderLogo = () => {
     <Link to={ROUTES.HOME}>
       <h1 className="sr-only">bootRun</h1>
       <StyledLogo src={logo} alt="" width={124} height={24} />
+      {APP_ENV.includes('dev') || APP_ENV.includes('local') ? (
+        <StyledDevBadge>{APP_ENV}</StyledDevBadge> // 'dev' 또는 'local' 환경일 때만 배지 표시
+      ) : null}
     </Link>
   );
 };
