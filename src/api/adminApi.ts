@@ -54,9 +54,8 @@ import { API_URL } from '../constants/apiConfig';
 const API_DELAY = 100;
 
 // 목업 데이터 사용 여부 (환경변수로 제어)
-// VITE_USE_MOCK_DATA=false → 실제 API 사용
 // VITE_USE_MOCK_DATA=true 또는 미설정 → Mock 데이터 사용
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA !== 'false';
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 // 🔍 디버깅용 로그 (환경변수 값 확인)
 console.log('📡 API Configuration:');
@@ -1640,7 +1639,9 @@ export const updateRefundStatus = async (
  * @param params - 필터 파라미터 (keyword, payment_method, status, start_date, end_date)
  * @response 200 OK - Excel/CSV 파일 (Blob)
  */
-export const exportPayments = async (params: Omit<PaymentApiParams, 'page' | 'page_size'>): Promise<Blob> => {
+export const exportPayments = async (
+  params: Omit<PaymentApiParams, 'page' | 'page_size'>
+): Promise<Blob> => {
   console.log('Exporting payments with params:', params);
   console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
 
