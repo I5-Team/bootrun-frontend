@@ -47,27 +47,27 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
   return (
           <>
             <S.LectureInfoList>
-              <li>
+              <div>
                 <S.InfoLabel>강의 유형</S.InfoLabel>
                 <S.InfoValue>{courseTypeLabel[course_type]}</S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>주제</S.InfoLabel>
                 <S.InfoValue>{categoryLabel[category_type]}</S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>난이도</S.InfoLabel>
                 <S.InfoValue>{difficultyLabel[difficulty]}</S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>수강 기한</S.InfoLabel>
                 <S.InfoValue>{access_duration_days}일</S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>모집 인원</S.InfoLabel>
                 <S.InfoValue>{max_students}명</S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>모집 기간</S.InfoLabel>
                 <S.InfoValue>
                   <span>~ {recruitment_end_date ? formatDate(recruitment_end_date) : '미정'}</span>
@@ -80,8 +80,8 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
                     </>
                   }
                 </S.InfoValue>
-              </li>
-              <li>
+              </div>
+              <div>
                 <S.InfoLabel>교육 기간</S.InfoLabel>
                 <S.InfoValue>
                   { course_start_date && course_end_date
@@ -89,7 +89,7 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
                     : <span>미정</span>
                   }
                 </S.InfoValue>
-              </li>
+              </div>
   
             </S.LectureInfoList>
 
@@ -107,7 +107,7 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
                 />
               </S.LearingProgress>
             ) : (
-              <S.Price>₩{data.price.toLocaleString()}</S.Price>
+              <S.Price aria-label="가격">₩{data.price.toLocaleString()}</S.Price>
             )
           )}
           </>
@@ -219,24 +219,24 @@ const S = {
     color: ${({ theme }) => theme.colors.surface};
     margin: 0;
   `,
-  LectureInfoList: styled.ul`
+  LectureInfoList: styled.dl`
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
     padding-block: 2.4rem;
     border-block: 0.1rem solid ${({ theme }) => theme.colors.gray200};
 
-    li {
+    div {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
   `,
-  InfoLabel: styled.span`
+  InfoLabel: styled.dt`
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray300};
   `,
-  InfoValue: styled.span`
+  InfoValue: styled.dd`
     font-weight: 600;
     color: ${({ theme }) => theme.colors.gray400};
     display: flex;

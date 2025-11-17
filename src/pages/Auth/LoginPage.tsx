@@ -159,7 +159,6 @@ const LoginPage: React.FC = () => {
             size="md"
             fullWidth
             disabled={!isFormValid || isPending}
-            ariaLabel="로그인"
           >
             로그인
           </Button>
@@ -190,7 +189,6 @@ const LoginPage: React.FC = () => {
                   <GithubIcon />
                 </OriginalColorIcon>
               }
-              ariaLabel="GitHub 계정으로 로그인"
             >
               GitHub 계정으로 로그인
             </Button>
@@ -206,7 +204,6 @@ const LoginPage: React.FC = () => {
                   <GoogleIcon />
                 </OriginalColorIcon>
               }
-              ariaLabel="Google 계정으로 로그인"
             >
               Google 계정으로 로그인
             </Button>

@@ -35,7 +35,7 @@ export const StyledCategoryList = styled.div`
     }
 `;
 
-export const StyledCategoryIcon = styled.div`
+export const StyledCategoryIcon = styled.span`
     width: clamp(8rem, 8vw, 10rem);
     height: clamp(8rem, 8vw, 10rem);
 

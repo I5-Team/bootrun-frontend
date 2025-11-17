@@ -19,7 +19,6 @@ const StyledButtonIcon = styled.button<{
     $tooltip?: string;
     $active: boolean;
 }>`
-    width: auto;
     width: 4.2rem;
     height: 4.2rem;
     
@@ -146,7 +145,7 @@ const StyledAlertDot = styled.span`
     border-radius: 50%;
 `;
 
-const ButtonIcon:React.FC<ButtonProps> = ({
+const ButtonIcon = ({
     children,
     ariaLabel,
     variant = "dark",

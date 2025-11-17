@@ -20,14 +20,15 @@ export default function AdminPageLayout({
   children,
 }: AdminPageLayoutProps) {
   return (
-    <S.PageWrapper>
-      <S.PageHeader>
-        <S.PageTitle id="page-title">{title}</S.PageTitle>
-        {rightElement}
-      </S.PageHeader>
-      <S.ContentLayout role="main" aria-labelledby="page-title">
-        {children}
-      </S.ContentLayout>
-    </S.PageWrapper>
+      <>
+        <S.PageHeader>
+          <S.PageTitle id="page-title">{title}</S.PageTitle>
+          {rightElement}
+        </S.PageHeader>
+        
+        <S.ContentLayout aria-labelledby="page-title">
+          {children}
+        </S.ContentLayout>
+      </>
   );
 }

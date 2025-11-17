@@ -1508,7 +1508,7 @@ const S = {
     text-align: center;
     color: ${({ theme }) => theme.colors.gray300};
     font-size: 1.4rem;
-    padding: 2rem;
+    padding: 2rem 4rem 4rem;
   `,
   FaqList: styled.div`
     display: flex;
@@ -1704,7 +1704,7 @@ const S = {
     gap: 1.2rem;
   `,
   EmptyMessage: styled.p`
-    padding: 2rem;
+    padding: 2rem 4rem 4rem;
     text-align: center;
     color: ${({ theme }) => theme.colors.gray300};
     font-size: 1.4rem;

@@ -7,23 +7,13 @@ import {
   useUpdateProfile,
   useUploadProfileImage,
 } from '../../queries/useUserQueries';
+import SvgImage from "../../assets/icons/icon-image.svg?react";
 import type { ProfileUpdatePayload } from '../../types/UserType';
-import {
-  Container,
-  Form,
-  FormContent,
-  FormGroup,
-  FormRow,
-  ImagePreview,
-  ImageActionButton,
-  ImageWrapper,
-  Input,
-  ProfileContainer,
-  Select,
-  SubmitButton,
-  SubmitButtonWrapper,
-  Title,
-} from './ProfilePage.styled';
+import { FormContent, FormGroup, FormRow, ImageActionButton, ImagePreview, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
+import styled from 'styled-components';
+import Button from '../../components/Button';
+import Profile from '../../components/Profile';
+import MyPage from './MyPage.styled';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
@@ -141,19 +131,18 @@ const ProfilePage: React.FC = () => {
   const isPending = isUpdating || isUploadingImage || isDeletingImage;
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Title as="h2">프로필 설정</Title>
-      <Container>
-        <ProfileContainer>
-          <ImageWrapper>
-            <ImagePreview>
+    <MyPage.Form onSubmit={handleSubmit}>
+      <MyPage.Container>
+        <MyPage.Title as="h2">프로필 설정</MyPage.Title>
+        <ProfileFormContainer>
+          <ProfileContainer>
               {imagePreview ? (
                 <>
                   {console.log('imagePreview:', imagePreview)}
-                  <img src={imagePreview} alt="현재 프로필 이미지" />
+                  <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지"/>
                 </>
               ) : (
-                <img src={SvgProfileImage} alt="기본 프로필 이미지" />
+                <Profile size={14.6} src={SvgProfileImage}  alt="기본 프로필 이미지"/>
               )}
             </ImagePreview>
             {imagePreview ? (
@@ -165,7 +154,7 @@ const ProfilePage: React.FC = () => {
                 disabled={isPending}
                 $isDelete={true}
               >
-                x
+                ✕
               </ImageActionButton>
             ) : (
               // 2. 이미지가 없으면 -> '업로드' 버튼 (+)
@@ -176,68 +165,72 @@ const ProfilePage: React.FC = () => {
                 disabled={isPending}
                 $isDelete={false}
               >
-                +
+                <SvgImage/>
               </ImageActionButton>
             )}
-          </ImageWrapper>
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            aria-hidden="true"
-          />
-        </ProfileContainer>
-
-        <FormContent>
-          <FormGroup>
-            <label htmlFor="nickname">닉네임</label>
-            <Input
-              id="nickname"
-              type="text"
-              name="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+  
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              aria-hidden="true"
             />
-          </FormGroup>
-          <FormRow>
+          </ProfileContainer>
+  
+          <FormContent>
             <FormGroup>
-              <label htmlFor="gender">성별</label>
-              <Select
-                id="gender"
-                name="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="none">선택</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-              </Select>
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="birthdate">생년월일</label>
-
-              <Input
-                id="birthdate"
-                type="date"
-                name="birthdate"
-                value={birthdate}
-                onChange={(e) => setBirthdate(e.target.value)}
-                aria-label="생년월일 입력"
+              <label htmlFor="nickname">닉네임</label>
+              <MyPage.Input
+                id="nickname"
+                type="text"
+                name="nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
               />
             </FormGroup>
-          </FormRow>
-        </FormContent>
-      </Container>
+            <FormRow>
+              <FormGroup>
+                <label htmlFor="gender">성별</label>
+                <MyPage.Select
+                  id="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="none">선택</option>
+                  <option value="male">남성</option>
+                  <option value="female">여성</option>
+                </MyPage.Select>
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="birthdate">생년월일</label>
+                <MyPage.Input
+                  id="birthdate"
+                  type="date"
+                  name="birthdate"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                  aria-label="생년월일 입력"
+                />
+              </FormGroup>
+            </FormRow>
+          </FormContent>
+        </ProfileFormContainer>
+      </MyPage.Container>
 
       <SubmitButtonWrapper>
-        <SubmitButton type="submit" disabled={isPending}>
+        <Button 
+          fullWidth
+          size="md"
+          type="submit"
+          disabled={isPending}
+        >
           수정하기
-        </SubmitButton>
+        </Button>
       </SubmitButtonWrapper>
-    </Form>
+    </MyPage.Form>
   );
 };
 

@@ -23,6 +23,7 @@ import {
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
+  StyledHeaderInnerAdmin,
 } from './Header.styled.ts';
 
 import Button from '../Button.tsx';
@@ -39,7 +40,7 @@ const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 const HeaderLogo = () => {
   return (
-    <Link to={ROUTES.HOME} aria-label="부트런 홈으로 이동">
+    <Link to={ROUTES.HOME}>
       <h1 className="sr-only">bootRun</h1>
       <StyledLogo src={logo} alt="" width={124} height={24} />
     </Link>
@@ -87,7 +88,7 @@ const SidebarOpenBtn = ({
   );
 };
 
-const UserActions = () => {
+const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { data: userProfile } = useProfile();
@@ -143,9 +144,7 @@ const UserActions = () => {
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownWrapper>
       ) : (
-        <Link to={ROUTES.LOGIN}>
-          <Button>로그인</Button>
-        </Link>
+          <Button as={Link} to={ROUTES.LOGIN} type="">로그인</Button>
       )}
     </>
   );
@@ -178,7 +177,7 @@ const ActionLists = () => {
         <>
           <NavList />
           <SearchForm />
-          <UserActions />
+          <UserProfileBtn />
         </>
       )}
     </StyledActionList>
@@ -290,24 +289,33 @@ const LectureRoomHeader = () => {
         <QnaBtn />
         <HomeBackBtn />
         <DiscordBtn />
-        <Link to={ROUTES.PROFILE}>
-          <Profile />
-        </Link>
+        <UserProfileBtn/>
       </StyledActionList>
     </StyledHeaderInnerLecture>
   );
 };
 
+const AdminHeader = () => {
+  return (
+    <StyledHeaderInnerAdmin>
+      <HeaderLogo />
+      <ActionLists />
+    </StyledHeaderInnerAdmin>
+  )
+}
+
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;
   const isSignupPage = location.pathname === ROUTES.SIGNUP;
-  const isLectureRoomPage = location.pathname === ROUTES.LECTURE_ROOM;
+  const isLectureRoomPage = location.pathname.startsWith(ROUTES.LECTURE_ROOM);
   const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
+  const isAdminPage = location.pathname.startsWith(ROUTES.ADMIN_DASHBOARD);
 
   const renderHeader = () => {
     if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
     if (isLectureRoomPage) return <LectureRoomHeader />;
+    if (isAdminPage) return <AdminHeader/>;
     return <DefaultHeader />;
   };
   return <StyledHeader>{renderHeader()}</StyledHeader>;

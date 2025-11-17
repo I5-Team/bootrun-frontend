@@ -6,6 +6,7 @@ import { useDeleteAccountHandler } from '../../hooks/useDeleteAccountHandler';
 import { useChangePasswordForm } from '../../hooks/useChangePasswordForm';
 import { useProfile } from '../../queries/useUserQueries';
 import Button from '../../components/Button';
+import MyPage from './MyPage.styled';
 
 const AccountSection: React.FC = () => {
   const { data, isLoading: loading, error } = useProfile();
@@ -43,22 +44,22 @@ const AccountSection: React.FC = () => {
 
   if (loading)
     return (
-      <S.PageWrapper>
+      <MyPage.Container>
         <LoadingSpinner />
-      </S.PageWrapper>
+      </MyPage.Container>
     );
   if (error)
     return (
-      <S.PageWrapper>
+      <MyPage.Container>
         <ErrorMessage message={error.message} />
-      </S.PageWrapper>
+      </MyPage.Container>
     );
   if (!data) return null;
 
   return (
     <>
-      <S.PageWrapper>
-        <S.Title as="h2">계정 관리</S.Title>
+      <S.MainContainer>
+        <MyPage.Title as="h2">계정 관리</MyPage.Title>
         <S.Container>
           <S.FormGroup>
             <label htmlFor="email">이메일</label>
@@ -80,7 +81,7 @@ const AccountSection: React.FC = () => {
               </S.GithubLinked>
             ) : (
               <S.GithubLink type="button" onClick={handleGithubLink}>
-                * GitHub 계정 로그인
+                ※ GitHub 계정 로그인
               </S.GithubLink>
             )}
           </S.FormGroup> */}
@@ -92,21 +93,23 @@ const AccountSection: React.FC = () => {
             </Button>
           </S.FormGroup>
         </S.Container>
-        <S.DangerZone>
-          <S.DangerSummary>
-            <span>회원 탈퇴</span>
-            <S.ArrowIcon aria-hidden="true" />
-          </S.DangerSummary>
-          <S.DangerContent>
-            <S.DangerDescription>
-              회원 탈퇴 시 계정의 모든 정보가 영구적으로 삭제되며 복구할 수 없습니다.
-            </S.DangerDescription>
-            <S.DangerButton type="button" onClick={() => setIsDeleteModalOpen(true)}>
-              회원 탈퇴하기
-            </S.DangerButton>
-          </S.DangerContent>
-        </S.DangerZone>
-      </S.PageWrapper>
+      </S.MainContainer>
+
+      <S.DangerZone>
+        <S.DangerSummary>
+          <span>회원 탈퇴</span>
+          <S.ArrowIcon aria-hidden="true" />
+        </S.DangerSummary>
+        <S.DangerContent>
+          <S.DangerDescription>
+            회원 탈퇴 시 계정의 모든 정보가 영구적으로 삭제되며 복구할 수 없습니다.
+          </S.DangerDescription>
+          <Button onClick={() => setIsDeleteModalOpen(true)}>
+            회원 탈퇴하기
+          </Button>
+        </S.DangerContent>
+      </S.DangerZone>
+
       <BaseModal
         isOpen={isPwModalOpen}
         onClose={() => setIsPwModalOpen(false)}
@@ -219,22 +222,11 @@ const AccountSection: React.FC = () => {
 };
 
 const S = {
-  PageWrapper: styled.div`
-    width: 100%;
-    max-width: 72rem;
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
-  `,
-  Title: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.lg}; /* 2.4rem */
-    font-weight: 700;
-    padding: 2.4rem;
-    margin: 0;
+  MainContainer: styled(MyPage.Container)`
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   `,
   Container: styled.div`
-    padding: 2.4rem;
-    border-top: 1px solid ${({ theme }) => theme.colors.gray100};
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
@@ -315,6 +307,13 @@ const S = {
     }
   `,
   DangerZone: styled.details`
+    z-index: 1;
+    position: relative;
+    top: -0.5px;  
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-bottom-left-radius: ${({ theme }) => theme.radius.md};
+    border-bottom-right-radius: ${({ theme }) => theme.radius.md};
+
     summary::-webkit-details-marker {
       display: none;
     }
@@ -338,11 +337,11 @@ const S = {
     align-items: center;
     padding: 2.4rem;
     cursor: pointer;
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 600;
     color: ${({ theme }) => theme.colors.alert};
 
     details[open] & {
+      border-bottom: none;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
@@ -447,7 +446,16 @@ const S = {
 
   DangerContent: styled.div`
     padding: 2.4rem;
-    border-top: 1px solid ${({ theme }) => theme.colors.gray200};
+    padding-top: 0;
+
+    button {
+      background-color: ${({ theme }) => theme.colors.alert};
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled) {
+        background-color: #e22531 !important;
+      }
+    }
   `,
 
   DangerTitle: styled.h3`

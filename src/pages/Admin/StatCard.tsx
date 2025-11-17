@@ -73,7 +73,6 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: ${({ theme }) => theme.colors.shadow};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -112,7 +111,7 @@ const S = {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    justify-content: center;
+    justify-content: end;
     gap: 0.8rem;
     min-height: clamp(4.8rem, 8vw, 6rem); // 로딩 스피너 공간 확보
     position: relative;

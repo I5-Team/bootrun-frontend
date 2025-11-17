@@ -169,7 +169,6 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: ${({ theme }) => theme.colors.shadow};
     display: flex;
     flex-direction: column;
     gap: clamp(1.2rem, 2vw, 1.6rem);
@@ -189,7 +188,6 @@ const S = {
   ChartWrapper: styled.div`
     position: relative;
     width: 100%;
-    height: clamp(24rem, 45vw, 32rem);
     max-width: 100%;
     display: flex;
     align-items: center;
@@ -206,7 +204,7 @@ const S = {
   RadialLabel: styled.text`
     fill: ${({ theme }) => theme.colors.surface};
     text-anchor: middle;
-    dominant-baseline: central;
+    /* dominant-baseline: central; */
   `,
   VisuallyHidden: styled.span`
     position: absolute;

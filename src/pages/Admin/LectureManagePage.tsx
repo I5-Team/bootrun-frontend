@@ -12,6 +12,7 @@ import {
   useDeleteCourseMutation,
 } from '../../queries/useCourseQueries';
 import { Button } from '../../components/Button';
+import SvgPlug from "../../assets/icons/icon-plus.svg?react"
 
 // 하위 컴포넌트 임포트
 import AdminPageLayout from './AdminPageLayout';
@@ -346,8 +347,8 @@ export default function LectureManagePage() {
     <AdminPageLayout
       title="강의 관리"
       rightElement={
-        <Button size="lg" onClick={handleAddCourse} ariaLabel="새 강의 추가">
-          + 새 강의 추가
+        <Button onClick={handleAddCourse} iconSvg={<SvgPlug/>}>
+          새 강의 추가
         </Button>
       }
     >

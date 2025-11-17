@@ -1,36 +1,40 @@
 import styled from 'styled-components';
 
-export const Form = styled.form`
-  width: 100%;
-  max-width: 72rem;
-  background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
+export const ProfileFormContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: clamp(2.4rem, 4vw, 5.2rem);
+
+    @media ${({ theme }) => theme.devices.tablet} {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 `;
-export const Title = styled.h2`
-  font-size: 2.4rem;
-  font-weight: 700;
-  padding: 2.4rem;
-  margin: 0;
-`;
-export const Container = styled.div`
-  display: flex;
-  gap: 3.2rem;
-  padding: 2.4rem;
-  border-top: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
-`;
+
 export const ProfileContainer = styled.div`
-  flex-shrink: 0;
+    flex-shrink: 0;
+    position: relative; /* ◀ 버튼의 기준점이 됨 */
+    width: 14.6rem;
+    height: 14.6rem;
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.colors.gray100};
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 `;
-export const ImageWrapper = styled.div`
-  position: relative; /* ◀ 버튼의 기준점이 됨 */
-  width: 12rem;
-  height: 12rem;
-`;
+
 export const ImagePreview = styled.div`
-  width: 12rem;
-  height: 12rem;
+  width: 14.6rem;
+  height: 14.6rem;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.gray100};
   border: 1px solid ${({ theme }) => theme.colors.gray200};
@@ -55,112 +59,69 @@ export const ImageActionButton = styled.button<{ $isDelete?: boolean }>`
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 4.6rem;
+  height: 4.6rem;
+  padding: 1.2rem;
   border-radius: 50%;
-
+  
   background: ${({ theme, $isDelete }) =>
     $isDelete ? theme.colors.gray400 : theme.colors.gray400};
 
   color: ${({ theme }) => theme.colors.white};
-  border: 2px solid ${({ theme }) => theme.colors.white};
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.6rem;
-  font-weight: 700;
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
+
+
 export const FormContent = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
 `;
-export const FormRow = styled.div`
-  display: flex;
-  gap: 2rem;
-`;
-export const FormGroup = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
 
-  label {
-    font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
-    font-weight: 500;
-  }
+export const  FormRow = styled.div`
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
 
-  input,
-  select {
-    height: 4.8rem;
-    padding: 0 1.6rem;
-    border: 1px solid ${({ theme }) => theme.colors.gray200};
-    border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
-    font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-
-    &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+    @media ${({ theme }) => theme.devices.tablet} {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
     }
-  }
-
-  input[type='text'] {
-    border-color: ${({ theme }) => theme.colors.primary300};
-  }
 `;
-export const Input = styled.input`
-  height: 4.8rem;
-  padding: 0 1.6rem;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.md};
-  font-size: ${({ theme }) => theme.fontSize.md};
-  min-width: auto;
 
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary300};
-    outline: none;
-  }
+export const FormGroup = styled.div`
+    flex-grow: 1;
+    min-width: 16.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 
-  &[type='text'] {
-    border-color: ${({ theme }) => theme.colors.primary300};
-  }
+    label {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+      font-weight: 700;
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      width: 100%;
+    }
 `;
-export const Select = styled.select`
-  height: 4.8rem;
-  padding: 0 1.6rem;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.md};
-  font-size: ${({ theme }) => theme.fontSize.md};
-  background: white;
 
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary300};
-    outline: none;
-  }
-`;
 export const SubmitButtonWrapper = styled.div`
-  padding: 2.4rem;
-  display: flex;
-  justify-content: flex-end;
-`;
-export const SubmitButton = styled.button`
-  padding: 1.4rem 2.4rem;
-  font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.primary300};
-  border: none;
-  border-radius: ${({ theme }) => theme.radius.md};
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.9;
-  }
+    width: 24rem;
 `;

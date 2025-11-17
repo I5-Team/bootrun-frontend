@@ -15,6 +15,7 @@ import type { RevenueStat } from '../../types/AdminType';
 import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents';
 import Pagination from '../../components/Pagination';
 import Button from '../../components/Button';
+import { S as FilterBar } from "../../pages/Admin/PaymentFilterBar";
 
 interface RevenueChartAreaProps {
   revenueStats?: RevenueStat[] | null;
@@ -184,23 +185,35 @@ const RevenueChartArea: React.FC<RevenueChartAreaProps> = ({
             </Button>
           </S.PresetButtons>
 
-          <S.Divider>|</S.Divider>
-
           {/* 날짜 피커 */}
           <S.DatePickerWrapper>
-            <S.DateInput
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              placeholder="시작일"
-            />
+            <S.Divider>|</S.Divider>
+            <FilterBar.FilterGroup>
+              <label htmlFor="start-date-filter" className="sr-only">조회 시작일</label>
+              <FilterBar.Input
+                id="start-date-filter"
+                type="date"
+                name="start_date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                placeholder='시작일'
+              />
+            </FilterBar.FilterGroup>
+
             <S.DateDash>~</S.DateDash>
-            <S.DateInput
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              placeholder="종료일"
-            />
+
+            <FilterBar.FilterGroup>
+              <label htmlFor="end-date-filter" className="sr-only">조회 종료일</label>
+              <FilterBar.Input
+                id="end-date-filter"
+                type="date"
+                name="end_date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                placeholder='종료일'
+              />
+            </FilterBar.FilterGroup>
+
             <Button
               variant="primary"
               size="sm"
@@ -336,7 +349,7 @@ const RevenueChartArea: React.FC<RevenueChartAreaProps> = ({
           </S.TableWrapper>
 
           {/* 페이지네이션 */}
-          <S.PaginationWrapper>
+          <S.PaginationWrapper $totalPage={totalPages}>
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -354,11 +367,10 @@ export default RevenueChartArea;
 // ============== STYLED COMPONENTS ==============
 
 const S = {
-  CardBox: styled.div`
+  CardBox: styled.section`
     background: white;
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3vw, 2.4rem);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   `,
 
   HeaderWithFilters: styled.div`
@@ -375,7 +387,7 @@ const S = {
     }
   `,
 
-  SectionTitle: styled.h2`
+  SectionTitle: styled.h3`
     font-size: 1.8rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.surface};
@@ -384,7 +396,9 @@ const S = {
   `,
 
   FilterContainer: styled.div`
+    margin-left: auto;
     display: flex;
+    justify-content: end;
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
@@ -405,12 +419,25 @@ const S = {
   `,
 
   DatePickerWrapper: styled.div`
+    flex-grow: 1;
     display: flex;
     align-items: center;
     gap: 0.8rem;
 
+    div {
+      flex: 1;
+      min-width: 0;
+      input {
+        flex-shrink: 1;
+        min-width: 0;
+      }
+    }
+
+    button {
+      margin-left: auto;
+    }
+
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      gap: 0.4rem;
       width: 100%;
       flex-wrap: wrap;
     }
@@ -462,17 +489,17 @@ const S = {
 
   SummaryStats: styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.6rem;
     margin-bottom: 2rem;
-    padding: 1.6rem;
+    padding: 2.4rem;
     background: ${({ theme }) => theme.colors.gray100};
     border-radius: ${({ theme }) => theme.radius.sm};
 
-    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      padding: 1.2rem;
+      gap: 1.8rem;
+      padding: 1.8rem;
     }
   `,
 
@@ -483,40 +510,37 @@ const S = {
   `,
 
   StatLabel: styled.span`
-    font-size: 1.2rem;
+    font-size: ${({ theme }) => theme.fontSize.sm};
     color: ${({ theme }) => theme.colors.gray300};
     font-weight: 500;
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      font-size: 1rem;
+      font-size: ${({ theme }) => theme.fontSize.caption};
     }
   `,
 
   StatValue: styled.span`
-    font-size: 1.6rem;
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 700;
     color: ${({ theme }) => theme.colors.gray400};
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      font-size: 1.3rem;
+      font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
 
   ChartWrapper: styled.div`
     width: 100%;
-    height: clamp(24rem, 42vw, 34rem);
     max-width: 100%;
     overflow: visible;
     position: relative;
     margin-bottom: 3rem;
-    padding: 1rem;
+    padding: 2.8rem 1.6rem 1.6rem;
     background: ${({ theme }) => theme.colors.gray100};
     border-radius: ${({ theme }) => theme.radius.sm};
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      height: 28rem;
-      padding: 0.8rem 0.4rem;
-      overflow: visible;
+      padding: 2.4rem 0.8rem 1.2rem;
     }
   `,
 
@@ -555,21 +579,23 @@ const S = {
 
     @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
       margin-top: 1.5rem;
-      font-size: 1.1rem;
+      font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
 
   Table: styled.table`
     width: 100%;
     border-collapse: collapse;
-    font-size: 1.3rem;
+    font-size: ${({ theme }) => theme.fontSize.sm};
 
     thead {
       background: ${({ theme }) => theme.colors.gray100};
     }
 
     tbody tr {
-      border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+      &:not(:last-child) {
+        border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+      }
       transition: background-color 0.2s ease;
 
       &:hover {
@@ -583,7 +609,7 @@ const S = {
   `,
 
   TableHeader: styled.th`
-    padding: 1rem;
+    padding: 1.4rem;
     text-align: left;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.gray400};
@@ -596,7 +622,7 @@ const S = {
   `,
 
   TableCell: styled.td`
-    padding: 1rem;
+    padding: 1.4rem;
     color: ${({ theme }) => theme.colors.gray400};
     white-space: nowrap;
 
@@ -611,8 +637,8 @@ const S = {
     color: ${({ theme }) => theme.colors.primary300};
   `,
 
-  PaginationWrapper: styled.div`
-    display: flex;
+  PaginationWrapper: styled.div<{ $totalPage: number }>`
+    display: ${({ $totalPage }) => $totalPage > 1 ? 'flex' : 'none'};
     justify-content: center;
     align-items: center;
     margin-top: 2rem;

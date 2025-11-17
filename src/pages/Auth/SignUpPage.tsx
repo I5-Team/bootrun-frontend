@@ -126,7 +126,7 @@ const SignUpPage = () => {
                   onBlur={() => handleBlur('email')}
                   error={errorState.email}
                   disabled={emailVerification.isEmailVerified}
-                  ariaLabel="이메일 주소를 입력하세요"
+                  autoComplete="email"
                 />
                 <VerifyButton
                   size="md"
@@ -178,8 +178,8 @@ const SignUpPage = () => {
                 onFocus={() => handleFocus('password')}
                 onBlur={() => handleBlur('password')}
                 error={errorState.password}
+                autoComplete="new-password"
                 fullWidth
-                ariaLabel="비밀번호를 입력하세요"
               />
             </InputWrapper>
 
@@ -201,8 +201,8 @@ const SignUpPage = () => {
                 onFocus={() => handleFocus('passwordConfirm')}
                 onBlur={() => handleBlur('passwordConfirm')}
                 error={errorState.passwordConfirm}
+                autoComplete="new-password"
                 fullWidth
-                ariaLabel="비밀번호를 다시 입력하세요"
               />
             </InputWrapper>
 
@@ -224,8 +224,8 @@ const SignUpPage = () => {
                 onFocus={() => handleFocus('nickName')}
                 onBlur={() => handleBlur('nickName')}
                 error={errorState.nickName}
+                autoComplete="nickname"
                 fullWidth
-                ariaLabel="닉네임을 입력하세요"
               />
             </InputWrapper>
           </InputGroup>

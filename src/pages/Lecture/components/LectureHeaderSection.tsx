@@ -20,14 +20,17 @@ const LectureHeaderSection = () => {
   
   return (
     <S.HeaderWrapper>
+      <h2 className="sr-only">강의 개요</h2>
       <S.LectureInfo>
-        <S.TagContainer>
+        <S.TagList aria-label="강의 태그">
           {tags.map((tag, index) => (
-            <Tag key={tag} variant={index === 0 ? 'dark' : 'light'}>
-              {tag}
-            </Tag>
+            <li key={tag} >
+              <Tag variant={index === 0 ? 'dark' : 'light'}>
+                {tag}
+              </Tag>
+            </li>
           ))}
-        </S.TagContainer>
+        </S.TagList>
         <S.Title>{title}</S.Title>
         <S.Description>{description}</S.Description>
       </S.LectureInfo>
@@ -45,25 +48,23 @@ const LectureHeaderSection = () => {
       {isLaptop && <InfoBoxContent/>}
           
       <S.ScheduleContainer>
-        <strong>교육 일정</strong>
-        {data && 
-        <ul>
+        <S.ScheduleTitle>교육 일정</S.ScheduleTitle>
+        <S.ScheduleList>
           {(recruitment_start_date && recruitment_end_date) && (
             <S.ScheduleItem>
               <S.ScheduleLabel>모집 기간</S.ScheduleLabel>
-              <span>{formatDate(recruitment_start_date)} ~ {formatDate(recruitment_end_date)}</span>
+              <dd>{formatDate(recruitment_start_date)} ~ {formatDate(recruitment_end_date)}</dd>
             </S.ScheduleItem>
           )}
 
           {(course_start_date && course_end_date) && (
             <S.ScheduleItem>
               <S.ScheduleLabel>교육 기간</S.ScheduleLabel>
-              <span>{formatDate(course_start_date)} ~ {formatDate(course_end_date)}</span>
+              <dd>{formatDate(course_start_date)} ~ {formatDate(course_end_date)}</dd>
             </S.ScheduleItem>
           )}
 
-        </ul>
-        }
+        </S.ScheduleList>
       </S.ScheduleContainer>
 
     </S.HeaderWrapper>
@@ -84,7 +85,7 @@ const S = {
     flex-direction: column;
     gap: 1.6rem;
   `,
-  TagContainer: styled.div`
+  TagList: styled.ul`
     display: flex;
     gap: 0.8rem;
   `,
@@ -132,22 +133,21 @@ const S = {
     background: ${({ theme }) => theme.colors.gray100};
     border-radius: ${({ theme }) => theme.radius.lg};
     padding: 3.2rem;
-    
-    strong {
-      display: block;
-      line-height: 2.4rem;
-      font-size: ${({ theme }) => theme.mobileFontSize.xl};
-      font-weight: 700;
-      color: ${({ theme }) => theme.colors.surface};
-      margin-bottom: 1.2rem;
-    }
-    ul {
+  `,
+  ScheduleTitle: styled.p`
+    display: block;
+    line-height: 2.4rem;
+    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.surface};
+    margin-bottom: 1.2rem;
+  `,
+  ScheduleList: styled.dl`
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
-    }
   `,
-  ScheduleItem: styled.li`
+  ScheduleItem: styled.div`
       display: flex;
       line-height: 2.2rem;
       font-size: 1.6rem;
@@ -159,7 +159,7 @@ const S = {
       font-size: ${({ theme }) => theme.fontSize.sm};
     }
   `,
-  ScheduleLabel: styled.span`
+  ScheduleLabel: styled.dt`
     color: ${({ theme }) => theme.colors.gray300};
     width: 8rem;
     flex-shrink: 0;

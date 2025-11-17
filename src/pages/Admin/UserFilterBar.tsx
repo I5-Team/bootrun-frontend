@@ -105,7 +105,6 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: 2.4rem;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
     display: flex;
     flex-wrap: wrap; // 반응형
     gap: 1.6rem;

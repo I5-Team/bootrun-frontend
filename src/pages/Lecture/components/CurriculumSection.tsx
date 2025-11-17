@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 
@@ -12,70 +12,89 @@ import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();
   const chapterData = data.chapters;
-  const [openChapterId, setOpenChapterId] = useState<number[]>([1]);
 
-  const toggleChapter = (id: number) => {
-    setOpenChapterId(prev => prev.includes(id) ? prev.filter(ch => ch !== id) : [...prev, id]);
+  const [openChapterIndex, setOpenChapterIndex] = useState<number[]>([1]);
+  const chapterRefs = useRef<Record<number, HTMLUListElement | null>>({});
+
+  const toggleChapter = (index: number) => {
+    setOpenChapterIndex(prev => prev.includes(index) 
+      ? prev.filter(ch => ch !== index) 
+      : [...prev, index]);
   };
 
   return (
     <S.Section ref={ref} id="curriculum">
       <S.SectionHeader>
         <S.SectionTitle>커리큘럼</S.SectionTitle>
-        {/* 임시 처리 */}
         <S.SectionSubtitle>{chapterData?.[0]?.description ?? '커리큘럼 소개'}</S.SectionSubtitle>
       </S.SectionHeader>
 
       <Curr.Container>
         {!chapterData || chapterData.length === 0
-        ? <Curr.Chapter>
-            <Curr.ChapterHeader>
-              <Curr.ToggleButton $isOpen={true}>
+        ? <Curr.Chapter $isOpen={true}>
+            <Curr.ChapterHeaderButton
+              style={{cursor: 'default'}}            
+            >
+              <Curr.ToggleIcon $isOpen={true}>
                 <SvgArrowDown /> 
-              </Curr.ToggleButton>
+              </Curr.ToggleIcon>
               <Curr.ChapterTitleText>
-                <span>커리큘럼 준비중</span>
+                커리큘럼 준비중
               </Curr.ChapterTitleText>
-            </Curr.ChapterHeader>
+            </Curr.ChapterHeaderButton>
 
             <Curr.LectureList>
                 <Curr.LectureItem>
-                  <SvgPlay/>
-                  <Curr.LectureTitle>
+                  <SvgPlay aria-hidden={true}/>
                     등록된 강의가 없습니다.
-                  </Curr.LectureTitle>
                 </Curr.LectureItem>
-
             </Curr.LectureList>
           </Curr.Chapter>
         :  <>
-            {chapterData?.map((chapter, index) => {
-              const isOpen = openChapterId.includes(chapter.id);
+            {chapterData.map((chapter) => {
+              const isOpen = openChapterIndex.includes(chapter.order_number);
               return (
-                <Curr.Chapter key={chapter.id}>
+                <Curr.Chapter key={chapter.id} $isOpen={isOpen}>
   
-                  <Curr.ChapterHeader onClick={() => toggleChapter(chapter.id)}>
-                    <Curr.ToggleButton $isOpen={isOpen}>
+                  <Curr.ChapterHeaderButton 
+                    onClick={() => toggleChapter(chapter.order_number)}
+                    id={`chapter${chapter.order_number}`}
+                    aria-controls={`chapter${chapter.order_number}-panel`}
+                    aria-expanded={isOpen}
+                  >
+                    <Curr.ToggleIcon $isOpen={isOpen}>
                       <SvgArrowDown /> 
-                    </Curr.ToggleButton>
+                    </Curr.ToggleIcon>
                     <Curr.ChapterTitleText>
-                      <span>Chapter{String(index + 1).padStart(2, '0')}.</span>
-                      <span>{chapter.title}</span>
+                      Chapter{String(chapter.order_number).padStart(2, '0')}.&nbsp;{chapter.title}
                     </Curr.ChapterTitleText>
-                  </Curr.ChapterHeader>
+                  </Curr.ChapterHeaderButton>
   
-                  {isOpen && (
-                    <Curr.LectureList>
-                      {(chapter?.lectures ?? [] as LectureItem[]).map((lecture, index) => (
+                  <Curr.LectureList
+                    aria-hidden={!isOpen}
+                    ref={(el) => {chapterRefs.current[chapter.order_number] = el}}
+                    style={{
+                      height: isOpen
+                        ? chapterRefs.current[chapter.order_number]?.scrollHeight + 'px'
+                        : '0px'
+                    }}
+                    id={`chapter${chapter.order_number}-panel`}
+                    aria-labelledby={`chapter${chapter.order_number}`}
+                  >
+                    {chapter.lectures && chapter.lectures.length > 0 ? (
+                      (chapter.lectures as LectureItem[]).map((lecture) => (
                         <Curr.LectureItem key={lecture.title}>
-                          <SvgPlay/>
-                          <Curr.LectureTitle>
-                            {index + 1}. {lecture.title}
-                          </Curr.LectureTitle>
+                          <SvgPlay aria-hidden={true}/>
+                            {lecture.order_number}. {lecture.title}
                         </Curr.LectureItem>
-                      ))}
-                    </Curr.LectureList>
-                  )}
+                      ))
+                    ) : (
+                        <Curr.LectureItem>
+                            등록된 강의가 없습니다.
+                        </Curr.LectureItem>
+                    )}
+                  </Curr.LectureList>
+                  
                 </Curr.Chapter>
               );
             })}
@@ -93,20 +112,23 @@ const Curr = {
     width: 100%;
     overflow: hidden;
   `,
-  Chapter: styled.div`
+  Chapter: styled.div<{ $isOpen: boolean }>`
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
     &:last-child {
       border-bottom: none;
     }
+    overflow: hidden;
   `,
-  ChapterHeader: styled.div`
+  ChapterHeaderButton: styled.button`
+    width: 100%;
+    height: 6rem;
     display: flex;
     align-items: center;
-    padding: 2rem 1.2rem;
+    padding: 0 1.2rem;
     cursor: pointer;
     background: ${({ theme }) => theme.colors.gray100};
   `,
-  ToggleButton: styled.button<{ $isOpen: boolean }>`
+  ToggleIcon: styled.span<{ $isOpen: boolean }>`
     background: ${({ theme }) => theme.colors.white};
     border: none;
     width: 2rem;
@@ -120,20 +142,22 @@ const Curr = {
 
     color: ${({ theme }) => theme.colors.gray400};
     transform: ${({ $isOpen }) => ($isOpen ? 'rotate(0deg)' : 'rotate(-90deg)')};
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
 
     svg {
       width: 50%;
     }
   `,
-  ChapterTitleText: styled.p`
+  ChapterTitleText: styled.span`
     font-weight: 500;
-    display: flex;
-    gap: 0.4rem;
-    span { font-weight: 600; }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
   LectureList: styled.ul`
     background: ${({ theme }) => theme.colors.white};
+    transition: height 0.3s ease;
   `,
   LectureItem: styled.li`
     display: flex;
@@ -156,9 +180,6 @@ const Curr = {
     @media ${({ theme }) => theme.devices.mobile} {
       font-size: ${({ theme }) => theme.fontSize.sm};
     }
-  `,
-  LectureTitle: styled.span`
-    span { font-weight: 400; }
   `,
 };
 

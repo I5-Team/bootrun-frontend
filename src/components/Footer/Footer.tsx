@@ -23,7 +23,7 @@ const LogoCopyright = () => {
 
 const Address = () => {
     return (
-        <StyledAddress>
+        <StyledAddress aria-label="회사 정보">
             <p>(주)부트런</p>
             <p>대표: 김규호, 김민주, 김채현,  신가람, 장민경</p>
             <p>사업자 번호:  019-11-02025</p>

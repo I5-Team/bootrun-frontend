@@ -1,5 +1,5 @@
 // src/components/FAQSection.tsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { StyledBaseSection as S } from "../LectureDetailPage.styled";
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
@@ -12,68 +12,87 @@ type FaqItem = {
 };
 
 const FAQSection = React.forwardRef<HTMLElement>((_, ref) => {
-  const { data } = useLectureContext();
-  const FAQData = data.faq;
-  const [openItemIndex, setOpenItemIndex] = useState<number | null>(null);
+  const [openItemIndex, setOpenItemIndex] = useState<number[]>([0]);
+  const answerRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
-  if (!FAQData) return null;
-  const FAQDataArr = JSON.parse(FAQData);
+  const { data } = useLectureContext();
+  let FAQDataArr: FaqItem[] = [];
+
+  try {
+    const rawFAQ = data?.faq ?? "[]";
+    const parsedFAQ = JSON.parse(rawFAQ);
+    FAQDataArr = Array.isArray(parsedFAQ) ? parsedFAQ : [];
+  } catch (e) {
+    FAQDataArr = [];
+  }
 
   const toggleItem = (index: number) => {
-    setOpenItemIndex(openItemIndex === index ? null : index);
+    setOpenItemIndex(prev => prev.includes(index) 
+      ? prev.filter(i => i !== index) 
+      : [...prev, index]);
   };
 
   return (
     <S.Section ref={ref} id="faq">
-        <>
-          <S.SectionHeader>
-            <S.SectionTitle>FAQ</S.SectionTitle>
-          </S.SectionHeader>
+      <S.SectionHeader>
+        <S.SectionTitle>FAQ</S.SectionTitle>
+      </S.SectionHeader>
 
-          <FAQ.Container>
-            {FAQDataArr.length === 0
-            ? <FAQ.Item $open={openItemIndex === 1234}>
-                <FAQ.Question onClick={() => toggleItem(1234)}>
-                  <FAQ.QuestionTitle>
-                    <span className="prefix">Q</span>
-                    <span>아직 등록된 FAQ가 없습니다.</span>
-                  </FAQ.QuestionTitle>
-                  <FAQ.ToggleButton $open={openItemIndex === 1234}><SvgArrowDown/></FAQ.ToggleButton>
-                </FAQ.Question>
-                {openItemIndex === 1234 && (
-                  <FAQ.Answer>
-                    <p>궁금한 점이 있다면 <FAQ.Anchor href="mailto:">고객센터</FAQ.Anchor>로 문의해주세요.</p>
-                  </FAQ.Answer>
-                )}
-              </FAQ.Item>
-            :
-              <>
-                {FAQDataArr.map((item: FaqItem, index: number) => {
-                  const isOpen = openItemIndex === index;
-                  return (
-                    <FAQ.Item key={item.question} $open={isOpen}>
-                      <FAQ.Question onClick={() => toggleItem(index)}>
-                        <FAQ.QuestionTitle>
-                          <span className="prefix">Q{index + 1}</span>
-                          <span>{item.question}</span>
-                        </FAQ.QuestionTitle>
-                        <FAQ.ToggleButton $open={isOpen}><SvgArrowDown/></FAQ.ToggleButton>
-                      </FAQ.Question>
-    
-                      {isOpen && (
-                        <FAQ.Answer>
-                          <p>{item.answer}</p>
-                        </FAQ.Answer>
-                      )}
-    
-                    </FAQ.Item>
-                  );
-                })}
-              </>
-            }
+      <FAQ.Container>
+        {!data || FAQDataArr.length === 0 ? (
+          <FAQ.Item $open={false}>
+            <FAQ.QuestionButton
+              style={{cursor: 'default'}}
+            >
+              <FAQ.QuestionTitle>
+                <span className="prefix">Q</span>
+                <span>아직 등록된 FAQ가 없습니다.</span>
+              </FAQ.QuestionTitle>
+            </FAQ.QuestionButton>
+            <FAQ.AnswerWrapper>
+              <FAQ.Answer>
+                궁금한 점이 있다면 <FAQ.Anchor href="mailto:">고객센터</FAQ.Anchor>로 문의해주세요.
+              </FAQ.Answer>
+            </FAQ.AnswerWrapper>
+          </FAQ.Item>
+        ) : (
+          FAQDataArr.map((item: FaqItem, index: number) => {
+              const isOpen = openItemIndex.includes(index);
+              return (
+                <FAQ.Item key={item.question} $open={isOpen}>
 
-          </FAQ.Container>
-        </>
+                  <FAQ.QuestionButton 
+                    onClick={() => toggleItem(index)}
+                    id={`faq-button-${index}`}
+                    aria-controls={`faq-panel-${index}`}
+                    aria-expanded={isOpen}
+                  >
+                    <FAQ.QuestionTitle>
+                      <span className="prefix">Q{index + 1}</span>
+                      <span>{item.question}</span>
+                    </FAQ.QuestionTitle>
+                    <FAQ.ToggleIcon $open={isOpen}>
+                      <SvgArrowDown/>
+                    </FAQ.ToggleIcon>
+                  </FAQ.QuestionButton>
+
+                  <FAQ.AnswerWrapper
+                    id={`faq-panel-${index}`}
+                    aria-labelledby={`faq-button-${index}`}
+                    aria-hidden={!isOpen}
+                    ref={(el) => {answerRefs.current[index] = el}}
+                    style={{
+                      height: isOpen ? answerRefs.current[index]?.scrollHeight + 'px' : 0
+                    }}
+                  >
+                    <FAQ.Answer>{item.answer}</FAQ.Answer>
+                  </FAQ.AnswerWrapper>
+
+                </FAQ.Item>
+            );
+          })
+        )}
+      </FAQ.Container>
     </S.Section>
   );
 });
@@ -95,7 +114,8 @@ const FAQ = {
     transition: all 0.2s ease-out;
     ${({ $open, theme }) => $open && theme.colors.shadow};
   `,
-  Question: styled.div`
+  QuestionButton: styled.button`
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -108,7 +128,7 @@ const FAQ = {
       padding-right: 1.2rem;
     }
   `,
-  QuestionTitle: styled.p`
+  QuestionTitle: styled.span`
     font-weight: 500;
     font-size: ${({ theme }) => theme.fontSize.md};
     display: flex;
@@ -125,11 +145,11 @@ const FAQ = {
       }
     }
 
-      @media ${({ theme }) => theme.devices.mobile} {
-        font-size: ${({ theme }) => theme.fontSize.sm};
-      }
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.sm};
+    }
   `,
-  ToggleButton: styled.button<{ $open: boolean }>`
+  ToggleIcon: styled.span<{ $open: boolean }>`
     width: 3.2rem;
     height: 3.2rem;
     display: flex;
@@ -147,16 +167,26 @@ const FAQ = {
       height: 1.2rem;
     }
   `,
-  Answer: styled.div`
-    padding: 2.8rem 2.4rem;
-    padding-top: 0;
+  AnswerWrapper: styled.div`
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: height 0.3s ease;
+  `,
+  Answer: styled.span`
+    display: block;
+    width: 100%;
+    
+    padding: 0 2.4rem 2.8rem;
     line-height: 1.6;
     color: ${({ theme }) => theme.colors.gray400};
     white-space: pre-wrap;
 
     @media ${({ theme }) => theme.devices.mobile} {
       font-size: ${({ theme }) => theme.fontSize.sm};
+      padding-bottom: 2rem;
     }
+    
   `,
   Anchor: styled.a`
     font-weight: 500; 
