@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/apiConfig";
-import type { PaymentCancelResponse, PaymentConfirmResponse, PaymentDetailItem, PaymentRefundBodyData, PaymentRefundResponse, PaymentsBodyData, PaymentsItem, PaymentsParams, PaymentsResponse } from "../types/PaymentsType";
+import type { MyRefundItem, PaymentCancelResponse, PaymentConfirmResponse, PaymentDetailItem, PaymentRefundBodyData, PaymentRefundResponse, PaymentsBodyData, PaymentsItem, PaymentsParams, PaymentsResponse } from "../types/PaymentsType";
 import { apiClient } from "./client";
 
 /**
@@ -126,6 +126,26 @@ export const postPaymentRefund = async (
         return null;
     } catch (err) {
         console.error('[API 요청 실패] 환불 요청', err);
-        return null;
+        throw err;
+    }
+};
+
+/**
+ * POST /payments/refunds/my
+ * 내 환불 요청 목록
+ */
+export const fetchMyRefunds = async (): Promise<MyRefundItem[] | null> => {
+    try {
+        const response = await apiClient.get(API_URL.REFUND.MY_REFUNDS);
+
+        if(response.data) {
+            console.log('[API 요청 성공] 내 환불 목록');
+            return response.data.data;
+        }
+        console.log('[API 데이터 없음] 내 환불 목록');
+        return [];
+    } catch (err) {
+        console.error('[API 요청 실패] 내 환불 목록', err);
+        throw err;
     }
 };
