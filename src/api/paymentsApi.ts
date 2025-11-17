@@ -10,14 +10,14 @@ export const postPayments = async (bodyData: PaymentsBodyData): Promise<Payments
     try {
         const response = await apiClient.post(API_URL.PAYMENT.PAYMENTS, bodyData);
         if(response) {
-            console.log('[API 요청 성공]');
+            console.log('[API 요청 성공] 결제 생성');
             return response.data.data;
         }
-        console.log('[API 데이터 없음]');
+        console.log('[API 데이터 없음] 결제 생성');
         return null;
     } catch (err) {
-        console.error('[API 요청 실패]', err);
-        return null;
+        console.error('[API 요청 실패] 결제 생성', err);
+        throw err;
     }
 };
 
@@ -31,7 +31,7 @@ export const fetchPayments = async (
     try {
         const response = await apiClient.get(API_URL.PAYMENT.PAYMENTS, { params });
         if (response.data.items) {
-            console.log('[API 요청 성공]');
+            console.log('[API 요청 성공] 결제 목록 조회');
             return response.data.items;
         }
         console.warn('[API 데이터 없음]');
@@ -48,11 +48,11 @@ export const fetchPayments = async (
  */
 export const fetchPaymentDetail = async (
     payment_id: number,
-): Promise<PaymentDetailItem[] | null> => {
+): Promise<PaymentDetailItem | null> => {
     try {
         const response = await apiClient.get(API_URL.PAYMENT.PAYMENT_DETAIL(payment_id));
         if (response.data.data) {
-            console.log('[API 요청 성공]');
+            console.log('[API 요청 성공] 결제 상세 조회');
             return response.data.data;
         }
         console.warn('[API 데이터 없음]');
@@ -68,12 +68,13 @@ export const fetchPaymentDetail = async (
  * 결제 확인
  */
 export const postPaymentConfirm = async (
-    payment_id: number
+    payment_id: number,
+    transaction_id: string,
 ): Promise<PaymentConfirmResponse | null> => {
     try {
-        const response = await apiClient.post(API_URL.PAYMENT.CONFIRM_PAYMENT(payment_id));
+        const response = await apiClient.post(API_URL.PAYMENT.CONFIRM_PAYMENT(payment_id), { transaction_id });
         if(response.data.data) {
-            console.log('[API 요청 성공]');
+            console.log('[API 요청 성공] 결제 확인');
             return response.data.data;
         }
         console.log('[API 데이터 없음]');
@@ -95,14 +96,14 @@ export const postPaymentCancel= async (
         const response = await apiClient.post(API_URL.PAYMENT.CANCEL_PAYMENT(payment_id));
 
         if (response.data.success) {
-            alert('결제 취소 완료');
+            console.log('[API 요청 성공] 결체 취소');
             return response.data;
         } else {
-            alert(response.data.detail || '결제 취소 실패');
+            console.log('[API 요청 성공] 결체 취소 실패', response);
             return null;
         }
     } catch (err) {
-        console.error('[API 요청 실패]', err);
+        console.error('[API 요청 실패] 결제 취소', err);
         return null;
     }
 };
@@ -118,13 +119,13 @@ export const postPaymentRefund = async (
         const response = await apiClient.post(API_URL.REFUND.REQUEST_REFUND, bodyData);
 
         if(response.data) {
-            console.log('[API 요청 성공]');
+            console.log('[API 요청 성공] 환불 요청');
             return response.data;
         }
-        console.log('[API 데이터 없음]');
+        console.log('[API 데이터 없음] 환불 요청');
         return null;
     } catch (err) {
-        console.error('[API 요청 실패]', err);
+        console.error('[API 요청 실패] 환불 요청', err);
         return null;
     }
 };
