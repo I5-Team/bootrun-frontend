@@ -34,7 +34,7 @@ const OrderCard: React.FC<{ order: PaymentsItem, refundStatus: string | null }> 
   
   const handleRefund = (id: number) => {
     if (refundStatus === 'pending' || refundStatus === 'approved') return;
-    const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
+    const reason = window.prompt('환불 사유를 최소 10자 이상 입력해주세요.')?.trim() ?? '';
     if (reason.length < 10) {
         alert('환불 사유를 최소 10자 이상 입력해주세요.');
         return;
