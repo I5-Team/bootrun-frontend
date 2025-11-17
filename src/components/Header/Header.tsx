@@ -144,7 +144,9 @@ const UserProfileBtn = () => {
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownWrapper>
       ) : (
-          <Button as={Link} to={ROUTES.LOGIN} type="">로그인</Button>
+        <Button as={Link} to={ROUTES.LOGIN} type="">
+          로그인
+        </Button>
       )}
     </>
   );
@@ -272,9 +274,15 @@ const HomeBackBtn = () => {
 
 const DiscordBtn = () => {
   return (
-    <ButtonIcon ariaLabel="디스코드 참여하기" variant="discord">
-      <SvgDiscord />
-    </ButtonIcon>
+    <a
+      href="https://discord.com/"
+      target="_blank"
+      rel="noopener noreferrer" // 보안을 위한 코드(새 창에서 원본 페이지에 접근 못하게 할 수 있는 속성 - 개인정보 보호, 피싱 방지)
+    >
+      <ButtonIcon ariaLabel="디스코드 참여하기" variant="discord">
+        <SvgDiscord />
+      </ButtonIcon>
+    </a>
   );
 };
 
@@ -318,7 +326,7 @@ const LectureRoomHeader = () => {
         <QnaBtn />
         <HomeBackBtn />
         <DiscordBtn />
-        <UserProfileBtn/>
+        <UserProfileBtn />
       </StyledActionList>
     </StyledHeaderInnerLecture>
   );
@@ -330,16 +338,14 @@ const AdminHeader = () => {
       <HeaderLogo />
       <ActionLists />
     </StyledHeaderInnerAdmin>
-  )
-}
+  );
+};
 
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;
   const isSignupPage = location.pathname === ROUTES.SIGNUP;
-  // const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname);
-
-  const isLectureRoomPage = location.pathname.startsWith(ROUTES.LECTURE_ROOM);
+  const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname);
 
   const isErrorPage = location.pathname === ROUTES.NOT_FOUND;
   const isAdminPage = location.pathname.startsWith(ROUTES.ADMIN_DASHBOARD);
@@ -347,7 +353,7 @@ export default function Header() {
   const renderHeader = () => {
     if (isSignupPage || isLoginPage || isErrorPage) return <OnlyLogoHeader />;
     if (isLectureRoomPage) return <LectureRoomHeader />;
-    if (isAdminPage) return <AdminHeader/>;
+    if (isAdminPage) return <AdminHeader />;
     return <DefaultHeader />;
   };
   return <StyledHeader>{renderHeader()}</StyledHeader>;

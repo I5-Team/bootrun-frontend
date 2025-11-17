@@ -708,7 +708,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
         <S.FormRow>
           <S.FormGroup>
-            <S.Label htmlFor="access_duration_days">수강 기간 (일)</S.Label>
+            <S.Label htmlFor="access_duration_days">수강 기한 (일)</S.Label>
             <S.Input
               id="access_duration_days"
               type="number"
@@ -721,7 +721,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
           </S.FormGroup>
 
           <S.FormGroup>
-            <S.Label htmlFor="max_students">최대 수강생 수</S.Label>
+            <S.Label htmlFor="max_students">모집 인원</S.Label>
             <S.Input
               id="max_students"
               type="number"
@@ -760,7 +760,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
         <S.FormRow>
           <S.FormGroup>
-            <S.Label htmlFor="course_start_date">강의 시작일</S.Label>
+            <S.Label htmlFor="course_start_date">교육 시작일</S.Label>
             <S.Input
               id="course_start_date"
               type="datetime-local"
@@ -771,7 +771,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
           </S.FormGroup>
 
           <S.FormGroup>
-            <S.Label htmlFor="course_end_date">강의 종료일</S.Label>
+            <S.Label htmlFor="course_end_date">교육 종료일</S.Label>
             <S.Input
               id="course_end_date"
               type="datetime-local"
@@ -878,13 +878,14 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
   };
 
   // 챕터 삭제
-  const handleDeleteChapter = (index: number) => {
-    if (window.confirm('정말 이 챕터를 삭제하시겠습니까?')) {
-      const newChapters = chapters.filter((_, i) => i !== index);
-      const reorderedChapters = newChapters.map((ch, i) => ({ ...ch, order_number: i + 1 }));
-      setChapters(reorderedChapters);
-      setExpandedChapterIndex(null);
-    }
+  const handleDeleteChapter = () => {
+    alert('챕터 삭제 기능은 추후 구현 예정입니다.');
+    // if (window.confirm('정말 이 챕터를 삭제하시겠습니까?')) {
+    //   const newChapters = chapters.filter((_, i) => i !== index);
+    //   const reorderedChapters = newChapters.map((ch, i) => ({ ...ch, order_number: i + 1 }));
+    //   setChapters(reorderedChapters);
+    //   setExpandedChapterIndex(null);
+    // }
   };
 
   // 챕터 수정
@@ -915,18 +916,19 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
   };
 
   // 강의 영상 삭제
-  const handleDeleteLecture = (chapterIndex: number, lectureIndex: number) => {
-    if (window.confirm('정말 이 강의 영상을 삭제하시겠습니까?')) {
-      const newChapters = [...chapters];
-      newChapters[chapterIndex].lectures = newChapters[chapterIndex].lectures.filter(
-        (_, i) => i !== lectureIndex
-      );
-      newChapters[chapterIndex].lectures = newChapters[chapterIndex].lectures.map((lec, i) => ({
-        ...lec,
-        order_number: i + 1,
-      }));
-      setChapters(newChapters);
-    }
+  const handleDeleteLecture = () => {
+    alert('강의 영상 삭제 기능은 추후 구현 예정입니다.');
+    // if (window.confirm('정말 이 강의 영상을 삭제하시겠습니까?')) {
+    //   const newChapters = [...chapters];
+    //   newChapters[chapterIndex].lectures = newChapters[chapterIndex].lectures.filter(
+    //     (_, i) => i !== lectureIndex
+    //   );
+    //   newChapters[chapterIndex].lectures = newChapters[chapterIndex].lectures.map((lec, i) => ({
+    //     ...lec,
+    //     order_number: i + 1,
+    //   }));
+    //   setChapters(newChapters);
+    // }
   };
 
   // 강의 영상 수정
@@ -1004,7 +1006,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
                       />
                     </S.FormGroup>
                     {!disabled && (
-                      <S.DeleteChapterButton onClick={() => handleDeleteChapter(chapterIndex)}>
+                      <S.DeleteChapterButton onClick={() => handleDeleteChapter()}>
                         챕터 삭제
                       </S.DeleteChapterButton>
                     )}
@@ -1030,9 +1032,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
                             <S.LectureHeader>
                               <span>강의 {lecture.order_number}</span>
                               {!disabled && (
-                                <S.DeleteButton
-                                  onClick={() => handleDeleteLecture(chapterIndex, lectureIndex)}
-                                >
+                                <S.DeleteButton onClick={() => handleDeleteLecture()}>
                                   삭제
                                 </S.DeleteButton>
                               )}
