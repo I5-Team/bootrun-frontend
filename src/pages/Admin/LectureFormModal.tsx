@@ -1006,7 +1006,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
                       />
                     </S.FormGroup>
                     {!disabled && (
-                      <S.DeleteChapterButton onClick={() => handleDeleteChapter(chapterIndex)}>
+                      <S.DeleteChapterButton onClick={() => handleDeleteChapter()}>
                         챕터 삭제
                       </S.DeleteChapterButton>
                     )}
@@ -1032,9 +1032,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
                             <S.LectureHeader>
                               <span>강의 {lecture.order_number}</span>
                               {!disabled && (
-                                <S.DeleteButton
-                                  onClick={() => handleDeleteLecture(chapterIndex, lectureIndex)}
-                                >
+                                <S.DeleteButton onClick={() => handleDeleteLecture()}>
                                   삭제
                                 </S.DeleteButton>
                               )}
