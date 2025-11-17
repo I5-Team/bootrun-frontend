@@ -178,18 +178,47 @@ const ActionLists = () => {
 
 // lectureRoom
 const DownloadBtn = () => {
-  const hasAlert = true;
-  const { toggleRightSidebar, rightSidebarType } = useLectureRoom();
+  const { toggleRightSidebar, rightSidebarType, currentLectureMaterialUrl, currentLectureId } =
+    useLectureRoom();
+  const [materialViewed, setMaterialViewed] = useState<boolean>(false);
+
+  // 강의 변경 시 자료 본 상태 확인
+  useEffect(() => {
+    if (!currentLectureId) return;
+
+    const getMaterialViewedKey = (id: number) => `material_viewed_lecture_${id}`;
+    const viewed = localStorage.getItem(getMaterialViewedKey(currentLectureId)) === 'true';
+    setMaterialViewed(viewed);
+  }, [currentLectureId]);
 
   const handleClick = () => {
+    // 자료 다운로드 버튼 클릭 시 자료를 본 상태로 저장
+    if (currentLectureId && !materialViewed) {
+      const getMaterialViewedKey = (id: number) => `material_viewed_lecture_${id}`;
+      localStorage.setItem(getMaterialViewedKey(currentLectureId), 'true');
+      setMaterialViewed(true);
+    }
     toggleRightSidebar('materials');
   };
+
+  // 자료가 있고 아직 보지 않았을 때만 알림 뱃지 표시
+  const hasMaterial = !!currentLectureMaterialUrl?.trim();
+  const showAlert = hasMaterial && !materialViewed;
+
+  console.log(
+    '[DownloadBtn] 자료 URL:',
+    currentLectureMaterialUrl,
+    '| 본상태:',
+    materialViewed,
+    '| 뱃지 표시:',
+    showAlert
+  );
 
   return (
     <ButtonIcon
       ariaLabel="자료 다운로드"
       variant="light"
-      hasAlert={hasAlert}
+      hasAlert={showAlert}
       onClick={handleClick}
       className={rightSidebarType === 'materials' ? 'active' : ''}
       tooltip="자료 다운로드"

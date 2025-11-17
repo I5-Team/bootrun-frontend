@@ -16,12 +16,14 @@ export const ContentWrapper = styled.div`
   flex: 1;
 `;
 
-export const InfoBanner = styled.div`
+export const InfoBanner = styled.div<{ $empty?: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 1.2rem;
   padding: 1.2rem;
-  background-color: ${({ theme }) => theme.colors.primary100};
+  background-color: ${({ theme, $empty }) =>
+    $empty ? theme.colors.gray100 : theme.colors.primary100};
+  border-radius: ${({ theme }) => theme.radius.sm};
 `;
 
 export const InfoIcon = styled.span`

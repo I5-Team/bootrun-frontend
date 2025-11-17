@@ -2,7 +2,7 @@
  * 강의 수강 페이지 - 비디오 플레이어, 커리큘럼, Q&A 등 강의 시청 관련 기능 제공
  */
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useOutletContext } from 'react-router-dom';
 import CurriculumSidebar from './components/CurriculumSidebar';
 import VideoPlayer from './components/VideoPlayer';
 import MaterialsTab from './components/MaterialsTab';
@@ -60,6 +60,7 @@ const MOCK_DATA = {
           video_url: 'https://www.youtube.com/watch?v=sCZMEUUMmrk',
           video_type: 'youtube' as const,
           lecture_type: 'video' as const,
+          material_url: 'https://example.com/material1.pdf',
         },
         {
           id: 2,
@@ -70,6 +71,7 @@ const MOCK_DATA = {
           video_url: 'https://www.youtube.com/watch?v=ksjwVp7VyqM',
           video_type: 'youtube' as const,
           lecture_type: 'video' as const,
+          material_url: undefined,
         },
         {
           id: 3,
@@ -80,6 +82,7 @@ const MOCK_DATA = {
           video_url: 'https://www.youtube.com/watch?v=eQYubCOj4Wo&t=33s',
           video_type: 'youtube' as const,
           lecture_type: 'video' as const,
+          material_url: undefined,
         },
       ],
     },
@@ -96,6 +99,7 @@ const MOCK_DATA = {
           video_url: 'https://www.youtube.com/watch?v=wMJhNjdojoA',
           video_type: 'youtube' as const,
           lecture_type: 'video' as const,
+          material_url: undefined,
         },
         {
           id: 5,
@@ -124,6 +128,7 @@ const MOCK_DATA = {
           video_url: 'https://www.youtube.com/watch?v=sCZMEUUMmrk',
           video_type: 'youtube' as const,
           lecture_type: 'video' as const,
+          material_url: undefined,
         },
       ],
     },
@@ -132,11 +137,12 @@ const MOCK_DATA = {
 
 export default function LectureRoomPage() {
   const { id: courseId } = useParams<{ id: string }>();
+  const outletContext = useOutletContext<{
+    setCurrentLectureMaterialUrl?: (url: string | null | undefined) => void;
+    setCurrentLectureId?: (id: number) => void;
+  }>();
 
   const [lectureData, setLectureData] = useState<EnrollmentDetailItem | null>(null);
-  // TODO: isLoading과 error는 로딩/에러 상태 UI 구현 시 사용 예정
-  const [isLoading, setIsLoading] = useState(true); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // 이어보기 위치 상태
   const [lastPosition, setLastPosition] = useState<number>(0);
@@ -197,21 +203,16 @@ export default function LectureRoomPage() {
     const loadLectureData = async () => {
       if (!courseId) {
         console.error('[LectureRoom] courseId가 없습니다:', courseId);
-        setError('강의 ID가 없습니다');
-        setIsLoading(false);
         return;
       }
 
       const courseIdNum = Number(courseId);
       if (isNaN(courseIdNum)) {
         console.error('[LectureRoom] courseId가 NaN입니다:', courseId);
-        setError('잘못된 강의 ID입니다');
-        setIsLoading(false);
         return;
       }
 
       try {
-        setIsLoading(true);
         console.log('[LectureRoom] 강의 데이터 로드 시작, courseId:', courseIdNum);
         const data = await fetchLectureRoomData(courseIdNum);
 
@@ -221,18 +222,12 @@ export default function LectureRoomPage() {
           setCurrentLectureId(
             data.last_watched_lecture_id || data.chapters?.[0]?.lectures?.[0]?.id || 1
           );
-          setError(null);
 
           // 초기 진행률 조회
           await refreshCourseProgress();
-        } else {
-          setError('강의 데이터를 로드할 수 없습니다');
         }
       } catch (err) {
         console.error('강의 데이터 로드 실패:', err);
-        setError('강의 데이터를 로드하는 중 오류가 발생했습니다');
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -272,6 +267,17 @@ export default function LectureRoomPage() {
   const handleLectureClick = (lectureId: number) => {
     setCurrentLectureId(lectureId);
   };
+
+  // 현재 강의의 자료 URL과 강의 ID를 Layout context에 업데이트
+  useEffect(() => {
+    if (currentLectureInfo && outletContext?.setCurrentLectureMaterialUrl) {
+      console.log('[LectureRoom] 자료 URL 업데이트:', currentLectureInfo.lecture.material_url);
+      outletContext.setCurrentLectureMaterialUrl(currentLectureInfo.lecture.material_url);
+    }
+    if (outletContext?.setCurrentLectureId) {
+      outletContext.setCurrentLectureId(currentLectureId);
+    }
+  }, [currentLectureId, currentLectureInfo, outletContext]);
 
   // 강의 영상별 진행 정보 조회 (이어보기)
   useEffect(() => {
@@ -612,7 +618,9 @@ export default function LectureRoomPage() {
             </S.SidebarTitle>
           </S.SidebarHeader>
           <S.SidebarContent>
-            {rightSidebarType === 'materials' && <MaterialsTab />}
+            {rightSidebarType === 'materials' && (
+              <MaterialsTab materialUrl={currentLectureInfo?.lecture.material_url} />
+            )}
             {rightSidebarType === 'qna' && <QnaTab />}
           </S.SidebarContent>
         </S.RightSidebar>
