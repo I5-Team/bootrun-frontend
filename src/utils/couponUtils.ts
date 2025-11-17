@@ -1,4 +1,4 @@
-import type { Coupon } from '../pages/Lecture/LecturePaymentPage';
+import type { Coupon } from '../pages/Lecture/pages/LecturePaymentPage';
 
 /**
  * 쿠폰의 할인 금액을 계산합니다.
