@@ -9,8 +9,7 @@ import {
 } from '../../queries/useUserQueries';
 import SvgImage from "../../assets/icons/icon-image.svg?react";
 import type { ProfileUpdatePayload } from '../../types/UserType';
-import { FormContent, FormGroup, FormRow, ImageActionButton, ImagePreview, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
-import styled from 'styled-components';
+import { FormContent, FormGroup, FormRow, ImageActionButton, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
 import Button from '../../components/Button';
 import Profile from '../../components/Profile';
 import MyPage from './MyPage.styled';
