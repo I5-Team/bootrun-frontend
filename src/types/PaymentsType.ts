@@ -2,6 +2,8 @@ export type PaymentMethod = 'card' | 'transfer' | 'toss';
 
 export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refuned';
 
+export type RefundStatus = 'approved' | 'pending' | 'rejected';
+
 // POST /payments
 export interface PaymentsBodyData {
   course_id: number,
@@ -114,7 +116,7 @@ export type MyRefundItem = {
     user_nickname: string,
     amount: number,
     reason: string,
-    status: PaymentStatus,
+    status: RefundStatus,
     admin_note: string,
     requested_at: string, 
     processed_at: string, 

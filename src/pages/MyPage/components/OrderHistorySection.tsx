@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
 import Tag from '../../../components/Tag';
 import Button from '../../../components/Button';
-import { Title } from '../../NotFoundPage.styled';
-import { Container } from '../styles/ProfilePage.styled';
-import { MainContainer } from '../styles/AccountSection.styled';
+import { Container, Title, Header } from '../styles/ProfilePage.styled';
 import {
   Card,
   CardHeader,
@@ -13,7 +11,6 @@ import {
   InfoGrid,
   InfoItem,
   PaymentInfo,
-  Header,
   FilterGroup,
   OrderList,
   EmptyState,
@@ -38,9 +35,10 @@ const formattedDate = (date: string) => new Date(date).toLocaleString('ko-KR', {
 });
 
 // 주문 내역 아이템 카드 컴포넌트
-const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined }> = ({ 
+const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined, refundLabel: string }> = ({ 
   order, 
-  isRefunded
+  isRefunded,
+  refundLabel
 }) => {
   const isCompleted = order.status === 'completed';
 
@@ -71,16 +69,15 @@ const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined
 
   return (
     <Card>
+      <Button 
+        size="sm" 
+        variant='outline' 
+        disabled={isRefunded} 
+        onClick={() => handleRefund(order.id)}
+      >{refundLabel}</Button>
       <CardHeader>
         <Tag variant={isCompleted ? 'primary' : 'dark'}>{isCompleted ? '결제 완료' : '결제 대기'}</Tag>
         <CourseName>{order.course_title}</CourseName>
-          <Button 
-            size="sm" 
-            variant='outline' 
-            disabled={isRefunded} 
-            onClick={() => handleRefund(order.id)}
-          >{isRefunded ? '환불 신청중' : '환불 신청'}</Button>
-
       </CardHeader>
       <CardBody>
         <InfoGrid>
@@ -170,7 +167,7 @@ const OrderHistoryPage: React.FC = () => {
   );
 
   return (
-    <MainContainer>
+    <Container>
       <Header>
         <Title as="h2">결제 내역</Title>
         <FilterGroup role="group" aria-label="결제 내역 필터">
@@ -200,19 +197,28 @@ const OrderHistoryPage: React.FC = () => {
 
       <OrderList>
         {filteredOrders.length > 0 ? (
-            filteredOrders.map(order => (
-                <OrderCard 
-                  key={order.id} 
-                  order={order}  
-                  isRefunded={safeRefundList.some(refund => +refund.payment_id === +order.id)}
-                />
-              )
-            )
-          ) : (
-            <EmptyState>결제 내역이 없습니다.</EmptyState>
+          filteredOrders.map(order => {
+            const refundItem = safeRefundList.find(refund => +refund.payment_id === +order.id);
+            const refundLabel = refundItem
+              ? refundItem.status === 'pending' ? '환불 신청중'
+                : refundItem.status === 'approved' ? '환불 완료'
+                : '환불 거절'
+              : '';
+
+            return (
+              <OrderCard 
+                key={order.id} 
+                order={order}  
+                isRefunded={!!refundItem}
+                refundLabel={refundLabel}
+              />
+            );
+          })
+        ) : (
+          <EmptyState>결제 내역이 없습니다.</EmptyState>
         )}
       </OrderList>
-    </MainContainer>
+    </Container>
   );
 }
 

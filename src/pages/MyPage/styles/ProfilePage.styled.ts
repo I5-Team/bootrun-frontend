@@ -133,20 +133,36 @@ export const Form = styled.form`
   gap: 4rem;
 `;
 
+// 마이페이지 공통
 export const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: clamp(2.4rem, 3vw, 4rem);
 
   width: 100%;
-  padding: 5.2rem;
+  padding: clamp(2.4rem, 4vw, 5.2rem);
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.radius.md};
   border: 1px solid ${({ theme }) => theme.colors.gray200};
 
   @media ${({ theme }) => theme.devices.tablet} {
-    padding: 3.2rem;
+    padding: 2rem;
+    padding-block: 3.2rem;
+  }
+`;
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4.2rem;
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    height: auto;
   }
 `;
 

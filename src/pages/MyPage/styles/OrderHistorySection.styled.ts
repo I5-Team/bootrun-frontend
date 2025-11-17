@@ -1,38 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
 
-  width: 100%;
-  padding: 5.2rem;
-  background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radius.md};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    padding: 3.2rem;
-  }
-`;
-
-export const MainContainer = styled(Container)`
-  @media ${({ theme }) => theme.devices.tablet} {
-    gap: 2.4rem;
-  }
-`;
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3.2rem;
-  }
-`;
 export const FilterGroup = styled.div`
   display: flex;
   gap: 0.8rem;
@@ -52,11 +20,23 @@ export const EmptyState = styled.div`
 export const Card = styled.div`
   border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
+  position: relative;
+
+
+  button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1.6rem;
+    margin-left: auto;
+  }
 `;
 export const CardHeader = styled.div`
+  width: 70%;
   display: flex;
   justify-content: start;
-  align-items: start;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1.2rem;
   padding: 2.4rem 2.4rem 1.6rem;
 
@@ -66,16 +46,10 @@ export const CardHeader = styled.div`
     gap: 1.6rem;
   }
 `;
-export const StatusTag = styled.span<{ $completed: boolean }>`
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  font-weight: 600;
-  padding: 0.6rem 1.2rem;
-  border-radius: ${({ theme }) => theme.radius.xs};
-  background: ${({ $completed, theme }) =>
-    $completed ? theme.colors.primary300 : theme.colors.gray400};
-  color: ${({ $completed, theme }) => ($completed ? theme.colors.white : theme.colors.white)};
-`;
 export const CourseName = styled.h3`
+  flex-grow: 1;
+  flex-shrink: 0;
+  min-width: 0;
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   margin: 0;
