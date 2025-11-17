@@ -419,7 +419,7 @@ export const RemoveCouponButton = styled.button`
 export const PaymentMethodSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.2rem;
 `;
 
 export const PaymentMethodOption = styled.div<{ $selected?: boolean }>`
@@ -428,6 +428,7 @@ export const PaymentMethodOption = styled.div<{ $selected?: boolean }>`
   justify-content: center;
   gap: 0.8rem;
   padding: 1rem 2rem;
+  height: 5.2rem; 
   border: 0.1rem solid
     ${({ theme, $selected }) => ($selected ? theme.colors.primary300 : theme.colors.gray200)};
   border-radius: ${({ theme }) => theme.radius.md};

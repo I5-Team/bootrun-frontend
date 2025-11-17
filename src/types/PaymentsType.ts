@@ -1,6 +1,6 @@
-type PaymentMethod = 'card' | 'transfer' | 'toss';
+export type PaymentMethod = 'card' | 'transfer' | 'toss';
 
-type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refuned';
+export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refuned';
 
 // POST /payments
 export interface PaymentsBodyData {

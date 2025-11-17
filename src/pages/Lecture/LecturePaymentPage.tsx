@@ -2,11 +2,16 @@ import { useState } from 'react';
 import Button from '../../components/Button';
 import CouponModal from './components/CouponModal';
 import * as S from './LecturePaymentPage.styled';
-import thumbPython2 from '../../assets/images/thumb-python2.png';
 import CheckRectActive from '../../assets/icons/icon-check-rect-active.svg?react';
 import CheckRectDefault from '../../assets/icons/icon-check-rect-default.svg?react';
 import tossIcon from '../../assets/icons/icon-payment-toss.avif';
 import { calculateCouponDiscount, formatPrice } from '../../utils/couponUtils';
+import { useCourseDetailQuery } from '../../queries/useCourseQueries';
+import { useNavigate, useParams } from 'react-router-dom';
+import { categoryLabel } from '../../types/CourseType';
+import { usePostPayments } from '../../queries/usePaymentsQueries';
+import type { PaymentMethod, PaymentsBodyData } from '../../types/PaymentsType';
+import { ROUTES } from '../../router/RouteConfig';
 
 export interface Coupon {
   // 기본 정보
@@ -29,72 +34,133 @@ export interface Coupon {
   // 메타 정보
   createdAt: string;
 }
+// TODO: API 연동 시 실제 쿠폰 데이터로 대체
+const availableCoupons: Coupon[] = [
+  {
+    id: 1,
+    courseId: null,
+    code: 'WELCOME10',
+    name: '10% 할인 쿠폰',
+    description: '전 강의 10% 할인',
+    discountRate: 10,
+    validFrom: '2025-01-01T00:00:00Z',
+    validUntil: '2025-12-31T23:59:59Z',
+    maxUsage: 100,
+    usedCount: 23,
+    isActive: true,
+    createdAt: '2025-01-01T00:00:00Z',
+  },
+  {
+    id: 2,
+    courseId: null,
+    code: 'SAVE3000',
+    name: '3,000원 할인 쿠폰',
+    description: '3만원 이상 구매 시 사용 가능',
+    discountAmount: 3000,
+    validFrom: '2025-01-01T00:00:00Z',
+    validUntil: '2025-12-31T23:59:59Z',
+    isActive: true,
+    createdAt: '2025-01-01T00:00:00Z',
+  },
+];
 
-interface LectureData {
-  id: string;
-  title: string;
-  instructor: string;
-  category: string;
-  price: number;
-  thumbnailUrl?: string;
+// components
+export interface Coupon {
+  // 기본 정보
+  id: number;
+  courseId: number | null;
+  code: string;
+  name: string;
+  description: string;
+
+  // 할인 정보
+  discountRate?: number;
+  discountAmount?: number;
+
+  validFrom: string;
+  validUntil: string;
+  maxUsage?: number;
+  usedCount?: number;
+  isActive: boolean;
+
+  // 메타 정보
+  createdAt: string;
 }
 
+// PaymentMethodButton
+interface PaymentMethodInterface {
+  payment_method: PaymentMethod;       
+  displayName: string;  
+  icon?: string;        
+}
+
+const paymentMethodList: PaymentMethodInterface[] = [
+  { payment_method: 'toss', displayName: '토스페이', icon: tossIcon },
+  { payment_method: 'transfer', displayName: '계좌이체' },
+  { payment_method: 'card', displayName: '신용/체크카드' }
+];
+
+const PaymentMethodButton = ({
+  method,
+  selected,
+  setSelectedPaymentMethod,
+}: {
+  method: PaymentMethodInterface;
+  selected: boolean;
+  setSelectedPaymentMethod: (value: PaymentMethod | null) => void;
+}) => {
+  const handleToggle = () => {
+    setSelectedPaymentMethod(selected ? null : method.payment_method);
+  }
+
+  return (
+    <S.PaymentMethodOption
+      $selected={selected}
+      onClick={handleToggle}
+      role="radio"
+      aria-checked={selected}
+      aria-label={`${method.displayName}로 결제`}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          handleToggle();
+        }
+      }}
+    >
+      {method.icon && <S.PaymentMethodIcon src={method.icon} alt="" aria-hidden="true" />}
+      {method.displayName}
+    </S.PaymentMethodOption>
+  )
+};
+
+//
 export default function LecturePaymentPage() {
+  // useState
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
 
-  // TODO: API 연동 시 실제 데이터로 대체
-  const lectureData: LectureData = {
-    id: '1',
-    title: 'Blender로 두더지를 만들며 전문가에게 배우는 3D 모델링 기초',
-    instructor: '김민주',
-    category: '디자인 클래스',
-    price: 50000,
-    thumbnailUrl: thumbPython2,
-  };
-
-  // TODO: API 연동 시 실제 쿠폰 데이터로 대체
-  const availableCoupons: Coupon[] = [
-    {
-      id: 1,
-      courseId: null,
-      code: 'WELCOME10',
-      name: '10% 할인 쿠폰',
-      description: '전 강의 10% 할인',
-      discountRate: 10,
-      validFrom: '2025-01-01T00:00:00Z',
-      validUntil: '2025-12-31T23:59:59Z',
-      maxUsage: 100,
-      usedCount: 23,
-      isActive: true,
-      createdAt: '2025-01-01T00:00:00Z',
-    },
-    {
-      id: 2,
-      courseId: null,
-      code: 'SAVE3000',
-      name: '3,000원 할인 쿠폰',
-      description: '3만원 이상 구매 시 사용 가능',
-      discountAmount: 3000,
-      validFrom: '2025-01-01T00:00:00Z',
-      validUntil: '2025-12-31T23:59:59Z',
-      isActive: true,
-      createdAt: '2025-01-01T00:00:00Z',
-    },
-  ];
+  // hooks
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const courseId = Number(id);
+  const { data: courseData } = useCourseDetailQuery(courseId);
+  const postPaymentMutation = usePostPayments();
+  
+  // 데이터 없으면 null
+  if (!courseData) return null;
 
   const calculateDiscount = (): number => {
     if (!selectedCoupon) return 0;
-    return calculateCouponDiscount(selectedCoupon, lectureData.price);
+    return calculateCouponDiscount(selectedCoupon, courseData.price);
   };
 
   const discount = calculateDiscount();
-  const totalPrice = lectureData.price - discount;
+  const totalPrice = courseData.price - discount;
 
   const handlePayment = () => {
-    // TODO: API 연동 시 결제 로직 구현
     if (!isAgreed) {
       alert('주문 내용 확인 및 정보 제공 동의가 필요합니다.');
       return;
@@ -103,6 +169,31 @@ export default function LecturePaymentPage() {
       alert('결제 수단을 선택해주세요.');
       return;
     }
+
+    const paymentBodyData: PaymentsBodyData = {
+      course_id: courseId,
+      payment_method: selectedPaymentMethod,
+    }
+
+    const resultPath = ROUTES.LECTURE_PAYMENT_RESULT.replace(':id', String(courseId));
+
+    postPaymentMutation.mutate(paymentBodyData, {
+
+      onSuccess: (data) => {
+        console.log('결제 완료', data);
+        navigate({
+          pathname: resultPath,
+          search: '?status=success'
+        });
+      },
+      onError: (err: any) => {
+        console.error('결제 실패', err);
+        navigate({
+          pathname: resultPath,
+          search: '?status=fail'
+        });
+      }
+    })
     console.log('결제 진행:', {
       coupon: selectedCoupon,
       totalPrice,
@@ -119,23 +210,23 @@ export default function LecturePaymentPage() {
       <S.PageContainer>
         <S.ContentWrapper>
           <S.LeftSection>
-            <S.SectionTitle as="h1">강의 구매</S.SectionTitle>
+            <S.SectionTitle as="h2">강의 구매</S.SectionTitle>
             <S.LectureCard>
               <S.LectureThumbnail
-                $thumbnailUrl={lectureData.thumbnailUrl}
+                $thumbnailUrl={courseData.thumbnail_url}
                 role="img"
-                aria-label={`${lectureData.title} 강의 썸네일`}
+                aria-label={`${courseData.title} 강의 썸네일`}
               />
               <S.LectureInfo>
-                <S.CategoryBadge aria-label={`카테고리: ${lectureData.category}`}>
-                  {lectureData.category}
+                <S.CategoryBadge aria-label='카테고리:'>
+                  {categoryLabel[courseData.category_type]}
                 </S.CategoryBadge>
-                <S.LectureTitle>{lectureData.title}</S.LectureTitle>
-                <S.LectureInstructor aria-label={`강사: ${lectureData.instructor}`}>
-                  {lectureData.instructor}
+                <S.LectureTitle>{courseData.title}</S.LectureTitle>
+                <S.LectureInstructor aria-label='강사:'>
+                  {courseData.instructor_name}
                 </S.LectureInstructor>
-                <S.LecturePrice aria-label={`강의 가격: ${formatPrice(lectureData.price)}`}>
-                  {formatPrice(lectureData.price)}
+                <S.LecturePrice aria-label='강의 가격:'>
+                  {formatPrice(courseData.price)}
                 </S.LecturePrice>
               </S.LectureInfo>
             </S.LectureCard>
@@ -149,8 +240,8 @@ export default function LecturePaymentPage() {
               <S.PriceSection>
                 <S.PriceRow>
                   <S.PriceLabel>상품 금액</S.PriceLabel>
-                  <S.PriceValue aria-label={`상품 금액 ${formatPrice(lectureData.price)}`}>
-                    {formatPrice(lectureData.price)}
+                  <S.PriceValue aria-label='상품 금액'>
+                    {formatPrice(courseData.price)}
                   </S.PriceValue>
                 </S.PriceRow>
 
@@ -205,25 +296,16 @@ export default function LecturePaymentPage() {
             <S.SectionTitle as="h2">결제 수단</S.SectionTitle>
             <S.Card role="region" aria-label="결제 수단 선택 및 결제 실행">
               <S.PaymentMethodSection role="radiogroup" aria-label="결제 수단">
-                <S.PaymentMethodOption
-                  $selected={selectedPaymentMethod === 'tosspay'}
-                  onClick={() =>
-                    setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay')
-                  }
-                  role="radio"
-                  aria-checked={selectedPaymentMethod === 'tosspay'}
-                  aria-label="토스페이로 결제"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === ' ' || e.key === 'Enter') {
-                      e.preventDefault();
-                      setSelectedPaymentMethod(selectedPaymentMethod === 'tosspay' ? '' : 'tosspay');
-                    }
-                  }}
-                >
-                  <S.PaymentMethodIcon src={tossIcon} alt="" aria-hidden="true" />
-                  토스페이
-                </S.PaymentMethodOption>
+                
+                {paymentMethodList.map((method) => (
+                  <PaymentMethodButton
+                    key={method.payment_method}
+                    method={method}
+                    selected={selectedPaymentMethod === method.payment_method}
+                    setSelectedPaymentMethod={setSelectedPaymentMethod}
+                  />
+                ))}
+
               </S.PaymentMethodSection>
 
               <S.PaymentDivider role="separator" aria-hidden="true" />
@@ -267,7 +349,7 @@ export default function LecturePaymentPage() {
         coupons={availableCoupons}
         selectedCoupon={selectedCoupon}
         onSelectCoupon={setSelectedCoupon}
-        lecturePrice={lectureData.price}
+        lecturePrice={courseData.price}
       />
     </>
   );
