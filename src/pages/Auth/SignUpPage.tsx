@@ -24,7 +24,7 @@ import {
   EmailInputWrapper,
   VerifyButton,
   HelperMessage,
-} from './SignUpPage.styled';
+} from './styles/SignUpPage.styled';
 import { validateEmail } from '../../utils/validation';
 
 const SignUpPage = () => {

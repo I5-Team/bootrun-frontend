@@ -12,7 +12,7 @@ import {
   TermsLink,
   TermsErrorMessage,
   CheckMark,
-} from '../SignUpPage.styled';
+} from '../styles/SignUpPage.styled';
 
 interface TermsAgreementSectionProps {
   /** 약관 동의 여부 */

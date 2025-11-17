@@ -26,7 +26,7 @@ import {
   SocialLoginSection,
   SocialButtonGroup,
   OriginalColorIcon,
-} from './LoginPage.styled.ts';
+} from './styles/LoginPage.styled.ts';
 import { useLogin } from '../../queries/useAuthQueries.ts';
 
 const LoginPage: React.FC = () => {

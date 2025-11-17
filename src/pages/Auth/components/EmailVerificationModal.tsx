@@ -25,7 +25,7 @@ import {
   TooltipTitle,
   TooltipCloseButton,
   TooltipList,
-} from '../SignUpPage.styled';
+} from '../styles/SignUpPage.styled';
 
 interface EmailVerificationModalProps {
   /** 인증코드 입력값 */
