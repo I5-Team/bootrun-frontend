@@ -4,8 +4,8 @@ import { InputLogin } from '../../../components/InputLogin.tsx';
 import { Button } from '../../../components/Button.tsx';
 import { ROUTES } from '../../../router/RouteConfig.ts';
 import LogoSymbol from '../../../assets/logos/logo-symbol.svg?react';
-import GithubIcon from '../../../assets/icons/icon-oatuth-github.svg?react';
-import GoogleIcon from '../../../assets/icons/icon-oauth-google.svg?react';
+// import GithubIcon from '../../../assets/icons/icon-oatuth-github.svg?react';
+// import GoogleIcon from '../../../assets/icons/icon-oauth-google.svg?react';
 import {
   PageContainer,
   LoginContainer,
@@ -20,12 +20,12 @@ import {
   StyledLink,
   LinkText,
   LinkDivider,
-  Divider,
-  DividerLine,
-  DividerText,
-  SocialLoginSection,
-  SocialButtonGroup,
-  OriginalColorIcon,
+  // Divider,
+  // DividerLine,
+  // DividerText,
+  // SocialLoginSection,
+  // SocialButtonGroup,
+  // OriginalColorIcon,
 } from '../styles/LoginPage.styled.ts';
 import { useLogin } from '../../../queries/useAuthQueries.ts';
 
@@ -91,16 +91,16 @@ const LoginPage: React.FC = () => {
     if (passwordError) setPasswordError(false);
   };
 
-  // 소셜 로그인 핸들러
-  const handleGithubLogin = () => {
-    // TODO:(선택) GitHub 로그인 구현
-    console.log('GitHub 로그인');
-  };
+  // // 소셜 로그인 핸들러
+  // const handleGithubLogin = () => {
+  //   // TODO:(선택) GitHub 로그인 구현
+  //   console.log('GitHub 로그인');
+  // };
 
-  const handleGoogleLogin = () => {
-    // TODO:(선택) Google 로그인 구현
-    console.log('Google 로그인');
-  };
+  // const handleGoogleLogin = () => {
+  //   // TODO:(선택) Google 로그인 구현
+  //   console.log('Google 로그인');
+  // };
 
   // 로그인 버튼 활성화 여부
   const isFormValid = email.trim() !== '' && password.trim() !== '';
@@ -170,7 +170,7 @@ const LoginPage: React.FC = () => {
           <LinkText>비밀번호 찾기</LinkText>
         </LinkGroup>
 
-        <SocialLoginSection>
+        {/* <SocialLoginSection>
           <Divider>
             <DividerLine />
             <DividerText>또는</DividerText>
@@ -208,7 +208,7 @@ const LoginPage: React.FC = () => {
               Google 계정으로 로그인
             </Button>
           </SocialButtonGroup>
-        </SocialLoginSection>
+        </SocialLoginSection> */}
       </LoginContainer>
     </PageContainer>
   );
