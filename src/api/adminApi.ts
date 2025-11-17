@@ -370,7 +370,7 @@ export const fetchUsers = async (params: UserApiParams): Promise<UserListRespons
 
     // null이거나 빈 문자열인 파라미터 제거
     const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== null && value !== '')
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
     );
     console.log('  🔍 Cleaned params:', cleanParams);
 
@@ -1411,7 +1411,7 @@ export const fetchPayments = async (params: PaymentApiParams): Promise<PaymentLi
 
     // null이거나 빈 문자열인 파라미터 제거
     const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== null && value !== '')
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
     );
     console.log('  🔍 Cleaned params:', cleanParams);
 
@@ -1481,7 +1481,7 @@ export const fetchRefunds = async (params: RefundApiParams): Promise<RefundListR
 
     // null이거나 빈 문자열인 파라미터 제거
     const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== null && value !== '')
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
     );
     console.log('  🔍 Cleaned params:', cleanParams);
 

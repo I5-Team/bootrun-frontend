@@ -48,6 +48,7 @@ export interface PaymentApiParams {
   status?: 'pending' | 'completed' | 'failed' | 'refunded' | null;
   start_date?: string; // YYYY-MM-DD (결제일 paid_at 기준)
   end_date?: string; // YYYY-MM-DD (결제일 paid_at 기준)
+  refund_status?: 'pending' | 'approved' | 'rejected' | null; // 환불 상태 필터
 }
 
 /**

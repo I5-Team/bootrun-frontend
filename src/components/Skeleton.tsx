@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import styled, { css, keyframes } from 'styled-components';
 
 import { StyledCardArticle, StyledThumbnailWrapper } from './CourseCard/CourseCard.styled';
