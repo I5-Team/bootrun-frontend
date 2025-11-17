@@ -1,6 +1,6 @@
 // 관리자 - 사용자 관리 훅 모음
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { activateUser, deactivateUser, fetchUsers, fetchUserDetail } from '../api/adminApi';
+import { fetchUsers, fetchUserDetail } from '../api/adminApi';
 import type { UserApiParams } from '../types/AdminUserType';
 import {
   changePassword,
@@ -150,36 +150,5 @@ export const useUserDetailQuery = (userId: number) => {
     queryKey: ['user', userId],
     queryFn: () => fetchUserDetail(userId),
     enabled: !!userId, // userId가 있을 때만 쿼리 실행
-  });
-};
-
-/**
- * 사용자 활성화/비활성화 훅
- */
-export const useActivateUserMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: activateUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adminUserKeys.lists() });
-    },
-    onError: (error) => {
-      console.error('사용자 활성화 실패:', error);
-    },
-  });
-};
-
-export const useDeactivateUserMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: deactivateUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adminUserKeys.lists() });
-    },
-    onError: (error) => {
-      console.error('사용자 비활성화 실패:', error);
-    },
   });
 };
