@@ -153,9 +153,13 @@ export default function PaymentManagePage() {
       try {
         setDownloadLoading(true);
 
-        // 페이지네이션 제외한 필터 파라미터만 전달
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { page, page_size, ...exportParams } = paymentParams;
+        // 전체 데이터 다운로드를 위해 페이지와 페이지 크기를 조정
+        // 백엔드 제한: page_size 최대 100
+        const exportParams = {
+          ...paymentParams,
+          page: 1,
+          page_size: 100, // 백엔드 최대값
+        };
 
         // 백엔드 API 호출하여 파일 다운로드
         const blob = await exportPayments(exportParams);
