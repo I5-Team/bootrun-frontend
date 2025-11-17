@@ -4,7 +4,6 @@ import SuccessIcon from '../../assets/icons/icon-status-success.svg';
 import ErrorIcon from '../../assets/icons/icon-status-error.svg';
 import { ROUTES } from '../../router/RouteConfig';
 import EmptyState from '../../components/EmptyState/EmptyState';
-import * as S from './PaymentResultPage.styled';
 
 export default function PaymentResultPage() {
   const [searchParams] = useSearchParams();
@@ -19,12 +18,6 @@ export default function PaymentResultPage() {
 
   const handleGoToMain = () => {
     navigate(ROUTES.HOME);
-  };
-
-  // 나중에 삭제 필요 // 개발용 토글 버튼(결제 완료 <-> 결제 실패 페이지 이동)
-  const handleToggleStatus = () => {
-    const newStatus = isSuccess ? 'fail' : 'success';
-    navigate(`?status=${newStatus}`, { replace: true });
   };
 
   return (
@@ -67,12 +60,6 @@ export default function PaymentResultPage() {
           )
         }
       />
-
-      {/* // 나중에 삭제 필요 */}
-      {/* 개발용 토글 버튼 */}
-      <S.DevToggle onClick={handleToggleStatus}>
-        {isSuccess ? '실패 화면 보기' : '성공 화면 보기'}
-      </S.DevToggle>
     </>
   );
 }

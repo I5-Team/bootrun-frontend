@@ -37,7 +37,7 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  padding-block: 14rem;
+  padding-block: 20rem 14rem;
 
   @media ${({ theme }) => theme.devices.tablet} {
     min-height: auto;
@@ -53,7 +53,7 @@ export const Container = styled.div`
 
   /* 결제 페이지용 상단 여백 조정 */
   &.payment-empty-state {
-    padding-block: 27rem;
+    padding-block: 20rem 14rem;
   }
 `;
 
