@@ -1,24 +1,25 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 type ButtonVariant = 'dark' | 'light' | 'discord';
 
 type ButtonProps = {
-    children: React.ReactNode;
-    ariaLabel: string;
-    variant?: ButtonVariant;
-    hasAlert?: boolean;
-    active?: boolean;
-    onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
-    className?: string;
-    tooltip?: string;
+  children: React.ReactNode;
+  ariaLabel: string;
+  variant?: ButtonVariant;
+  hasAlert?: boolean;
+  active?: boolean;
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
+  className?: string;
+  tooltip?: string;
 };
 
 const StyledButtonIcon = styled.button<{
-    $variant?: ButtonVariant;
-    $hasAlert: boolean;
-    $tooltip?: string;
-    $active: boolean;
+  $variant?: ButtonVariant;
+  $hasAlert: boolean;
+  $tooltip?: string;
+  $active: boolean;
 }>`
+
     width: 4.2rem;
     height: 4.2rem;
     
@@ -37,138 +38,163 @@ const StyledButtonIcon = styled.button<{
         transition: fill 0.1s;
     }
 
-    color: ${({ theme }) => theme.colors.gray400};
-    svg path {
-        fill: currentColor !important;
-    }
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    &:hover {
-        cursor: pointer;
+  border-radius: ${({ theme }) => theme.radius.md};
+  aspect-ratio: 1 / 1;
+  position: relative;
 
-        ${(p) => 
-            p.$variant !== "discord" &&
-            css`
-                background-color: ${({ theme }) => theme.colors.primary100};
-                color: ${({ theme }) => theme.colors.primary300}; 
-            `
-        }
-    }
+  svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    vertical-align: bottom;
+    transition: fill 0.1s;
+  }
 
-    ${({ $variant, $active,  theme }) => 
-        $variant === "dark" &&
-        css`
-            color: ${$active ? theme.colors.primary300 : theme.colors.gray400};
-        `
-    }
+  color: ${({ theme }) => theme.colors.gray400};
+  svg path {
+    fill: currentColor !important;
+  }
 
-    ${({ $variant, $active,  theme }) => 
-        $variant === "light" &&
-        css`
-            color: ${$active ? theme.colors.primary300 : theme.colors.gray300}; 
-        `
-    }
+  &:hover {
+    cursor: pointer;
 
     ${(p) =>
-        p.$variant === "discord" &&
-        css`
-            background-color: ${({ theme }) => theme.colors.gray400};
-            color: ${({ theme }) => theme.colors.white};
-            svg path {
-                fill: ${({ theme }) => theme.colors.white};
-            }
-        `
-    }
+      p.$variant !== 'discord' &&
+      css`
+        background-color: ${({ theme }) => theme.colors.primary100};
+        color: ${({ theme }) => theme.colors.primary300};
+      `}
+  }
+
+  ${({ $variant, $active, theme }) =>
+    $variant === 'dark' &&
+    css`
+      color: ${$active ? theme.colors.primary300 : theme.colors.gray400};
+    `}
+
+  ${({ $variant, $active, theme }) =>
+    $variant === 'light' &&
+    css`
+      color: ${$active ? theme.colors.primary300 : theme.colors.gray300};
+    `}
 
     ${(p) =>
-        (p.$tooltip || p.$variant === "discord") &&
-        css`
-            position: relative;
+    p.$variant === 'discord' &&
+    css`
+      background-color: ${({ theme }) => theme.colors.gray400};
+      color: ${({ theme }) => theme.colors.white};
+      svg path {
+        fill: ${({ theme }) => theme.colors.white};
+      }
+    `}
 
-            &::before,
-            &::after {
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.1s;
-            }
+    ${(p) =>
+    (p.$tooltip || p.$variant === 'discord') &&
+    css`
+      position: relative;
 
-            &:hover::before,
-            &:hover::after {
-                opacity: 1;
-                visibility: visible;
-            }
+      &::before,
+      &::after {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.1s;
+      }
 
-            &::after {
-                content: "${p.$variant === "discord" ? "디스코드 참여하기" : p.$tooltip}";
-                position: absolute;
-                top: 125%;
-                left: 50%;
-                transform: translateX(-50%);
+      &:hover::before,
+      &:hover::after {
+        opacity: 1;
+        visibility: visible;
+      }
 
-                white-space: nowrap;
-                padding: 0.8rem 1.2rem;
-                border-radius : ${({ theme }) => theme.radius.sm};
-                background-color: ${({ theme }) => theme.colors.surface};
-                color: ${({ theme }) => theme.colors.white};
-                font-size: ${({ theme }) => theme.fontSize.caption};
-                box-shadow: ${({ theme }) => theme.colors.shadow};
-            }
+      &::after {
+        content: '${p.$variant === 'discord' ? '디스코드 참여하기' : p.$tooltip}';
+        position: absolute;
+        top: 125%;
+        left: 50%;
+        transform: translateX(-50%);
 
-            &::before {
-                content: "";
-                color: ${({ theme }) => theme.colors.surface};
+        white-space: nowrap;
+        padding: 0.8rem 1.2rem;
+        border-radius: ${({ theme }) => theme.radius.sm};
+        background-color: ${({ theme }) => theme.colors.surface};
+        color: ${({ theme }) => theme.colors.white};
+        font-size: ${({ theme }) => theme.fontSize.caption};
+        box-shadow: ${({ theme }) => theme.colors.shadow};
+      }
 
-                position: absolute;
-                top: 115%;
-                left: 50%;
-                transform: translateX(-50%) rotate(45deg);
+      &::before {
+        content: '';
+        color: ${({ theme }) => theme.colors.surface};
 
-                width: 1rem;
-                height: 1rem;
+        position: absolute;
+        top: 115%;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
 
-                background-color: ${({ theme }) => theme.colors.surface};
-                border-radius: 0.25rem;
-            }
-        `
-    }
+        width: 1rem;
+        height: 1rem;
+
+        background-color: ${({ theme }) => theme.colors.surface};
+        border-radius: 0.25rem;
+      }
+    `}
 `;
 
 const StyledAlertDot = styled.span`
-    position: absolute;
-    top: 74%;
-    left: 78%;
-    transform: translate(-50%, -50%);
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
 
-    width: 0.8rem;
-    height: 0.8rem;
-    background-color: ${({ theme }) => theme.colors.alert};
-    border-radius: 50%;
+  position: absolute;
+  top: 74%;
+  left: 78%;
+  transform: translate(-50%, -50%);
+
+  width: 0.8rem;
+  height: 0.8rem;
+  background-color: ${({ theme }) => theme.colors.alert};
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
 `;
 
-const ButtonIcon = ({
-    children,
-    ariaLabel,
-    variant = "dark",
-    hasAlert = false,
-    active = false,
-    onClick,
-    className,
-    tooltip,
-}: ButtonProps) =>  {
-    return (
-        <StyledButtonIcon
-            $variant={variant}
-            $hasAlert={hasAlert}
-            $tooltip={tooltip}
-            aria-label={ariaLabel}
-            $active={active}
-            onClick={onClick}
-            className={className}
-        >
-            {children}
-            {hasAlert && <StyledAlertDot/>}
-        </StyledButtonIcon>
-    );
-}
+
+const ButtonIcon: React.FC<ButtonProps> = ({
+  children,
+  ariaLabel,
+  variant = 'dark',
+  hasAlert = false,
+  active = false,
+  onClick,
+  className,
+  tooltip,
+}: ButtonProps) => {
+  return (
+    <StyledButtonIcon
+      $variant={variant}
+      $hasAlert={hasAlert}
+      $tooltip={tooltip}
+      aria-label={ariaLabel}
+      $active={active}
+      onClick={onClick}
+      className={className}
+    >
+      {children}
+      {hasAlert && <StyledAlertDot />}
+    </StyledButtonIcon>
+  );
+};
 
 export default ButtonIcon;
+

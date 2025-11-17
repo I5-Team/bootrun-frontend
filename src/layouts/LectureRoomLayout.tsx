@@ -10,6 +10,10 @@ type RightSidebarType = null | 'materials' | 'qna';
 export default function LectureRoomLayout() {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [rightSidebarType, setRightSidebarType] = useState<RightSidebarType>(null);
+  const [currentLectureMaterialUrl, setCurrentLectureMaterialUrl] = useState<
+    string | null | undefined
+  >(null);
+  const [currentLectureId, setCurrentLectureId] = useState<number>(0);
   const { isLaptop } = useMediaQuery();
 
   const toggleLeftSidebar = () => {
@@ -45,6 +49,8 @@ export default function LectureRoomLayout() {
     toggleLeftSidebar,
     toggleRightSidebar,
     closeAllSidebars,
+    currentLectureMaterialUrl,
+    currentLectureId,
   };
 
   return (
@@ -52,7 +58,7 @@ export default function LectureRoomLayout() {
       <LectureRoomContext.Provider value={contextValue}>
         <Header />
         <StyledMainContainer>
-            <Outlet context={contextValue} />
+            <Outlet context={{ ...contextValue, setCurrentLectureMaterialUrl, setCurrentLectureId }} />
         </StyledMainContainer>
       </LectureRoomContext.Provider>
     </StyledWrapper>

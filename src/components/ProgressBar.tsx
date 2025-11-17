@@ -8,11 +8,17 @@ type ProgressBarProps = {
     variant?: Variant; 
 };
 
-export const StyledProgressWrapper = styled.div`
+export const StyledProgressWrapper = styled.div<{ $variant?: Variant }>`
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    flex-shrink: 0;
+
+    ${({ $variant }) => $variant === 'lecture' && css`
+        height: 0.4rem;
+        gap: 0;
+    `}
 
     span {
     color: ${({ theme }) => theme.colors.gray400};
@@ -30,28 +36,28 @@ const ProgressWrapper = styled.div<{ $variant: Variant }>`
         `}
         ${$variant === "lecture" &&
         css`
-            width: 100vw;
+            width: 100%;
             height: 0.4rem;
             background-color: ${theme.colors.gray200};
             border-radius: 0;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
         `}
     `}
   overflow: hidden;
+  display: block;
+  flex-shrink: 0;
 `;
 
 const ProgressFill = styled.div<{ $value: number; $max: number; $variant: Variant }>`
-    width: ${({ $value, $max }) =>
-    $max > 0
-        ? `${Math.min(100, Math.max(0, ($value / $max) * 100))}%`
-        : '0%'
-    };
-    
+    width: ${({ $value, $max }) => {
+        const percentage = $max > 0 ? Math.min(100, Math.max(0, ($value / $max) * 100)) : 0;
+        return `${percentage}%`;
+    }};
+
     height: 100%;
     background-color: ${({ theme }) => theme.colors.primary300};
-    transition: width 0.3s;
+    transition: width 0.3s ease-in-out;
+    will-change: width;
+    display: block;
 `;
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -59,15 +65,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     max = 100,
     variant = "enrollment",
 }) => {
-    
+
   const formatPercent = (percent: number) => {
     return Math.round(percent * 100);
   }
 
   return (
-    <StyledProgressWrapper>
+    <StyledProgressWrapper $variant={variant}>
         <ProgressWrapper $variant={variant}>
-            <ProgressFill $value={value} $max={max} $variant={variant} />
+            <ProgressFill
+                $value={value}
+                $max={max}
+                $variant={variant}
+            />
         </ProgressWrapper>
 
         {variant === 'enrollment' &&

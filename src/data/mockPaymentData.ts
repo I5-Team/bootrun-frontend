@@ -1,4 +1,8 @@
-import type { PaymentListItem, PaymentApiParams, PaymentListResponse } from '../types/AdminPaymentType';
+import type {
+  PaymentListItem,
+  PaymentApiParams,
+  PaymentListResponse,
+} from '../types/AdminPaymentType';
 
 /**
  * 목업 결제 데이터
@@ -204,17 +208,22 @@ export const mockPayments: PaymentListItem[] = [
       user_email: `user${userId}@example.com`,
       user_nickname: `사용자${userId}`,
       course_title: ['React 강의', 'Vue 강의', 'Angular 강의', 'Node 강의', 'Python 강의'][i % 5],
-      refund: hasRefund ? {
-        id: Math.floor(i / 5) + 4,
-        payment_id: id,
-        user_id: userId,
-        amount: [50000, 70000, 90000, 100000][i % 4] - (i % 3 === 0 ? 10000 : 0),
-        reason: ['강의 수준 불만', '개인 사정', '중복 구매'][i % 3],
-        status: refundStatus,
-        admin_note: refundStatus === 'pending' ? null : `처리 완료: ${refundStatus}`,
-        requested_at: `${year}-${refundReqMonth}-${refundReqDay}T10:00:00`,
-        processed_at: refundStatus === 'pending' ? null : `${year}-${refundProcMonth}-${refundProcDay}T15:00:00`,
-      } : null,
+      refund: hasRefund
+        ? {
+            id: Math.floor(i / 5) + 4,
+            payment_id: id,
+            user_id: userId,
+            amount: [50000, 70000, 90000, 100000][i % 4] - (i % 3 === 0 ? 10000 : 0),
+            reason: ['강의 수준 불만', '개인 사정', '중복 구매'][i % 3],
+            status: refundStatus,
+            admin_note: refundStatus === 'pending' ? null : `처리 완료: ${refundStatus}`,
+            requested_at: `${year}-${refundReqMonth}-${refundReqDay}T10:00:00`,
+            processed_at:
+              refundStatus === 'pending'
+                ? null
+                : `${year}-${refundProcMonth}-${refundProcDay}T15:00:00`,
+          }
+        : null,
     } as PaymentListItem;
   }),
 ];
@@ -257,7 +266,7 @@ export const getPaginatedPayments = (params: PaymentApiParams): PaymentListRespo
   // 5. 환불 상태 필터
   if (params.refund_status) {
     filteredPayments = filteredPayments.filter(
-      (p) => p.refund !== null && p.refund.status === params.refund_status
+      (p) => p.refund && p.refund.status === params.refund_status
     );
   }
 

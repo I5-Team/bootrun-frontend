@@ -97,7 +97,7 @@ const RevenueChartArea: React.FC<RevenueChartAreaProps> = ({
 
   // 차트용 요약 정보
   const chartSummary = useMemo(() => {
-    if (!revenueStats || revenueStats.length === 0) {
+    if (!revenueStats || !Array.isArray(revenueStats) || revenueStats.length === 0) {
       return {
         totalRevenue: '0원',
         totalRefund: '0원',
@@ -120,7 +120,7 @@ const RevenueChartArea: React.FC<RevenueChartAreaProps> = ({
 
   // 테이블 전체 데이터 (최신순)
   const allTableData = useMemo(() => {
-    if (!revenueStats) return [];
+    if (!revenueStats || !Array.isArray(revenueStats)) return [];
     return revenueStats.slice().reverse(); // 최신순
   }, [revenueStats]);
 
@@ -249,7 +249,7 @@ const RevenueChartArea: React.FC<RevenueChartAreaProps> = ({
       )}
 
       {/* 차트 + 테이블 */}
-      {!loading && hasData && (
+      {!loading && hasData && Array.isArray(revenueStats) && (
         <>
           {/* 요약 통계 */}
           <S.SummaryStats>

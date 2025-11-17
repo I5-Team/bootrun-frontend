@@ -224,6 +224,7 @@ export const API_URL = {
     ENROLLMENTS: '/enrollments', // 수강 등록           (POST)
     MY_ENROLLMENTS: '/enrollments/my', // 내 수강 목록 조회    (GET)
     ENROLLMENT_DETAIL: (enrollmentId: number) => `/enrollments/${enrollmentId}`, // 수강 상세 조회  (GET)
+    LECTURE_ROOM: (courseId: number) => `/enrollments/${courseId}`, // 내 강의실 조회 (GET)
     CREATE_PROGRESS: '/enrollments/progress', // 학습 진행 생성      (POST)
     UPDATE_LECTURE_PROGRESS: (lectureId: number) => `/enrollments/progress/lectures/${lectureId}`, // 학습 진행 업데이트 (PATCH)
     COURSE_PROGRESS: (courseId: number) => `/enrollments/progress/course/${courseId}`, // 강의별 학습 진행 조회 (GET)
@@ -318,6 +319,7 @@ export const API_URL = {
     PAYMENT_LIST: '/admin/payments', // 결제 목록 조회         (GET)
     EXPORT_PAYMENTS: '/admin/payments/export', // 결제 내역 엑셀 다운로드 (GET)
     REFUND_LIST: '/admin/payments/refunds', // 환불 목록 조회         (GET)
+    REFUND_DETAIL: (refundId: number) => `/admin/payments/refunds/${refundId}`, // 환불 상세 조회    (GET)
     PROCESS_REFUND: (refundId: number) => `/admin/payments/refunds/${refundId}`, // 환불 승인/거절  (PATCH)
   },
   /* 관리자 - 쿠폰 관리 */

@@ -19,7 +19,7 @@ const LectureBannerSection = () => {
         src={getThumbnailUrl(thumbnail_url)}
         alt={title}
         onLoad={() => {
-          setImgLoaded(false);
+          setImgLoaded(true);
         }}
         style={{ display: imgLoaded ? 'block' : 'none' }}
       />

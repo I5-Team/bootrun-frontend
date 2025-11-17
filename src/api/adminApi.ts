@@ -38,6 +38,15 @@ import type {
 } from '../types/AdminCourseType';
 import { getPaginatedCourses } from '../data/mockAdminCourseData';
 
+import type {
+  PaymentApiParams,
+  PaymentListResponse,
+  RefundApiParams,
+  RefundListResponse,
+  RefundDetail,
+} from '../types/AdminPaymentType';
+import { getPaginatedPayments } from '../data/mockPaymentData';
+
 import { apiClient } from './client';
 import { API_URL } from '../constants/apiConfig';
 
@@ -85,9 +94,12 @@ export const fetchDashboardStats = async (): Promise<AdminStats> => {
 
   try {
     console.log('  🔗 Calling real API: GET /admin/dashboard/stats');
-    const response = await apiClient.get<AdminStats>('/admin/dashboard/stats');
+    const response = await apiClient.get<{ success: boolean; message: string; data: AdminStats }>(
+      API_URL.ADMIN_DASHBOARD.DASHBOARD_STATS
+    );
     console.log('  ✅ API response:', response.data);
-    return response.data;
+    // 응답 래퍼에서 data 필드 추출
+    return response.data.data;
   } catch (error) {
     console.error('  ❌ API Error:', error);
     console.log('  📦 Falling back to MOCK data');
@@ -358,7 +370,7 @@ export const fetchUsers = async (params: UserApiParams): Promise<UserListRespons
 
     // null이거나 빈 문자열인 파라미터 제거
     const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== null && value !== '')
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
     );
     console.log('  🔍 Cleaned params:', cleanParams);
 
@@ -572,10 +584,16 @@ export const fetchCourses = async (params: CourseApiParams): Promise<CourseListR
     }
 
     // 실제 API 호출
-    const response = await apiClient.get<CourseListResponse>('/admin/courses', {
+    const response = await apiClient.get<{
+      success: boolean;
+      message: string;
+      data: CourseListResponse;
+    }>(API_URL.ADMIN_COURSES.COURSE_LIST, {
       params: cleanParams,
     });
-    return response.data;
+    // 응답 래퍼에서 data 필드 추출
+    console.log('✅ Courses API response:', response.data);
+    return response.data.data;
   } catch (error) {
     console.error('Failed to fetch courses:', error);
     // API 에러 시 Mock 데이터 폴백
@@ -1344,6 +1362,316 @@ export const updateLecture = async (
 // return response.data;
 // }
 // };
+
+// --- 관리자 결제 관리 API ---
+
+/**
+ * GET /admin/payments
+ * 결제 목록 조회 (필터링, 페이지네이션)
+ *
+ * @param params - page, page_size, keyword, payment_method, status, start_date, end_date, refund_status
+ * @response 200 OK
+ * {
+ *   "total": 0,
+ *   "page": 0,
+ *   "page_size": 0,
+ *   "total_pages": 0,
+ *   "items": [
+ *     {
+ *       "id": 0,
+ *       "transaction_id": "string",
+ *       "user_id": 0,
+ *       "user_nickname": "string",
+ *       "user_email": "string",
+ *       "course_id": 0,
+ *       "course_title": "string",
+ *       "amount": 0,
+ *       "discount_amount": 0,
+ *       "final_amount": 0,
+ *       "payment_method": "string",
+ *       "status": "string",
+ *       "paid_at": "2025-11-15T18:55:10.119Z",
+ *       "created_at": "2025-11-15T18:55:10.119Z"
+ *     }
+ *   ]
+ * }
+ */
+export const fetchPayments = async (params: PaymentApiParams): Promise<PaymentListResponse> => {
+  console.log('Fetching payments with params:', params);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
+  if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for payment list');
+    const data = getPaginatedPayments(params);
+    return simulateFetch(data, API_DELAY);
+  }
+
+  try {
+    console.log('  🔗 Calling real API: GET /admin/payments');
+
+    // null이거나 빈 문자열인 파라미터 제거
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
+    );
+    console.log('  🔍 Cleaned params:', cleanParams);
+
+    const response = await apiClient.get<PaymentListResponse>(API_URL.ADMIN_PAYMENTS.PAYMENT_LIST, {
+      params: cleanParams,
+    });
+    console.log('  ✅ API response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    console.log('  📦 Falling back to MOCK data');
+    const data = getPaginatedPayments(params);
+    return simulateFetch(data, API_DELAY);
+  }
+};
+
+/**
+ * GET /admin/payments/refunds
+ * 환불 목록 조회 (필터링, 페이지네이션)
+ *
+ * @param params - page, page_size, keyword, status, start_date, end_date
+ * @response 200 OK
+ * {
+ *   "total": 2,
+ *   "page": 1,
+ *   "page_size": 20,
+ *   "total_pages": 1,
+ *   "items": [
+ *     {
+ *       "id": 3,
+ *       "payment_id": 4,
+ *       "transaction_id": "dd31a95e-eef2-403b-b57d-22f269c66f88",
+ *       "user_id": 12,
+ *       "user_nickname": "강미윤",
+ *       "course_title": "string",
+ *       "amount": 50000,
+ *       "reason": "사유: 환불 요청 재테스트",
+ *       "status": "approved",
+ *       "payment_date": "2025-11-15T10:12:00.286888",
+ *       "progress_rate": 0,
+ *       "requested_at": "2025-11-15T15:45:09.829884",
+ *       "processed_at": "2025-11-15T16:03:52.327462",
+ *       "admin_note": "환불 조건 충족하여 승인 처리"
+ *     }
+ *   ]
+ * }
+ */
+export const fetchRefunds = async (params: RefundApiParams): Promise<RefundListResponse> => {
+  console.log('Fetching refunds with params:', params);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
+  if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for refund list');
+    // TODO: Mock 데이터 추가 필요 시 구현
+    const mockData: RefundListResponse = {
+      items: [],
+      total: 0,
+      page: params.page,
+      page_size: params.page_size,
+      total_pages: 0,
+    };
+    return simulateFetch(mockData, API_DELAY);
+  }
+
+  try {
+    console.log('  🔗 Calling real API: GET /admin/payments/refunds');
+
+    // null이거나 빈 문자열인 파라미터 제거
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
+    );
+    console.log('  🔍 Cleaned params:', cleanParams);
+
+    const response = await apiClient.get<RefundListResponse>(API_URL.ADMIN_PAYMENTS.REFUND_LIST, {
+      params: cleanParams,
+    });
+    console.log('  ✅ API response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * GET /admin/payments/refunds/{refund_id}
+ * 환불 상세 조회
+ *
+ * @param refundId - 환불 ID
+ * @response 200 OK
+ * {
+ *   "success": true,
+ *   "message": null,
+ *   "data": {
+ *     "id": 2,
+ *     "payment_id": 3,
+ *     "user_id": 12,
+ *     "user_nickname": "강미윤",
+ *     "amount": 50000,
+ *     "reason": "사유: 환불 요청 테스트",
+ *     "status": "approved",
+ *     "admin_note": "환불 조건 충족하여 승인 처리",
+ *     "requested_at": "2025-11-15T10:08:49.450238",
+ *     "processed_at": "2025-11-15T10:10:49.713481",
+ *     "payment_date": "2025-11-15T10:06:45.979162",
+ *     "course_title": "string",
+ *     "progress_rate": 0
+ *   }
+ * }
+ */
+export const fetchRefundDetail = async (refundId: number): Promise<RefundDetail> => {
+  console.log(`Fetching refund detail for refund ${refundId}...`);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
+  if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for refund detail');
+    // TODO: Mock 데이터 추가 필요 시 구현
+    throw new Error('REFUND_NOT_FOUND');
+  }
+
+  try {
+    console.log(`  🔗 Calling real API: GET /admin/payments/refunds/${refundId}`);
+    const response = await apiClient.get<{
+      success: boolean;
+      message: string | null;
+      data: RefundDetail;
+    }>(API_URL.ADMIN_PAYMENTS.REFUND_DETAIL(refundId));
+    console.log('  ✅ API response:', response.data);
+
+    if (response.data.data) {
+      return response.data.data;
+    }
+
+    throw new Error('Invalid API response: missing data field');
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * PATCH /admin/payments/refunds/{refund_id}
+ * 환불 상태 변경 (승인/거절)
+ *
+ * @param refundId - 환불 ID
+ * @param status - 변경할 상태 ('approved' | 'rejected')
+ * @param adminNote - 관리자 메모 (선택사항)
+ * @response 200 OK
+ * {
+ *   "success": true,
+ *   "message": "string",
+ *   "data": {
+ *     "id": 0,
+ *     "payment_id": 0,
+ *     "user_id": 0,
+ *     "user_nickname": "string",
+ *     "amount": 0,
+ *     "reason": "string",
+ *     "status": "approved",
+ *     "admin_note": "string",
+ *     "requested_at": "2025-11-16T08:20:40.465Z",
+ *     "processed_at": "2025-11-16T08:20:40.465Z",
+ *     "payment_date": "2025-11-16T08:20:40.465Z",
+ *     "course_title": "string",
+ *     "progress_rate": 0
+ *   }
+ * }
+ */
+export const updateRefundStatus = async (
+  refundId: number,
+  status: 'approved' | 'rejected',
+  adminNote?: string
+): Promise<RefundDetail> => {
+  console.log(`Updating refund ${refundId} status to ${status}`);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
+  if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for refund status update');
+    const mockData: RefundDetail = {
+      id: refundId,
+      payment_id: 1,
+      user_id: 1,
+      user_nickname: '테스트 사용자',
+      amount: 50000,
+      reason: '환불 요청 사유',
+      status: status,
+      admin_note: adminNote || null,
+      requested_at: new Date(Date.now() - 86400000).toISOString(),
+      processed_at: new Date().toISOString(),
+      payment_date: new Date(Date.now() - 172800000).toISOString(),
+      course_title: '테스트 강의',
+      progress_rate: 0,
+    };
+    return simulateFetch(mockData, API_DELAY);
+  }
+
+  try {
+    console.log(`  🔗 Calling real API: PATCH /admin/payments/refunds/${refundId}`);
+    const requestBody: { status: string; admin_note?: string } = { status };
+    if (adminNote) {
+      requestBody.admin_note = adminNote;
+    }
+
+    const response = await apiClient.patch<{
+      success: boolean;
+      message: string;
+      data: RefundDetail;
+    }>(API_URL.ADMIN_PAYMENTS.PROCESS_REFUND(refundId), requestBody);
+    console.log('  ✅ API response:', response.data);
+
+    if (response.data.data) {
+      return response.data.data;
+    }
+
+    throw new Error('Invalid API response: missing data field');
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * GET /admin/payments/export
+ * 결제 내역 엑셀 다운로드 (필터 조건에 맞는 전체 데이터)
+ *
+ * @param params - 필터 파라미터 (keyword, payment_method, status, start_date, end_date)
+ * @response 200 OK - Excel/CSV 파일 (Blob)
+ */
+export const exportPayments = async (params: Omit<PaymentApiParams, 'page' | 'page_size'>): Promise<Blob> => {
+  console.log('Exporting payments with params:', params);
+  console.log('  [DEBUG] USE_MOCK_DATA:', USE_MOCK_DATA);
+
+  if (USE_MOCK_DATA) {
+    console.log('  ✅ Using MOCK data for payment export');
+    // Mock: CSV 파일 생성
+    const mockCsv = 'ID,결제일,사용자,강의명,금액\n1,2025-11-15,테스트,테스트 강의,50000';
+    const blob = new Blob([mockCsv], { type: 'text/csv;charset=utf-8;' });
+    return simulateFetch(blob, API_DELAY);
+  }
+
+  try {
+    console.log('  🔗 Calling real API: GET /admin/payments/export');
+
+    // null이거나 빈 문자열인 파라미터 제거
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== null && value !== '')
+    );
+    console.log('  🔍 Cleaned params:', cleanParams);
+
+    const response = await apiClient.get(API_URL.ADMIN_PAYMENTS.EXPORT_PAYMENTS, {
+      params: cleanParams,
+      responseType: 'blob', // 중요: Blob 형식으로 받기
+    });
+    console.log('  ✅ Export API response received');
+    return response.data;
+  } catch (error) {
+    console.error('  ❌ API Error:', error);
+    throw error;
+  }
+};
 
 // DELETE 예시
 // 특정 항목 삭제

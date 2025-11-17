@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import userProfileDefault from '../assets/images/profile-default.jpg';
+import { getProfileImageUrl } from '../utils/imageUtils';
 
 type ProfileProps = {
   src?: string;
@@ -32,10 +33,12 @@ export default function Profile({
   alt = '프로필',
   isActive = false,
 }: ProfileProps) {
+  const imageSrc = src ? src : getProfileImageUrl();
+
   return (
     <>
       <StyledProfileImg
-        src={src || userProfileDefault}
+        src={imageSrc || userProfileDefault}
         $size={size}
         alt={alt}
         $isActive={isActive}

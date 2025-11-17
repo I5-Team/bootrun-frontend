@@ -82,6 +82,8 @@ export default function AppRouter() {
               </Route>
             </Route>
 
+            {/* 강의실은 독립적인 레이아웃 사용 */}
+
             <Route element={<LectureRoomLayout />}>
               <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
             </Route>

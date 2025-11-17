@@ -30,6 +30,7 @@ export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
   align-items: center;
   gap: 0.4rem;
   padding: 1.3rem 2rem;
+  background-color: ${({ theme }) => theme.colors.white};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fontSize.sm};
   height: 5rem;
@@ -179,27 +180,50 @@ export const CenterContent = styled.main`
   align-items: center;
   overflow-y: auto;
   position: relative;
-  padding: 4rem 0rem;
+  padding: 0;
 `;
 
 export const ContentArea = styled.div`
   width: 100%;
+  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  padding: 6rem 2rem 2rem;
+  overflow-y: auto;
+
+  @media ${({ theme }) => theme.devices.laptop} {
+    padding: 5.5rem 1.5rem 1.5rem;
+  }
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    padding: 5rem 1rem 1rem;
+  }
 `;
 
 export const VideoPlayerWrapper = styled.div`
-  width: 60%;
-  max-width: 99rem;
+  width: 90%;
+  max-width: none;
   aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 8rem 0 0rem 0;
+  margin: 0;
 
+  /* 큰 화면에서는 적당한 크기 */
+  @media (min-width: 1440px) {
+    width: 70%;
+    max-width: 120rem;
+  }
+
+  /* laptop 사이즈에서 조정 */
+  @media ${({ theme }) => theme.devices.laptop} {
+    width: 95%;
+  }
+
+  /* tablet에서는 거의 전체 너비 */
   @media ${({ theme }) => theme.devices.tablet} {
-    max-width: 80%;
+    width: 98%;
   }
 `;
 
@@ -275,12 +299,14 @@ export const BottomNavigation = styled.nav`
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  margin-top: 4rem;
-  margin-bottom: 4rem;
+  padding: 4rem 0rem;
+  width: 100%;
+  flex-shrink: 0;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray200};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    padding: 3rem 0rem;
   }
 `;
 
@@ -291,11 +317,12 @@ export const NavButtonGroup = styled.div`
 `;
 
 export const NavButton = styled.button<{ $variant?: 'outline' | 'primary' }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
   gap: 0.8rem;
-  padding: ${({ $variant }) => ($variant === 'primary' ? '1.3rem 2.2rem 1.3rem 1.2rem' : '1.3rem')};
+  padding: ${({ $variant }) => ($variant === 'primary' ? '1.3rem 2rem' : '1.3rem')};
   background-color: ${({ $variant, theme }) =>
     $variant === 'primary' ? theme.colors.primary300 : theme.colors.white};
   color: ${({ $variant, theme }) =>
@@ -308,14 +335,55 @@ export const NavButton = styled.button<{ $variant?: 'outline' | 'primary' }>`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 500;
   transition: all 0.2s ease;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  position: relative;
 
-  &:hover {
+  /* 내부 span 요소 정렬 */
+  & span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* 내부 img 요소 정렬 */
+  & img {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+    filter: ${({ $variant }) => ($variant === 'primary' ? 'brightness(0) invert(1)' : 'none')};
+  }
+
+  &:hover:not(:disabled) {
     background-color: ${({ $variant, theme }) =>
       $variant === 'primary' ? theme.colors.primaryDark : theme.colors.gray100};
   }
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: ${({ $variant, theme }) =>
+      $variant === 'primary' ? theme.colors.gray300 : theme.colors.gray100};
+    color: ${({ $variant, theme }) =>
+      $variant === 'outline' ? theme.colors.gray400 : theme.colors.surface};
+
+    img {
+      filter: ${({ $variant }) =>
+        $variant === 'primary' ? 'brightness(0) invert(0.4)' : 'grayscale(100%)'};
+    }
+  }
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    padding: ${({ $variant }) => ($variant === 'primary' ? '1.3rem 2rem' : '1.3rem')};
+    min-width: 4.8rem;
+    height: 4.8rem;
+    font-size: ${({ theme }) => theme.fontSize.md};
+  }
+
   @media ${({ theme }) => theme.devices.mobile} {
-    padding: ${({ $variant }) => ($variant === 'primary' ? '1.2rem 2rem 1.2rem 1rem' : '1.2rem')};
+    padding: ${({ $variant }) => ($variant === 'primary' ? '1.2rem 2rem' : '1.2rem')};
     min-width: 4.4rem;
     height: 4.4rem;
     font-size: ${({ theme }) => theme.mobileFontSize.md};

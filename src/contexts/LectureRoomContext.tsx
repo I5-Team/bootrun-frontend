@@ -8,6 +8,8 @@ interface LectureRoomContextType {
   toggleLeftSidebar: () => void;
   toggleRightSidebar: (type: RightSidebarType) => void;
   closeAllSidebars: () => void;
+  currentLectureMaterialUrl: string | null | undefined;
+  currentLectureId: number;
 }
 
 export const LectureRoomContext = createContext<LectureRoomContextType | null>(null);
@@ -21,6 +23,8 @@ export const useLectureRoom = () => {
       toggleLeftSidebar: () => {},
       toggleRightSidebar: () => {},
       closeAllSidebars: () => {},
+      currentLectureMaterialUrl: null,
+      currentLectureId: 0,
     };
   }
   return context;

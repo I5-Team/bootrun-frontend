@@ -19,6 +19,7 @@ interface LectureFormModalProps {
   isOpen: boolean;
   mode: 'add' | 'edit'; // 추가 vs 수정 모드
   courseId?: number | null; // 수정 모드일 때만 필요
+  isSaving?: boolean;
   onClose: () => void;
   onSubmit: (data: CreateCourseRequest) => void;
   onUpdate?: (courseId: number, data: CreateCourseRequest, originalChapters: Chapter[]) => void;
@@ -36,6 +37,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   isOpen,
   mode,
   courseId,
+  isSaving = false,
   onClose,
   onSubmit,
   onUpdate,
@@ -43,6 +45,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const prevSavingRef = useRef(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // 기본 정보 상태
@@ -141,7 +144,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   // 수정 모드에서 강의 데이터 로드
   useEffect(() => {
     if (isOpen && mode === 'edit' && courseId) {
-      console.log(`Loading course data for edit mode: ${courseId}`);
       setIsLoading(true);
 
       // 강의 기본 정보와 챕터 정보를 병렬로 로드
@@ -152,9 +154,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
           .catch(() => []),
       ])
         .then(([courseData, chaptersData]) => {
-          console.log('Course data loaded:', courseData);
-          console.log('Chapters data loaded:', chaptersData);
-
           setBasicInfo({
             title: courseData.title || '',
             description: courseData.description || '',
@@ -194,7 +193,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
               const parsedFaq = JSON.parse(courseData.faq);
               setFaqs(Array.isArray(parsedFaq) ? parsedFaq : []);
             } catch {
-              console.warn('Failed to parse FAQ data:', courseData.faq);
               setFaqs([]);
             }
           }
@@ -220,6 +218,14 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         });
     }
   }, [isOpen, mode, courseId]);
+
+  // 저장 완료 시 모달 자동 닫기
+  useEffect(() => {
+    if (prevSavingRef.current && !isSaving && isOpen) {
+      handleClose();
+    }
+    prevSavingRef.current = isSaving || false;
+  }, [isSaving, isOpen]);
 
   // 모달 닫기 + 초기화
   const handleClose = useCallback(() => {
@@ -277,15 +283,6 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
   // 최종 제출/수정
   const handleSubmit = useCallback(() => {
-    console.log('=== 제출 시작 ===');
-    console.log('basicInfo 전체:', basicInfo);
-    console.log('날짜 필드:', {
-      recruitment_start_date: basicInfo.recruitment_start_date,
-      recruitment_end_date: basicInfo.recruitment_end_date,
-      course_start_date: basicInfo.course_start_date,
-      course_end_date: basicInfo.course_end_date,
-    });
-
     // 날짜 변환 + 기본값 설정
     const toISOStringWithDefault = (dateStr: string, defaultOffsetDays: number = 0) => {
       // 빈 값 처리: 현재 날짜 기준으로 기본값 생성
@@ -293,13 +290,13 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         const defaultDate = new Date();
         defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
         const isoDate = defaultDate.toISOString();
-        console.log(`⚠️ 빈 날짜 감지 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+
         return isoDate;
       }
 
       try {
         const isoDate = new Date(dateStr).toISOString();
-        console.log(`✅ 날짜 변환 성공: "${dateStr}" → "${isoDate}"`);
+
         return isoDate;
       } catch (error) {
         console.error(`❌ 날짜 변환 실패: "${dateStr}"`, error);
@@ -307,7 +304,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         const defaultDate = new Date();
         defaultDate.setDate(defaultDate.getDate() + defaultOffsetDays);
         const isoDate = defaultDate.toISOString();
-        console.log(`⚠️ 변환 실패 → 기본값 사용 (+${defaultOffsetDays}일): ${isoDate}`);
+
         return isoDate;
       }
     };
@@ -325,15 +322,11 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
       missions,
     };
 
-    console.log('=== 최종 전송 데이터 ===', courseData);
-
     if (mode === 'add') {
       onSubmit(courseData);
     } else if (mode === 'edit' && courseId) {
       onUpdate?.(courseId, courseData, originalChapters);
     }
-
-    handleClose();
   }, [
     basicInfo,
     faqs,
@@ -403,7 +396,11 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
         </S.StepIndicator>
 
         <S.ModalBody>
-          {isLoading && mode === 'edit' ? (
+          {isSaving ? (
+            <S.LoadingContainer>
+              <S.LoadingText>강의를 저장하는 중입니다...</S.LoadingText>
+            </S.LoadingContainer>
+          ) : isLoading && mode === 'edit' ? (
             <S.LoadingContainer>
               <S.LoadingText>강의 정보를 불러오는 중...</S.LoadingText>
             </S.LoadingContainer>
@@ -430,18 +427,18 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
         <S.ModalFooter>
           {currentStep > 1 && (
-            <Button variant="outline" size="md" onClick={handlePrev}>
+            <Button variant="outline" size="md" onClick={handlePrev} disabled={isSaving}>
               이전
             </Button>
           )}
           <S.Spacer />
           {currentStep < 3 ? (
-            <Button size="md" onClick={handleNext}>
+            <Button size="md" onClick={handleNext} disabled={isSaving}>
               다음
             </Button>
           ) : (
-            <Button size="md" onClick={handleSubmit}>
-              {submitButtonText}
+            <Button size="md" onClick={handleSubmit} disabled={isSaving}>
+              {isSaving ? '저장 중...' : submitButtonText}
             </Button>
           )}
         </S.ModalFooter>
