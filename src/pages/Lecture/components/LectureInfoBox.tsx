@@ -74,8 +74,10 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
                   {(course_end_date && course_start_date) && 
                     <>
                       {recruitmentStatus
-                      ? <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
-                      : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
+                      ?
+                      <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
+                      :
+                      <S.DdayTag $variant="closed">모집마감</S.DdayTag>
                       }
                     </>
                   }
@@ -173,12 +175,12 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
 }
 
 export const LectureInfoBox = () => {
-  const { data } = useLectureContext();
+  const { data, isLoading } = useLectureContext();
+  if (isLoading || !data) return null;
+
   const { recruitment_end_date } = data;
 
-    const recruitmentStatus = recruitment_end_date 
-      ? (new Date(recruitment_end_date.replace('T', ''))) > new Date() ? true : false
-      : false;
+    const recruitmentStatus = recruitment_end_date ? Boolean((new Date(recruitment_end_date?.split('T')[0])) >= new Date()) : false;
 
   return (
     <S.FloatingCardWrapper>
