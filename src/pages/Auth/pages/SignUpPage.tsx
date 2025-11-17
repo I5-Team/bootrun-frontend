@@ -5,14 +5,14 @@
  * - 회원가입 버튼
  */
 import { useState } from 'react';
-import { Button } from '../../components/Button';
-import { InputLogin } from '../../components/InputLogin';
-import { useSignUpForm } from './hooks/useSignUpForm';
-import { useTermsAgreement } from './hooks/useTermsAgreement';
-import { EmailVerificationModal } from './components/EmailVerificationModal';
-import { TermsModal } from './components/TermsModal';
-import { TermsAgreementSection } from './components/TermsAgreementSection';
-import { TERMS_OF_SERVICE, PRIVACY_POLICY } from './constants/terms';
+import { Button } from '../../../components/Button';
+import { InputLogin } from '../../../components/InputLogin';
+import { useSignUpForm } from '../hooks/useSignUpForm';
+import { useTermsAgreement } from '../hooks/useTermsAgreement';
+import { EmailVerificationModal } from '../components/EmailVerificationModal';
+import { TermsModal } from '../components/TermsModal';
+import { TermsAgreementSection } from '../components/TermsAgreementSection';
+import { TERMS_OF_SERVICE, PRIVACY_POLICY } from '../constants/terms';
 import {
   PageContainer,
   ContentWrapper,
@@ -24,8 +24,8 @@ import {
   EmailInputWrapper,
   VerifyButton,
   HelperMessage,
-} from './SignUpPage.styled';
-import { validateEmail } from '../../utils/validation';
+} from '../styles/SignUpPage.styled';
+import { validateEmail } from '../../../utils/validation';
 
 const SignUpPage = () => {
   // 각 입력 필드의 focus 상태 관리

@@ -1,18 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
-import SvgProfileImage from '../../assets/images/profile-user-default.png';
+import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import SvgProfileImage from '../../../assets/images/profile-user-default.png';
 import {
   useDeleteProfileImage,
   useProfile,
   useUpdateProfile,
   useUploadProfileImage,
-} from '../../queries/useUserQueries';
-import SvgImage from "../../assets/icons/icon-image.svg?react";
-import type { ProfileUpdatePayload } from '../../types/UserType';
-import { FormContent, FormGroup, FormRow, ImageActionButton, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
-import Button from '../../components/Button';
-import Profile from '../../components/Profile';
-import MyPage from './MyPage.styled';
+} from '../../../queries/useUserQueries';
+import SvgImage from '../../../assets/icons/icon-image.svg?react';
+import type { ProfileUpdatePayload } from '../../../types/UserType';
+import {
+  Container,
+  Form,
+  FormContent,
+  FormGroup,
+  FormRow,
+  ImageActionButton,
+  Input,
+  ProfileContainer,
+  ProfileFormContainer,
+  Select,
+  SubmitButtonWrapper,
+  Title,
+} from '../styles/ProfilePage.styled';
+import Button from '../../../components/Button';
+import Profile from '../../../components/Profile';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
@@ -130,19 +142,19 @@ const ProfilePage: React.FC = () => {
   const isPending = isUpdating || isUploadingImage || isDeletingImage;
 
   return (
-    <MyPage.Form onSubmit={handleSubmit}>
-      <MyPage.Container>
-        <MyPage.Title as="h2">프로필 설정</MyPage.Title>
+    <Form onSubmit={handleSubmit}>
+      <Container>
+        <Title as="h2">프로필 설정</Title>
         <ProfileFormContainer>
           <ProfileContainer>
-              {imagePreview ? (
-                <>
-                  {console.log('imagePreview:', imagePreview)}
-                  <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지"/>
-                </>
-              ) : (
-                <Profile size={14.6} src={SvgProfileImage}  alt="기본 프로필 이미지"/>
-              )}
+            {imagePreview ? (
+              <>
+                {console.log('imagePreview:', imagePreview)}
+                <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" />
+              </>
+            ) : (
+              <Profile size={14.6} src={SvgProfileImage} alt="기본 프로필 이미지" />
+            )}
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
               <ImageActionButton
@@ -163,10 +175,10 @@ const ProfilePage: React.FC = () => {
                 disabled={isPending}
                 $isDelete={false}
               >
-                <SvgImage/>
+                <SvgImage />
               </ImageActionButton>
             )}
-  
+
             <input
               type="file"
               accept="image/*"
@@ -176,11 +188,11 @@ const ProfilePage: React.FC = () => {
               aria-hidden="true"
             />
           </ProfileContainer>
-  
+
           <FormContent>
             <FormGroup>
               <label htmlFor="nickname">닉네임</label>
-              <MyPage.Input
+              <Input
                 id="nickname"
                 type="text"
                 name="nickname"
@@ -191,7 +203,7 @@ const ProfilePage: React.FC = () => {
             <FormRow>
               <FormGroup>
                 <label htmlFor="gender">성별</label>
-                <MyPage.Select
+                <Select
                   id="gender"
                   name="gender"
                   value={gender}
@@ -200,11 +212,11 @@ const ProfilePage: React.FC = () => {
                   <option value="none">선택</option>
                   <option value="male">남성</option>
                   <option value="female">여성</option>
-                </MyPage.Select>
+                </Select>
               </FormGroup>
               <FormGroup>
                 <label htmlFor="birthdate">생년월일</label>
-                <MyPage.Input
+                <Input
                   id="birthdate"
                   type="date"
                   name="birthdate"
@@ -216,19 +228,14 @@ const ProfilePage: React.FC = () => {
             </FormRow>
           </FormContent>
         </ProfileFormContainer>
-      </MyPage.Container>
+      </Container>
 
       <SubmitButtonWrapper>
-        <Button 
-          fullWidth
-          size="md"
-          type="submit"
-          disabled={isPending}
-        >
+        <Button fullWidth size="md" type="submit" disabled={isPending}>
           수정하기
         </Button>
       </SubmitButtonWrapper>
-    </MyPage.Form>
+    </Form>
   );
 };
 
