@@ -12,6 +12,7 @@ import { categoryLabel } from '../../types/CourseType';
 import { usePostPayments } from '../../queries/usePaymentsQueries';
 import type { PaymentMethod, PaymentsBodyData } from '../../types/PaymentsType';
 import { ROUTES } from '../../router/RouteConfig';
+import { ErrorMessage } from '../../components/HelperComponents';
 
 export interface Coupon {
   // 기본 정보
@@ -149,17 +150,18 @@ export default function LecturePaymentPage() {
   const { data: courseData } = useCourseDetailQuery(courseId);
   const postPaymentMutation = usePostPayments();
   
-  // 데이터 없으면 null
-  if (!courseData) return null;
+  // 데이터 없으면
+  if (!courseData) return <ErrorMessage message="불러올 데이터가 없습니다."/>;
 
+  // 할인
   const calculateDiscount = (): number => {
     if (!selectedCoupon) return 0;
     return calculateCouponDiscount(selectedCoupon, courseData.price);
   };
-
   const discount = calculateDiscount();
   const totalPrice = courseData.price - discount;
 
+  // 결제하기 이벤트
   const handlePayment = () => {
     if (!isAgreed) {
       alert('주문 내용 확인 및 정보 제공 동의가 필요합니다.');
@@ -178,13 +180,14 @@ export default function LecturePaymentPage() {
     const resultPath = ROUTES.LECTURE_PAYMENT_RESULT.replace(':id', String(courseId));
 
     postPaymentMutation.mutate(paymentBodyData, {
-
       onSuccess: (data) => {
-        const paymentId = data ? data.id : null;
-        navigate({
-          pathname: resultPath,
-          search: `?paymentId=${paymentId}`
-        });
+        if (data?.id) {
+          const paymentId = data.id;
+          navigate({
+            pathname: resultPath,
+            search: `?paymentId=${paymentId}`
+          });
+        }
       },
       onError: (err: any) => {
         console.error('결제 실패', err);

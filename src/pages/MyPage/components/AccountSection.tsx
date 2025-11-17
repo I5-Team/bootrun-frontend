@@ -5,9 +5,9 @@ import { useDeleteAccountHandler } from '../../../hooks/useDeleteAccountHandler'
 import { useChangePasswordForm } from '../../../hooks/useChangePasswordForm';
 import { useProfile } from '../../../queries/useUserQueries';
 import Button from '../../../components/Button';
-import { Title } from '../../NotFoundPage.styled';
-import { Container, FormGroup } from '../styles/ProfilePage.styled';
+import { Header, Title } from '../styles/ProfilePage.styled';
 import {
+  Container,
   ArrowIcon,
   DangerContent,
   DangerDescription,
@@ -16,13 +16,13 @@ import {
   DangerZone,
   EmailInput,
   FormLabel,
-  MainContainer,
   ModalButton,
   ModalErrorMessage,
   ModalFooter,
   ModalFormGroup,
   ModalInput,
   ModalLoadingWrapper,
+  FormGroup,
 } from '../styles/AccountSection.styled';
 
 const AccountSection: React.FC = () => {
@@ -75,9 +75,10 @@ const AccountSection: React.FC = () => {
 
   return (
     <>
-      <MainContainer>
-        <Title as="h2">계정 관리</Title>
-        <Container>
+      <Container>
+        <Header>
+          <Title as="h2">계정 관리</Title>
+        </Header>
           <FormGroup>
             <label htmlFor="email">이메일</label>
             <EmailInput id="email" disabled readOnly type="email" value={data.email} />
@@ -109,8 +110,7 @@ const AccountSection: React.FC = () => {
               비밀번호 변경
             </Button>
           </FormGroup>
-        </Container>
-      </MainContainer>
+      </Container>
 
       <DangerZone>
         <DangerSummary>

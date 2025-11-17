@@ -123,7 +123,7 @@ export const InfoBoxButtons = () => {
   const { id } = useParams<{id: string}>();
 
 
-  const handleEnrollCourse = () => {
+  const handleGoToPayment = () => {
     const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
     navigate(path);
   }
@@ -158,7 +158,7 @@ export const InfoBoxButtons = () => {
           <Button 
             size="lg" 
             fullWidth={!isLaptop} 
-            onClick={handleEnrollCourse}
+            onClick={handleGoToPayment}
           >수강신청 하기</Button>
           ) : (
           <Button 

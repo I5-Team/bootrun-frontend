@@ -1,23 +1,7 @@
 import styled from 'styled-components';
+import { Container as ProfileContainer } from './ProfilePage.styled';
 
-export const Container = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-
-  width: 100%;
-  padding: 5.2rem;
-  background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radius.md};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    padding: 3.2rem;
-  }
-`;
-
-export const MainContainer = styled(Container)`
+export const Container = styled(ProfileContainer)`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 `;

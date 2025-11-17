@@ -4,39 +4,76 @@ import SuccessIcon from '../../assets/icons/icon-status-success.svg';
 import ErrorIcon from '../../assets/icons/icon-status-error.svg';
 import { ROUTES } from '../../router/RouteConfig';
 import EmptyState from '../../components/EmptyState/EmptyState';
-import { usePostPaymentConfirm } from '../../queries/usePaymentsQueries';
+import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../queries/usePaymentsQueries';
 import { useEffect, useState } from 'react';
-import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents';
+import { LoadingSpinner } from '../../components/HelperComponents';
 import type { PaymentStatus } from '../../types/PaymentsType';
 
 export default function PaymentResultPage() {
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
-
-  // const { paymentId } = use
-  const [searchParams] = useSearchParams();
+  // hooks
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isMinTimeElapsed, setIsMinTimeElapsed] = useState(false);
+  const MIN_DELAY_MS = 300;
 
-  const paymentId = searchParams.get('paymentId');
+
+  // paymentId 유효성 검사
+  const paymentIdParam = searchParams.get('paymentId');
+  const paymentId = Number(paymentIdParam);
+  const isValidPaymentId =
+    paymentIdParam !== null &&
+    paymentIdParam !== 'null' &&
+    paymentIdParam !== 'undefined' &&
+    !isNaN(paymentId) &&
+    paymentId > 0;
+
+
+  // queries: transaction_id
   const { mutate: confirmPayment } = usePostPaymentConfirm();
+  const { data: paymentDetailData, isLoading } = usePaymentDetailQuery(Number(paymentId));
 
+  // 결제 확인
   useEffect(() => {
-    if (!paymentId) {
-      alert('결제 정보가 없습니다. 이전 페이지로 돌아갑니다.');
-      navigate(-1);
-    }
-  }, [paymentId, navigate]);
-
-  useEffect(() => {
-    if (paymentId) {
-      confirmPayment(Number(paymentId), {
+    if (isValidPaymentId && paymentDetailData?.transaction_id) {
+      confirmPayment({ 
+        payment_id: Number(paymentId), 
+        transaction_id: paymentDetailData.transaction_id
+      }, {
         onSuccess: (data) => {
-          setPaymentStatus(data?.status as PaymentStatus | null);
+          setPaymentStatus(data?.status ?? 'completed');
         },
+        onError: (err: any) => {
+          setErrorMessage('결제 확인을 실패했어요. 다시 시도해 주세요.');
+          if (err.isAxiosError && err.response?.data) {
+            setErrorMessage(err.response.data.detail);
+          } else if (err instanceof Error) {
+            setErrorMessage(err.message);
+          }
+          console.error('결제 확인 실패:', err);
+          setPaymentStatus('failed');
+        }
       });
     }
-  }, [paymentId, confirmPayment]);
+  }, [isValidPaymentId, paymentDetailData?.transaction_id, paymentId, confirmPayment]);
 
-  // 이동 버튼
+  // 
+  useEffect(() => {
+    if (!isValidPaymentId || !paymentDetailData) {
+      setPaymentStatus('failed');
+    }
+  }, [isValidPaymentId, paymentDetailData]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMinTimeElapsed(true);
+    }, MIN_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 이벤트 핸들러: 이동 버튼
   const handleGoToLectureRoom = () => {
     navigate(ROUTES.MY_LECTURES);
   };
@@ -45,11 +82,14 @@ export default function PaymentResultPage() {
     navigate(ROUTES.HOME);
   };
 
-  const isSuccess = paymentStatus === 'completed';
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
-// 로딩 중이면 스피너 표시 가능
-  if (paymentStatus === 'pending') return <LoadingSpinner/>;
-  if (paymentStatus === 'failed') return <ErrorMessage message='결제 확인 중 오류가 발생했습니다.'/>;
+  // 조건부 렌더링: 예외 처리
+  if (isLoading || paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed) return <LoadingSpinner />;
+
+  const isSuccess = paymentStatus === 'completed';
 
   return (
     <>
@@ -58,7 +98,7 @@ export default function PaymentResultPage() {
         iconAnimation={isSuccess ? 'success' : 'error'}
         icon={<img src={isSuccess ? SuccessIcon : ErrorIcon} alt="" aria-hidden="true" />}
         title={isSuccess ? '결제가 완료되었습니다' : '결제에 실패했어요'}
-        description={isSuccess ? '수강 준비가 끝났어요. 지금 시작해볼까요?' : undefined}
+        description={isSuccess ? '수강 준비가 끝났어요. 지금 시작해볼까요?' : errorMessage}
         buttons={
           isSuccess ? (
             <Button
@@ -72,20 +112,20 @@ export default function PaymentResultPage() {
           ) : (
             <>
               <Button
+                variant="outline"
+                size="md"
+                onClick={handleGoBack}
+                ariaLabel="내 강의실로 이동"
+              >
+                이전으로
+              </Button>
+              <Button
                 variant="primary"
                 size="md"
                 onClick={handleGoToMain}
                 ariaLabel="메인 페이지로 이동"
               >
                 메인 페이지
-              </Button>
-              <Button
-                variant="outline"
-                size="md"
-                onClick={handleGoToLectureRoom}
-                ariaLabel="내 강의실로 이동"
-              >
-                내 강의실로 이동
               </Button>
             </>
           )

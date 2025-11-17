@@ -15,6 +15,7 @@ import {
   FormContent,
   FormGroup,
   FormRow,
+  Header,
   ImageActionButton,
   Input,
   ProfileContainer,
@@ -144,7 +145,9 @@ const ProfilePage: React.FC = () => {
   return (
     <Form onSubmit={handleSubmit}>
       <Container>
-        <Title as="h2">프로필 설정</Title>
+        <Header>
+          <Title as="h2">프로필 설정</Title>
+        </Header>
         <ProfileFormContainer>
           <ProfileContainer>
             {imagePreview ? (
