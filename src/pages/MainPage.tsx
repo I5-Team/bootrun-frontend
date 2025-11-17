@@ -17,6 +17,7 @@ import useMediaQuery from "../hooks/useMediaQuery";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import type { CourseType } from "../types/CourseType";
 import { useState } from "react";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -25,11 +26,11 @@ const CategoryBtn = ({ icon, title, onClick }: {
     onClick?: () => void
 }) => {
     return (
-        <StyledCategoryBtn onClick={onClick}>
+        <StyledCategoryBtn type="button" onClick={onClick}>
             <StyledCategoryIcon>
                 {icon}
             </StyledCategoryIcon>
-            <p>{title}</p>
+            <span>{title}</span>
         </StyledCategoryBtn>
     )
 }
@@ -46,7 +47,7 @@ const SectionHead = ({ courseType }: { courseType: CourseType }) => {
     return (
         <StyledSectionHead>
             <StyledTitle>{title}</StyledTitle>
-            <Link to={showMorePath} aria-label={`${title} 강의 리스트 더보기`}>
+            <Link to={showMorePath} aria-label={`강의 목록 더보기`}>
                 <StyledShowMore>
                     더 보기
                     <SvgArrowRight/>
@@ -84,8 +85,16 @@ export default function MainPage() {
         navigate(ROUTES.LECTURE_LIST + queryString);
     }
 
+    const metaHelmet = usePageMeta({
+        title: '부트런 - ICT 교육 플랫폼',
+        description: '부트런은 현업 개발자와 함께하는 실무 중심 ICT 교육 플랫폼입니다. 최신 기술 스택, 커뮤니티 기반 학습, 실전 프로젝트, 취업 지원까지 학습자의 커리어 성장을 위한 완전한 로드맵을 제공합니다.',
+        thumbnail: 'https://i5-team.github.io/bootrun-frontend/OG.jpg',
+    });
+
     return (
         <>
+            {metaHelmet}
+
             <StyledHeroWrapper>
                 <Banner/>
                 {!isTablet && <ProfileCard/>}

@@ -28,17 +28,28 @@ const getRandomDateString = () => {
 
 const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();
-  const reviewData = data.student_reviews;
-  const parsedData = reviewData ? JSON.parse(reviewData) : [];
-  const reviewDataArr = parsedData.map((item: ReviewItem) => ({
+
+  let reviewData: ReviewItem[] = [];
+
+  try {
+    const rawReview = data?.student_reviews ?? "[]";
+    const parsedReview = JSON.parse(rawReview);
+    reviewData = Array.isArray(parsedReview) ? parsedReview : [];
+  } catch (e) {
+    reviewData = [];
+  }
+  
+  const reviewDataArr = reviewData?.map((item: ReviewItem) => ({
     ...item,
-    rating: (3 + (Math.floor(Math.random() * 5) * 0.5)).toFixed(1),
+    rating: Number((3 + (Math.floor(Math.random() * 5) * 0.5)).toFixed(1)),
     date: getRandomDateString(),
   }));
 
   const reviewTitleInfo = {
-    averageRating: reviewDataArr.reduce((acc: number, cur: ReviewItem) => 
-      acc + (cur.rating ? cur.rating : 0), 0) / reviewDataArr.length,
+    averageRating: reviewDataArr.length > 0
+      ? reviewDataArr.reduce((acc: number, cur: ReviewItem) => 
+      acc + (cur.rating || 0), 0) / reviewDataArr.length
+      : 0,
     totalReviews: reviewDataArr.length,
   }
 

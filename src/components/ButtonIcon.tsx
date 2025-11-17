@@ -19,9 +19,25 @@ const StyledButtonIcon = styled.button<{
   $tooltip?: string;
   $active: boolean;
 }>`
-  width: auto;
-  width: 4.2rem;
-  height: 4.2rem;
+
+    width: 4.2rem;
+    height: 4.2rem;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: ${({ theme }) => theme.radius.md};
+    aspect-ratio: 1 / 1;
+    position: relative;
+
+    svg {
+        width: 2.4rem;
+        height: 2.4rem;
+        vertical-align: bottom;
+        transition: fill 0.1s;
+    }
+
 
   display: flex;
   justify-content: center;
@@ -153,6 +169,7 @@ const StyledAlertDot = styled.span`
   animation: pulse 1.5s infinite;
 `;
 
+
 const ButtonIcon: React.FC<ButtonProps> = ({
   children,
   ariaLabel,
@@ -180,3 +197,4 @@ const ButtonIcon: React.FC<ButtonProps> = ({
 };
 
 export default ButtonIcon;
+

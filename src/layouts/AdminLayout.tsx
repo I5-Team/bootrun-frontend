@@ -1,18 +1,14 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
-import DevNavigator from '../components/DevNavigator';
 import Header from '../components/Header/Header';
-import Footer from '../components/Footer/Footer';
 
-export default function AdminLayout({ hasFooter = false }: { hasFooter?: boolean }) {
+export default function AdminLayout() {
   return (
     <Wrapper>
       <Header />
       <MainContainer>
         <Outlet />
       </MainContainer>
-      <DevNavigator />
-      {hasFooter && <Footer />}
     </Wrapper>
   );
 }
@@ -28,22 +24,13 @@ const StyledWrapper = styled.div`
 
 const StyledMainContainer = styled.main`
   flex: 1;
-  width: calc(100% - 7rem);
+  max-width: 1840px;
+  width: calc(100% - 4.8rem);
   margin: 0 auto;
-  padding: 0 2rem;
+  margin-bottom: 8rem;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
-    width: calc(100% - 3rem);
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
-    width: 100%;
-    padding: 0 1.6rem;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    width: 100%;
-    padding: 0;
+  @media ${({ theme }) => theme.devices.tablet} {
+  width: calc(100% - 3.2rem);
   }
 `;
 

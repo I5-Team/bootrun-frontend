@@ -4,6 +4,9 @@ import { useApiData } from '../../hooks/useApiData';
 import { mockOrderData } from '../../data/mockMyPageData';
 import type { OrderData, OrderItem } from '../../types/ProfileType';
 import { LoadingSpinner, ErrorMessage } from '../../components/HelperComponents';
+import MyPage from './MyPage.styled';
+import Tag from '../../components/Tag';
+import Button from '../../components/Button';
 
 // 주문 내역 아이템 카드 컴포넌트
 const OrderCard: React.FC<{ order: OrderItem }> = ({ order }) => {
@@ -12,9 +15,7 @@ const OrderCard: React.FC<{ order: OrderItem }> = ({ order }) => {
   return (
     <S.Card>
       <S.CardHeader>
-        <S.StatusTag $completed={isCompleted}>
-          {isCompleted ? '결제 완료' : '결제 대기'}
-        </S.StatusTag>
+        <Tag variant={isCompleted ? 'primary' : 'dark'}>{isCompleted ? '결제 완료' : '결제 대기'}</Tag>
         <S.CourseName>{order.courseName}</S.CourseName>
       </S.CardHeader>
       <S.CardBody>
@@ -65,43 +66,43 @@ const OrderHistoryPage: React.FC = () => {
 
   if (loading)
     return (
-      <S.PageWrapper>
+      <MyPage.Container>
         <LoadingSpinner />
-      </S.PageWrapper>
+      </MyPage.Container>
     );
   if (error)
     return (
-      <S.PageWrapper>
+      <MyPage.Container>
         <ErrorMessage message={error.message} />
-      </S.PageWrapper>
+      </MyPage.Container>
     );
 
   return (
-    <S.PageWrapper>
+    <S.MainContainer>
       <S.Header>
-        <S.Title as="h2">결제 내역</S.Title>
+        <MyPage.Title as="h2">결제 내역</MyPage.Title>
         <S.FilterGroup role="group" aria-label="결제 내역 필터">
-          <S.FilterButton
-            $active={filter === 'all'}
+          <Button size="sm"
+            variant={filter === 'all' ? 'primary' : 'outline'}
             onClick={() => setFilter('all')}
             aria-pressed={filter === 'all'}
           >
             전체
-          </S.FilterButton>
-          <S.FilterButton
-            $active={filter === 'pending'}
+          </Button>
+          <Button size="sm"
+            variant={filter === 'pending' ? 'primary' : 'outline'}
             onClick={() => setFilter('pending')}
             aria-pressed={filter === 'pending'}
           >
             결제 대기
-          </S.FilterButton>
-          <S.FilterButton
-            $active={filter === 'completed'}
+          </Button>
+          <Button size="sm"
+            variant={filter === 'completed' ? 'primary' : 'outline'}
             onClick={() => setFilter('completed')}
             aria-pressed={filter === 'completed'}
           >
             결제 완료
-          </S.FilterButton>
+          </Button>
         </S.FilterGroup>
       </S.Header>
 
@@ -112,25 +113,21 @@ const OrderHistoryPage: React.FC = () => {
           <S.EmptyState>결제 내역이 없습니다.</S.EmptyState>
         )}
       </S.OrderList>
-    </S.PageWrapper>
+    </S.MainContainer>
   );
 };
 
 // --- Styles (시안 반영, rem/theme 적용) ---
 const S = {
-  PageWrapper: styled.div`
-    width: 100%;
-    max-width: 72rem;
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.radius.lg}; /* 1.2rem */
-    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
+  MainContainer: styled(MyPage.Container)`
+    @media ${({ theme }) => theme.devices.tablet} {
+      gap: 2.4rem;
+    }
   `,
   Header: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2.4rem;
 
     @media ${({ theme }) => theme.devices.tablet} {
       flex-direction: column;
@@ -138,33 +135,15 @@ const S = {
       gap: 3.2rem;
     }
   `,
-  Title: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.lg}; /* 2.4rem */
-    font-weight: 700;
-    margin: 0;
-  `,
   FilterGroup: styled.div`
     display: flex;
     gap: 0.8rem;
-  `,
-  FilterButton: styled.button<{ $active: boolean }>`
-    padding: 0.8rem 1.6rem;
-    font-size: ${({ theme }) => theme.fontSize.sm}; /* 1.4rem */
-    font-weight: 500;
-    border-radius: ${({ theme }) => theme.radius.sm}; /* 0.6rem */
-    border: 1px solid
-      ${({ $active, theme }) => ($active ? theme.colors.primary300 : theme.colors.gray200)};
-    background: ${({ $active, theme }) => ($active ? theme.colors.primary300 : theme.colors.white)};
-    color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.gray400)};
-    cursor: pointer;
-
-    &:hover {
-      background: ${({ theme }) => theme.colors.gray100};
-    }
+    margin-left: auto;
   `,
   OrderList: styled.div`
     display: flex;
     flex-direction: column;
+    gap: 2rem;
   `,
   EmptyState: styled.div`
     padding: 8rem;
@@ -173,13 +152,13 @@ const S = {
     font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
   `,
   Card: styled.div`
-    margin: 2.4rem;
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.md}; /* 0.8rem */
   `,
   CardHeader: styled.div`
     display: flex;
-    align-items: center;
+    justify-content: start;
+    align-items: start;
     gap: 1.2rem;
     padding: 2.4rem 2.4rem 1.6rem;
 
@@ -219,10 +198,18 @@ const S = {
   `,
   InfoItem: styled.div`
     display: contents;
+
+    dt, dd {
+      min-width: 0; 
+      word-break: break-all;
+    } 
+
     dt {
+      width: 100%;
       color: ${({ theme }) => theme.colors.gray300};
     }
     dd {
+      width: 100%;
       color: ${({ theme }) => theme.colors.surface};
       font-weight: 500;
       margin: 0;

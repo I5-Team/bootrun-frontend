@@ -6,9 +6,10 @@ import SvgDelete from "../assets/icons/icon-x.svg?react";
 type TagVariant = 'dark' | 'primary' | 'light';
 
 type TagProps = {
-  children: React.ReactNode
-  variant?: TagVariant
-  hasDelete?: boolean
+  children: React.ReactNode,
+  variant?: TagVariant,
+  hasDelete?: boolean,
+  ariaHidden?: boolean,
 }
 
 const StyledTag = styled.span<{ $variant: TagVariant }>`
@@ -40,13 +41,11 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
   }
 `
 
-export const Tag: React.FC<TagProps> = ({ children, variant = 'light', hasDelete }) => {
-  const tagName = typeof children === 'string' ? children : '';
-
+export const Tag: React.FC<TagProps> = ({ children, variant = 'light', hasDelete, ariaHidden }) => {
   return (
     <StyledTag 
       $variant={variant}
-      aria-label={hasDelete ? `${tagName} 조건 삭제` : tagName}
+      aria-hidden={ariaHidden}
     >
       {children}
       {hasDelete && <SvgDelete aria-hidden="true" />}

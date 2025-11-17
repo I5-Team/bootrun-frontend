@@ -12,13 +12,14 @@ export const PageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  padding-inline: 2rem;
+  padding-bottom: 8rem;
   padding-top: 8rem;
   background-color: ${({ theme }) => theme.colors.white};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    padding-top: 4rem;
-    padding-left: 3.4rem;
-    padding-right: 3.4rem;
+    padding-top: 6rem;
+    padding-inline: 3.4rem;
   }
 `;
 
@@ -28,14 +29,10 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6rem;
-
-  @media ${({ theme }) => theme.devices.mobile} {
-    gap: 6rem;
-  }
 `;
 
-export const Title = styled.h1`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+export const Title = styled.h2`
+  font-size: ${({ theme }) => theme.fontSize.xl};
   font-weight: 600;
   line-height: 1;
   color: ${({ theme }) => theme.colors.surface};
@@ -43,7 +40,7 @@ export const Title = styled.h1`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
@@ -319,7 +316,7 @@ export const TooltipList = styled.ul`
 export const TermsContainer = styled.div<{ $hasError?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1.8rem;
   animation: ${({ $hasError }) => ($hasError ? 'shake 0.3s' : 'none')};
 
   @keyframes shake {
@@ -339,7 +336,7 @@ export const TermsContainer = styled.div<{ $hasError?: boolean }>`
 export const CheckboxWrapper = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
+  gap: 1rem;
 `;
 
 export const Checkbox = styled.input`
@@ -395,7 +392,7 @@ export const CheckboxLabel = styled.label`
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 500;
   line-height: 2rem;
-  text-align: center;
+  text-align: left;
   color: ${({ theme }) => theme.colors.gray400};
   cursor: pointer;
   flex: 1;
@@ -429,7 +426,7 @@ export const TermsLink = styled.button`
 `;
 
 export const TermsErrorMessage = styled.span`
-  margin-left: 2.8rem;
+  text-align: center;
   font-size: ${({ theme }) => theme.fontSize.caption};
   color: ${({ theme }) => theme.colors.alert};
   line-height: 1.6rem;
@@ -443,7 +440,7 @@ export const CheckMark = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.4rem;
+  margin-right: 0.2rem;
   color: ${({ theme }) => theme.colors.primary300};
   font-size: 1.4rem;
   font-weight: bold;

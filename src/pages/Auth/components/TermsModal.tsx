@@ -6,6 +6,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../components/Button';
+import SvgClose from "../../../assets/icons/icon-x.svg?react";
 
 // 약관 모달 스타일
 const ModalOverlay = styled.div`
@@ -40,15 +41,10 @@ const TermsModalContainer = styled.div`
   }
 `;
 
-const ModalHeader = styled.div`
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const ModalTitle = styled.h2`
-  padding: 4rem 4rem 0 4rem;
+  width: 100%;
+  text-align: center;
+  padding: 4rem 4rem 1.2rem 4rem;
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 700;
   line-height: 2.2rem;
@@ -57,22 +53,31 @@ const ModalTitle = styled.h2`
 `;
 
 const CloseButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  background: none;
-  border: none;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin: 1.6rem;
+  padding: 0.8rem;
+  border-radius: ${({ theme }) => theme.radius.xs};
   color: ${({ theme }) => theme.colors.gray400};
-  font-size: 2.5rem;
-  line-height: 1;
   cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
+
+  svg { 
+    width: 100%;
+    height: 100%;
+    path {
+      fill: currentColor;
+    }
+  }
 
   &:hover {
     color: ${({ theme }) => theme.colors.surface};
+    background-color: ${({ theme }) => theme.colors.gray100};
   }
 
   &:focus-visible {
@@ -124,8 +129,9 @@ const ModalFooter = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
-  padding: 1.6rem 2rem 2rem 2rem;
+  gap: 1.4rem;
+  
+  padding: 2.4rem;
 `;
 
 const ScrollHint = styled.p`
@@ -201,12 +207,10 @@ export const TermsModal: React.FC<TermsModalProps> = ({
   return (
     <ModalOverlay onClick={onClose}>
       <TermsModalContainer onClick={(e) => e.stopPropagation()}>
-        <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
           <CloseButton type="button" onClick={onClose} aria-label="닫기">
-            ×
+            <SvgClose/>
           </CloseButton>
-        </ModalHeader>
 
         <TermsContent
           ref={contentRef}

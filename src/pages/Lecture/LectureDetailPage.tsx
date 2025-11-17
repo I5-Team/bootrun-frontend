@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import type { SectionRefs } from '../../types/LectureType';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { useLectureContext } from '../../layouts/LectureDetailLayout';
 
 // 스타일
 import {
-  LectureMainLayout,
   ContentWrapper,
   SectionWrapper,
 } from './LectureDetailPage.styled';
@@ -20,6 +20,7 @@ import NoticeSection from './components/NoticeSection';
 import ReviewSection from './components/ReviewSection';
 import { SectionTabs } from './components/SectionTabs';
 import { LectureInfoBox, InfoBoxButtons } from './components/LectureInfoBox';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
 // 함수
 export const formatDate = (dateString: string): string => {
@@ -37,6 +38,7 @@ export const formatDate = (dateString: string): string => {
 //
 export default function LectureDetailPage() {
   const { isLaptop } = useMediaQuery();
+  const { data } = useLectureContext();
   
   // 1. 스크롤을 위한 Ref 생성
   const introRef = useRef<HTMLElement>(null);
@@ -54,32 +56,39 @@ export default function LectureDetailPage() {
     faqRef,
   };
 
+  const metaHelmet = usePageMeta({
+    title: `${data.title} - 강의 상세 | 부트런`,
+    description: data.description,
+    thumbnail: data.thumbnail_url,
+  });
+
   return (
       <>
+        {metaHelmet}
+
         <LectureBannerSection/>
-        <LectureMainLayout>
-            <ContentWrapper>
-              {/* 헤더 영역 (왼쪽) */}
-              <LectureHeaderSection/>
 
-              {/* 고정 사이드바 (오른쪽) */}
-              {!isLaptop && <LectureInfoBox/>}
-              {isLaptop && <InfoBoxButtons/>}
+        <ContentWrapper>
+          {/* 헤더 영역 (왼쪽) */}
+          <LectureHeaderSection/>
 
-              {/* 메인 콘텐츠 영역 (왼쪽) */}
-              <SectionWrapper>
-                <SectionTabs refs={sectionRefs}/>
+          {/* 고정 사이드바 (오른쪽) */}
+          {!isLaptop && <LectureInfoBox/>}
+          {isLaptop && <InfoBoxButtons/>}
 
-                <LectureIntroSection ref={introRef}/>
-                <ReviewSection ref={reviewsRef}/>
-                <CurriculumSection ref={curriculumRef}/>
-                <InstructorSection ref={instructorRef}/>
-                <FAQSection ref={faqRef}/>
-                <NoticeSection />
-              </SectionWrapper>
+          {/* 메인 콘텐츠 영역 (왼쪽) */}
+          <SectionWrapper>
+            <SectionTabs refs={sectionRefs}/>
 
-            </ContentWrapper>
-        </LectureMainLayout>
+            <LectureIntroSection ref={introRef}/>
+            <ReviewSection ref={reviewsRef}/>
+            <CurriculumSection ref={curriculumRef}/>
+            <InstructorSection ref={instructorRef}/>
+            <FAQSection ref={faqRef}/>
+            <NoticeSection />
+          </SectionWrapper>
+
+        </ContentWrapper>
       </>
   );
 }

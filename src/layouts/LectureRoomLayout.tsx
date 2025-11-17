@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { LectureRoomContext } from '../contexts/LectureRoomContext';
 import Header from '../components/Header/Header';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { StyledMainContainer, StyledWrapper } from './MainLayout';
 
 type RightSidebarType = null | 'materials' | 'qna';
 
@@ -54,18 +54,13 @@ export default function LectureRoomLayout() {
   };
 
   return (
-    <LectureRoomContext.Provider value={contextValue}>
-      <Wrapper>
+    <StyledWrapper>
+      <LectureRoomContext.Provider value={contextValue}>
         <Header />
-        <Outlet context={{ ...contextValue, setCurrentLectureMaterialUrl, setCurrentLectureId }} />
-      </Wrapper>
-    </LectureRoomContext.Provider>
+        <StyledMainContainer>
+            <Outlet context={{ ...contextValue, setCurrentLectureMaterialUrl, setCurrentLectureId }} />
+        </StyledMainContainer>
+      </LectureRoomContext.Provider>
+    </StyledWrapper>
   );
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-`;

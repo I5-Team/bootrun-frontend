@@ -43,6 +43,17 @@ export const StyledHeaderInnerLecture = styled(StyledHeaderInner)`
     justify-content: space-between;
 `;
 
+export const StyledHeaderInnerAdmin = styled.div`
+    max-width: 1840px;
+    width: calc(100% - 4.8rem);
+    margin: 0 auto;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
 // logo
 export const StyledLogo = styled.img`
     width: 12.4rem;

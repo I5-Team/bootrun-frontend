@@ -230,7 +230,7 @@ export const StyledDescriptionBox = styled.div`
   }
 `;
 
-export const StyledPrice = styled.div`
+export const StyledPrice = styled.span`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   line-height: 1.4;
@@ -242,7 +242,6 @@ export const StyledPrice = styled.div`
 `;
 
 export const StyledLearning = styled.div`
-  /* border: 1px solid red; */
   display: flex;
   justify-content: start;
   align-items: center;

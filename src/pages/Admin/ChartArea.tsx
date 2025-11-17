@@ -16,6 +16,7 @@ import {
 import type { DailyStat } from '../../types/AdminType';
 import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents';
 
+
 // 1. Tooltip의 payload 타입 정의 (any 대신 사용)
 interface TooltipPayload {
   name: string;
@@ -259,7 +260,6 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: clamp(1.6rem, 3.5vw, 2.4rem);
-    box-shadow: ${({ theme }) => theme.colors.shadow};
     display: flex;
     flex-direction: column;
     gap: clamp(1.2rem, 2vw, 1.6rem);
@@ -286,7 +286,6 @@ const S = {
   `,
   ChartWrapper: styled.div`
     width: 100%;
-    height: clamp(24rem, 42vw, 34rem);
     max-width: 100%;
     overflow: hidden;
     position: relative;

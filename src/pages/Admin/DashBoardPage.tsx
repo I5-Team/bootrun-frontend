@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import {
   useDashboardStatsQuery,
   useDailyStatsQuery,
@@ -9,7 +8,6 @@ import {
 } from '../../queries/useDashboardQueries';
 
 import AdminPageLayout from './AdminPageLayout';
-import StatsCardArea from './StatsCardArea';
 import RevenueChartArea from './RevenueChartArea';
 import ChartArea from './ChartArea';
 import ProgressArea from './ProgressArea';
@@ -17,6 +15,7 @@ import TableArea from './TableArea';
 import { AdminPageStyles as S } from './AdminPageStyles';
 
 import { LoadingSpinner } from '../../components/HelperComponents';
+import StatsCardArea from './StatsCardArea';
 
 // --- 헬퍼 함수 ---
 const getTodayDate = () => {
@@ -67,62 +66,22 @@ export default function DashboardPage() {
       title="관리자 대시보드"
       rightElement={<S.DateDisplay>{todayDate}</S.DateDisplay>}
     >
-      <Layout.Wrapper>
-        <Layout.Section>
-          <StatsCardArea stats={stats} dailyStats={dailyStats} />
-        </Layout.Section>
+        <StatsCardArea stats={stats} dailyStats={dailyStats} />
 
-        <Layout.Section>
-          <RevenueChartArea
-            revenueStats={revenueStats}
-            isLoading={revenueStatsLoading}
-            period={revenuePeriod}
-            onPeriodChange={setRevenuePeriod}
-            onDateRangeChange={setDateRange}
-          />
-        </Layout.Section>
+        <RevenueChartArea
+          revenueStats={revenueStats}
+          isLoading={revenueStatsLoading}
+          period={revenuePeriod}
+          onPeriodChange={setRevenuePeriod}
+          onDateRangeChange={setDateRange}
+        />
 
-        <Layout.Section>
-          <ChartArea dailyStats={dailyStats} />
-        </Layout.Section>
+        <ChartArea dailyStats={dailyStats} />
 
-        <Layout.Section>
-          <ProgressArea courseStats={courseStats} categoryStats={categoryStats} />
-        </Layout.Section>
+        <ProgressArea courseStats={courseStats} categoryStats={categoryStats} />
 
-        <Layout.Section>
-          <TableArea courseStats={courseStats} />
-        </Layout.Section>
-      </Layout.Wrapper>
+        <TableArea courseStats={courseStats} />
     </AdminPageLayout>
   );
 }
 
-const Layout = {
-  Wrapper: styled.div`
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 clamp(1.6rem, 5vw, 3.2rem);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 4vw, 3.2rem);
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
-      padding: 0 clamp(1.2rem, 4vw, 2.4rem);
-      gap: 2.4rem;
-    }
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      padding: 0 1.2rem;
-      gap: 2rem;
-    }
-  `,
-  Section: styled.section`
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.6rem, 3vw, 2.4rem);
-    width: 100%;
-    min-width: 0;
-  `,
-};

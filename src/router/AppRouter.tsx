@@ -69,6 +69,7 @@ export default function AppRouter() {
 
           {/* 그룹 3: 인증 사용자 전용 레이아웃 (결제, 마이페이지, 강의실) */}
           <Route element={<RequireAuth />}>
+          
             <Route element={<MainLayout />}>
               <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
               <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
@@ -82,6 +83,7 @@ export default function AppRouter() {
             </Route>
 
             {/* 강의실은 독립적인 레이아웃 사용 */}
+
             <Route element={<LectureRoomLayout />}>
               <Route path={ROUTES.LECTURE_ROOM} element={<LectureRoomPage />} />
             </Route>

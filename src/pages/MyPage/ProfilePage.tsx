@@ -7,25 +7,15 @@ import {
   useUpdateProfile,
   useUploadProfileImage,
 } from '../../queries/useUserQueries';
+import SvgImage from "../../assets/icons/icon-image.svg?react";
 import type { ProfileUpdatePayload } from '../../types/UserType';
-import {
-  Container,
-  Form,
-  FormContent,
-  FormGroup,
-  FormRow,
-  ImagePreview,
-  ImageActionButton,
-  ImageWrapper,
-  Input,
-  ProfileContainer,
-  Select,
-  SubmitButton,
-  SubmitButtonWrapper,
-  Title,
-} from './ProfilePage.styled';
+import { FormContent, FormGroup, FormRow, ImageActionButton, ProfileContainer, ProfileFormContainer, SubmitButtonWrapper } from './ProfilePage.styled';
+import Button from '../../components/Button';
+import Profile from '../../components/Profile';
+import MyPage from './MyPage.styled';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
@@ -48,9 +38,15 @@ const ProfilePage: React.FC = () => {
       setNickname(data.nickname || '');
       setGender(data.gender || 'none');
       setBirthdate(data.birth_date || '');
-      const fullImageUrl = data.profile_image ? API_BASE_URL + data.profile_image : null;
-      console.log('fullImageUrl:', fullImageUrl);
 
+      const serverImageUrl = data.profile_image;
+      let fullImageUrl: string | null = null;
+
+      if (serverImageUrl && serverImageUrl !== DEFAULT_PLACEHOLDER_URL) {
+        // 'uploads/...' 형태의 상대 경로이므로, BASE_URL을 붙여줌
+        fullImageUrl = `${API_BASE_URL}${serverImageUrl}`;
+      }
+      console.log('Processed Image URL:', fullImageUrl);
       if (!selectedFile) {
         setImagePreview(fullImageUrl);
       }
@@ -59,7 +55,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('수정하기:', { name, gender, birthdate, selectedFile });
+    console.log('수정하기:', { nickname, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
     // 1. 변경된 텍스트 정보가 있는지 확인
     const payload: ProfileUpdatePayload = {};
@@ -82,6 +78,7 @@ const ProfilePage: React.FC = () => {
         onSuccess: () => {
           // 업로드 성공 시 선택된 파일 초기화
           setSelectedFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = '';
         },
       });
     }
@@ -133,22 +130,19 @@ const ProfilePage: React.FC = () => {
   const isPending = isUpdating || isUploadingImage || isDeletingImage;
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Title as="h2">프로필 설정</Title>
-      <Container>
-        <ProfileContainer>
-          <ImageWrapper>
-            <ImagePreview>
+    <MyPage.Form onSubmit={handleSubmit}>
+      <MyPage.Container>
+        <MyPage.Title as="h2">프로필 설정</MyPage.Title>
+        <ProfileFormContainer>
+          <ProfileContainer>
               {imagePreview ? (
                 <>
                   {console.log('imagePreview:', imagePreview)}
-                  <img src={imagePreview} alt="현재 프로필 이미지" />
+                  <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지"/>
                 </>
               ) : (
-                <img src={SvgProfileImage} alt="기본 프로필 이미지" />
+                <Profile size={14.6} src={SvgProfileImage}  alt="기본 프로필 이미지"/>
               )}
-            </ImagePreview>
-            {/* ⭐️ (수정) 조건부 버튼 렌더링 */}
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
               <ImageActionButton
@@ -158,7 +152,7 @@ const ProfilePage: React.FC = () => {
                 disabled={isPending}
                 $isDelete={true}
               >
-                x
+                ✕
               </ImageActionButton>
             ) : (
               // 2. 이미지가 없으면 -> '업로드' 버튼 (+)
@@ -169,68 +163,72 @@ const ProfilePage: React.FC = () => {
                 disabled={isPending}
                 $isDelete={false}
               >
-                +
+                <SvgImage/>
               </ImageActionButton>
             )}
-          </ImageWrapper>
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            aria-hidden="true"
-          />
-        </ProfileContainer>
-
-        <FormContent>
-          <FormGroup>
-            <label htmlFor="nickname">닉네임</label>
-            <Input
-              id="nickname"
-              type="text"
-              name="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+  
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              aria-hidden="true"
             />
-          </FormGroup>
-          <FormRow>
+          </ProfileContainer>
+  
+          <FormContent>
             <FormGroup>
-              <label htmlFor="gender">성별</label>
-              <Select
-                id="gender"
-                name="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="none">선택</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-              </Select>
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="birthdate">생년월일</label>
-
-              <Input
-                id="birthdate"
-                type="date"
-                name="birthdate"
-                value={birthdate}
-                onChange={(e) => setBirthdate(e.target.value)}
-                aria-label="생년월일 입력"
+              <label htmlFor="nickname">닉네임</label>
+              <MyPage.Input
+                id="nickname"
+                type="text"
+                name="nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
               />
             </FormGroup>
-          </FormRow>
-        </FormContent>
-      </Container>
+            <FormRow>
+              <FormGroup>
+                <label htmlFor="gender">성별</label>
+                <MyPage.Select
+                  id="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="none">선택</option>
+                  <option value="male">남성</option>
+                  <option value="female">여성</option>
+                </MyPage.Select>
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="birthdate">생년월일</label>
+                <MyPage.Input
+                  id="birthdate"
+                  type="date"
+                  name="birthdate"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                  aria-label="생년월일 입력"
+                />
+              </FormGroup>
+            </FormRow>
+          </FormContent>
+        </ProfileFormContainer>
+      </MyPage.Container>
 
       <SubmitButtonWrapper>
-        <SubmitButton type="submit" disabled={isPending}>
+        <Button 
+          fullWidth
+          size="md"
+          type="submit"
+          disabled={isPending}
+        >
           수정하기
-        </SubmitButton>
+        </Button>
       </SubmitButtonWrapper>
-    </Form>
+    </MyPage.Form>
   );
 };
 

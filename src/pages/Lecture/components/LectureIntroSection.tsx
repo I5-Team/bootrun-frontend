@@ -12,7 +12,7 @@ const LectureIntroSection = React.forwardRef<HTMLElement>((_, ref) => {
           <Intro.Title>{data.title}</Intro.Title>
           <Intro.Desc>{data.description}</Intro.Desc>
           <Intro.ContentContainer>
-            강의 소개
+            강의 소개에 대한 콘텐츠
           </Intro.ContentContainer>
     </Intro.Section>
   );

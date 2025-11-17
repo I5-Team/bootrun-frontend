@@ -14,12 +14,13 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
     <S.Section ref={ref} id="instructor">
       <S.SectionHeader>
         <S.SectionTitle>강사소개</S.SectionTitle>
-        <S.SectionSubtitle>
-          "부트캠프 수료율 100%의 비결은 수강생을 향한 '진심'입니다."
-        </S.SectionSubtitle>
+        {instructor_description &&
+          <S.SectionSubtitle>
+            {instructor_description.split('.')[0]}
+          </S.SectionSubtitle>
+        }
       </S.SectionHeader>
 
-      {data && (
         <Instructor.InfoBox>
           <Profile
             size={24}
@@ -36,7 +37,6 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
             <Instructor.Description>{instructor_description}</Instructor.Description>
           </Instructor.ContentContainer>
         </Instructor.InfoBox>
-      )}
     </S.Section>
   );
 });
