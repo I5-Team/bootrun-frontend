@@ -33,6 +33,10 @@ import SearchForm from '../SearchForm.tsx';
 import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
 import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
+import { useProfile } from '../../queries/useUserQueries.ts';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 const HeaderLogo = () => {
   return (
@@ -87,8 +91,13 @@ const SidebarOpenBtn = ({
 const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const token = localStorage.getItem('accessToken');
-  const isLoggedIn = Boolean(token);
+  const { data: userProfile } = useProfile();
+  const isLoggedIn = !!userProfile;
+
+  let finalImageUrl: string | undefined = undefined;
+  if (userProfile?.profile_image && userProfile.profile_image !== DEFAULT_PLACEHOLDER_URL) {
+    finalImageUrl = `${API_BASE_URL}${userProfile.profile_image}`;
+  }
 
   const handleOpenDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -130,7 +139,7 @@ const UserProfileBtn = () => {
       {isLoggedIn ? (
         <StyledDropdownWrapper ref={dropdownRef}>
           <button onClick={handleOpenDropdown}>
-            <Profile size={4.2} isActive={isDropdownOpen} />
+            <Profile size={4.2} isActive={isDropdownOpen} src={finalImageUrl} />
           </button>
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownWrapper>
