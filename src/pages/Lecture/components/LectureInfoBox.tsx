@@ -15,8 +15,8 @@ import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 import { LoadingSpinner } from '../../../components/HelperComponents';
 
 
-export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
-  const { courseId, data, isEnrolled } = useLectureContext();
+export const InfoBoxContent = () => {
+  const { courseId, data, isEnrolled, recruitmentStatus } = useLectureContext();
   const { course_type, category_type, difficulty } = data;
   const { recruitment_end_date, course_start_date, course_end_date } = data;
   const { access_duration_days, max_students } = data;
@@ -74,8 +74,10 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
                   {(course_end_date && course_start_date) && 
                     <>
                       {recruitmentStatus
-                      ? <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
-                      : <S.DdayTag $variant="closed">모집마감</S.DdayTag>
+                      ?
+                      <S.DdayTag $variant="open">{calculateDdayFrom(course_start_date)}</S.DdayTag>
+                      :
+                      <S.DdayTag $variant="closed">모집마감</S.DdayTag>
                       }
                     </>
                   }
@@ -114,9 +116,9 @@ export const InfoBoxContent = ({ recruitmentStatus }: { recruitmentStatus?: bool
   )
 }
 
-export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: boolean }) => {
+export const InfoBoxButtons = () => {
   const { isLaptop } = useMediaQuery();
-  const { isEnrolled } = useLectureContext();
+  const { isEnrolled, recruitmentStatus } = useLectureContext();
   const navigate = useNavigate();
   const { id } = useParams<{id: string}>();
 
@@ -140,7 +142,12 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
 
   return (
     <S.ButtonContainer>
-        {isEnrolled ? (
+      {recruitmentStatus === undefined ? (
+        <Button>
+          <LoadingSpinner/>
+        </Button>
+      ) : (
+        isEnrolled ? (
           <Button
             size="lg" 
             fullWidth={!isLaptop} 
@@ -160,7 +167,8 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
             disabled={true}
           >수강신청 마감</Button> 
           ) 
-        )}
+        )
+      )}
         <Button 
           variant='outline' 
           size="lg" 
@@ -173,18 +181,13 @@ export const InfoBoxButtons = ({ recruitmentStatus }: { recruitmentStatus?: bool
 }
 
 export const LectureInfoBox = () => {
-  const { data } = useLectureContext();
-  const { recruitment_end_date } = data;
-
-    const recruitmentStatus = recruitment_end_date 
-      ? (new Date(recruitment_end_date.replace('T', ''))) > new Date() ? true : false
-      : false;
-
+  const { data, isLoading } = useLectureContext();
+  if (isLoading || !data) return null;
   return (
     <S.FloatingCardWrapper>
           <S.Title>강의 정보</S.Title>
-              <InfoBoxContent recruitmentStatus={recruitmentStatus}/>
-              <InfoBoxButtons recruitmentStatus={recruitmentStatus}/>
+              <InfoBoxContent/>
+              <InfoBoxButtons/>
     </S.FloatingCardWrapper>
   );
 };

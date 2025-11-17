@@ -4,15 +4,39 @@ import SuccessIcon from '../../assets/icons/icon-status-success.svg';
 import ErrorIcon from '../../assets/icons/icon-status-error.svg';
 import { ROUTES } from '../../router/RouteConfig';
 import EmptyState from '../../components/EmptyState/EmptyState';
-import * as S from './PaymentResultPage.styled';
+import { usePostPaymentConfirm } from '../../queries/usePaymentsQueries';
+import { useEffect, useState } from 'react';
+import { ErrorMessage, LoadingSpinner } from '../../components/HelperComponents';
+import type { PaymentStatus } from '../../types/PaymentsType';
 
 export default function PaymentResultPage() {
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
+
+  // const { paymentId } = use
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const status = searchParams.get('status'); // 'success' | 'fail'
-  const isSuccess = status === 'success';
+  const paymentId = searchParams.get('paymentId');
+  const { mutate: confirmPayment } = usePostPaymentConfirm();
 
+  useEffect(() => {
+    if (!paymentId) {
+      alert('결제 정보가 없습니다. 이전 페이지로 돌아갑니다.');
+      navigate(-1);
+    }
+  }, [paymentId, navigate]);
+
+  useEffect(() => {
+    if (paymentId) {
+      confirmPayment(Number(paymentId), {
+        onSuccess: (data) => {
+          setPaymentStatus(data?.status as PaymentStatus | null);
+        },
+      });
+    }
+  }, [paymentId, confirmPayment]);
+
+  // 이동 버튼
   const handleGoToLectureRoom = () => {
     navigate(ROUTES.MY_LECTURES);
   };
@@ -21,11 +45,11 @@ export default function PaymentResultPage() {
     navigate(ROUTES.HOME);
   };
 
-  // 나중에 삭제 필요 // 개발용 토글 버튼(결제 완료 <-> 결제 실패 페이지 이동)
-  const handleToggleStatus = () => {
-    const newStatus = isSuccess ? 'fail' : 'success';
-    navigate(`?status=${newStatus}`, { replace: true });
-  };
+  const isSuccess = paymentStatus === 'completed';
+
+// 로딩 중이면 스피너 표시 가능
+  if (paymentStatus === 'pending') return <LoadingSpinner/>;
+  if (paymentStatus === 'failed') return <ErrorMessage message='결제 확인 중 오류가 발생했습니다.'/>;
 
   return (
     <>
@@ -67,12 +91,6 @@ export default function PaymentResultPage() {
           )
         }
       />
-
-      {/* // 나중에 삭제 필요 */}
-      {/* 개발용 토글 버튼 */}
-      <S.DevToggle onClick={handleToggleStatus}>
-        {isSuccess ? '실패 화면 보기' : '성공 화면 보기'}
-      </S.DevToggle>
     </>
   );
 }
