@@ -312,18 +312,36 @@ export default function LectureRoomPage() {
             setCurrentVideoDuration(duration);
           }
         } else {
+          // 진행 정보가 없으면 초기 상태로 설정 (첫 시청 또는 데이터 없음)
+          console.log(
+            '[LectureRoom] 강의 ID',
+            currentLectureId,
+            '에 대한 진행 정보 없음 (초기 상태)'
+          );
           setLastPosition(0);
           setProgressExists(false);
           // 진행 정보가 없으면 0%로 초기화
           setCurrentVideoProgress(0);
           setIsCurrentLectureCompleted(false);
+
+          // 강의 정보가 있으면 duration 설정
+          if (currentLectureInfo?.lecture.duration_seconds) {
+            setCurrentVideoDuration(currentLectureInfo.lecture.duration_seconds);
+          }
         }
       } catch (err) {
-        console.error('진행 정보 조회 실패:', err);
-        setLastPosition(0);
+        console.error('[LectureRoom] 진행 정보 조회 중 오류:', err);
+        // 조회 실패해도 lastPosition을 0으로 리셋하지 않음 (이전 값 유지)
+        // progressExists는 false로 설정하여 다음에 POST로 시도하도록 함
         setProgressExists(false);
+        // 진행 정보가 없으면 0%로 초기화하되, lastPosition은 유지
         setCurrentVideoProgress(0);
         setIsCurrentLectureCompleted(false);
+
+        // 강의 정보가 있으면 duration 설정
+        if (currentLectureInfo?.lecture.duration_seconds) {
+          setCurrentVideoDuration(currentLectureInfo.lecture.duration_seconds);
+        }
       }
     };
 
@@ -351,11 +369,42 @@ export default function LectureRoomPage() {
       try {
         if (progressExists) {
           // 기존 진행 정보 업데이트 (is_completed는 서버가 자동 처리)
-          const result = await updateLectureProgress(currentLectureId, {
-            watched_seconds: Math.floor(playedSeconds),
-            last_position: Math.floor(playedSeconds),
-          });
-          console.log('[LectureRoom] 진행률 업데이트 성공:', result);
+          try {
+            const result = await updateLectureProgress(currentLectureId, {
+              watched_seconds: Math.floor(playedSeconds),
+              last_position: Math.floor(playedSeconds),
+            });
+            console.log('[LectureRoom] 진행률 업데이트 성공:', result);
+            // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
+            if (result && result[0]?.completion_rate !== undefined) {
+              setCurrentVideoProgress(result[0].completion_rate);
+              setIsCurrentLectureCompleted(result[0].is_completed || false);
+            }
+          } catch (updateErr: unknown) {
+            // PATCH 404 에러: 진행 기록이 없으면 POST로 생성
+            const axiosError = updateErr as { response?: { status?: number } };
+            if (axiosError.response?.status === 404) {
+              console.log('[LectureRoom] 진행 기록 없음, POST로 생성 시도');
+              const result = await createEnrollmentProgress({
+                lecture_id: currentLectureId,
+                watched_seconds: Math.floor(playedSeconds),
+                last_position: Math.floor(playedSeconds),
+              });
+              if (result) {
+                console.log('[LectureRoom] 진행률 생성 성공:', result);
+                setProgressExists(true);
+                // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
+                if (result[0]?.completion_rate !== undefined) {
+                  setCurrentVideoProgress(result[0].completion_rate);
+                  setIsCurrentLectureCompleted(result[0].is_completed || false);
+                }
+              } else {
+                console.warn('[LectureRoom] 진행률 생성 실패, progressExists 상태 유지');
+              }
+            } else {
+              throw updateErr; // 다른 에러는 다시 throw
+            }
+          }
         } else {
           // 새로운 진행 정보 생성 (is_completed는 서버가 자동 처리)
           const result = await createEnrollmentProgress({
@@ -363,8 +412,17 @@ export default function LectureRoomPage() {
             watched_seconds: Math.floor(playedSeconds),
             last_position: Math.floor(playedSeconds),
           });
-          console.log('[LectureRoom] 진행률 생성 성공:', result);
-          setProgressExists(true);
+          if (result) {
+            console.log('[LectureRoom] 진행률 생성 성공:', result);
+            setProgressExists(true);
+            // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
+            if (result[0]?.completion_rate !== undefined) {
+              setCurrentVideoProgress(result[0].completion_rate);
+              setIsCurrentLectureCompleted(result[0].is_completed || false);
+            }
+          } else {
+            console.warn('[LectureRoom] 진행률 생성 실패, progressExists는 false 유지');
+          }
         }
 
         // 전체 진행률 새로고침 (매번)
@@ -417,16 +475,52 @@ export default function LectureRoomPage() {
     try {
       // 영상 끝 위치 저장 (is_completed는 서버가 자동 처리)
       if (progressExists) {
-        await updateLectureProgress(currentLectureId, {
-          watched_seconds: Math.floor(currentVideoDuration),
-          last_position: Math.floor(currentVideoDuration),
-        });
+        try {
+          const result = await updateLectureProgress(currentLectureId, {
+            watched_seconds: Math.floor(currentVideoDuration),
+            last_position: Math.floor(currentVideoDuration),
+          });
+          // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트 (100%로 설정)
+          if (result && result[0]?.completion_rate !== undefined) {
+            setCurrentVideoProgress(result[0].completion_rate);
+            setIsCurrentLectureCompleted(result[0].is_completed || false);
+          }
+        } catch (updateErr: unknown) {
+          // PATCH 404 에러: 진행 기록이 없으면 POST로 생성
+          const axiosError = updateErr as { response?: { status?: number } };
+          if (axiosError.response?.status === 404) {
+            console.log('[LectureRoom] 진행 기록 없음, POST로 생성 시도');
+            const result = await createEnrollmentProgress({
+              lecture_id: currentLectureId,
+              watched_seconds: Math.floor(currentVideoDuration),
+              last_position: Math.floor(currentVideoDuration),
+            });
+            if (result) {
+              setProgressExists(true);
+              // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
+              if (result[0]?.completion_rate !== undefined) {
+                setCurrentVideoProgress(result[0].completion_rate);
+                setIsCurrentLectureCompleted(result[0].is_completed || false);
+              }
+            }
+          } else {
+            throw updateErr; // 다른 에러는 다시 throw
+          }
+        }
       } else {
-        await createEnrollmentProgress({
+        const result = await createEnrollmentProgress({
           lecture_id: currentLectureId,
           watched_seconds: Math.floor(currentVideoDuration),
           last_position: Math.floor(currentVideoDuration),
         });
+        if (result) {
+          setProgressExists(true);
+          // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
+          if (result[0]?.completion_rate !== undefined) {
+            setCurrentVideoProgress(result[0].completion_rate);
+            setIsCurrentLectureCompleted(result[0].is_completed || false);
+          }
+        }
       }
 
       // 전체 진행률 새로고침
