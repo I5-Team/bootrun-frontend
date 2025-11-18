@@ -232,7 +232,7 @@ graph TD
 
 : 프론트엔드는 **MVVM(Model-View-ViewModel)** 패턴을 React 환경에 맞게 적용하여 **관심사를 명확히 분리**했습니다.
 
-```Mermaid
+```mermaid
 graph TD
 
     %% View
