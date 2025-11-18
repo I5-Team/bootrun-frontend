@@ -96,15 +96,11 @@ export const LectureIconWrapper = styled.div<{ $isCurrent: boolean }>`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: ${({ $isCurrent, theme }) => $isCurrent ? theme.colors.primary300 : theme.colors.gray300};
 
-  img {
+  svg {
     width: 1.6rem;
-    height: 100%;
-    object-fit: contain;
-    filter: ${({ $isCurrent }) =>
-      $isCurrent
-        ? `brightness(0) saturate(100%) invert(45%) sepia(85%) saturate(2234%) hue-rotate(211deg) brightness(98%) contrast(91%)`
-        : `brightness(0) saturate(100%) invert(61%) sepia(8%) saturate(458%) hue-rotate(182deg) brightness(94%) contrast(89%)`};
+    height: 1.6rem;
   }
 `;
 
@@ -118,7 +114,7 @@ export const LectureInfo = styled.div`
 
 export const LectureTitle = styled.span<{ $isCurrent: boolean }>`
   font-size: ${({ theme }) => theme.fontSize.sm};
-  font-weight: ${({ $isCurrent }) => ($isCurrent ? '600' : '400')};
+  font-weight: ${({ $isCurrent }) => ($isCurrent ? '600' : '500')};
   color: ${({ $isCurrent, theme }) =>
     $isCurrent ? theme.colors.primary300 : theme.colors.surface};
   overflow: hidden;
@@ -139,13 +135,15 @@ export const LectureDuration = styled.span`
   }
 `;
 
-export const CompletionBadge = styled.span`
+export const CompletionBadge = styled.span<{ $isCompleted: boolean }>`
   width: 1.4rem;
   height: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  color: ${({ $isCompleted, theme }) => $isCompleted ? theme.colors.primary300 + 'CC' : theme.colors.gray300 + 'CC'};
 
   img {
     width: 100%;

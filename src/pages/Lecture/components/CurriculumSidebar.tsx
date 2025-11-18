@@ -2,12 +2,12 @@
  * 커리큘럼 사이드바 - 챕터/강의 목록, 완료 상태 표시
  */
 import { useState } from 'react';
-import iconPlay from '../../../assets/icons/icon-play.svg';
-import iconPage from '../../../assets/icons/icon-page.svg';
-import iconQuiz from '../../../assets/icons/icon-quiz.svg';
-import iconDownArrow from '../../../assets/icons/icon-down.svg';
-import iconCheckCircleActive from '../../../assets/icons/icon-check-circle-active.svg';
-import iconCheckCircleDefault from '../../../assets/icons/icon-check-circle-default.svg';
+import IconPlay from '../../../assets/icons/icon-play.svg?react';
+import IconPage from '../../../assets/icons/icon-page.svg?react';
+import IconQuiz from '../../../assets/icons/icon-quiz.svg?react';
+import IconDownArrow from '../../../assets/icons/icon-down.svg?react';
+import IconCheckCircleActive from '../../../assets/icons/icon-check-circle-active.svg?react';
+import IconCheckCircleDefault from '../../../assets/icons/icon-check-circle-default.svg?react';
 import * as S from '../styles/CurriculumSidebar.styled';
 
 interface LectureItem {
@@ -51,13 +51,13 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
   const getLectureIcon = (lectureType: 'video' | 'text' | 'quiz') => {
     switch (lectureType) {
       case 'video':
-        return iconPlay;
+        return <IconPlay/>;
       case 'text':
-        return iconPage;
+        return <IconPage/>;
       case 'quiz':
-        return iconQuiz;
+        return <IconQuiz/>;
       default:
-        return iconPlay;
+        return <IconPlay/>;
     }
   };
 
@@ -74,7 +74,8 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
               aria-label={`${chapter.title} ${isExpanded ? '접기' : '펼치기'}`}
             >
               <S.ChapterIcon $isExpanded={isExpanded}>
-                <img src={iconDownArrow} alt="" />
+                <IconDownArrow/>
+                {/* <img src={IconDownArrow} alt="" /> */}
               </S.ChapterIcon>
               <S.ChapterTitle>{chapter.title}</S.ChapterTitle>
             </S.ChapterHeader>
@@ -93,7 +94,7 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
                     }`}
                   >
                     <S.LectureIconWrapper $isCurrent={lecture.is_current}>
-                      <img src={getLectureIcon(lecture.lecture_type)} alt="" />
+                      {getLectureIcon(lecture.lecture_type)}
                     </S.LectureIconWrapper>
                     <S.LectureInfo>
                       <S.LectureTitle $isCurrent={lecture.is_current}>
@@ -103,11 +104,15 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
                         {formatDuration(lecture.duration_seconds)}
                       </S.LectureDuration>
                     </S.LectureInfo>
-                    <S.CompletionBadge aria-label={lecture.is_completed ? '완료' : '미완료'}>
-                      <img
-                        src={lecture.is_completed ? iconCheckCircleActive : iconCheckCircleDefault}
-                        alt=""
-                      />
+                    <S.CompletionBadge 
+                      $isCompleted={lecture.is_completed}
+                      aria-label={lecture.is_completed ? '완료' : '미완료'}
+                    >
+                      {lecture.is_completed ? (
+                        <IconCheckCircleActive/>
+                      ) : (
+                        <IconCheckCircleDefault/>
+                      )}
                     </S.CompletionBadge>
                   </S.LectureItem>
                 ))}
