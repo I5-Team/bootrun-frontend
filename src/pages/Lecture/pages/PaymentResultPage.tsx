@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../../components/Button';
-import SuccessIcon from '../../../assets/icons/icon-status-success.svg';
-import ErrorIcon from '../../../assets/icons/icon-status-error.svg';
+import SuccessIcon from '../../../assets/icons/icon-status-success.svg?react';
+import ErrorIcon from '../../../assets/icons/icon-status-error.svg?react';
 import { ROUTES } from '../../../router/RouteConfig';
 import EmptyState from '../../../components/EmptyState/EmptyState';
 import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../../queries/usePaymentsQueries';
@@ -98,7 +98,7 @@ export default function PaymentResultPage() {
       <EmptyState
         className="payment-empty-state"
         iconAnimation={isSuccess ? 'success' : 'error'}
-        icon={<img src={isSuccess ? SuccessIcon : ErrorIcon} alt="" aria-hidden="true" />}
+        icon={isSuccess ? <SuccessIcon/> : <ErrorIcon/>}
         title={isSuccess ? '결제가 완료되었습니다' : '결제에 실패했어요'}
         description={isSuccess ? '수강 준비가 끝났어요. 지금 시작해볼까요?' : errorMessage}
         buttons={
