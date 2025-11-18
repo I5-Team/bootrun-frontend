@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 import Button from '../../components/Button';
 import logo from '../../assets/logos/logo-typo.svg';
-import ogImage from '../../assets/images/OG.jpg';
+import ogImage from '../../assets/images/OG-noText.jpg';
 
 const StyledHeroSection = styled.section`
   position: relative;

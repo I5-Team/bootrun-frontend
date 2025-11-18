@@ -67,7 +67,7 @@ const StyledSwiperSlide = styled(SwiperSlide)<{ $bgImageSrc?: string }>`
     background-size: cover;
     ${({ theme, $bgImageSrc }) => css`
         background-image: 
-            linear-gradient(to top, ${theme.colors.primary200}60, ${theme.colors.primary200}00),
+            /* linear-gradient(to top, ${theme.colors.primary100}50, ${theme.colors.primary100}00), */
             url(${$bgImageSrc});
     `}
 

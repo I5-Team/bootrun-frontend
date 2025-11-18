@@ -10,7 +10,7 @@ interface UsePageMetaProps {
 export const usePageMeta = ({ title, description, thumbnail }: UsePageMetaProps) => {
   const location = useLocation();
   const url = `https://i5-team.github.io/bootrun-frontend${location.pathname}`;
-  const defaultOgImage = 'https://i5-team.github.io/bootrun-frontend/OG.jpg';
+  const defaultOgImage = 'https://i5-team.github.io/bootrun-frontend/assets/images/OG.jpg';
 
   return (
     <Helmet>
