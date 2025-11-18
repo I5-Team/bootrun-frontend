@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { StyledBaseSection as S } from '../LectureDetailPage.styled';
 import Profile from '../../../components/Profile';
 
-import { getProfileImageUrl } from '../../../utils/imageUtils';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
@@ -14,29 +14,27 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
     <S.Section ref={ref} id="instructor">
       <S.SectionHeader>
         <S.SectionTitle>강사소개</S.SectionTitle>
-        {instructor_description &&
-          <S.SectionSubtitle>
-            {instructor_description.split('.')[0]}
-          </S.SectionSubtitle>
-        }
+        {instructor_description && (
+          <S.SectionSubtitle>{instructor_description.split('.')[0]}</S.SectionSubtitle>
+        )}
       </S.SectionHeader>
 
-        <Instructor.InfoBox>
-          <Profile
-            size={24}
-            src={getProfileImageUrl(instructor_image)}
-            alt={`${instructor_name} 강사 프로필`}
-          ></Profile>
+      <Instructor.InfoBox>
+        <Profile
+          size={24}
+          src={getFullImageUrl(instructor_image)}
+          alt={`${instructor_name} 강사 프로필`}
+        ></Profile>
 
-          <Instructor.ContentContainer>
-            <Instructor.Header>
-              <Instructor.Name>{instructor_name}</Instructor.Name>
-              <Instructor.SubName>{instructor_bio}</Instructor.SubName>
-            </Instructor.Header>
+        <Instructor.ContentContainer>
+          <Instructor.Header>
+            <Instructor.Name>{instructor_name}</Instructor.Name>
+            <Instructor.SubName>{instructor_bio}</Instructor.SubName>
+          </Instructor.Header>
 
-            <Instructor.Description>{instructor_description}</Instructor.Description>
-          </Instructor.ContentContainer>
-        </Instructor.InfoBox>
+          <Instructor.Description>{instructor_description}</Instructor.Description>
+        </Instructor.ContentContainer>
+      </Instructor.InfoBox>
     </S.Section>
   );
 });

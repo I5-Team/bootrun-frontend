@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { getThumbnailUrl } from '../../../utils/imageUtils';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 import { useState } from 'react';
 import { SkeletonImage } from '../../../components/Skeleton';
@@ -16,7 +16,7 @@ const LectureBannerSection = () => {
 
       {!imgLoaded && <SkeletonImage />}
       <img
-        src={getThumbnailUrl(thumbnail_url)}
+        src={getFullImageUrl(thumbnail_url)}
         alt={title}
         onLoad={() => {
           setImgLoaded(true);

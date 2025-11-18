@@ -45,7 +45,7 @@ const HeaderLogo = () => {
     <Link to={ROUTES.HOME}>
       <h1 className="sr-only">bootRun</h1>
       <StyledLogo src={logo} alt="" width={124} height={24} />
-      {APP_ENV.includes('dev') || APP_ENV.includes('local') ? (
+      {APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local')) ? (
         <StyledDevBadge>{APP_ENV}</StyledDevBadge> // 'dev' 또는 'local' 환경일 때만 배지 표시
       ) : null}
     </Link>
