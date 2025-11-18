@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ScrollToTopButton from '../components/ScrollToTopButton';
 import SvgStar from '../assets/icons/icon-star.svg?react';
-import profileDefault from '../assets/images/profile-default.jpg';
+import { DEFAULT_INSTRUCTOR_IMAGE } from '../constants/apiConfig';
 
 const StyledPage = styled.div`
   width: 100%;
@@ -192,7 +192,7 @@ const reviews: Review[] = [
     name: '김규호',
     courseName: '프론트엔드 부트캠프',
     rating: 5,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       '실무 중심의 커리큘럼이 정말 좋았습니다. 단순히 이론만 배우는 것이 아니라 실제 프로젝트를 진행하면서 포트폴리오까지 완성할 수 있었어요. 현업 개발자 분들의 피드백도 좋았습니다.',
     beforeAfter: '비전공자에서 프론트엔드 개발자로 취업 성공!',
@@ -202,7 +202,7 @@ const reviews: Review[] = [
     name: '신가람',
     courseName: 'Spring Boot 백엔드 과정',
     rating: 5,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       'Discord를 통한 실시간 Q&A가 정말 유용했습니다. 막히는 부분이 있을 때 바로바로 질문하고 답변받을 수 있어서 학습 속도가 빨라졌어요. 커뮤니티 분위기도 너무 좋았습니다.',
     beforeAfter: '신입 개발자에서 백엔드 전문가로 성장',
@@ -212,7 +212,7 @@ const reviews: Review[] = [
     name: '장민경',
     courseName: 'Python 데이터 분석',
     rating: 4,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       '데이터 분석의 기초부터 실전까지 체계적으로 배울 수 있었습니다. 특히 실제 데이터를 활용한 프로젝트가 인상 깊었어요. 강사님의 설명도 이해하기 쉬웠습니다.',
     beforeAfter: '엑셀만 쓰던 직장인에서 데이터 분석가로',
@@ -222,7 +222,7 @@ const reviews: Review[] = [
     name: '김민주',
     courseName: '풀스택 개발 부트캠프',
     rating: 5,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       '프론트엔드부터 백엔드, 배포까지 전체 과정을 경험할 수 있어서 좋았습니다. 혼자서는 엄두도 못 냈을 프로젝트를 완성했고, 자신감을 얻었어요. 취업 지원도 체계적이었습니다.',
     beforeAfter: '6개월 만에 스타트업 풀스택 개발자 취업',
@@ -232,7 +232,7 @@ const reviews: Review[] = [
     name: '김채현',
     courseName: 'React 마스터 과정',
     rating: 5,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       'React의 기본부터 고급 패턴까지 깊이 있게 다뤄주셔서 실력이 많이 늘었습니다. 코드 리뷰를 통해 좋은 코드를 작성하는 법을 배웠고, 실무에서 바로 적용할 수 있었어요.',
     beforeAfter: 'jQuery 개발자에서 React 전문가로',
@@ -242,7 +242,7 @@ const reviews: Review[] = [
     name: '아이오',
     courseName: 'AWS 클라우드 인프라',
     rating: 4,
-    profileImage: profileDefault,
+    profileImage: DEFAULT_INSTRUCTOR_IMAGE,
     reviewText:
       'AWS의 다양한 서비스를 실습을 통해 배울 수 있었습니다. 이론뿐만 아니라 실제 운영 환경을 고려한 아키텍처 설계를 배워서 실무에 큰 도움이 되었어요.',
     beforeAfter: '서버 관리자에서 DevOps 엔지니어로 전환',

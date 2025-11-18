@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
-import SvgProfileImage from '../../../assets/images/profile-user-default.png';
 import {
   useDeleteProfileImage,
   useProfile,
@@ -26,6 +25,7 @@ import {
 } from '../styles/ProfilePage.styled';
 import Button from '../../../components/Button';
 import Profile from '../../../components/Profile';
+import { DEFAULT_INSTRUCTOR_IMAGE } from '../../../constants/apiConfig';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
@@ -156,7 +156,7 @@ const ProfilePage: React.FC = () => {
                 <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" />
               </>
             ) : (
-              <Profile size={14.6} src={SvgProfileImage} alt="기본 프로필 이미지" />
+              <Profile size={14.6} src={DEFAULT_INSTRUCTOR_IMAGE} alt="기본 프로필 이미지" />
             )}
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
