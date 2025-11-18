@@ -203,7 +203,7 @@ const OrderHistoryPage: React.FC = () => {
               ? refundItem.status === 'pending' ? '환불 신청중'
                 : refundItem.status === 'approved' ? '환불 완료'
                 : '환불 거절'
-              : '';
+              : '환불 신청';
 
             return (
               <OrderCard 
