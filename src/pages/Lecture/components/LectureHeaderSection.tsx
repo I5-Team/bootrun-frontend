@@ -6,6 +6,7 @@ import { InfoBoxContent } from './LectureInfoBox';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
 import { formatDate } from '../pages/LectureDetailPage';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const LectureHeaderSection = () => {
   const { data } = useLectureContext();
@@ -39,7 +40,7 @@ const LectureHeaderSection = () => {
 
       <S.InstructorContainer>
         <S.Profile>
-          <Profile size={4.6} src={instructor_image} alt={`${instructor_name} 강사 프로필`} />
+          <Profile size={4.6} src={getFullImageUrl(instructor_image)} alt={`${instructor_name} 강사 프로필`} />
           <S.ProfileInfo>
             <S.ProfileName>{instructor_name} 강사님</S.ProfileName>
             <S.ProfileRole>{instructor_bio}</S.ProfileRole>
