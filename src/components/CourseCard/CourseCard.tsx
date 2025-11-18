@@ -46,7 +46,7 @@ type VariantType = 'info' | 'study';
 type BaseProps = {
   courseId: number;
   thumbnail: string;
-  tags: Array<{ label: string; variant?: 'dark' | 'light' }>;
+  tags: Array<{ label: string; variant?: 'dark' | 'light' | 'primary' }>;
   title: string;
   isActive?: boolean;
   isCompleted?: boolean;

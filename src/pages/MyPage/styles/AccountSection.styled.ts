@@ -229,11 +229,11 @@ export const DangerContent = styled.div`
   padding-top: 0;
 
   button {
-    background-color: ${({ theme }) => theme.colors.alert};
+    background-color: ${({ theme }) => theme.colors.gray400};
 
     &:hover:not(:disabled),
     &:active:not(:disabled) {
-      background-color: #e22531 !important;
+      background-color: ${({ theme }) => theme.colors.surface};
     }
   }
 `;

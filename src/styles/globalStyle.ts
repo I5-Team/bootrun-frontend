@@ -41,6 +41,12 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  select {
+    &:focus-visible {
+      outline: 0.2rem solid ${({ theme }) => theme.colors.primary300};
+    }
+  }
+
   body {
     font-family: 'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
     color: #121314;

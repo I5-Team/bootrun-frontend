@@ -36,6 +36,9 @@ export const StyledCategoryList = styled.div`
 `;
 
 export const StyledCategoryIcon = styled.span`
+    --primary300: ${({ theme }) => theme.colors.primary300};
+    --primary200: ${({ theme }) => theme.colors.primary200};
+
     width: clamp(8rem, 8vw, 10rem);
     height: clamp(8rem, 8vw, 10rem);
 
@@ -51,15 +54,6 @@ export const StyledCategoryIcon = styled.span`
     svg {
         transform: scale(1.1);
     }
-
-    &:hover,
-    &:active {
-        background-color: ${({ theme }) => theme.colors.primary100};
-    }
-
-    &:active {
-        border: 0.2rem solid ${({ theme }) => theme.colors.primary300};
-    }
 `;
 
 export const StyledCategoryBtn = styled.button`
@@ -71,9 +65,22 @@ export const StyledCategoryBtn = styled.button`
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
 
+    span {
+        pointer-events: none;
+    }
+
     &:hover {
-        color: ${({ theme }) => theme.colors.primary300};
+        color: ${({ theme }) => theme.colors.primaryDark};
         font-weight: 600;
+    }
+
+    &:active ${StyledCategoryIcon},
+    &:hover ${StyledCategoryIcon} {
+        background-color: ${({ theme }) => theme.colors.primary200 + '80'};
+    }
+
+    &:active ${StyledCategoryIcon} {
+        border: 0.2rem solid ${({ theme }) => theme.colors.primary300};
     }
 
     @media ${({ theme }) => theme.devices.mobile} {

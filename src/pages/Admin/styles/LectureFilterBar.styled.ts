@@ -30,8 +30,7 @@ export const LectureFilterBarStyles = {
     width: 25rem;
 
     &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
     }
   `,
   Select: styled.select`
@@ -45,8 +44,7 @@ export const LectureFilterBarStyles = {
     cursor: pointer;
 
     &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
     }
   `,
   SubmitButton: styled.button`

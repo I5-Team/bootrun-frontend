@@ -26,11 +26,13 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
 
   background-color: ${({ $variant, theme }) =>
     $variant === 'dark' ? theme.colors.gray400 
-    : $variant === 'light' ? theme.colors.primary100 
-    : theme.colors.primary300};
+    : $variant === 'light' ? theme.colors.gray200
+    : theme.colors.primary100};
 
   color: ${({ $variant, theme }) =>
-    $variant === 'light' ? theme.colors.primary300 : theme.colors.white};
+    $variant === 'dark' ? theme.colors.white 
+    : $variant === 'light' ? theme.colors.gray400 
+    : theme.colors.primary300};
 
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.mobileFontSize.md};

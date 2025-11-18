@@ -1,17 +1,17 @@
 import type { DefaultTheme } from "styled-components";
 
 const colors = {
-  primary100: '#DEE8FF',
-  primary200: '#B5CEFF',
-  primary300: '#2E6FF2',
-  primaryDark: '#2861d2',
+  primary100: '#FFEAE6',
+  primary200: '#FFBAA4',
+  primary300: '#FF5B3B',
+  primaryDark: '#E94525',
 
-  gray100: '#F3F5FA',
-  gray200: '#D9DBE0',
-  gray300: '#8D9299',
-  gray400: '#47494D',
+  gray100: '#F8F9FA',
+  gray200: '#ECEEF0',
+  gray300: '#8D949E',
+  gray400: '#303546',
 
-  surface: '#121314',
+  surface: '#11181C',
   white: '#FFFFFF',
   alert: '#FF3440',
   focus: '#8B38FF',
