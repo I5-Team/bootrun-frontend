@@ -14,7 +14,11 @@
 - **GitHub (Front-End):** [`https://github.com/i5-team/bootrun-frontend`](https://github.com/i5-team/bootrun-frontend)
 - **GitHub (Back-End):** [`https://github.com/i5-team/bootrun-backend`](https://github.com/i5-team/bootrun-backend)
 - **관리자 계정(테스트):**
+  - ID: admin@bootrun.com
+  - PW: adminSecureI5!
 - **수강자 계정(테스트):**
+  - ID: test@bootrun.com
+  - PW: Test1234!@
 
 ## 2. 프로젝트 개요 (Introduction)
 
@@ -28,16 +32,67 @@
 
 ### 2-2. 주요 기능 (What We Built)
 
-- **(핵심) 강의실:** 영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
-  - 시나리오별 동작 GIF
-- **강의:** 강의 목록(필터링), 강의 상세, 수강 신청 (시나리오)
-  - 시나리오별 동작 GIF
-- **인증:** 회원가입(이메일 인증), 로그인(JWT)
-  - 시나리오별 동작 GIF
-- **마이페이지:** 내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
-  - 시나리오별 동작 GIF
-- **관리자:** 대시보드, 강의/사용자/결제 내역 관리
-  - 시나리오별 동작 GIF
+#### (핵심) 강의실
+
+영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
+
+- **강의실 > 진행률 - Progress Bar**
+  <video src="./videos/강의실 > 진행률 - progress bar.mov" controls width="100%"></video>
+
+- **강의실 > 자료 다운로드 링크 이동**
+  <video src="./videos/강의실 > 자료 다운로드 링크 이동.mov" controls width="100%"></video>
+
+#### 강의
+
+강의 목록(필터링), 강의 상세, 수강 신청
+
+- **강의 > 강의 목록 필터링**
+  <video src="./videos/강의 > 강의 목록 필터링.mov" controls width="100%"></video>
+
+- **강의 > 강의 상세 조회**
+  <video src="./videos/강의 > 강의 상세 조회.mov" controls width="100%"></video>
+
+- **강의 > 수강 신청**
+  <video src="./videos/강의 > 수강 신청.mov" controls width="100%"></video>
+
+#### 인증
+
+회원가입(이메일 인증), 로그인(JWT)
+
+- **회원가입**
+  <video src="./videos/회원가입.mov" controls width="100%"></video>
+
+- **로그인 > 수강생, 관리자**
+  <video src="./videos/로그인 > 수강생, 관리자.mov" controls width="100%"></video>
+
+#### 마이페이지
+
+내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
+
+- **마이페이지 > 프로필 설정**
+  <video src="./videos/마이페이지 > 프로필 설정.mov" controls width="100%"></video>
+
+- **마이페이지 > 비밀번호 변경/탈퇴**
+  <video src="./videos/마이페이지 > 비밀변호 변경:탈퇴.mov" controls width="100%"></video>
+
+#### 관리자
+
+대시보드, 강의/사용자/결제 내역 관리
+
+- **관리자 > 대시보드**
+  <video src="./videos/관리자_대시보드.mov" controls width="100%"></video>
+
+- **관리자 > 강의 관리 > 강의 추가 및 조회**
+  <video src="./videos/관리자 > 강의 관리 > 강의 추가 및 조회.mov" controls width="100%"></video>
+
+- **관리자 > 강의 관리 > 수정 및 삭제, 공개 변경**
+  <video src="./videos/관리자 > 강의 관리 > 수정 및 삭제, 공개 변환.mov" controls width="100%"></video>
+
+- **관리자 > 결제 관리 > 결제 내역 엑셀 다운로드**
+  <video src="./videos/관리자 > 결제 관리 > 엑셀 다운로드.mov" controls width="100%"></video>
+
+- **관리자 > 사용자 관리 > 조회**
+  <video src="./videos/관리자 > 강의 관리 > 강의 추가 및 조회.mov" controls width="100%"></video>
 
 ### 2-3. 백엔드 핵심 설계
 
@@ -64,7 +119,7 @@
 
 ### 3-1. 아키텍처 다이어그램
 
-```Mermaid
+```mermaid
 graph TD
 
     %% ===============================
@@ -82,11 +137,15 @@ graph TD
         %% --- Lightsail Instance ---
         subgraph INSTANCE["Lightsail Instance"]
             NGINX[Nginx Reverse Proxy<br/>HTTPS/SSL]
-            UVICORN["Uvicorn Server"]
-            API[FastAPI Application]
+
+            subgraph DOCKER["Docker Compose"]
+                API[FastAPI Container<br/>Uvicorn ASGI Server]
+                REDIS[(Redis Container<br/>Cache & Rate Limit)]
+            end
+
             UPLOADS["/uploads Volume<br/>Local File Storage"]
-            NGINX --> UVICORN
-            UVICORN --> API
+            NGINX --> API
+            API --> REDIS
             API --> UPLOADS
           end
 
@@ -94,12 +153,6 @@ graph TD
         subgraph DB["Lightsail Database"]
             POSTGRES[(PostgreSQL)]
         end
-
-        %% --- Redis Docker ---
-        subgraph Cache["Redis - Docker"]
-           REDIS[(Redis Cache)]
-        end
-
     end
 
     %% ===============================
@@ -130,7 +183,6 @@ graph TD
     %% ===============================
     A -->|HTTPS API Request| NGINX
     API -->|DB Query| POSTGRES
-    API -->|Cache Access| REDIS
     API -->|File Upload or Read| UPLOADS
     A -->|Stream Video| VIDEO
 
@@ -138,7 +190,7 @@ graph TD
     %% Deploy Flow
     %% ===============================
     ACTIONS -->|Deploy Frontend| A
-    ACTIONS -->|SSH Deploy Backend| INSTANCE
+    MANUAL -->|Deploy Backend| INSTANCE
 ```
 
 ### 3-2. ERD 다이어그램
@@ -177,7 +229,7 @@ graph TD
 
 : 프론트엔드는 **MVVM(Model-View-ViewModel)** 패턴을 React 환경에 맞게 적용하여 **관심사를 명확히 분리**했습니다.
 
-```Mermaid
+```mermaid
 graph TD
 
     %% View
@@ -253,58 +305,91 @@ src/
 
 ### 4-2. Backend 폴더구조
 
-: 백엔드는 계층별 책임 분리를 통해 코드의 유지보수성과 테스트 가능성을 확보했습니다.
+: 백엔드는 계층별 책임 분리를 통해 코드의 유지보수성과 테스트 가능성을 확보했습니다.
 
-- **Router (라우터):** `routers/auth.py`, `routers/admin/dashboard.py`
+```mermaid
+graph TD
+    %% Router Layer
+    subgraph Router["Router Layer - 라우터"]
+        R[auth.py<br/>API 엔드포인트 정의]
+    end
+
+    %% Service Layer
+    subgraph Service["Service Layer - 서비스"]
+        S[user_service.py<br/>비즈니스 로직 처리]
+    end
+
+    %% Data Layer
+    subgraph Data["Data Layer - 데이터"]
+        Schema[schemas/user.py<br/>Pydantic 스키마]
+        Model[models/user.py<br/>SQLAlchemy 모델]
+    end
+
+    %% Database
+    DB[(PostgreSQL)]
+
+    %% Flow
+    Client[Client Request]
+
+    Client -->|1. POST /api/v1/auth/signup| R
+    R -->|2. 요청 데이터 검증| Schema
+    R -->|3. 비즈니스 로직 호출| S
+    S -->|4. 데이터 처리| Schema
+    S -->|5. DB 작업 요청| Model
+    Model -->|6. SQL 쿼리 실행| DB
+    DB -->|7. 결과 반환| Model
+    Model -->|8. 데이터 변환| S
+    S -->|9. 응답 생성| Schema
+    Schema -->|10. JSON 응답| R
+    R -->|11. HTTP Response| Client
+```
+
+- **Router (라우터):** `routers/auth.py`, `routers/admin/dashboard.py`
   - HTTP 요청을 받아 적절한 서비스로 라우팅하는 "진입점" 역할을 합니다.
   - 요청 검증(Pydantic Schemas)과 응답 포맷 담당을 담당합니다.
-- **Service (서비스):**
+- **Service (서비스):** `services/user_service.py`
+  - 모든 비즈니스 로직과 데이터 처리 로직이 집중된 계층입니다.
+  - 데이터베이스 쿼리, 캐시 조회, 외부 API 호출 등을 조율합니다.
+  - 재사용 가능한 로직을 제공하여 테스트가 용이합니다.
+- **Model & Schema (모델/스키마):** `models/user.py`, `schemas/user.py`
+  - **Model:** SQLAlchemy ORM 모델로 데이터베이스 테이블을 정의합니다.
+  - **Schema:** Pydantic으로 요청/응답 데이터 검증 및 직렬화를 합니다.
+- **Core (핵심 인프라):** `core/database.py`, `core/security.py`
+  - 데이터베이스 연결, JWT 인증, 캐시 관리 등 공통 기능을 제공합니다.
 
-`services/user_service.py`, `services/admin_dashboard_service.py`
+이러한 구조로 라우터는 HTTP 처리에만 집중하고, 비즈니스 로직은 서비스에서 관리되어 **테스트 및 수정이 간편**합니다.
 
-- 모든 비즈니스 로직과 데이터 처리 로직이 집중된 계층입니다.
-- 데이터베이스 쿼리, 캐시 조회, 외부 API 호출 등을 조율합니다.
-- 재사용 가능한 로직을 제공하여 테스트가 용이합니다.
-- **Model & Schema (모델/스키마):** `models/user.py`, `schemas/user.py`
-  - **Model:** SQLAlchemy ORM 모델로 데이터베이스 테이블을 정의합니다.
-  - **Schema:** Pydantic으로 요청/응답 데이터 검증 및 직렬화를 합니다.
-- **Core (핵심 인프라):**
-
-`core/database.py`, `core/security.py`, `core/redis.py`
-
-- 데이터베이스 연결, JWT 인증, 캐시 관리 등 공통 기능을 제공합니다.
-- 의존성 주입(Dependencies)을 통해 라우터에 주입됩니다.
-
-이러한 구조로 라우터는 HTTP 처리에만 집중하고, 비즈니스 로직은 서비스에서 관리되어 **테스트 및 수정이 간편**합니다.
-
-```tsx
+```
 ## backend 폴더구조
 bootrun-backend/
 ├── app/
 │   ├── main.py                 # FastAPI 앱 진입점, 라우터 등록, 미들웨어 설정
-│   ├── core/
+│   │
+│   ├── core/                   # 핵심 설정 및 의존성
 │   │   ├── config.py           # 환경 변수 및 설정 관리
 │   │   ├── database.py         # PostgreSQL 연결 및 세션 관리
 │   │   ├── redis.py            # Redis 캐시 초기화 및 관리
 │   │   ├── security.py         # JWT 토큰 생성/검증, 비밀번호 해싱
-│   │   ├── dependencies.py     # FastAPI 의존성 주입 (인증, DB)
-│   │   └── logging_config.py   # 로깅 설정
+│   │   ├── dependencies.py     # FastAPI 의존성 주입
+│   │   └── logging_config.py   # 구조화된 로깅 설정
+│   │
 │   ├── models/                 # SQLAlchemy ORM 모델
 │   │   ├── base.py             # 기본 모델 클래스
 │   │   ├── user.py             # 사용자 모델
-│   │   ├── course.py           # 강의 모델
-│   │   ├── enrollment.py       # 수강 등록 모델
+│   │   ├── course.py           # 강의, 챕터, 강의 영상 모델
 │   │   ├── payment.py          # 결제 정보 모델
-│   │   └── progress.py         # 학습 진행률 모델
+│   │   └── progress.py         # 수강 등록 및 학습 진행률 모델
+│   │
 │   ├── schemas/                # Pydantic 요청/응답 스키마
-│   │   ├── user.py
-│   │   ├── course.py
-│   │   ├── enrollment.py
-│   │   ├── payment.py
+│   │   ├── user.py             # 사용자 스키마
+│   │   ├── course.py           # 강의 스키마
+│   │   ├── enrollment.py       # 수강 등록 스키마
+│   │   ├── payment.py          # 결제 스키마
 │   │   ├── admin.py            # 관리자 대시보드 응답 스키마
-│   │   ├── common.py           # 공통 응답 스키마
+│   │   └── common.py           # 공통 응답 스키마
+│   │
 │   ├── routers/                # API 엔드포인트
-│   │   ├── auth.py             # 인증 API (회원가입, 로그인, 소셜로그인)
+│   │   ├── auth.py             # 인증 API
 │   │   ├── user.py             # 사용자 API
 │   │   ├── course.py           # 강의 조회 API
 │   │   ├── enrollment.py       # 수강 등록 API
@@ -314,41 +399,55 @@ bootrun-backend/
 │   │       ├── users.py        # 사용자 관리 API
 │   │       ├── courses.py      # 강의 관리 API
 │   │       └── payments.py     # 결제 관리 API
+│   │
 │   ├── services/               # 비즈니스 로직 계층
-│   │   ├── user_service.py
-│   │   ├── course_service.py
-│   │   ├── enrollment_service.py
-│   │   ├── payment_service.py
-│   │   ├── admin_dashboard_service.py
-│   │   ├── admin_user_service.py
-│   │   └── admin_course_service.py
-│   ├── middleware/             # 커스텀 미들웨어
-│   │   ├── rate_limit.py       # Rate Limiting (분당 60개 요청, 버스트 10개)
-│   │   └── tracking.py         # 요청 추적 및 로깅
+│   │   ├── user_service.py                 # 사용자 서비스
+│   │   ├── course_service.py               # 강의 조회 서비스
+│   │   ├── enrollment_service.py           # 수강 등록 서비스
+│   │   ├── payment_service.py              # 결제 서비스
+│   │   ├── admin_dashboard_service.py      # 관리자 대시보드 서비스
+│   │   ├── admin_user_service.py           # 관리자 사용자 관리 서비스
+│   │   └── admin_course_service.py         # 관리자 강의 관리 서비스
+│   │
+│   ├── middleware/             # 미들웨어
+│   │   └── rate_limit.py       # API 요청 속도 제한
+│   │
 │   ├── exceptions/             # 커스텀 예외 처리
-│   │   ├── base.py
-│   │   ├── handlers.py         # 예외 핸들러 등록
-│   │   └── responses.py        # 에러 응답 포맷
-│   ├── utils/                  # 유틸리티 함수
-│   │   ├── email_service.py    # 이메일 발송
-│   │   ├── file_upload.py      # AWS S3 파일 업로드
-│   │   ├── helpers.py          # 공통 헬퍼 함수
-│   │   └── constants.py        # 상수 정의
+│   │   └── responses.py        # 표준화된 에러 응답
+│   │
+│   └── utils/                  # 유틸리티 함수
+│       └── file_utils.py       # 파일 업로드/삭제 유틸
 │
 ├── alembic/                    # 데이터베이스 마이그레이션
 │   ├── versions/               # 마이그레이션 버전 파일
-│   └── env.py
+│   └── env.py                  # Alembic 환경 설정
 │
-├── scripts/                    # 관리자 관련 스크립트
-│   ├── manage_admin.py         # 관리자 계정 관리
-│   ├── seed_admin.py           # 초기 관리자 생성
-│   └── recalculate_progress_rates.py  # 진행률 재계산
+├── scripts/                    # 운영 스크립트
+│   └── recalculate_progress_rates.py  # 진행률 재계산 스크립트
+│
+├── docs/                       # 프로젝트 문서
+│   └── FOLDER_STRUCTURE.md            # 폴더 구조 문서
 │
 ├── uploads/                    # 로컬 파일 저장 디렉토리
+│   ├── thumbnails/             # 강의 썸네일 이미지
+│   ├── instructors/            # 강사 프로필 이미지
+│   └── profiles/               # 사용자 프로필 이미지
+│
 ├── logs/                       # 로그 파일
+│   ├── app.log                 # 애플리케이션 로그
+│   └── error.log               # 에러 전용 로그
+│
+├── docker-compose.yml          # Docker Compose 설정
+├── Dockerfile                  # Docker 이미지 빌드 설정
+├── .dockerignore               # Docker 빌드 시 제외 파일
 ├── requirements.txt            # Python 패키지 의존성
+├── alembic.ini                # Alembic 설정 파일
+├── .env                       # 환경 변수
 ├── .env.example               # 환경 변수 예제
-└── .gitignore
+├── .gitignore                 # Git 제외 파일 목록
+├── deploy-ec2.sh              # EC2 배포 스크립트
+├── update-deployment.sh       # 배포 업데이트 스크립트
+└── README.md                  # 프로젝트 README
 ```
 
 ## 5. 실행 방법 (Getting Started)
@@ -380,30 +479,22 @@ npm run dev
 **사전 요구 사항:** `Docker`, `Docker Compose`
 
 ```
-# 1. 저장소 클론
-https://github.com/I5-Team/bootrun-backend.git
+# 1. SSH로 Lightsail 서버 접속
+ssh -i ~/.ssh/lightsail-key.pem ubuntu@YOUR_IP
 
+# 2. 저장소 클론
+git clone https://github.com/I5-Team/bootrun-backend.git
 cd bootrun-backend
 
-# 2. 환경 변수 설정
-# .env 파일 생성 및 설정
+# 3. 환경 변수 설정
 cp .env.example .env
-nano .env  # 또는 vi .env
-
-# 3. 의존성 설치 (Python)
-# 가상 환경 생성 (선택 사항이지만 권장)
-python3 -m venv venv
-
-# 가상 환경 활성화
-source venv/bin/activate
-
-# 의존성 설치
-pip install -r requirements.txt
-참고: requirements.txt 파일이 저장소에 있어야 합니다.
+nano .env
 
 # 4. Docker Compose 실행
-# 개발 환경 실행 (PostgreSQL은 별도로 구성 필요)
-docker-compose up -d
+docker-compose up -d --build
+
+# 5. 확인
+docker-compose ps
 ```
 
 ## 6. 협업 규칙 (Collaboration Rules)
@@ -419,7 +510,7 @@ docker-compose up -d
 
 | Gitmoji | **커밋 type** | 설명                                               |
 | ------- | ------------- | -------------------------------------------------- |
-| ✨      | feat          | 새 기능 추가                                       |
+| ✨      | feat          | 새 기능 추가                                       |
 | 🗃️      | db            | DB: DB 스키마, 마이그레이션, 쿼리 변경             |
 | 🔐      | auth          | Auth 관련: 인증/인가 로직 추가 및 수정             |
 | 🌐      | api           | API 관련: API 엔드포인트 추가/변경                 |
@@ -473,25 +564,35 @@ docker-compose up -d
 6. **[동적 경로 비교 에러]**
    - **문제**: 동적 경로 패턴(/lectures/:id/room)과 실제 URL(/lectures/1/room)을 문자열로 직접 비교하면 항상 false가 됨
    - **해결**: const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname); 정규식을 사용한 패턴 매칭으로 해결
-7. **[이미지 URL 경로 문제(로컬/배포 환경 공통 이미지 로딩 오류)]**
-   - **문제**: 백엔드에서 `/uploads/...` 형태의 상대 경로를 반환하는데, 프론트엔드에서 이를 그대로 `<img src={course.thumbnail_url} />`로 사용하면서 로컬/배포 환경 모두에서 이미지가 로딩되지 않는 문제가 발생함.
-   - **해결**: 환경변수 VITE_API_BASE_URL를 설정하고 `getImageUrl` 유틸 함수를 추가하여, 모든 이미지 경로를 `${API_BASE_URL}${url}` 형태의 절대 경로로 변환하도록 수정. 이후 `thumbnail_url`, `instructor_image`, `profile_image` 등 이미지가 사용되는 모든 곳에서 `getImageUrl()`을 통해 URL을 변환해 사용하도록 변경.
+7. **[강의 진도 저장 API 404 에러 처리]**
+   - **문제**: `PATCH /enrollments/progress/lectures/:id` 호출 시 간헐적으로 404가 발생하여, 프론트의 `progressExists` 상태와 서버 기록이 불일치하는 문제가 생김.
+   - **해결**: `enrollmentsApi.ts`에서 404 응답을 명시적으로 throw하도록 변경하고, `LectureRoomPage`에서 해당 예외를 `catch`한 뒤 `POST` API로 재시도하도록 처리하여 최초 진행률 데이터가 안전하게 생성되도록 함.
 8. **[SQLAlchemy Enum 타입 매핑 오류]**
    - **문제**: `SQLEnum(Gender)` 사용 시, 데이터베이스에 Enum의 `name`이 저장되어야 하는데 `value`가 저장되거나, Alembic 마이그레이션 시 Enum 타입이 제대로 인식되지 않는 오류 발생.
    - **해결**: `values_callable=lambda obj: [e.value for e in obj]` 파라미터를 추가하여 Enum 객체의 실제 `value` 값을 명시적으로 데이터베이스에 저장하도록 설정. 이를 통해 Python Enum과 데이터베이스 간 데이터 타입 불일치 문제 해결.
+9. **[결제 결과 페이지 깜빡임 현상]**
+   - **문제**: 결제 성공 시에도 초기 렌더링 단계에서 상태가 falsey로 설정되어 잠깐 결제 실패 화면이 노출됨.
+   - **해결**: 강제 로딩 시간(300ms)을 주어 API 응답 전까지 로딩 상태를 유지하도록 수정, 성공/실패 화면은 로딩 이후에 렌더링되도록 개선.
 
 # 8. 팀원
 
 - **김규호 (Front-End, 팀장):** 프로젝트 총괄, 인증(로그인/회원가입), 마이페이지 개발, CI/CD 구축 및 관리
 - **김민주 (Front-End):** 강의 목록, 강의 상세 페이지, UI/UX 디자인 시스템, SEO 및 웹 접근성 구축, 사용자 결제 관리
-- **김채현 (Front-End):** (핵심) 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
-- **신가람 (Back-End):** 모델/스키마 설계, 인증/사용자/강의/학습 진행/관리자(강의) API, 개발/운영서버 배포
-- **장민경 (Back-End):** 프로젝트 환경 세팅(env/config), 결제/관리자(사용자, 결제, 대시보드) API, 로컬 서버 배포
+- **김채현 (Front-End):** 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
+- **신가람 (Back-End):** DB 설계, 인증/사용자/강의/학습 진행/관리자(강의) API 개발, 서버 배포
+- **장민경 (Back-End):** 환경 설정(env/config), 결제/관리자(사용자·결제·대시보드) API 개발, 로컬 서버 구축
 
 # 9. 소감
 
 - ## 김규호
+  - 팀장으로서 프로젝트를 리딩하면서 새로운 관점에서의 업무를 수행해 보았고, 각 팀원들의 적극적인 태도와 협업이 있었기에 이러한 결과를 낼 수 있었다고 생각하고, 팀장의 기회를 주신 팀원들께 감사드립니다.
 - ## 김민주
+  - 팀 프로젝트를 진행하며 초기 개발 환경 세팅과 코드 컨벤션 등 협업 기준을 직접 설정하고 관리하며 팀원들과 소통하고, 협업 효율과 프로젝트 일관성을 유지하는 방법을 배울 수 있었습니다. 또한, 백엔드와 프론트엔드를 동시에 개발하며 정리되지 않은 데이터를 처리하고 가공하는 경험을 통해 데이터 구조를 이해하고 안정적인 기능을 구현하는 능력을 키울 수 있었습니다.
 - ## 김채현
+  - 이번 프로젝트를 통해 다양한 배경을 가진 팀원들과 함께 협업할 수 있었습니다.
+    백엔드 지식이 깊은 분, 디자인 감각이 뛰어난 분, 실제 현업 경험이 있는 분들과 함께하며
+    서로의 강점을 배우고 실제 서비스를 만들어가는 과정이 큰 성장 경험이 되었습니다.
 - ## 신가람
+  - 팀 프로젝트를 통해 협업 방식과 소통 방법, 그리고 함께 문제를 해결하는 과정을 깊이 경험할 수 있었습니다. 개발 환경 설정부터 아키텍처 설계, 그리고 프론트엔드와의 API 연동까지 진행하면서, 개발이 어떤 의미를 가지며 어떤 흐름으로 이루어지는지 많이 배울 수 있던 시간이었습니다.
 - ## 장민경
+  - 저희 팀은 꾸준히, 그리고 밀접하게 소통하였고 팀원 각자가 자신의 역할에 높은 책임감과 열정을 가지고 임한 덕분에 저도 어려운 문제들을 포기하지 않고 해결하며 프로젝트를 성공적으로 완수할 수 있었습니다.
