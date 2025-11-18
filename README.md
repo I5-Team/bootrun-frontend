@@ -141,7 +141,7 @@ graph TD
     ACTIONS -->|SSH Deploy Backend| INSTANCE
 ```
 
-### 3-2. Front-End
+### 3-2. ERD 다이어그램
 
 ![ERD 다이어그램](https://github.com/user-attachments/assets/5dca5055-e3e4-4264-a2b5-40deb6ad545b)
 
