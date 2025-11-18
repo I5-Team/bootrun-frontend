@@ -13,6 +13,8 @@ import { usePostPayments } from '../../../queries/usePaymentsQueries';
 import type { PaymentMethod, PaymentsBodyData } from '../../../types/PaymentsType';
 import { ROUTES } from '../../../router/RouteConfig';
 import { ErrorMessage } from '../../../components/HelperComponents';
+import { getFullImageUrl } from '../../../utils/imageUtils';
+import { SkeletonImage } from '../../../components/Skeleton';
 
 export interface Coupon {
   // 기본 정보
@@ -144,6 +146,7 @@ export default function LecturePaymentPage() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
 
   // hooks
+  const [imgLoaded, setImgLoaded] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const courseId = Number(id);
@@ -210,11 +213,16 @@ export default function LecturePaymentPage() {
           <S.LeftSection>
             <S.SectionTitle as="h2">강의 구매</S.SectionTitle>
             <S.LectureCard>
-              <S.LectureThumbnail
-                $thumbnailUrl={courseData.thumbnail_url}
-                role="img"
-                aria-label={`${courseData.title} 강의 썸네일`}
-              />
+              <S.LectureThumbnail>
+                {!imgLoaded && <SkeletonImage />}
+                  <img 
+                    src={getFullImageUrl(courseData.thumbnail_url)}
+                    alt={courseData.title}
+                    onLoad={() => {
+                      setImgLoaded(true);
+                    }}
+                  />
+              </S.LectureThumbnail>
               <S.LectureInfo>
                 <S.CategoryBadge aria-label="카테고리:">
                   {categoryLabel[courseData.category_type]}

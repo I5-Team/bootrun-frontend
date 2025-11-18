@@ -122,6 +122,7 @@ export const InfoBoxButtons = () => {
   const { isEnrolled, recruitmentStatus } = useLectureContext();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const isAdmin = localStorage.getItem('role') === 'admin';
 
   const handleGoToPayment = () => {
     const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(id));
@@ -142,27 +143,36 @@ export const InfoBoxButtons = () => {
 
   return (
     <S.ButtonContainer>
-      {recruitmentStatus === undefined ? (
-        <Button>
-          <LoadingSpinner />
-        </Button>
-      ) : isEnrolled ? (
+      {isAdmin ? (
         <Button
           size="lg"
           fullWidth={!isLaptop}
-          iconSvg={<SvgPlay />}
-          onClick={handleGoToLectureRoom}
-        >
-          학습하기
-        </Button>
-      ) : recruitmentStatus ? (
-        <Button size="lg" fullWidth={!isLaptop} onClick={handleGoToPayment}>
-          수강신청 하기
+          disabled={true}
+        >수강 불가
         </Button>
       ) : (
-        <Button size="lg" fullWidth={!isLaptop} disabled={true}>
-          수강신청 마감
-        </Button>
+        recruitmentStatus === undefined ? (
+          <Button>
+            <LoadingSpinner />
+          </Button>
+        ) : isEnrolled ? (
+          <Button
+            size="lg"
+            fullWidth={!isLaptop}
+            iconSvg={<SvgPlay />}
+            onClick={handleGoToLectureRoom}
+          >
+            학습하기
+          </Button>
+        ) : recruitmentStatus ? (
+          <Button size="lg" fullWidth={!isLaptop} onClick={handleGoToPayment}>
+            수강신청 하기
+          </Button>
+        ) : (
+          <Button size="lg" fullWidth={!isLaptop} disabled={true}>
+            수강신청 마감
+          </Button>
+        )
       )}
       <Button
         variant="outline"

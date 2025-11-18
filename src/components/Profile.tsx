@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import userProfileDefault from '../assets/images/profile-default.jpg';
 import { getFullImageUrl } from '../utils/imageUtils';
+import { DEFAULT_INSTRUCTOR_IMAGE } from '../constants/apiConfig';
 
 type ProfileProps = {
   src?: string;
@@ -38,7 +38,7 @@ export default function Profile({
   return (
     <>
       <StyledProfileImg
-        src={imageSrc || userProfileDefault}
+        src={imageSrc || DEFAULT_INSTRUCTOR_IMAGE}
         $size={size}
         alt={alt}
         $isActive={isActive}

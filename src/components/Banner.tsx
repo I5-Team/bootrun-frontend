@@ -67,7 +67,7 @@ const StyledSwiperSlide = styled(SwiperSlide)<{ $bgImageSrc?: string }>`
     background-size: cover;
     ${({ theme, $bgImageSrc }) => css`
         background-image: 
-            /* linear-gradient(to top, ${theme.colors.primary100}50, ${theme.colors.primary100}00), */
+            linear-gradient(to top, ${theme.colors.primary100}20, ${theme.colors.primary100}00),
             url(${$bgImageSrc});
     `}
 
@@ -91,7 +91,9 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledTag = styled.span`
-    color: ${({ theme }) => theme.colors.primary300};
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.focus};
+
     font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 700;
     text-align: center;
@@ -100,9 +102,6 @@ const StyledTag = styled.span`
     justify-content: center;
     align-items: center;
     padding: 0.2rem 0.4rem;
-
-    background-color: ${({ theme }) => theme.colors.white};
-
 
     @media ${({ theme }) => theme.devices.mobile} {
         background-position: center;
@@ -116,7 +115,6 @@ const StyledTitle = styled.p`
     font-weight: 700;
     line-height: 1.2;
     white-space: pre-line;
-
 
     @media ${({ theme }) => theme.devices.mobile} {
         font-size: ${({ theme }) => `clamp(${theme.mobileFontSize.xl}, 5vw, ${theme.fontSize.lg})`};
@@ -156,26 +154,25 @@ export default function Banner() {
     const bannerDatas: BannerItem[] = [
         {
             id: 1,
-            imgSrc: BannerImg1,
-            tag: '수강생 모집중',
-            title: "견고한 파이썬\n부스트 커뮤니티 1기",
-            desc: "위니브와 함께하는 파이썬 완전 정복 온라인 강의가 출시되었습니다.\n",
-            highlight: "얼리버드 20% 할인 혜택을 놓치지 마세요!",
+            imgSrc: BannerImg2,
+            tag: '부트런 사이트 오픈!',
+            title: `부트런 사이트\n오픈했습니다!`,
+            desc: "김규호, 김민주, 김채현, 신가람, 장민경\n다들 수고하셨습니다. 🔥",
         }, 
         {
             id: 2,
-            imgSrc: BannerImg2,
-            tag: '부트런 사이트 오픈예정!',
-            title: `부트런 사이트 오픈까지\n${calculateDdayFrom('2025-11-19')}`,
-            desc: "김규호, 김민주, 김채현, 신가람, 장민경\n아자아자 파이팅 🔥",
+            imgSrc: BannerImg1,
+            tag: '부트캠프 수료',
+            title: "부트캠프 수료를\n진심으로 축하드립니다",
+            desc: '수료한지 오늘로부터 ',
+            highlight: calculateDdayFrom('2025-11-19'),
         }, 
         {
             id: 3,
             imgSrc: BannerImg3,
-            tag: '수상을 축하합니다',
-            title: "김채현님 수상을\n진심으로 축하드립니다",
-            desc: "무슨상인진 모르지만 축하드립니다~\n",
-            highlight: "짱짱",
+            tag: '생일을 축하합니다',
+            title: "11월 9일은\n채현님의 생일",
+            desc: "지났지만 축하드립니다 🎉",
         }
     ]
 

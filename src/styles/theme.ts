@@ -5,10 +5,11 @@ const colors = {
   primary200: '#FFBAA4',
   primary300: '#FF5B3B',
   primaryDark: '#E94525',
+  sub: '#FF9971',
 
-  gray100: '#F8F9FA',
-  gray200: '#ECEEF0',
-  gray300: '#8D949E',
+  gray100: '#F2F4F9',
+  gray200: '#DCE1E6',
+  gray300: '#7E848C',
   gray400: '#303546',
 
   surface: '#11181C',

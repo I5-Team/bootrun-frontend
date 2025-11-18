@@ -95,14 +95,18 @@ export const LectureCard = styled(Card)`
 
 export const LectureThumbnail = styled.div<{ $thumbnailUrl?: string }>`
   width: 20rem;
+  max-width: 20rem;
   flex-shrink: 0;
-  background-image: ${({ $thumbnailUrl }) => ($thumbnailUrl ? `url(${$thumbnailUrl})` : 'none')};
-  background-size: cover;
-  background-position: center;
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md};
   overflow: hidden;
   aspect-ratio: 16/9;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   @media ${({ theme }) => theme.devices.tablet} {
     width: 100%;

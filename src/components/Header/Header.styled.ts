@@ -118,16 +118,16 @@ export const StyledDevBadge = styled.span`
   font-weight: 700;
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
+  margin-left: 8px;
 
   /* 'dev' 환경은 주황색 계열, 'local'은 파란색 계열로 구분 */
   background-color: ${({ theme, children }) =>
-    children === 'dev' ? theme.colors.alert : theme.colors.primary200};
+    children === 'dev' ? theme.colors.alert : theme.colors.focus};
 
-  color: ${({ theme, children }) =>
-    children === 'dev' ? theme.colors.surface : theme.colors.white};
+  color: white;
 
-  opacity: 0.7; /* ⭐️ 요청하신 반투명 스타일 */
+  opacity: 0.7;
 
   text-transform: uppercase;
-  pointer-events: none; /* 로고 클릭에 방해되지 않도록 */
+  pointer-events: none;
 `;
