@@ -21,14 +21,14 @@ const LectureManagePage = lazy(() => import('../pages/Admin/pages/LectureManageP
 const PaymentManagePage = lazy(() => import('../pages/Admin/pages/PaymentManagePage'));
 const UserManagePage = lazy(() => import('../pages/Admin/pages/UserManagePage'));
 
-const LectureListPage = lazy(() => import('../pages/Lecture/LectureListPage'));
-const LectureSearchPage = lazy(() => import('../pages/Lecture/LectureSearchPage'));
-const LectureDetailPage = lazy(() => import('../pages/Lecture/LectureDetailPage'));
+const LectureListPage = lazy(() => import('../pages/Lecture/pages/LectureListPage'));
+const LectureSearchPage = lazy(() => import('../pages/Lecture/pages/LectureSearchPage'));
+const LectureDetailPage = lazy(() => import('../pages/Lecture/pages/LectureDetailPage'));
 const ProfilePage = lazy(() => import('../pages/MyPage/pages/ProfilePage'));
-const LecturePaymentPage = lazy(() => import('../pages/Lecture/LecturePaymentPage'));
-const PaymentResultPage = lazy(() => import('../pages/Lecture/PaymentResultPage'));
-const MyLecturePage = lazy(() => import('../pages/Lecture/MyLecturePage'));
-const LectureRoomPage = lazy(() => import('../pages/Lecture/LectureRoomPage'));
+const LecturePaymentPage = lazy(() => import('../pages/Lecture/pages/LecturePaymentPage'));
+const PaymentResultPage = lazy(() => import('../pages/Lecture/pages/PaymentResultPage'));
+const MyLecturePage = lazy(() => import('../pages/Lecture/pages/MyLecturePage'));
+const LectureRoomPage = lazy(() => import('../pages/Lecture/pages/LectureRoomPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));

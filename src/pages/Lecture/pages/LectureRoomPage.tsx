@@ -3,27 +3,27 @@
  */
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useParams, useOutletContext } from 'react-router-dom';
-import CurriculumSidebar from './components/CurriculumSidebar';
-import VideoPlayer from './components/VideoPlayer';
-import MaterialsTab from './components/MaterialsTab';
-import QnaTab from './components/QnaTab';
-import ProgressBar from '../../components/ProgressBar';
-import { SkeletonLectureRoom } from '../../components/Skeleton';
-import { useLectureRoom } from '../../contexts/LectureRoomContext';
+import CurriculumSidebar from '../components/CurriculumSidebar';
+import VideoPlayer from '../components/VideoPlayer';
+import MaterialsTab from '../components/MaterialsTab';
+import QnaTab from '../components/QnaTab';
+import ProgressBar from '../../../components/ProgressBar';
+import { SkeletonLectureRoom } from '../../../components/Skeleton';
+import { useLectureRoom } from '../../../contexts/LectureRoomContext';
 import {
   fetchLectureRoomData,
   fetchLectureProgress,
   updateLectureProgress,
   createEnrollmentProgress,
   fetchCourseProgress,
-} from '../../api/enrollmentsApi';
-import type { EnrollmentDetailItem } from '../../types/CourseType';
-import iconArrowLeft from '../../assets/icons/icon-arrow-left.svg';
-import iconArrowRight from '../../assets/icons/icon-arrow-right.svg';
-import iconArrowUp from '../../assets/icons/icon-arrow-up.svg';
-import iconCloseLeft from '../../assets/icons/icon-sidebar-left.svg';
-import iconCloseRight from '../../assets/icons/icon-sidebar-right.svg';
-import * as S from './components/styles/LectureRoomPage.styled';
+} from '../../../api/enrollmentsApi';
+import type { EnrollmentDetailItem } from '../../../types/CourseType';
+import iconArrowLeft from '../../../assets/icons/icon-arrow-left.svg';
+import iconArrowRight from '../../../assets/icons/icon-arrow-right.svg';
+import iconArrowUp from '../../../assets/icons/icon-arrow-up.svg';
+import iconCloseLeft from '../../../assets/icons/icon-sidebar-left.svg';
+import iconCloseRight from '../../../assets/icons/icon-sidebar-right.svg';
+import * as S from '../styles/LectureRoomPage.styled';
 
 // 임시 데이터
 const MOCK_DATA = {

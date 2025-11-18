@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
-import { useIsEnrolled } from '../../hooks/useIsEnrolled';
+import { useIsEnrolled } from '../../pages/Lecture/hooks/useIsEnrolled';
 
 // import - components
 import {

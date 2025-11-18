@@ -58,7 +58,9 @@ export default function LectureRoomLayout() {
       <LectureRoomContext.Provider value={contextValue}>
         <Header />
         <StyledMainContainer>
-            <Outlet context={{ ...contextValue, setCurrentLectureMaterialUrl, setCurrentLectureId }} />
+          <Outlet
+            context={{ ...contextValue, setCurrentLectureMaterialUrl, setCurrentLectureId }}
+          />
         </StyledMainContainer>
       </LectureRoomContext.Provider>
     </StyledWrapper>

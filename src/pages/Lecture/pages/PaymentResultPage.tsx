@@ -1,13 +1,13 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button } from '../../components/Button';
-import SuccessIcon from '../../assets/icons/icon-status-success.svg';
-import ErrorIcon from '../../assets/icons/icon-status-error.svg';
-import { ROUTES } from '../../router/RouteConfig';
-import EmptyState from '../../components/EmptyState/EmptyState';
-import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../queries/usePaymentsQueries';
+import { Button } from '../../../components/Button';
+import SuccessIcon from '../../../assets/icons/icon-status-success.svg';
+import ErrorIcon from '../../../assets/icons/icon-status-error.svg';
+import { ROUTES } from '../../../router/RouteConfig';
+import EmptyState from '../../../components/EmptyState/EmptyState';
+import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../../queries/usePaymentsQueries';
 import { useEffect, useState } from 'react';
-import { LoadingSpinner } from '../../components/HelperComponents';
-import type { PaymentStatus } from '../../types/PaymentsType';
+import { LoadingSpinner } from '../../../components/HelperComponents';
+import type { PaymentStatus } from '../../../types/PaymentsType';
 
 export default function PaymentResultPage() {
   // hooks
@@ -17,7 +17,6 @@ export default function PaymentResultPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isMinTimeElapsed, setIsMinTimeElapsed] = useState(false);
   const MIN_DELAY_MS = 300;
-
 
   // paymentId 유효성 검사
   const paymentIdParam = searchParams.get('paymentId');
@@ -29,7 +28,6 @@ export default function PaymentResultPage() {
     !isNaN(paymentId) &&
     paymentId > 0;
 
-
   // queries: transaction_id
   const { mutate: confirmPayment } = usePostPaymentConfirm();
   const { data: paymentDetailData, isLoading } = usePaymentDetailQuery(Number(paymentId));
@@ -37,28 +35,31 @@ export default function PaymentResultPage() {
   // 결제 확인
   useEffect(() => {
     if (isValidPaymentId && paymentDetailData?.transaction_id) {
-      confirmPayment({ 
-        payment_id: Number(paymentId), 
-        transaction_id: paymentDetailData.transaction_id
-      }, {
-        onSuccess: (data) => {
-          setPaymentStatus(data?.status ?? 'completed');
+      confirmPayment(
+        {
+          payment_id: Number(paymentId),
+          transaction_id: paymentDetailData.transaction_id,
         },
-        onError: (err: any) => {
-          setErrorMessage('결제 확인을 실패했어요. 다시 시도해 주세요.');
-          if (err.isAxiosError && err.response?.data) {
-            setErrorMessage(err.response.data.detail);
-          } else if (err instanceof Error) {
-            setErrorMessage(err.message);
-          }
-          console.error('결제 확인 실패:', err);
-          setPaymentStatus('failed');
+        {
+          onSuccess: (data) => {
+            setPaymentStatus(data?.status ?? 'completed');
+          },
+          onError: (err: any) => {
+            setErrorMessage('결제 확인을 실패했어요. 다시 시도해 주세요.');
+            if (err.isAxiosError && err.response?.data) {
+              setErrorMessage(err.response.data.detail);
+            } else if (err instanceof Error) {
+              setErrorMessage(err.message);
+            }
+            console.error('결제 확인 실패:', err);
+            setPaymentStatus('failed');
+          },
         }
-      });
+      );
     }
   }, [isValidPaymentId, paymentDetailData?.transaction_id, paymentId, confirmPayment]);
 
-  // 
+  //
   useEffect(() => {
     if (!isValidPaymentId || !paymentDetailData) {
       setPaymentStatus('failed');
@@ -87,7 +88,8 @@ export default function PaymentResultPage() {
   };
 
   // 조건부 렌더링: 예외 처리
-  if (isLoading || paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed) return <LoadingSpinner />;
+  if (isLoading || paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed)
+    return <LoadingSpinner />;
 
   const isSuccess = paymentStatus === 'completed';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { RefObject } from 'react';
-import type { SectionRefs } from '../../../types/LectureType'; 
-import { NavItem, StickyNavWrapper, NavCta, NavList } from "../LectureDetailPage.styled";
+import type { SectionRefs } from '../../../types/LectureType';
+import { NavItem, StickyNavWrapper, NavCta, NavList } from '../styles/LectureDetailPage.styled';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { ROUTES } from '../../../router/RouteConfig';
 import { useNavigate } from 'react-router-dom';
@@ -24,23 +24,21 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
     { name: '강사 소개', ref: refs.instructorRef, id: 'instructor' },
     { name: 'FAQ', ref: refs.faqRef, id: 'faq' },
   ];
-  
-  const ctaItem = { name: '수강신청', href: '#' }; 
 
-    const recruitmentStatus = data.recruitment_end_date 
-      ? (new Date(data.recruitment_end_date.replace('T', ''))) > new Date() ? true : false
-      : false;
+  const ctaItem = { name: '수강신청', href: '#' };
 
-  const handleNavClick = (
-    e: React.MouseEvent, 
-    name: string, 
-    ref: RefObject<HTMLElement>
-  ) => {
+  const recruitmentStatus = data.recruitment_end_date
+    ? new Date(data.recruitment_end_date.replace('T', '')) > new Date()
+      ? true
+      : false
+    : false;
+
+  const handleNavClick = (e: React.MouseEvent, name: string, ref: RefObject<HTMLElement>) => {
     e.preventDefault();
     setActiveTab(name);
     ref.current?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start', 
+      block: 'start',
     });
   };
 
@@ -49,8 +47,8 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
     const path = ROUTES.LECTURE_PAYMENT.replace(':id', String(courseId));
     console.log(path);
     navigate(path);
-  }
-  
+  };
+
   return (
     <StickyNavWrapper aria-label="강의 상세 정보 탐색">
       <NavList>
@@ -65,19 +63,16 @@ export const SectionTabs: React.FC<StickyNavProps> = ({ refs }) => {
             </NavItem>
           </li>
         ))}
-        
+
         {/* 수강신청 CTA 버튼 (별도 스타일링) */}
-        {(recruitmentStatus && isTablet) && 
+        {recruitmentStatus && isTablet && (
           <li key={ctaItem.name}>
-            <NavCta
-              href='#'
-              onClick={handleEnrollCourse}
-            >
+            <NavCta href="#" onClick={handleEnrollCourse}>
               {ctaItem.name}
             </NavCta>
           </li>
-        }
+        )}
       </NavList>
     </StickyNavWrapper>
   );
-}
+};

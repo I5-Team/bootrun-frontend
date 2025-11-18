@@ -202,7 +202,7 @@ export const ContentArea = styled.div`
 `;
 
 export const VideoPlayerWrapper = styled.div`
-  width: 90%;
+  width: 80%;
   max-width: none;
   aspect-ratio: 16 / 9;
   display: flex;

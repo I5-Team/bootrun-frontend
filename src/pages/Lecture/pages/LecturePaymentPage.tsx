@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import Button from '../../components/Button';
-import CouponModal from './components/CouponModal';
-import * as S from './LecturePaymentPage.styled';
-import CheckRectActive from '../../assets/icons/icon-check-rect-active.svg?react';
-import CheckRectDefault from '../../assets/icons/icon-check-rect-default.svg?react';
-import tossIcon from '../../assets/icons/icon-payment-toss.avif';
-import { calculateCouponDiscount, formatPrice } from '../../utils/couponUtils';
-import { useCourseDetailQuery } from '../../queries/useCourseQueries';
+import Button from '../../../components/Button';
+import CouponModal from '../components/CouponModal';
+import * as S from '../styles/LecturePaymentPage.styled';
+import CheckRectActive from '../../../assets/icons/icon-check-rect-active.svg?react';
+import CheckRectDefault from '../../../assets/icons/icon-check-rect-default.svg?react';
+import tossIcon from '../../../assets/icons/icon-payment-toss.avif';
+import { calculateCouponDiscount, formatPrice } from '../../../utils/couponUtils';
+import { useCourseDetailQuery } from '../../../queries/useCourseQueries';
 import { useNavigate, useParams } from 'react-router-dom';
-import { categoryLabel } from '../../types/CourseType';
-import { usePostPayments } from '../../queries/usePaymentsQueries';
-import type { PaymentMethod, PaymentsBodyData } from '../../types/PaymentsType';
-import { ROUTES } from '../../router/RouteConfig';
-import { ErrorMessage } from '../../components/HelperComponents';
+import { categoryLabel } from '../../../types/CourseType';
+import { usePostPayments } from '../../../queries/usePaymentsQueries';
+import type { PaymentMethod, PaymentsBodyData } from '../../../types/PaymentsType';
+import { ROUTES } from '../../../router/RouteConfig';
+import { ErrorMessage } from '../../../components/HelperComponents';
 
 export interface Coupon {
   // 기본 정보
@@ -90,15 +90,15 @@ export interface Coupon {
 
 // PaymentMethodButton
 interface PaymentMethodInterface {
-  payment_method: PaymentMethod;       
-  displayName: string;  
-  icon?: string;        
+  payment_method: PaymentMethod;
+  displayName: string;
+  icon?: string;
 }
 
 const paymentMethodList: PaymentMethodInterface[] = [
   { payment_method: 'toss', displayName: '토스페이', icon: tossIcon },
   { payment_method: 'transfer', displayName: '계좌이체' },
-  { payment_method: 'card', displayName: '신용/체크카드' }
+  { payment_method: 'card', displayName: '신용/체크카드' },
 ];
 
 const PaymentMethodButton = ({
@@ -112,7 +112,7 @@ const PaymentMethodButton = ({
 }) => {
   const handleToggle = () => {
     setSelectedPaymentMethod(selected ? null : method.payment_method);
-  }
+  };
 
   return (
     <S.PaymentMethodOption
@@ -132,7 +132,7 @@ const PaymentMethodButton = ({
       {method.icon && <S.PaymentMethodIcon src={method.icon} alt="" aria-hidden="true" />}
       {method.displayName}
     </S.PaymentMethodOption>
-  )
+  );
 };
 
 //
@@ -149,9 +149,9 @@ export default function LecturePaymentPage() {
   const courseId = Number(id);
   const { data: courseData } = useCourseDetailQuery(courseId);
   const postPaymentMutation = usePostPayments();
-  
+
   // 데이터 없으면
-  if (!courseData) return <ErrorMessage message="불러올 데이터가 없습니다."/>;
+  if (!courseData) return <ErrorMessage message="불러올 데이터가 없습니다." />;
 
   // 할인
   const calculateDiscount = (): number => {
@@ -175,7 +175,7 @@ export default function LecturePaymentPage() {
     const paymentBodyData: PaymentsBodyData = {
       course_id: courseId,
       payment_method: selectedPaymentMethod,
-    }
+    };
 
     const resultPath = ROUTES.LECTURE_PAYMENT_RESULT.replace(':id', String(courseId));
 
@@ -185,7 +185,7 @@ export default function LecturePaymentPage() {
           const paymentId = data.id;
           navigate({
             pathname: resultPath,
-            search: `?paymentId=${paymentId}`
+            search: `?paymentId=${paymentId}`,
           });
         }
       },
@@ -193,10 +193,10 @@ export default function LecturePaymentPage() {
         console.error('결제 실패', err);
         navigate({
           pathname: resultPath,
-          search: `?status=fail`
+          search: `?status=fail`,
         });
-      }
-    })
+      },
+    });
   };
 
   const handleRemoveCoupon = () => {
@@ -216,14 +216,14 @@ export default function LecturePaymentPage() {
                 aria-label={`${courseData.title} 강의 썸네일`}
               />
               <S.LectureInfo>
-                <S.CategoryBadge aria-label='카테고리:'>
+                <S.CategoryBadge aria-label="카테고리:">
                   {categoryLabel[courseData.category_type]}
                 </S.CategoryBadge>
                 <S.LectureTitle>{courseData.title}</S.LectureTitle>
-                <S.LectureInstructor aria-label='강사:'>
+                <S.LectureInstructor aria-label="강사:">
                   {courseData.instructor_name}
                 </S.LectureInstructor>
-                <S.LecturePrice aria-label='강의 가격:'>
+                <S.LecturePrice aria-label="강의 가격:">
                   {formatPrice(courseData.price)}
                 </S.LecturePrice>
               </S.LectureInfo>
@@ -238,7 +238,7 @@ export default function LecturePaymentPage() {
               <S.PriceSection>
                 <S.PriceRow>
                   <S.PriceLabel>상품 금액</S.PriceLabel>
-                  <S.PriceValue aria-label='상품 금액'>
+                  <S.PriceValue aria-label="상품 금액">
                     {formatPrice(courseData.price)}
                   </S.PriceValue>
                 </S.PriceRow>
@@ -294,7 +294,6 @@ export default function LecturePaymentPage() {
             <S.SectionTitle as="h2">결제 수단</S.SectionTitle>
             <S.Card role="region" aria-label="결제 수단 선택 및 결제 실행">
               <S.PaymentMethodSection role="radiogroup" aria-label="결제 수단">
-                
                 {paymentMethodList.map((method) => (
                   <PaymentMethodButton
                     key={method.payment_method}
@@ -303,7 +302,6 @@ export default function LecturePaymentPage() {
                     setSelectedPaymentMethod={setSelectedPaymentMethod}
                   />
                 ))}
-
               </S.PaymentMethodSection>
 
               <S.PaymentDivider role="separator" aria-hidden="true" />
