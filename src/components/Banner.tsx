@@ -91,7 +91,9 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledTag = styled.span`
-    color: ${({ theme }) => theme.colors.primary300};
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.focus};
+
     font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 700;
     text-align: center;
@@ -100,9 +102,6 @@ const StyledTag = styled.span`
     justify-content: center;
     align-items: center;
     padding: 0.2rem 0.4rem;
-
-    background-color: ${({ theme }) => theme.colors.white};
-
 
     @media ${({ theme }) => theme.devices.mobile} {
         background-position: center;

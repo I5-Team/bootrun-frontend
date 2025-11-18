@@ -36,8 +36,8 @@ export const StyledCategoryList = styled.div`
 `;
 
 export const StyledCategoryIcon = styled.span`
-    --primary300: ${({ theme }) => theme.colors.primary300};
-    --primary200: ${({ theme }) => theme.colors.primary200};
+    --primary300: ${({ theme }) => theme.colors.gray400};
+    --primary200: ${({ theme }) => theme.colors.sub};
 
     width: clamp(8rem, 8vw, 10rem);
     height: clamp(8rem, 8vw, 10rem);
