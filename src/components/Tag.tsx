@@ -26,13 +26,18 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
 
   background-color: ${({ $variant, theme }) =>
     $variant === 'dark' ? theme.colors.gray400 
-    : $variant === 'light' ? theme.colors.gray200
-    : theme.colors.primary100};
+    : $variant === 'light' ? theme.colors.white
+    : theme.colors.primary300};
 
   color: ${({ $variant, theme }) =>
     $variant === 'dark' ? theme.colors.white 
-    : $variant === 'light' ? theme.colors.gray400 
-    : theme.colors.primary300};
+    : $variant === 'light' ? theme.colors.gray400
+    : theme.colors.white};
+
+  outline: ${({ $variant, theme }) =>
+    $variant === 'dark' ? '0.1rem solid transparent'  
+    : $variant === 'light' ? '0.1rem solid' + theme.colors.gray200
+    : '0.1rem solid transparent'};
 
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.mobileFontSize.md};
@@ -55,4 +60,4 @@ export const Tag: React.FC<TagProps> = ({ children, variant = 'light', hasDelete
   )
 }
 
-export default Tag
+export default Tag;
