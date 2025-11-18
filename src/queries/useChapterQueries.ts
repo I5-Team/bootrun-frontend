@@ -14,7 +14,6 @@ export const useCreateChapterMutation = () => {
     mutationFn: ({ courseId, chapterData }: { courseId: number; chapterData: ChapterRequest }) =>
       createChapter(courseId, chapterData),
     onSuccess: (data) => {
-      console.log('챕터 생성 성공:', data);
       // 강의 목록 및 상세 정보 쿼리 무효화 (목록 새로고침)
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       queryClient.invalidateQueries({ queryKey: ['course', data.data.course_id] });
@@ -42,7 +41,6 @@ export const useUpdateChapterMutation = () => {
       chapterData: ChapterRequest;
     }) => updateChapter(courseId, chapterId, chapterData),
     onSuccess: (data) => {
-      console.log('챕터 수정 성공:', data);
       // 강의 목록 및 상세 정보 쿼리 무효화 (목록 새로고침)
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       queryClient.invalidateQueries({ queryKey: ['course', data.data.course_id] });
@@ -63,7 +61,6 @@ export const useDeleteChapterMutation = () => {
     mutationFn: ({ courseId, chapterId }: { courseId: number; chapterId: number }) =>
       deleteChapter(courseId, chapterId),
     onSuccess: () => {
-      console.log('챕터 삭제 성공');
       // 강의 목록 및 상세 정보 쿼리 무효화 (목록 새로고침)
       queryClient.invalidateQueries({ queryKey: ['courses'] });
     },

@@ -21,7 +21,6 @@ export const useCreateLectureMutation = () => {
       lectureData: LectureRequest;
     }) => createLecture(courseId, chapterId, lectureData),
     onSuccess: (data) => {
-      console.log('강의 영상 생성 성공:', data);
       // 강의 목록 및 상세 정보 쿼리 무효화 (목록 새로고침)
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       queryClient.invalidateQueries({ queryKey: ['course', data.data.chapter_id] });
@@ -51,7 +50,6 @@ export const useUpdateLectureMutation = () => {
       lectureData: LectureRequest;
     }) => updateLecture(courseId, chapterId, lectureId, lectureData),
     onSuccess: (data) => {
-      console.log('강의 영상 수정 성공:', data);
       // 강의 목록 및 상세 정보 쿼리 무효화 (목록 새로고침)
       queryClient.invalidateQueries({ queryKey: ['courses'] });
       queryClient.invalidateQueries({ queryKey: ['course', data.data.chapter_id] });

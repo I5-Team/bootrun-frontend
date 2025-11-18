@@ -80,6 +80,10 @@ const getAnimation = (animation?: string) => {
 export const IconWrapper = styled.div<{ $animation?: string }>`
   width: 8.8rem;
   height: 8.8rem;
+  color: ${({ $animation, theme }) => $animation === 'error' 
+    ? theme.colors.alert
+    : theme.colors.primary200 
+  };
 
   svg,
   img {

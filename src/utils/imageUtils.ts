@@ -6,6 +6,9 @@
 
 import { DEFAULT_THUMBNAIL_URL, DEFAULT_INSTRUCTOR_IMAGE } from '../constants/apiConfig';
 
+// API 기본 URL (Vite는 import.meta.env 사용)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bootrun-backend.duckdns.org';
+
 /**
  * URL이 유효한지 검사
  * - null, undefined, 빈 문자열, 공백, "null", "undefined" 문자열 모두 무효로 처리
@@ -17,16 +20,28 @@ const isInvalidUrl = (url?: string | null): boolean => {
   return false;
 };
 
+/**
+ * 상대 경로 이미지 URL을 전체 URL로 변환
+ * - 빈 문자열이면 빈 문자열 반환
+ * - https://나 http://로 시작하면 그대로 반환
+ * - 그 외에는 API_BASE_URL + url 반환
+ */
+export const getFullImageUrl = (url?: string | null): string => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `${API_BASE_URL}${url}`;
+};
+
 export const getThumbnailUrl = (url?: string | null): string => {
   if (isInvalidUrl(url)) {
     return DEFAULT_THUMBNAIL_URL;
   }
-  return url!;
+  return getFullImageUrl(url!);
 };
 
 export const getProfileImageUrl = (url?: string | null): string => {
   if (isInvalidUrl(url)) {
     return DEFAULT_INSTRUCTOR_IMAGE;
   }
-  return url!;
+  return getFullImageUrl(url!);
 };

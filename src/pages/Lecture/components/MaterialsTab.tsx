@@ -1,7 +1,7 @@
 /**
  * 자료 탭 - 강의 자료 다운로드 페이지 안내
  */
-import * as S from './styles/MaterialsTab.styled';
+import * as S from '../styles/MaterialsTab.styled';
 
 interface MaterialsTabProps {
   materialUrl?: string | null;

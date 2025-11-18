@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
+import { fetchMyRefunds, fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
 import type { PaymentsParams, PaymentsItem, PaymentsBodyData, PaymentRefundBodyData } from "../types/PaymentsType";
 
 const useToken = () => localStorage.getItem('accessToken');
@@ -48,7 +48,6 @@ export const usePaymentDetailQuery = (payment_id: number) => {
   return useQuery({
     queryKey: ["paymentDetail", payment_id],
     queryFn: () => fetchPaymentDetail(payment_id),
-    placeholderData: [],
     enabled: !!token && !!payment_id,
   });
 };
@@ -62,9 +61,12 @@ export const usePostPaymentConfirm = () => {
   const token = useToken();
 
   return useMutation({
-    mutationFn: (payment_id: number) => {
+    mutationFn: ({ payment_id, transaction_id }: { 
+      payment_id: number,
+      transaction_id: string,
+    }) => {
         if (!token) throw new Error('로그인이 필요합니다');
-        return postPaymentConfirm(payment_id);
+        return postPaymentConfirm(payment_id, transaction_id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['paymentDetail']});
@@ -112,5 +114,19 @@ export const usePostPaymentRefund = () => {
     onError: (err: any) => {
       console.error('환불 요청 실패', err);
     }
+  });
+};
+
+/**
+ * POST /payments/refunds/my
+ * 내 환불 요청 목록
+ */
+export const useMyRefunds = () => {
+  const token = useToken();
+
+  return useQuery({
+    queryKey: ["myRefunds"],
+    queryFn: () => fetchMyRefunds(),
+    enabled: !!token,
   });
 };

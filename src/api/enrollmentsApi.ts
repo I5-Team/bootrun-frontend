@@ -142,6 +142,11 @@ export const updateLectureProgress = async (
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
+    // 404 에러는 진행 기록이 없다는 의미이므로 throw하여 상위에서 처리하도록 함
+    const axiosError = err as { response?: { status?: number } };
+    if (axiosError.response?.status === 404) {
+      throw err; // 404 에러는 다시 throw
+    }
     return null;
   }
 };
