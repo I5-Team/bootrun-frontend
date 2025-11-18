@@ -3,7 +3,7 @@ import Instructor from '../styles/InstructorSection.styled';
 import { StyledBaseSection as S } from '../styles/LectureDetailPage.styled';
 import Profile from '../../../components/Profile';
 
-import { getProfileImageUrl } from '../../../utils/imageUtils';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 import { useLectureContext } from '../../../layouts/LectureDetailLayout';
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
@@ -22,7 +22,7 @@ const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
       <Instructor.InfoBox>
         <Profile
           size={24}
-          src={getProfileImageUrl(instructor_image)}
+          src={getFullImageUrl(instructor_image)}
           alt={`${instructor_name} 강사 프로필`}
         ></Profile>
 

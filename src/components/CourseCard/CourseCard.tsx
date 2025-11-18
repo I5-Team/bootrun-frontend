@@ -37,7 +37,7 @@ import SvgPlayDark from '../../assets/icons/icon-play-dark.svg?react';
 import SvgCertificate from '../../assets/icons/icon-certificate.svg?react';
 
 // import - utils
-import { getThumbnailUrl, getProfileImageUrl } from '../../utils/imageUtils';
+import { getFullImageUrl } from '../../utils/imageUtils';
 
 // types
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
@@ -99,7 +99,7 @@ const CardHeader = ({
           onClick={(e) => isActive === false && e.preventDefault()}
         >
           <StyledThumbnailImage
-            src={getThumbnailUrl(thumbnail)}
+            src={getFullImageUrl(thumbnail)}
             alt=""
             onLoad={() => setImgLoaded(true)}
             style={{ display: imgLoaded ? 'block' : 'none' }}
@@ -170,7 +170,7 @@ const CardInfoContent = ({
         <StyledTeacherInfo>
           <Profile
             size={4.6}
-            src={getProfileImageUrl(teacherImage)}
+            src={getFullImageUrl(teacherImage)}
             alt={`${teacherName} 강사 프로필`}
           />
           <StyledTeacherDetails>
