@@ -55,8 +55,10 @@ const API_DELAY = 100;
 
 // 목업 데이터 사용 여부 (환경변수로 제어)
 // VITE_USE_MOCK_DATA=true 또는 미설정 → Mock 데이터 사용
-// 관리자 대시보드는 항상 목업 데이터 사용
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+
+// 관리자 대시보드 페이지만 목업 데이터 사용
+const USE_MOCK_DATA_DASHBOARD = true;
 
 /**
  * API 호출을 시뮬레이션하는 래퍼
@@ -78,7 +80,7 @@ const simulateFetch = <T>(data: T, delay: number = API_DELAY): Promise<T> => {
  * 대시보드 상단 카드 통계 조회
  */
 export const fetchDashboardStats = async (): Promise<AdminStats> => {
-  if (USE_MOCK_DATA) {
+  if (USE_MOCK_DATA_DASHBOARD) {
     return simulateFetch(mockAdminStats, API_DELAY);
   }
 
@@ -101,7 +103,7 @@ export const fetchDashboardStats = async (): Promise<AdminStats> => {
  * (참고: '신규 회원 수' 카드 데이터도 여기서 가져옴)
  */
 export const fetchDailyStats = async (params: DateRangeParams): Promise<DailyStat[]> => {
-  if (USE_MOCK_DATA) {
+  if (USE_MOCK_DATA_DASHBOARD) {
     return simulateFetch(mockDailyStats, API_DELAY);
   }
 
@@ -119,7 +121,7 @@ export const fetchDailyStats = async (params: DateRangeParams): Promise<DailySta
  * 일별 상세 매출 통계
  */
 export const fetchRevenueStats = async (params: DateRangeParams): Promise<RevenueStat[]> => {
-  if (USE_MOCK_DATA) {
+  if (USE_MOCK_DATA_DASHBOARD) {
     console.log('MOCK data for revenue stats');
     if (params.start_date && params.end_date) {
       const filtered = mockRevenueStats365Days.filter(
@@ -181,7 +183,7 @@ export const fetchRevenueStats = async (params: DateRangeParams): Promise<Revenu
  * 강의별 통계 (ProgressArea, TableArea용)
  */
 export const fetchCourseStats = async (params: CourseStatParams): Promise<CourseStat[]> => {
-  if (USE_MOCK_DATA) {
+  if (USE_MOCK_DATA_DASHBOARD) {
     return simulateFetch(mockCourseStats, API_DELAY);
   }
 
@@ -199,7 +201,7 @@ export const fetchCourseStats = async (params: CourseStatParams): Promise<Course
  * 카테고리별 통계 (ProgressArea용)
  */
 export const fetchCategoryStats = async (): Promise<CategoryStat[]> => {
-  if (USE_MOCK_DATA) {
+  if (USE_MOCK_DATA_DASHBOARD) {
     return simulateFetch(mockCategoryStats, API_DELAY);
   }
 
