@@ -37,10 +37,10 @@
 영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
 
 - **강의실 > 진행률 - Progress Bar**
-<video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"/>
+<video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"></video>
 
 - **강의실 > 자료 다운로드 링크 이동**
-<video src="https://github.com/user-attachments/assets/b0678a05-0ed3-488c-937c-e3c6886501f1"/>
+<video src="https://github.com/user-attachments/assets/b0678a05-0ed3-488c-937c-e3c6886501f1"></video>
 
 
 #### 강의
@@ -48,13 +48,13 @@
 강의 목록(필터링), 강의 상세, 수강 신청
 
 - **강의 > 강의 목록 필터링**
-<video src="https://github.com/user-attachments/assets/08360770-bbdc-4b76-8b90-d0ef007fef31"/>
+<video src="https://github.com/user-attachments/assets/08360770-bbdc-4b76-8b90-d0ef007fef31"></video>
 
 - **강의 > 강의 상세 조회**
-<video src="https://github.com/user-attachments/assets/112d6fb3-f893-41bc-bfd1-e8824f190d66"/>
+<video src="https://github.com/user-attachments/assets/112d6fb3-f893-41bc-bfd1-e8824f190d66"></video>
 
 - **강의 > 수강 신청**
-<video src="https://github.com/user-attachments/assets/d7ad3960-9626-4653-9f11-8f8a9c635aeb"/>
+<video src="https://github.com/user-attachments/assets/d7ad3960-9626-4653-9f11-8f8a9c635aeb"></video>
 
 
 #### 인증
@@ -62,40 +62,40 @@
 회원가입(이메일 인증), 로그인(JWT)
 
 - **회원가입**
-<video src="https://github.com/user-attachments/assets/fd39c8cc-ecac-42a8-afb0-9a26b2824130"/>
+<video src="https://github.com/user-attachments/assets/fd39c8cc-ecac-42a8-afb0-9a26b2824130"></video>
 
 
 - **로그인 > 수강생, 관리자**
-<video src="https://github.com/user-attachments/assets/83fe11a7-bfcb-4467-bd93-2a0b42c7bbb3"/>
+<video src="https://github.com/user-attachments/assets/83fe11a7-bfcb-4467-bd93-2a0b42c7bbb3"></video>
 
 #### 마이페이지
 
 내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
 
 - **마이페이지 > 프로필 설정**
-<video src="https://github.com/user-attachments/assets/02787e1c-ff44-4f71-aaa9-f8726c1c847b"/>
+<video src="https://github.com/user-attachments/assets/02787e1c-ff44-4f71-aaa9-f8726c1c847b"></video>
 
 - **마이페이지 > 비밀번호 변경/탈퇴**
-<video src="https://github.com/user-attachments/assets/5e1a9ed6-fa76-4d9a-b4cf-289f3d7e3c8e"/>
+<video src="https://github.com/user-attachments/assets/5e1a9ed6-fa76-4d9a-b4cf-289f3d7e3c8e"></video>
 
 #### 관리자
 
 대시보드, 강의/사용자/결제 내역 관리
 
 - **관리자 > 대시보드**
-<video src="https://github.com/user-attachments/assets/e28784d0-a656-4246-b1cf-a5e7fe81b914"/>
+<video src="https://github.com/user-attachments/assets/e28784d0-a656-4246-b1cf-a5e7fe81b914"></video>
 
 - **관리자 > 강의 관리 > 강의 추가 및 조회**
-<video src="https://github.com/user-attachments/assets/dbd45c34-305c-412d-b584-07b04e60407f"/>
+<video src="https://github.com/user-attachments/assets/dbd45c34-305c-412d-b584-07b04e60407f"></video>
 
 - **관리자 > 강의 관리 > 수정 및 삭제, 공개 변경**
-<video src="https://github.com/user-attachments/assets/d96a0806-0b50-4b28-a0a0-0cd167bcc9d1"/>
+<video src="https://github.com/user-attachments/assets/d96a0806-0b50-4b28-a0a0-0cd167bcc9d1"></video>
 
 - **관리자 > 결제 관리 > 결제 내역 엑셀 다운로드**
-<video src="https://github.com/user-attachments/assets/72932412-a053-4c36-bb8b-4558f8930bd4"/>
+<video src="https://github.com/user-attachments/assets/72932412-a053-4c36-bb8b-4558f8930bd4"></video>
 
 - **관리자 > 사용자 관리 > 조회**
-<video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"/>
+<video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
 
 ### 2-3. 백엔드 핵심 설계
 
