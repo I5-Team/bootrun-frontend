@@ -48,7 +48,7 @@ export const StyledCategoryIcon = styled.span`
     padding: clamp(0.72rem, 1rem, 0.9rem);
 
     border-radius: ${({ theme }) => theme.radius.xxl};
-    background-color: ${({ theme }) => theme.colors.gray100};
+    background-color: ${({ theme }) => theme.colors.primary100};
     border: 0.2rem solid transparent;
 
     svg {
@@ -70,16 +70,16 @@ export const StyledCategoryBtn = styled.button`
     }
 
     &:hover {
-        color: ${({ theme }) => theme.colors.primary300};
+        color: ${({ theme }) => theme.colors.primaryDark};
         font-weight: 600;
     }
 
+    &:active ${StyledCategoryIcon},
     &:hover ${StyledCategoryIcon} {
-        background-color: ${({ theme }) => theme.colors.primary100};
+        background-color: ${({ theme }) => theme.colors.primary200 + '80'};
     }
 
     &:active ${StyledCategoryIcon} {
-        background-color: ${({ theme }) => theme.colors.primary100};
         border: 0.2rem solid ${({ theme }) => theme.colors.primary300};
     }
 
