@@ -70,7 +70,7 @@ export const StyledCategoryBtn = styled.button`
     }
 
     &:hover {
-        color: ${({ theme }) => theme.colors.primaryDark};
+        color: ${({ theme }) => theme.colors.primary300};
         font-weight: 600;
     }
 
