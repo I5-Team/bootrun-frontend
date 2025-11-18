@@ -13,6 +13,8 @@
 - **Back-End API (Swagger):** [`https://bootrun-backend.duckdns.org/docs`](https://bootrun-backend.duckdns.org/docs)
 - **GitHub (Front-End):** [`https://github.com/i5-team/bootrun-frontend`](https://github.com/i5-team/bootrun-frontend)
 - **GitHub (Back-End):** [`https://github.com/i5-team/bootrun-backend`](https://github.com/i5-team/bootrun-backend)
+- **관리자 계정(테스트):**
+- **수강자 계정(테스트):**
 
 ## 2. 프로젝트 개요 (Introduction)
 
@@ -37,14 +39,33 @@
 - **관리자:** 대시보드, 강의/사용자/결제 내역 관리
   - 시나리오별 동작 GIF
 
-## 2-3. 백앤드 핵심 설계
+### 2-3. 백엔드 핵심 설계
+
+- **API 아키텍처**: 비동기 처리(AsyncIO + AsyncPG), Router-Service 계층 분리
+  - 고성능 비동기 데이터베이스 연결
+  - FastAPI Depends를 활용한 의존성 주입
+- **인증 및 보안**: JWT 토큰 기반 인증, 다중 보안 계층
+  - Access/Refresh Token 분리, 토큰 타입 검증’
+  - bcrypt 패스워드 암호화, Fernet 데이터 암호화
+  - Redis 기반 Rate Limiting (API 요청 제한)
+- **데이터 관리**: PostgreSQL + Redis 하이브리드 구조
+  - AsyncPG를 통한 비동기 DB 연결 풀링
+  - Redis 캐싱으로 반복 쿼리 성능 최적화
+- **로깅 시스템**: 구조화된 로깅 및 보안
+  - 민감정보 자동 감지 및 마스킹 (비밀번호, JWT, API 키, 카드번호 등)
+  - Request ID 기반 요청 추적
+  - 로테이션 파일 로깅 (크기/날짜 기반)
+- **배포 환경**: Docker 컨테이너화, HTTPS 적용
+  - AWS Lightsail 배포
+  - Let's Encrypt SSL 인증서, DuckDNS 동적 DNS
+  - Nginx 리버스 프록시
 
 ## 3. 기술 스택 (Technology Stack)
 
 ### 3-1. 아키텍처 다이어그램
 
-```
-ggraph TD
+```Mermaid
+graph TD
 
     %% ===============================
     %% 사용자/프론트엔드
@@ -54,32 +75,29 @@ ggraph TD
     end
 
     %% ===============================
-    %% AWS Cloud 전체
+    %% AWS Lightsail Infrastructure
     %% ===============================
-    subgraph Cloud["AWS Cloud Infrastructure"]
+    subgraph Cloud["AWS Lightsail Infrastructure"]
 
-        %% --- EC2 내부 ---
-        subgraph EC2["EC2 Server"]
-            NGINX[Nginx Reverse Proxy]
-            GUNI[Gunicorn Uvicorn]
+        %% --- Lightsail Instance ---
+        subgraph INSTANCE["Lightsail Instance"]
+            NGINX[Nginx Reverse Proxy<br/>HTTPS/SSL]
+            UVICORN["Uvicorn Server"]
             API[FastAPI Application]
-            NGINX --> GUNI
-            GUNI --> API
+            UPLOADS["/uploads Volume<br/>Local File Storage"]
+            NGINX --> UVICORN
+            UVICORN --> API
+            API --> UPLOADS
+          end
+
+        %% --- Lightsail Database ---
+        subgraph DB["Lightsail Database"]
+            POSTGRES[(PostgreSQL)]
         end
 
-        %% --- RDS ---
-        subgraph DB["RDS PostgreSQL"]
-            RDS[(PostgreSQL DB)]
-        end
-
-        %% --- Redis ---
-        subgraph Cache["Redis"]
-            REDIS[(Redis Cache)]
-        end
-
-        %% --- S3 ---
-        subgraph Storage["S3"]
-            S3[(S3 Bucket)]
+        %% --- Redis Docker ---
+        subgraph Cache["Redis - Docker"]
+           REDIS[(Redis Cache)]
         end
 
     end
@@ -94,19 +112,33 @@ ggraph TD
     end
 
     %% ===============================
+    %% Manual Deployment
+    %% ===============================
+    MANUAL[Deployment - SSH + docker-compose]
+
+
+    %% ===============================
+    %% External Services
+    %% ===============================
+    subgraph External["External Video Services"]
+        VIDEO[YouTube / External Video URLs]
+    end
+
+
+    %% ===============================
     %% API Request 흐름
     %% ===============================
     A -->|HTTPS API Request| NGINX
-    API -->|DB Query| RDS
+    API -->|DB Query| POSTGRES
     API -->|Cache Access| REDIS
-    API -->|File Upload or Read| S3
+    API -->|File Upload or Read| UPLOADS
+    A -->|Stream Video| VIDEO
 
     %% ===============================
     %% Deploy Flow
     %% ===============================
     ACTIONS -->|Deploy Frontend| A
-    ACTIONS -->|SSH Deploy Backend| EC2
-
+    ACTIONS -->|SSH Deploy Backend| INSTANCE
 ```
 
 ### 3-2. Front-End
@@ -141,7 +173,7 @@ ggraph TD
 
 : 프론트엔드는 **MVVM(Model-View-ViewModel)** 패턴을 React 환경에 맞게 적용하여 **관심사를 명확히 분리**했습니다.
 
-```
+```Mermaid
 graph TD
 
     %% View
@@ -381,24 +413,24 @@ docker-compose up -d
 
 ### 6-2. 커밋 메시지 (Commit Message)
 
-| Gitmoji                       | **커밋 type** | 설명                                               |
-| ----------------------------- | ------------- | -------------------------------------------------- |
-| ✨  **:sparkles:**            | feat          | 새 기능 추가                                       |
-| 🗃️ **:card_file_box:**        | db            | DB: DB 스키마, 마이그레이션, 쿼리 변경             |
-| 🔐 **:closed_lock_with_key:** | auth          | Auth 관련: 인증/인가 로직 추가 및 수정             |
-| 🌐 **:globe_with_meridians:** | api           | API 관련: API 엔드포인트 추가/변경                 |
-| 🎨 **:art:**                  | style         | UI 수정 (CSS/스타일/레이아웃)                      |
-| ✅ **:white_check_mark:**     | test          | 테스트 관련                                        |
-| ♿️ **:wheelchair:**           | a11y          | 접근성 개선                                        |
-| 🐛 **:bug:**                  | fix           | 기능/버그 수정                                     |
-| **🔨 :hammer:**               | server        | Server 관련: 서버 설정, 미들웨어, 인프라 코드 변경 |
-| ⚡️ **:zap:**                 | perf          | 성능 개선 (최적화, SEO 등)                         |
-| ♻️ **:recycle:**              | refactor      | 코드 리팩토링 (기능 변경 X)                        |
-| 📦 **:package:**              | chore         | 빌드 시스템, 환경설정 관련                         |
-| 🔥**:fire:**                  | remove        | 불필요한 코드/파일 삭제                            |
-| 🍱  **:bento:**               | asset         | 리소스 파일 관리                                   |
-| 🚀 **:rocket:**               | deploy        | 배포 관련                                          |
-| 📝 **:memo:**                 | docs          | 코드 외 문서 관련 / 오타 수정                      |
+| Gitmoji | **커밋 type** | 설명                                               |
+| ------- | ------------- | -------------------------------------------------- |
+| ✨      | feat          | 새 기능 추가                                       |
+| 🗃️      | db            | DB: DB 스키마, 마이그레이션, 쿼리 변경             |
+| 🔐      | auth          | Auth 관련: 인증/인가 로직 추가 및 수정             |
+| 🌐      | api           | API 관련: API 엔드포인트 추가/변경                 |
+| 🎨      | style         | UI 수정 (CSS/스타일/레이아웃)                      |
+| ✅      | test          | 테스트 관련                                        |
+| ♿️      | a11y          | 접근성 개선                                        |
+| 🐛      | fix           | 기능/버그 수정                                     |
+| **🔨**  | server        | Server 관련: 서버 설정, 미들웨어, 인프라 코드 변경 |
+| ⚡️     | perf          | 성능 개선 (최적화, SEO 등)                         |
+| ♻️      | refactor      | 코드 리팩토링 (기능 변경 X)                        |
+| 📦      | chore         | 빌드 시스템, 환경설정 관련                         |
+| 🔥      | remove        | 불필요한 코드/파일 삭제                            |
+| 🍱      | asset         | 리소스 파일 관리                                   |
+| 🚀      | deploy        | 배포 관련                                          |
+| 📝      | docs          | 코드 외 문서 관련 / 오타 수정                      |
 
 ### 6-3. 그라운드 룰 (Ground Rules)
 
@@ -435,14 +467,27 @@ docker-compose up -d
    - **문제**: `datetime` 필드가 UTC(0시간)로 형식 반환되어 실제 한국 시간보다 다르게 표시됨
    - **해결**: Pydantic `@field_serializer`로 모든 `datetime` 필드를 KST(UTC+9)로 변환
 6. **[동적 경로 비교 에러]**
-
-- **문제**: 동적 경로 패턴(/lectures/:id/room)과 실제 URL(/lectures/1/room)을 문자열로 직접 비교하면 항상 false가 됨
-- **해결**: const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname); 정규식을 사용한 패턴 매칭으로 해결
+   - **문제**: 동적 경로 패턴(/lectures/:id/room)과 실제 URL(/lectures/1/room)을 문자열로 직접 비교하면 항상 false가 됨
+   - **해결**: const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname); 정규식을 사용한 패턴 매칭으로 해결
+7. **[이미지 URL 경로 문제(로컬/배포 환경 공통 이미지 로딩 오류)]**
+   - **문제**: 백엔드에서 `/uploads/...` 형태의 상대 경로를 반환하는데, 프론트엔드에서 이를 그대로 `<img src={course.thumbnail_url} />`로 사용하면서 로컬/배포 환경 모두에서 이미지가 로딩되지 않는 문제가 발생함.
+   - **해결**: 환경변수 VITE_API_BASE_URL를 설정하고 `getImageUrl` 유틸 함수를 추가하여, 모든 이미지 경로를 `${API_BASE_URL}${url}` 형태의 절대 경로로 변환하도록 수정. 이후 `thumbnail_url`, `instructor_image`, `profile_image` 등 이미지가 사용되는 모든 곳에서 `getImageUrl()`을 통해 URL을 변환해 사용하도록 변경.
+8. **[SQLAlchemy Enum 타입 매핑 오류]**
+   - **문제**: `SQLEnum(Gender)` 사용 시, 데이터베이스에 Enum의 `name`이 저장되어야 하는데 `value`가 저장되거나, Alembic 마이그레이션 시 Enum 타입이 제대로 인식되지 않는 오류 발생.
+   - **해결**: `values_callable=lambda obj: [e.value for e in obj]` 파라미터를 추가하여 Enum 객체의 실제 `value` 값을 명시적으로 데이터베이스에 저장하도록 설정. 이를 통해 Python Enum과 데이터베이스 간 데이터 타입 불일치 문제 해결.
 
 # 8. 팀원
 
 - **김규호 (Front-End, 팀장):** 프로젝트 총괄, 인증(로그인/회원가입), 마이페이지 개발, CI/CD 구축 및 관리
-- **김민주 (Front-End):** 강의 목록, 강의 상세 페이지, UI/UX 디자인 시스템
+- **김민주 (Front-End):** 강의 목록, 강의 상세 페이지, UI/UX 디자인 시스템, SEO 및 웹 접근성 구축, 사용자 결제 관리
 - **김채현 (Front-End):** (핵심) 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
-- **신가람 (Back-End):** API 총괄, DB 설계, 인증/결제 API
-- **장민경 (Back-End):** 인프라(AWS/Docker), CI/CD, 강의/관리자 API
+- **신가람 (Back-End):** 모델/스키마 설계, 인증/사용자/강의/학습 진행/관리자(강의) API, 개발/운영서버 배포
+- **장민경 (Back-End):** 프로젝트 환경 세팅(env/config), 결제/관리자(사용자, 결제, 대시보드) API, 로컬 서버 배포
+
+# 9. 소감
+
+- ## 김규호
+- ## 김민주
+- ## 김채현
+- ## 신가람
+- ## 장민경
