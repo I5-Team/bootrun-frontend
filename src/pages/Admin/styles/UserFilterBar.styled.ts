@@ -28,8 +28,7 @@ export const UserFilterBarStyles = {
     font-size: 1.4rem;
     width: 25rem; // 너비 조절
     &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
     }
   `,
   Select: styled.select`

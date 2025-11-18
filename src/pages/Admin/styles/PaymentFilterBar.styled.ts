@@ -30,8 +30,7 @@ export const PaymentFilterBarStyles = {
     min-width: 20rem;
 
     &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
     }
   `,
   Select: styled.select`
@@ -45,8 +44,7 @@ export const PaymentFilterBarStyles = {
     cursor: pointer;
 
     &:focus {
-      border-color: ${({ theme }) => theme.colors.primary300};
-      outline: none;
+      outline: 2px solid ${({ theme }) => theme.colors.primary300};
     }
   `,
   SubmitButton: styled.button`
