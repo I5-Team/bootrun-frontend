@@ -153,7 +153,7 @@ export const FilterCourseList = ({
                 courseId={course.id}
                 thumbnail={course.thumbnail_url}
                 tags={[
-                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                    {'label': courseTypeLabel[course.course_type], 'variant': 'primary'}, 
                     {'label': categoryLabel[course.category_type] || "기타"}, 
                     {'label': difficultyLabel[course.difficulty]},
                 ]}
@@ -210,7 +210,7 @@ export const FilterMyCourseList = ({
                 thumbnail={course.thumbnail_url}
                 title={course.title}
                 tags={[
-                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
+                    {'label': courseTypeLabel[course.course_type], 'variant': 'primary'}, 
                     {'label': categoryLabel[course.category_type]}, 
                     {'label': difficultyLabel[course.difficulty]},
                 ]}
