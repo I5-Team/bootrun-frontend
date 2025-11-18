@@ -14,7 +14,11 @@
 - **GitHub (Front-End):** [`https://github.com/i5-team/bootrun-frontend`](https://github.com/i5-team/bootrun-frontend)
 - **GitHub (Back-End):** [`https://github.com/i5-team/bootrun-backend`](https://github.com/i5-team/bootrun-backend)
 - **관리자 계정(테스트):**
+  - ID: admin@bootrun.com
+  - PW: adminSecureI5!
 - **수강자 계정(테스트):**
+  - ID: test@bootrun.com
+  - PW: Test1234!@
 
 ## 2. 프로젝트 개요 (Introduction)
 
@@ -28,16 +32,67 @@
 
 ### 2-2. 주요 기능 (What We Built)
 
-- **(핵심) 강의실:** 영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
-  - 시나리오별 동작 GIF
-- **강의:** 강의 목록(필터링), 강의 상세, 수강 신청 (시나리오)
-  - 시나리오별 동작 GIF
-- **인증:** 회원가입(이메일 인증), 로그인(JWT)
-  - 시나리오별 동작 GIF
-- **마이페이지:** 내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
-  - 시나리오별 동작 GIF
-- **관리자:** 대시보드, 강의/사용자/결제 내역 관리
-  - 시나리오별 동작 GIF
+#### (핵심) 강의실
+
+영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
+
+- **강의실 > 진행률 - Progress Bar**
+  <video src="./videos/강의실 > 진행률 - progress bar.mov" controls width="100%"></video>
+
+- **강의실 > 자료 다운로드 링크 이동**
+  <video src="./videos/강의실 > 자료 다운로드 링크 이동.mov" controls width="100%"></video>
+
+#### 강의
+
+강의 목록(필터링), 강의 상세, 수강 신청
+
+- **강의 > 강의 목록 필터링**
+  <video src="./videos/강의 > 강의 목록 필터링.mov" controls width="100%"></video>
+
+- **강의 > 강의 상세 조회**
+  <video src="./videos/강의 > 강의 상세 조회.mov" controls width="100%"></video>
+
+- **강의 > 수강 신청**
+  <video src="./videos/강의 > 수강 신청.mov" controls width="100%"></video>
+
+#### 인증
+
+회원가입(이메일 인증), 로그인(JWT)
+
+- **회원가입**
+  <video src="./videos/회원가입.mov" controls width="100%"></video>
+
+- **로그인 > 수강생, 관리자**
+  <video src="./videos/로그인 > 수강생, 관리자.mov" controls width="100%"></video>
+
+#### 마이페이지
+
+내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
+
+- **마이페이지 > 프로필 설정**
+  <video src="./videos/마이페이지 > 프로필 설정.mov" controls width="100%"></video>
+
+- **마이페이지 > 비밀번호 변경/탈퇴**
+  <video src="./videos/마이페이지 > 비밀변호 변경:탈퇴.mov" controls width="100%"></video>
+
+#### 관리자
+
+대시보드, 강의/사용자/결제 내역 관리
+
+- **관리자 > 대시보드**
+  <video src="./videos/관리자_대시보드.mov" controls width="100%"></video>
+
+- **관리자 > 강의 관리 > 강의 추가 및 조회**
+  <video src="./videos/관리자 > 강의 관리 > 강의 추가 및 조회.mov" controls width="100%"></video>
+
+- **관리자 > 강의 관리 > 수정 및 삭제, 공개 변경**
+  <video src="./videos/관리자 > 강의 관리 > 수정 및 삭제, 공개 변환.mov" controls width="100%"></video>
+
+- **관리자 > 결제 관리 > 결제 내역 엑셀 다운로드**
+  <video src="./videos/관리자 > 결제 관리 > 엑셀 다운로드.mov" controls width="100%"></video>
+
+- **관리자 > 사용자 관리 > 조회**
+  <video src="./videos/관리자 > 강의 관리 > 강의 추가 및 조회.mov" controls width="100%"></video>
 
 ### 2-3. 백엔드 핵심 설계
 
@@ -473,18 +528,21 @@ docker-compose up -d
 6. **[동적 경로 비교 에러]**
    - **문제**: 동적 경로 패턴(/lectures/:id/room)과 실제 URL(/lectures/1/room)을 문자열로 직접 비교하면 항상 false가 됨
    - **해결**: const isLectureRoomPage = /^\/lectures\/\d+\/room/.test(location.pathname); 정규식을 사용한 패턴 매칭으로 해결
-7. **[이미지 URL 경로 문제(로컬/배포 환경 공통 이미지 로딩 오류)]**
-   - **문제**: 백엔드에서 `/uploads/...` 형태의 상대 경로를 반환하는데, 프론트엔드에서 이를 그대로 `<img src={course.thumbnail_url} />`로 사용하면서 로컬/배포 환경 모두에서 이미지가 로딩되지 않는 문제가 발생함.
-   - **해결**: 환경변수 VITE_API_BASE_URL를 설정하고 `getImageUrl` 유틸 함수를 추가하여, 모든 이미지 경로를 `${API_BASE_URL}${url}` 형태의 절대 경로로 변환하도록 수정. 이후 `thumbnail_url`, `instructor_image`, `profile_image` 등 이미지가 사용되는 모든 곳에서 `getImageUrl()`을 통해 URL을 변환해 사용하도록 변경.
+7. **[강의 진도 저장 API 404 에러 처리]**
+   - **문제**: `PATCH /enrollments/progress/lectures/:id` 호출 시 간헐적으로 404가 발생하여, 프론트의 `progressExists` 상태와 서버 기록이 불일치하는 문제가 생김.
+   - **해결**: `enrollmentsApi.ts`에서 404 응답을 명시적으로 throw하도록 변경하고, `LectureRoomPage`에서 해당 예외를 `catch`한 뒤 `POST` API로 재시도하도록 처리하여 최초 진행률 데이터가 안전하게 생성되도록 함.
 8. **[SQLAlchemy Enum 타입 매핑 오류]**
    - **문제**: `SQLEnum(Gender)` 사용 시, 데이터베이스에 Enum의 `name`이 저장되어야 하는데 `value`가 저장되거나, Alembic 마이그레이션 시 Enum 타입이 제대로 인식되지 않는 오류 발생.
    - **해결**: `values_callable=lambda obj: [e.value for e in obj]` 파라미터를 추가하여 Enum 객체의 실제 `value` 값을 명시적으로 데이터베이스에 저장하도록 설정. 이를 통해 Python Enum과 데이터베이스 간 데이터 타입 불일치 문제 해결.
+9. **[결제 결과 페이지 깜빡임 현상]**
+   - **문제**: 결제 성공 시에도 초기 렌더링 단계에서 상태가 falsey로 설정되어 잠깐 결제 실패 화면이 노출됨.
+   - **해결**: 강제 로딩 시간(300ms)을 주어 API 응답 전까지 로딩 상태를 유지하도록 수정, 성공/실패 화면은 로딩 이후에 렌더링되도록 개선.
 
 # 8. 팀원
 
 - **김규호 (Front-End, 팀장):** 프로젝트 총괄, 인증(로그인/회원가입), 마이페이지 개발, CI/CD 구축 및 관리
 - **김민주 (Front-End):** 강의 목록, 강의 상세 페이지, UI/UX 디자인 시스템, SEO 및 웹 접근성 구축, 사용자 결제 관리
-- **김채현 (Front-End):** (핵심) 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
+- **김채현 (Front-End):** 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
 - **신가람 (Back-End):** 모델/스키마 설계, 인증/사용자/강의/학습 진행/관리자(강의) API, 개발/운영서버 배포
 - **장민경 (Back-End):** 프로젝트 환경 세팅(env/config), 결제/관리자(사용자, 결제, 대시보드) API, 로컬 서버 배포
 
@@ -492,6 +550,10 @@ docker-compose up -d
 
 - ## 김규호
 - ## 김민주
+  - 팀 프로젝트를 진행하며 초기 개발 환경 세팅과 코드 컨벤션 등 협업 기준을 직접 설정하고 관리하며 팀원들과 소통하고, 협업 효율과 프로젝트 일관성을 유지하는 방법을 배울 수 있었습니다. 또한, 백엔드와 프론트엔드를 동시에 개발하며 정리되지 않은 데이터를 처리하고 가공하는 경험을 통해 데이터 구조를 이해하고 안정적인 기능을 구현하는 능력을 키울 수 있었습니다.
 - ## 김채현
+  - 이번 프로젝트를 통해 다양한 배경을 가진 팀원들과 함께 협업할 수 있었습니다.
+    백엔드 지식이 깊은 분, 디자인 감각이 뛰어난 분, 실제 현업 경험이 있는 분들과 함께하며
+    서로의 강점을 배우고 실제 서비스를 만들어가는 과정이 큰 성장 경험이 되었습니다.
 - ## 신가람
 - ## 장민경
