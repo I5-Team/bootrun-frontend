@@ -55,7 +55,8 @@ const API_DELAY = 100;
 
 // 목업 데이터 사용 여부 (환경변수로 제어)
 // VITE_USE_MOCK_DATA=true 또는 미설정 → Mock 데이터 사용
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+// 관리자 대시보드는 항상 목업 데이터 사용
+const USE_MOCK_DATA = true;
 
 /**
  * API 호출을 시뮬레이션하는 래퍼
