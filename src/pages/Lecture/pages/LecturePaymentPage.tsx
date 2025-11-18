@@ -13,6 +13,7 @@ import { usePostPayments } from '../../../queries/usePaymentsQueries';
 import type { PaymentMethod, PaymentsBodyData } from '../../../types/PaymentsType';
 import { ROUTES } from '../../../router/RouteConfig';
 import { ErrorMessage } from '../../../components/HelperComponents';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 
 export interface Coupon {
   // 기본 정보
@@ -211,7 +212,7 @@ export default function LecturePaymentPage() {
             <S.SectionTitle as="h2">강의 구매</S.SectionTitle>
             <S.LectureCard>
               <S.LectureThumbnail
-                $thumbnailUrl={courseData.thumbnail_url}
+                $thumbnailUrl={getFullImageUrl(courseData.thumbnail_url)}
                 role="img"
                 aria-label={`${courseData.title} 강의 썸네일`}
               />
