@@ -217,7 +217,7 @@ export const mockMyEnrollments: MyEnrollmentItem[] = [
 export const getMockMyEnrollments = (
   params: MyEnrollmentsApiParams = {},
 ): MyEnrollmentItem[] => {
-  let filteredData = [...mockMyEnrollments];
+  const filteredData = [...mockMyEnrollments];
 
   const filtered = filteredData.filter(item => {
     if (params.learning_status && item.learning_status !== params.learning_status) return false;
