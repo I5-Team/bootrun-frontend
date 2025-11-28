@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { DEFAULT_PROFILE_IMAGE } from '../constants/apiConfig';
+import { useState } from 'react';
 
 type ProfileProps = {
   src?: string | null;
@@ -32,15 +33,22 @@ export default function Profile({
   alt = '프로필',
   isActive = false,
 }: ProfileProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const finalImageSrc = src ?? DEFAULT_PROFILE_IMAGE;
 
   return (
     <>
       <StyledProfileImg
-        src={src ?? DEFAULT_PROFILE_IMAGE}
         $size={size}
-        alt={alt}
         $isActive={isActive}
-        onError={(e) => e.currentTarget.src = DEFAULT_PROFILE_IMAGE}
+
+        src={isLoaded ? finalImageSrc : DEFAULT_PROFILE_IMAGE}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        onError={(e) => {
+          e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
+          setIsLoaded(true);
+        }}
       />
     </>
   );
