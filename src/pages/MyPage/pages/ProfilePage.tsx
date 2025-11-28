@@ -25,10 +25,7 @@ import {
 } from '../styles/ProfilePage.styled';
 import Button from '../../../components/Button';
 import Profile from '../../../components/Profile';
-import { DEFAULT_INSTRUCTOR_IMAGE } from '../../../constants/apiConfig';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
@@ -55,11 +52,10 @@ const ProfilePage: React.FC = () => {
       const serverImageUrl = data.profile_image;
       let fullImageUrl: string | null = null;
 
-      if (serverImageUrl && serverImageUrl !== DEFAULT_PLACEHOLDER_URL) {
+      if (serverImageUrl) {
         // 'uploads/...' 형태의 상대 경로이므로, BASE_URL을 붙여줌
-        fullImageUrl = `${API_BASE_URL}${serverImageUrl}`;
+        fullImageUrl = serverImageUrl.includes('placeholder') ? null : getFullImageUrl(serverImageUrl);
       }
-      console.log('Processed Image URL:', fullImageUrl);
       if (!selectedFile) {
         setImagePreview(fullImageUrl);
       }
@@ -117,11 +113,8 @@ const ProfilePage: React.FC = () => {
     if (selectedFile) {
       // 1. 로컬에서 선택한 파일(blob:)을 '취소'할 때
       setSelectedFile(null);
-      // 원래 서버 이미지 (있다면) 또는 기본 이미지로 되돌림
-      const originalServerImage = data?.profile_image
-        ? `${API_BASE_URL}${data.profile_image}`
-        : null;
-      setImagePreview(originalServerImage);
+      setImagePreview(null);
+
       if (fileInputRef.current) fileInputRef.current.value = ''; // input DOM 초기화
     } else if (data?.profile_image) {
       // 2. 서버에 저장된 이미지를 '삭제'할 때 (API 호출)
@@ -150,14 +143,7 @@ const ProfilePage: React.FC = () => {
         </Header>
         <ProfileFormContainer>
           <ProfileContainer>
-            {imagePreview ? (
-              <>
-                {console.log('imagePreview:', imagePreview)}
-                <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" />
-              </>
-            ) : (
-              <Profile size={14.6} src={DEFAULT_INSTRUCTOR_IMAGE} alt="기본 프로필 이미지" />
-            )}
+            <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" /> 
             {imagePreview ? (
               // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
               <ImageActionButton
