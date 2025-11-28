@@ -35,8 +35,9 @@ const ProfilePage: React.FC = () => {
   const { mutate: deleteProfileImage, isPending: isDeletingImage } = useDeleteProfileImage();
 
   const [nickname, setNickname] = useState('');
-  const [gender, setGender] = useState('none');
-  const [birthdate, setBirthdate] = useState('');
+  const [gender, setGender] = useState('other');
+  const [birthdate, setBirthdate] = useState<string| null>(null);
+  const RESET_BIRTHDATE = '0001-01-01';
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -46,8 +47,8 @@ const ProfilePage: React.FC = () => {
     if (data) {
       // 프로필 데이터가 로드되면 상태 초기화
       setNickname(data.nickname || '');
-      setGender(data.gender || 'none');
-      setBirthdate(data.birth_date || '');
+      setGender(data.gender || 'other');
+      setBirthdate(data.birth_date === RESET_BIRTHDATE ? null : data.birth_date);
 
       const serverImageUrl = data.profile_image;
       let fullImageUrl: string | null = null;
@@ -70,7 +71,7 @@ const ProfilePage: React.FC = () => {
     const payload: ProfileUpdatePayload = {};
     if (data?.nickname !== nickname) payload.nickname = nickname;
     if (data?.gender !== gender) payload.gender = gender;
-    if (data?.birth_date !== birthdate) payload.birth_date = birthdate;
+    if (data?.birth_date !== birthdate) payload.birth_date = birthdate === '' ? RESET_BIRTHDATE : birthdate;
 
     const didTextChange = Object.keys(payload).length > 0;
 
@@ -145,7 +146,7 @@ const ProfilePage: React.FC = () => {
           <ProfileContainer>
             <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" /> 
             {imagePreview ? (
-              // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
+              // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼
               <ImageActionButton
                 type="button"
                 onClick={handleClearImage}
@@ -156,7 +157,7 @@ const ProfilePage: React.FC = () => {
                 ✕
               </ImageActionButton>
             ) : (
-              // 2. 이미지가 없으면 -> '업로드' 버튼 (+)
+              // 2. 이미지가 없으면 -> '업로드' 버튼
               <ImageActionButton
                 type="button"
                 onClick={handleImageUploadClick}
@@ -197,8 +198,9 @@ const ProfilePage: React.FC = () => {
                   name="gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
+                  defaultValue="other"
                 >
-                  <option value="none">선택</option>
+                  <option value="other">기타</option>
                   <option value="male">남성</option>
                   <option value="female">여성</option>
                 </Select>
@@ -209,7 +211,7 @@ const ProfilePage: React.FC = () => {
                   id="birthdate"
                   type="date"
                   name="birthdate"
-                  value={birthdate}
+                  value={birthdate ?? ''}
                   onChange={(e) => setBirthdate(e.target.value)}
                   aria-label="생년월일 입력"
                 />
