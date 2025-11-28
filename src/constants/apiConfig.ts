@@ -364,4 +364,4 @@ const getImagePath = (filename: string): string => {
 };
 
 export const DEFAULT_THUMBNAIL_URL = getImagePath('OG.jpg');
-export const DEFAULT_INSTRUCTOR_IMAGE = getImagePath('profile-default.jpg');
+export const DEFAULT_PROFILE_IMAGE = getImagePath('profile-default.jpg');

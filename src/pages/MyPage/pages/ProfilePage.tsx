@@ -25,21 +25,18 @@ import {
 } from '../styles/ProfilePage.styled';
 import Button from '../../../components/Button';
 import Profile from '../../../components/Profile';
-import { DEFAULT_INSTRUCTOR_IMAGE } from '../../../constants/apiConfig';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
+import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
-  console.log('ProfilePage data:', data);
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: uploadProfileImage, isPending: isUploadingImage } = useUploadProfileImage();
   const { mutate: deleteProfileImage, isPending: isDeletingImage } = useDeleteProfileImage();
 
   const [nickname, setNickname] = useState('');
-  const [gender, setGender] = useState('none');
-  const [birthdate, setBirthdate] = useState('');
+  const [gender, setGender] = useState('other');
+  const [birthdate, setBirthdate] = useState<string| null>(null);
+  const RESET_BIRTHDATE = '0001-01-01';
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -49,17 +46,16 @@ const ProfilePage: React.FC = () => {
     if (data) {
       // 프로필 데이터가 로드되면 상태 초기화
       setNickname(data.nickname || '');
-      setGender(data.gender || 'none');
-      setBirthdate(data.birth_date || '');
+      setGender(data.gender || 'other');
+      setBirthdate(data.birth_date === RESET_BIRTHDATE ? null : data.birth_date);
 
       const serverImageUrl = data.profile_image;
       let fullImageUrl: string | null = null;
 
-      if (serverImageUrl && serverImageUrl !== DEFAULT_PLACEHOLDER_URL) {
+      if (serverImageUrl) {
         // 'uploads/...' 형태의 상대 경로이므로, BASE_URL을 붙여줌
-        fullImageUrl = `${API_BASE_URL}${serverImageUrl}`;
+        fullImageUrl = serverImageUrl.includes('placeholder') ? null : getFullImageUrl(serverImageUrl);
       }
-      console.log('Processed Image URL:', fullImageUrl);
       if (!selectedFile) {
         setImagePreview(fullImageUrl);
       }
@@ -68,13 +64,12 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('수정하기:', { nickname, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
     // 1. 변경된 텍스트 정보가 있는지 확인
     const payload: ProfileUpdatePayload = {};
     if (data?.nickname !== nickname) payload.nickname = nickname;
     if (data?.gender !== gender) payload.gender = gender;
-    if (data?.birth_date !== birthdate) payload.birth_date = birthdate;
+    if (data?.birth_date !== birthdate) payload.birth_date = birthdate === '' ? RESET_BIRTHDATE : birthdate;
 
     const didTextChange = Object.keys(payload).length > 0;
 
@@ -117,11 +112,8 @@ const ProfilePage: React.FC = () => {
     if (selectedFile) {
       // 1. 로컬에서 선택한 파일(blob:)을 '취소'할 때
       setSelectedFile(null);
-      // 원래 서버 이미지 (있다면) 또는 기본 이미지로 되돌림
-      const originalServerImage = data?.profile_image
-        ? `${API_BASE_URL}${data.profile_image}`
-        : null;
-      setImagePreview(originalServerImage);
+      setImagePreview(null);
+
       if (fileInputRef.current) fileInputRef.current.value = ''; // input DOM 초기화
     } else if (data?.profile_image) {
       // 2. 서버에 저장된 이미지를 '삭제'할 때 (API 호출)
@@ -150,16 +142,9 @@ const ProfilePage: React.FC = () => {
         </Header>
         <ProfileFormContainer>
           <ProfileContainer>
+            <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" /> 
             {imagePreview ? (
-              <>
-                {console.log('imagePreview:', imagePreview)}
-                <Profile size={14.6} src={imagePreview} alt="현재 프로필 이미지" />
-              </>
-            ) : (
-              <Profile size={14.6} src={DEFAULT_INSTRUCTOR_IMAGE} alt="기본 프로필 이미지" />
-            )}
-            {imagePreview ? (
-              // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼 (X)
+              // 1. 이미지가 있으면 (서버/로컬) -> '삭제/취소' 버튼
               <ImageActionButton
                 type="button"
                 onClick={handleClearImage}
@@ -170,7 +155,7 @@ const ProfilePage: React.FC = () => {
                 ✕
               </ImageActionButton>
             ) : (
-              // 2. 이미지가 없으면 -> '업로드' 버튼 (+)
+              // 2. 이미지가 없으면 -> '업로드' 버튼
               <ImageActionButton
                 type="button"
                 onClick={handleImageUploadClick}
@@ -211,8 +196,9 @@ const ProfilePage: React.FC = () => {
                   name="gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
+                  defaultValue="other"
                 >
-                  <option value="none">선택</option>
+                  <option value="other">기타</option>
                   <option value="male">남성</option>
                   <option value="female">여성</option>
                 </Select>
@@ -223,7 +209,7 @@ const ProfilePage: React.FC = () => {
                   id="birthdate"
                   type="date"
                   name="birthdate"
-                  value={birthdate}
+                  value={birthdate ?? ''}
                   onChange={(e) => setBirthdate(e.target.value)}
                   aria-label="생년월일 입력"
                 />

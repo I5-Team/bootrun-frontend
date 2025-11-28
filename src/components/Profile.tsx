@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { getFullImageUrl } from '../utils/imageUtils';
-import { DEFAULT_INSTRUCTOR_IMAGE } from '../constants/apiConfig';
+import { DEFAULT_PROFILE_IMAGE } from '../constants/apiConfig';
+import { useState } from 'react';
 
 type ProfileProps = {
-  src?: string;
+  src?: string | null;
   size?: number; // rem
   alt?: string;
   isActive?: boolean;
@@ -33,15 +33,22 @@ export default function Profile({
   alt = '프로필',
   isActive = false,
 }: ProfileProps) {
-  const imageSrc = src ? src : getFullImageUrl();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const finalImageSrc = src ?? DEFAULT_PROFILE_IMAGE;
 
   return (
     <>
       <StyledProfileImg
-        src={imageSrc || DEFAULT_INSTRUCTOR_IMAGE}
         $size={size}
-        alt={alt}
         $isActive={isActive}
+
+        src={isLoaded ? finalImageSrc : DEFAULT_PROFILE_IMAGE}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        onError={(e) => {
+          e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
+          setIsLoaded(true);
+        }}
       />
     </>
   );
