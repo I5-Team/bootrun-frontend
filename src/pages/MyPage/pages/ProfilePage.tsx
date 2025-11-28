@@ -29,7 +29,6 @@ import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
-  console.log('ProfilePage data:', data);
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: uploadProfileImage, isPending: isUploadingImage } = useUploadProfileImage();
   const { mutate: deleteProfileImage, isPending: isDeletingImage } = useDeleteProfileImage();
@@ -65,7 +64,6 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('수정하기:', { nickname, gender, birthdate, selectedFile });
     // TODO: 프로필 수정 API 호출
     // 1. 변경된 텍스트 정보가 있는지 확인
     const payload: ProfileUpdatePayload = {};
