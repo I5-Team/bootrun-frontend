@@ -168,6 +168,9 @@ export default function LectureRoomPage() {
   // 완료 처리 중복 방지를 위한 ref
   const isMovingToNextRef = useRef(false);
 
+  // 마지막 자동 이동 시간
+  const lastAutoMoveTimeRef = useRef(0);
+
   // 전체 진행률 새로고침 함수
   const refreshCourseProgress = useCallback(async () => {
     if (!courseId) return;
@@ -180,12 +183,6 @@ export default function LectureRoomPage() {
         console.log(`[LectureRoom] 진행률 업데이트: ${newProgressRate}%`);
         setLectureData((prev) => {
           if (!prev) return prev;
-          console.log(
-            '[LectureRoom] setLectureData - prev:',
-            prev.progress_rate,
-            '-> new:',
-            newProgressRate
-          );
           // 값이 실제로 변경되었을 때만 새 객체 반환
           if (prev.progress_rate === newProgressRate) {
             console.log('[LectureRoom] 진행률 변경 없음, 리렌더링 스킵');
@@ -291,7 +288,6 @@ export default function LectureRoomPage() {
         const progressData = await fetchLectureProgress(currentLectureId);
         if (progressData) {
           const progress = progressData;
-          setLastPosition(progress.last_position || 0);
           setProgressExists(true);
 
           // 완료된 강의는 항상 100%, 미완료는 저장된 진도율로 초기화
@@ -309,6 +305,8 @@ export default function LectureRoomPage() {
               setIsCurrentLectureCompleted(false);
             }
 
+            // 이어보기 위치 설정 (완료/미완료 관계없이)
+            setLastPosition(progress.last_position || 0);
             setCurrentVideoDuration(duration);
           }
         } else {
@@ -348,23 +346,18 @@ export default function LectureRoomPage() {
     loadLectureProgress();
   }, [currentLectureId, currentLectureInfo]);
 
-  // 진행률 저장 (10초마다 자동 호출됨)
+  // 진행률 저장 (5초마다 자동 호출됨)
   const handleVideoProgress = useCallback(
     async (playedSeconds: number, totalSeconds: number) => {
       if (!currentLectureId) return;
 
       const completionRate = totalSeconds > 0 ? (playedSeconds / totalSeconds) * 100 : 0;
-      const isCompleted = completionRate >= 95; // 95% 이상 시청 시 완료 처리 (서버 기준)
 
       // 완료된 강의면 진도율 업데이트 하지 않음 (100% 유지)
       if (!isCurrentLectureCompleted) {
         setCurrentVideoProgress(completionRate);
         setCurrentVideoDuration(totalSeconds);
       }
-
-      console.log(
-        `[LectureRoom] 진행률 저장 시도: 강의 ID ${currentLectureId}, ${Math.floor(playedSeconds)}초, 완료율 ${completionRate.toFixed(1)}%`
-      );
 
       try {
         if (progressExists) {
@@ -427,52 +420,30 @@ export default function LectureRoomPage() {
 
         // 전체 진행률 새로고침 (매번)
         await refreshCourseProgress();
-
-        // 95% 이상 시청 시 다음 강의로 자동 이동 (중복 방지)
-        if (isCompleted && !isMovingToNextRef.current) {
-          isMovingToNextRef.current = true;
-          console.log('[LectureRoom] 강의 완료! 다음 강의로 이동합니다.');
-
-          const chaptersToUse = lectureData?.chapters || [];
-          const allLectures: Array<{ id: number }> = [];
-          chaptersToUse.forEach((chapter) => {
-            if (chapter.lectures) {
-              chapter.lectures.forEach((lecture) => {
-                allLectures.push({ id: lecture.id });
-              });
-            }
-          });
-
-          const currentIndex = allLectures.findIndex((lec) => lec.id === currentLectureId);
-          if (currentIndex >= 0 && currentIndex < allLectures.length - 1) {
-            setTimeout(() => {
-              setCurrentLectureId(allLectures[currentIndex + 1].id);
-              scrollToTop();
-              isMovingToNextRef.current = false; // 다음 강의로 이동 후 리셋
-            }, 2000); // 2초 후 다음 강의로 이동
-          } else {
-            console.log('[LectureRoom] 마지막 강의입니다.');
-            isMovingToNextRef.current = false;
-          }
-        }
       } catch (err) {
         console.error('[LectureRoom] 진행률 저장 실패:', err);
       }
     },
-    [
-      currentLectureId,
-      progressExists,
-      refreshCourseProgress,
-      lectureData,
-      isCurrentLectureCompleted,
-    ]
+    [currentLectureId, progressExists, refreshCourseProgress, isCurrentLectureCompleted]
   );
 
   // 강의 완료 처리 (실제 완료는 서버가 자동으로 95% 기준으로 처리)
   const handleVideoEnded = useCallback(async () => {
+    console.log(`[LectureRoom] handleVideoEnded 호출됨 - 강의 ID: ${currentLectureId}`);
+
     if (!currentLectureId) return;
 
+    // 타이머 기반 중복 방지: 최근 3초 이내에 자동 이동했으면 무시
+    const now = Date.now();
+    const timeSinceLastMove = now - lastAutoMoveTimeRef.current;
+
+    if (timeSinceLastMove < 3000) {
+      return;
+    }
+
     try {
+      // 마지막 자동 이동 시간 기록
+      lastAutoMoveTimeRef.current = now;
       // 영상 끝 위치 저장 (is_completed는 서버가 자동 처리)
       if (progressExists) {
         try {
@@ -504,7 +475,7 @@ export default function LectureRoomPage() {
               }
             }
           } else {
-            throw updateErr; // 다른 에러는 다시 throw
+            throw updateErr;
           }
         }
       } else {
@@ -536,10 +507,16 @@ export default function LectureRoomPage() {
         }, 1000); // 1초 후 다음 강의로 이동
       }
     } catch (err) {
-      console.error('완료 처리 실패:', err);
+      console.error('[LectureRoom] 완료 처리 실패:', err);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLectureId, progressExists, refreshCourseProgress, lectureData]);
+  }, [
+    currentLectureId,
+    progressExists,
+    refreshCourseProgress,
+    lectureData,
+    isCurrentLectureCompleted,
+  ]);
 
   // 화면 맨 위로 부드럽게 스크롤
   const scrollToTop = () => {
