@@ -193,7 +193,6 @@ export const requestEmailVerification = async (
   if (!useMock) {
     console.log('Requesting email verification for:', payload);
     const response = await apiClient.post(API_URL.AUTH.EMAIL_VERIFICATION_REQUEST, payload);
-    console.log('Email verification request response:', response);
     return response.data; // (data.data가 아닌 data로 추정)
   } else {
     return new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500));
