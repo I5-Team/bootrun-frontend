@@ -16,6 +16,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
+// 페이지네이션 컴포넌트 (이전/다음 버튼 및 현재 페이지 표시)
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   // 렌더링할 페이지가 없거나 1페이지뿐이면 아무것도 표시하지 않음
   if (totalPages <= 1) {
@@ -84,13 +85,13 @@ const S = {
     }
   `,
   PageInfo: styled.span`
-    font-size: 1.4rem;
+    font-size: ${({ theme }) => theme.fontSize.sm};
     color: ${({ theme }) => theme.colors.gray300};
     padding: 0 0.8rem;
 
     strong {
       color: ${({ theme }) => theme.colors.surface};
-      font-weight: 600;
+      font-weight: ${({ theme }) => theme.fontWeight.bold};
     }
   `,
 };

@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 interface BannerItem {
     id: number;
     imgSrc: string;
-    title:string;
+    title: string;
     tag?: string;
     desc?: string;
     highlight?: string;
@@ -22,6 +22,7 @@ interface BannerItem {
 }
 
 // style
+// 메인 배너 슬라이더 스타일 (Swiper 라이브러리 커스텀)
 const StyledBannerSwiper = styled(Swiper)`
     flex: 1;
     width: 100%;
@@ -56,7 +57,8 @@ const StyledBannerSwiper = styled(Swiper)`
     }
 `;
 
-const StyledSwiperSlide = styled(SwiperSlide)<{ $bgImageSrc?: string }>`
+// 개별 슬라이드 스타일 (배경 이미지 및 그라데이션 적용)
+const StyledSwiperSlide = styled(SwiperSlide) <{ $bgImageSrc?: string }>`
     width: 100%;
     min-width: 100%;
     height: 100%;
@@ -95,7 +97,7 @@ const StyledTag = styled.span`
     color: ${({ theme }) => theme.colors.focus};
 
     font-size: ${({ theme }) => theme.fontSize.sm};
-    font-weight: 700;
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
     text-align: center;
 
     display: inline-flex;
@@ -112,7 +114,7 @@ const StyledTag = styled.span`
 const StyledTitle = styled.p`
     font-size: ${({ theme }) => theme.fontSize.xxl};
     font-style: normal;
-    font-weight: 700;
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
     line-height: 1.2;
     white-space: pre-line;
 
@@ -123,17 +125,18 @@ const StyledTitle = styled.p`
 
 const StyledDesc = styled.p`
     width: 74%;
-    font-weight: 500;
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
     line-height: 1.4;
     word-break: keep-all;
     white-space: pre-line;
 `;
 
 const StyledStrong = styled.span`
-    font-weight: 700;
-`; 
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
+`;
 
 // components
+// 메인 배너 컴포넌트
 export default function Banner() {
     const { isMobile } = useMediaQuery();
 
@@ -142,10 +145,10 @@ export default function Banner() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         targetDate.setHours(0, 0, 0, 0);
-        
+
         const diffTime = targetDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (diffDays > 0) return `D-${diffDays}`;
         if (diffDays === 0) return 'D-Day';
         return `D+${Math.abs(diffDays)}`;
@@ -158,7 +161,7 @@ export default function Banner() {
             tag: '부트런 사이트 오픈!',
             title: `부트런 사이트\n오픈했습니다!`,
             desc: "김규호, 김민주, 김채현, 신가람, 장민경\n다들 수고하셨습니다. 🔥",
-        }, 
+        },
         {
             id: 2,
             imgSrc: BannerImg1,
@@ -166,7 +169,7 @@ export default function Banner() {
             title: "부트캠프 수료를\n진심으로 축하드립니다",
             desc: '수료한지 오늘로부터 ',
             highlight: calculateDdayFrom('2025-11-19'),
-        }, 
+        },
         {
             id: 3,
             imgSrc: BannerImg3,
@@ -188,19 +191,19 @@ export default function Banner() {
             }}
             loop={true}
             wrapperTag="ul"
-            aria-label="메인 배너"    
+            aria-label="메인 배너"
         >
             {bannerDatas.map((bannerItem) => (
-                <StyledSwiperSlide 
+                <StyledSwiperSlide
                     key={bannerItem.id}
                     $bgImageSrc={bannerItem.imgSrc}
                     tag="li"
                 >
                     <StyledLink to={bannerItem.linkTo ? bannerItem.linkTo : '#'}>
                         {bannerItem.tag && <StyledTag>{bannerItem.tag}</StyledTag>}
-                        
+
                         <StyledTitle>{bannerItem.title}</StyledTitle>
-                        {!isMobile && 
+                        {!isMobile &&
                             <StyledDesc>
                                 {bannerItem.desc}
                                 {bannerItem.highlight &&

@@ -1,88 +1,16 @@
-import styled, { css } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import Button from '../components/Button';
 import Profile from '../components/Profile';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../router/RouteConfig';
+import { Flex } from './Box';
+import { Text } from './Typography';
 
 import SvgPlay from '../assets/icons/icon-play.svg?react';
 import SvgMyPage from '../assets/icons/icon-mypage.svg?react';
 import { useProfile } from '../queries/useUserQueries';
 
-// profileCard
-const StyledPofileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
-  width: clamp(25rem, 24vw, 29rem);
-  min-width: 25rem;
-  height: 100%;
-
-  padding: 0 3.2rem;
-  border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-  border-radius: ${({ theme }) => theme.radius.md};
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 1.6rem;
-  text-align: center;
-
-  ${({ $variant }) =>
-    $variant === 'sidebar' &&
-    css`
-      border: none;
-      border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-      border-radius: 0;
-      width: 100%;
-      height: 33rem;
-      z-index: 10;
-    `}
-`;
-
-// userInfo - name + email
-const StyledUserInfo = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 1.2rem;
-`;
-
-const StyledInfoText = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 0.8rem;
-`;
-
-const StyledName = styled.p`
-  font-weight: 600;
-  text-align: center;
-  line-height: 2.2rem;
-`;
-
-const StyledEmail = styled.p`
-  line-height: 1;
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  color: ${({ theme }) => theme.colors.gray300};
-`;
-
-// !loggedIn > text
-const StyledText = styled.p`
-  line-height: 2.2rem;
-`;
-
-// loggedIn > actionList
-const StyledActionList = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  gap: 1.2rem;
-  margin-top: 0.8rem;
-  width: 14.8rem;
-  min-width: fit-content;
-`;
-const StlyedLink = styled(Link)`
+const StyledLink = styled(Link)`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -115,19 +43,23 @@ const AdminActionList = () => {
 // components
 const UserActionList = () => {
   return (
-    <StyledActionList>
-      <StlyedLink to={ROUTES.MY_LECTURES}>
+    <Flex direction="column" align="flex-start" gap={12} mt={8} width="14.8rem" style={{ minWidth: 'fit-content' }}>
+      <StyledLink to={ROUTES.MY_LECTURES}>
         <SvgPlay />내 강의 목록 보기
-      </StlyedLink>
-      <StlyedLink to={ROUTES.MYPAGE}>
+      </StyledLink>
+      <StyledLink to={ROUTES.MYPAGE}>
         <SvgMyPage />
         마이페이지
-      </StlyedLink>
-    </StyledActionList>
+      </StyledLink>
+    </Flex>
   );
 };
 
+// 프로필 카드 컴포넌트
+// 로그인 상태에 따라 사용자 정보 또는 로그인 버튼 표시
+// variant props에 따라 메인 화면용(main) 또는 사이드바용(sidebar) 스타일 적용
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
+  const theme = useTheme();
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
@@ -148,27 +80,46 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
     navigate(ROUTES.LOGIN);
   };
 
-  //   const userInfo = {
-  //     profile_image: 'https://picsum.photos/id/237/200/200',
-  //     nickname: 'S부트런짱2',
-  //     email: 'bootruns2@email.com',
-  //   };
+  const isSidebar = variant === 'sidebar';
 
   return (
-    <StyledPofileCard $variant={variant}>
-      <StyledUserInfo>
+    <Flex
+      as="article"
+      direction="column"
+      align="center"
+      justify="center"
+      gap={16}
+      style={{
+        width: isSidebar ? '100%' : 'clamp(25rem, 24vw, 29rem)',
+        minWidth: isSidebar ? undefined : '25rem',
+        height: isSidebar ? '33rem' : '100%',
+        padding: isSidebar ? '0 3.2rem' : '0 3.2rem',
+        border: isSidebar ? 'none' : `0.1rem solid ${theme.colors.gray200}`,
+        borderBottom: isSidebar ? `0.1rem solid ${theme.colors.gray200}` : undefined,
+        borderRadius: isSidebar ? '0' : theme.radius.md,
+        zIndex: isSidebar ? 10 : undefined,
+        textAlign: 'center'
+      }}
+    >
+      <Flex direction="column" align="center" gap={12}>
         {isLoggedIn ? <Profile size={10} src={finalImageUrl} /> : <Profile size={10} />}
-        <StyledInfoText>
-          <StyledName>{isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}</StyledName>
-          {isLoggedIn && <StyledEmail>{userProfile?.email}</StyledEmail>}
-        </StyledInfoText>
-      </StyledUserInfo>
+        <Flex direction="column" align="center" gap={8}>
+          <Text weight="bold" style={{ lineHeight: '2.2rem' }}>
+            {isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}
+          </Text>
+          {isLoggedIn && (
+            <Text variant="sm" color="gray300" style={{ lineHeight: 1 }}>
+              {userProfile?.email}
+            </Text>
+          )}
+        </Flex>
+      </Flex>
 
       {!isLoggedIn && (
-        <StyledText>
+        <Text style={{ lineHeight: '2.2rem' }}>
           부트런에 로그인 후<br />
           커뮤니티와 함께 성장하세요.
-        </StyledText>
+        </Text>
       )}
 
       {isLoggedIn ? (
@@ -182,7 +133,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
           로그인
         </Button>
       )}
-    </StyledPofileCard>
+    </Flex>
   );
 };
 

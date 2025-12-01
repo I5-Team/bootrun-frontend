@@ -23,13 +23,14 @@ export type CourseFilter = {
 }
 
 // styled
+// 강의 목록 그리드 레이아웃 스타일 (반응형)
 const StyledCardGrid = styled.ul`
     width: 100%;
     height: auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     
-    row-gap: 4rem;
+    row-gap: ${({ theme }) => theme.space[40]};
     column-gap: clamp(1.4rem, 2vw, 2.5rem);
 
     @media ${({ theme }) => theme.devices.laptop} {
@@ -62,10 +63,11 @@ type BaseCourseListProps<T> = {
     sortFn?: (a: T, b: T) => number;
     sliceFn?: (list: T[]) => T[];
     courseCard: (item: T) => React.ReactNode;
-    onCountChange? : (count: number) => void;
+    onCountChange?: (count: number) => void;
     isLoading?: boolean;
 }
 
+// 공통 강의 목록 컴포넌트 (데이터 필터링, 정렬, 스켈레톤 처리)
 const BaseCourseList = <T,>({
     variant = 'info',
     data,
@@ -81,7 +83,7 @@ const BaseCourseList = <T,>({
     const sortedList = sortFn ? [...filteredList].sort(sortFn) : filteredList;
     const slicedList = sliceFn ? sliceFn(sortedList) : sortedList;
     const refinedList = slicedList;
-    
+
     useEffect(() => {
         onCountChange?.(refinedList.length);
     }, [refinedList, onCountChange])
@@ -90,38 +92,39 @@ const BaseCourseList = <T,>({
         <div className="card-list">
             {isLoading || !refinedList ? (
                 <StyledCardGrid>
-                    {Array(9).fill(0).map((_, index) => 
+                    {Array(9).fill(0).map((_, index) =>
                         variant === "info"
-                            ? <SkeletonCard key={index}/>
-                            : <SkeletonMyCourseCard key={index}/>
+                            ? <SkeletonCard key={index} />
+                            : <SkeletonMyCourseCard key={index} />
                     )}
                 </StyledCardGrid>
             ) : (
-                refinedList.length === 0  
-                ? <NoResultPage/>
-                : <>
-                    <StyledCardGrid>
-                        {refinedList.map(courseCard)}
-                    </StyledCardGrid>
-                    <ScrollToTopButton/>
-                 </>
-                
-            )}            
+                refinedList.length === 0
+                    ? <NoResultPage />
+                    : <>
+                        <StyledCardGrid>
+                            {refinedList.map(courseCard)}
+                        </StyledCardGrid>
+                        <ScrollToTopButton />
+                    </>
+
+            )}
         </div>
     )
 }
 
-export const FilterCourseList = ({ 
+// 필터링 기능이 포함된 강의 목록 컴포넌트
+export const FilterCourseList = ({
     courseTypeOpt,
-    sortOpt, 
-    cardCount, 
+    sortOpt,
+    cardCount,
     onCountChange,
-}: CourseFilter ) => {
+}: CourseFilter) => {
     const [searchParams] = useSearchParams();
 
     const filterParams: CoursesApiParams = {
-        course_types: courseTypeOpt 
-            ? [courseTypeOpt] 
+        course_types: courseTypeOpt
+            ? [courseTypeOpt]
             : searchParams.getAll('course_types').length > 0 ? searchParams.getAll('course_types') as CourseType[] : [],
         category_types: searchParams.getAll('category_types') as CategoryType[],
         difficulties: searchParams.getAll('difficulties') as DifficultyType[],
@@ -148,14 +151,14 @@ export const FilterCourseList = ({
 
     const courseCardItem = (course: CourseItem) => (
         <li key={course.id}>
-             <CourseCard
+            <CourseCard
                 variant="info"
                 courseId={course.id}
                 thumbnail={course.thumbnail_url}
                 tags={[
-                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                    {'label': categoryLabel[course.category_type] || "기타"}, 
-                    {'label': difficultyLabel[course.difficulty]},
+                    { 'label': courseTypeLabel[course.course_type], 'variant': 'dark' },
+                    { 'label': categoryLabel[course.category_type] || "기타" },
+                    { 'label': difficultyLabel[course.difficulty] },
                 ]}
                 title={course.title}
                 teacherName={course.instructor_name}
@@ -180,17 +183,17 @@ export const FilterCourseList = ({
     )
 }
 
-export const FilterMyCourseList = ({ 
+export const FilterMyCourseList = ({
     sortOpt,
     onCountChange,
-}: CourseFilter ) => {
+}: CourseFilter) => {
     const [searchParams] = useSearchParams();
 
     const filterParams: Partial<MyEnrollmentsApiParams> = {};
     searchParams.forEach((value, key) => {
-    if (value) {
-        filterParams[key as keyof MyEnrollmentsApiParams] = value as any;
-    }
+        if (value) {
+            filterParams[key as keyof MyEnrollmentsApiParams] = value as any;
+        }
     });
     const { data: myEnrollments = [], isLoading } = useMyEnrollmentQuery(filterParams);
 
@@ -210,19 +213,19 @@ export const FilterMyCourseList = ({
                 thumbnail={course.thumbnail_url}
                 title={course.title}
                 tags={[
-                    {'label': courseTypeLabel[course.course_type], 'variant': 'dark'}, 
-                    {'label': categoryLabel[course.category_type]}, 
-                    {'label': difficultyLabel[course.difficulty]},
+                    { 'label': courseTypeLabel[course.course_type], 'variant': 'dark' },
+                    { 'label': categoryLabel[course.category_type] },
+                    { 'label': difficultyLabel[course.difficulty] },
                 ]}
-                value={course.completed_lectures || 0} 
-                max={course.total_lectures || 0} 
+                value={course.completed_lectures || 0}
+                max={course.total_lectures || 0}
                 courseId={course.id}
-                
-                isActive={course.enrollment_status === 'available' ? true: false}
+
+                isActive={course.enrollment_status === 'available' ? true : false}
                 isCompleted={course.learning_status === 'completed' ? true : false}
             />
         </li>
-     );
+    );
 
     return (
         <BaseCourseList

@@ -1,5 +1,6 @@
 import type { DefaultTheme } from "styled-components";
 
+// 디자인 시스템 색상 팔레트 정의
 const colors = {
   primary100: '#FFEAE6',
   primary200: '#FFBAA4',
@@ -20,6 +21,7 @@ const colors = {
   shadow: '0 4px 20px 0 rgba(0, 0, 0, 0.04)',
 } as const;
 
+// 반응형 디자인을 위한 브레이크포인트 정의
 const breakpoints = {
   desktop: '1190px',
   laptop: '992px',
@@ -43,6 +45,7 @@ const radius = {
   xxl: '2rem',
 } as const;
 
+// 폰트 크기 정의 (rem 단위)
 const fontSize = {
   xxl: '4rem',
   xl: '3.2rem',
@@ -62,6 +65,57 @@ const mobileFontSize = {
 }
 
 
+// 간격 시스템 정의 (4px 단위 기본)
+const space = {
+  0: '0',
+  2: '0.2rem',
+  4: '0.4rem',
+  6: '0.6rem',
+  8: '0.8rem',
+  10: '1.0rem',
+  12: '1.2rem',
+  14: '1.4rem',
+  16: '1.6rem',
+  20: '2.0rem',
+  24: '2.4rem',
+  32: '3.2rem',
+  40: '4.0rem',
+  48: '4.8rem',
+  64: '6.4rem',
+  80: '8.0rem',
+  96: '9.6rem',
+} as const;
+
+const lineHeight = {
+  tight: 1.2,
+  normal: 1.5,
+  loose: 1.8,
+} as const;
+
+const fontWeight = {
+  regular: 400,
+  medium: 500,
+  bold: 700,
+} as const;
+
+const zIndex = {
+  dropdown: 1000,
+  sticky: 1020,
+  fixed: 1030,
+  modalBackdrop: 1040,
+  modal: 1050,
+  popover: 1060,
+  tooltip: 1070,
+  toast: 1080,
+} as const;
+
+const shadows = {
+  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+} as const;
+
 const theme: DefaultTheme = {
   colors,
   devices,
@@ -69,6 +123,11 @@ const theme: DefaultTheme = {
   fontSize,
   mobileFontSize,
   breakpoints,
+  space,
+  lineHeight,
+  fontWeight,
+  zIndex,
+  shadows,
 } as const;
 
 export type ColorTypes = typeof colors;
@@ -77,6 +136,10 @@ export type RadiusTypes = typeof radius;
 export type FontSizeTypes = typeof fontSize;
 export type MobileFontSizeTypes = typeof mobileFontSize;
 export type BreakpointsTypes = typeof breakpoints;
-
+export type SpaceTypes = typeof space;
+export type LineHeightTypes = typeof lineHeight;
+export type FontWeightTypes = typeof fontWeight;
+export type ZIndexTypes = typeof zIndex;
+export type ShadowTypes = typeof shadows;
 
 export default theme;

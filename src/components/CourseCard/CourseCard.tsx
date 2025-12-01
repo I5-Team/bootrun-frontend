@@ -13,11 +13,6 @@ import {
   StyledLikeButton,
   StyledPrice,
   StyledTagList,
-  StyledTeacherDetails,
-  StyledTeacherInfo,
-  StyledTeacherName,
-  StyledTeacherRole,
-  StyledTeacherSection,
   StyledThumbnailImage,
   StyledThumbnailWrapper,
   StyledTitle,
@@ -29,6 +24,8 @@ import Tag from '../Tag';
 import Profile from '../Profile';
 import ProgressBar from '../ProgressBar';
 import Button from '../Button';
+import { Flex } from '../Box';
+import { Text } from '../Typography';
 
 // import - assets
 import SvgHeart from '../../assets/icons/icon-heart.svg?react';
@@ -40,6 +37,7 @@ import SvgCertificate from '../../assets/icons/icon-certificate.svg?react';
 import { getFullImageUrl } from '../../utils/imageUtils';
 
 // types
+// 강의 카드 컴포넌트 타입 정의 (정보형/학습형)
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
 type VariantType = 'info' | 'study';
 
@@ -166,23 +164,23 @@ const CardInfoContent = ({
 
   return (
     <StyledContentWrapper>
-      <StyledTeacherSection>
-        <StyledTeacherInfo>
+      <Flex direction="column" gap={16}>
+        <Flex align="center" gap={12}>
           <Profile
             size={4.6}
             src={getFullImageUrl(teacherImage)}
             alt={`${teacherName} 강사 프로필`}
           />
-          <StyledTeacherDetails>
-            <StyledTeacherName>{teacherName}</StyledTeacherName>
-            <StyledTeacherRole>{teacherRole}</StyledTeacherRole>
-          </StyledTeacherDetails>
-        </StyledTeacherInfo>
+          <Flex align="center" gap={8} style={{ flex: 1, overflow: 'hidden' }}>
+            <Text weight="bold" variant="md" style={{ whiteSpace: 'nowrap' }}>{teacherName}</Text>
+            <Text variant="sm" color="gray300" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{teacherRole}</Text>
+          </Flex>
+        </Flex>
 
         <StyledDescriptionBox>
           <p>{description}</p>
         </StyledDescriptionBox>
-      </StyledTeacherSection>
+      </Flex>
 
       {isEnrolled ? (
         <StyledLearning>
@@ -237,6 +235,8 @@ const CardStudyContent = ({
   );
 };
 
+// 강의 카드 메인 컴포넌트
+// variant props에 따라 정보형(info) 또는 학습형(study)으로 렌더링
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
   const { variant, courseId, thumbnail, tags, title, isActive, isCompleted } = props;
   return (

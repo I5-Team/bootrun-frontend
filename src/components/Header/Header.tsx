@@ -18,7 +18,6 @@ import {
   StyledHeader,
   StyledHeaderInner,
   StyledLogo,
-  StyledActionList,
   StyledNavList,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
@@ -35,11 +34,13 @@ import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
 import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
 import { useProfile } from '../../queries/useUserQueries.ts';
+import { Flex } from '../Box.tsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const APP_ENV = import.meta.env.VITE_APP_ENV;
 const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
+// 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
   return (
     <Link to={ROUTES.HOME}>
@@ -93,6 +94,7 @@ const SidebarOpenBtn = ({
   );
 };
 
+// 사용자 프로필 버튼 및 드롭다운 메뉴
 const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -173,7 +175,7 @@ const ActionLists = () => {
   };
 
   return (
-    <StyledActionList>
+    <Flex justify="flex-end" align="center" style={{ height: '100%', gap: '0 clamp(1.2rem, 1vw, 2rem)' }}>
       {isTablet ? (
         <>
           <SearchOpenBtn isActive={isSearchActive} onClick={handleOpenSearch} />
@@ -187,7 +189,7 @@ const ActionLists = () => {
           <UserProfileBtn />
         </>
       )}
-    </StyledActionList>
+    </Flex>
   );
 };
 
@@ -326,13 +328,13 @@ const LectureRoomHeader = () => {
   return (
     <StyledHeaderInnerLecture>
       {isMobile ? <ChapterBtn /> : !isLeftSidebarOpen ? <ChapterBtn /> : <HeaderLogo />}
-      <StyledActionList>
+      <Flex justify="flex-end" align="center" style={{ height: '100%', gap: '0 clamp(1.2rem, 1vw, 2rem)' }}>
         <DownloadBtn />
         <QnaBtn />
         <HomeBackBtn />
         <DiscordBtn />
         <UserProfileBtn />
-      </StyledActionList>
+      </Flex>
     </StyledHeaderInnerLecture>
   );
 };
@@ -346,6 +348,7 @@ const AdminHeader = () => {
   );
 };
 
+// 메인 헤더 컴포넌트 (페이지 타입에 따라 다른 헤더 렌더링)
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;

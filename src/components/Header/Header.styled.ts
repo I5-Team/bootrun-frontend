@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 // header
+// 헤더 메인 컨테이너 스타일 (Sticky 포지셔닝)
 export const StyledHeader = styled.header`
   flex-shrink: 0;
 
@@ -15,7 +16,7 @@ export const StyledHeader = styled.header`
 
   position: sticky;
   top: 0;
-  z-index: 10000;
+  z-index: ${({ theme }) => theme.zIndex.sticky};
 
   @media ${({ theme }) => theme.devices.tablet} {
     height: 5.6rem;
@@ -23,6 +24,7 @@ export const StyledHeader = styled.header`
 `;
 
 // headerInner
+// 헤더 내부 컨텐츠 영역 스타일 (최대 너비 제한)
 export const StyledHeaderInner = styled.div<{ $isSignup?: boolean }>`
   max-width: ${({ theme }) => theme.breakpoints.desktop};
   width: calc(100% - 3.2rem);
