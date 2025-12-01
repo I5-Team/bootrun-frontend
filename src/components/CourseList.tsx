@@ -23,13 +23,14 @@ export type CourseFilter = {
 }
 
 // styled
+// 강의 목록 그리드 레이아웃 스타일 (반응형)
 const StyledCardGrid = styled.ul`
     width: 100%;
     height: auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     
-    row-gap: 4rem;
+    row-gap: ${({ theme }) => theme.space[40]};
     column-gap: clamp(1.4rem, 2vw, 2.5rem);
 
     @media ${({ theme }) => theme.devices.laptop} {
@@ -66,6 +67,7 @@ type BaseCourseListProps<T> = {
     isLoading?: boolean;
 }
 
+// 공통 강의 목록 컴포넌트 (데이터 필터링, 정렬, 스켈레톤 처리)
 const BaseCourseList = <T,>({
     variant = 'info',
     data,
@@ -111,6 +113,7 @@ const BaseCourseList = <T,>({
     )
 }
 
+// 필터링 기능이 포함된 강의 목록 컴포넌트
 export const FilterCourseList = ({
     courseTypeOpt,
     sortOpt,

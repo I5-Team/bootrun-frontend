@@ -35,16 +35,17 @@ export const SectionWrapper = styled.div`
 `
 
 // --- SectionTabs 스타일 ---
+// 스크롤 시 상단에 고정되는 네비게이션 바 스타일
 export const StickyNavWrapper = styled.nav`
   width: 100%;
   height: 5rem;
   
   background: ${({ theme }) => theme.colors.white};
-  border-bottom: 0.1rem solid${({ theme }) => theme.colors.gray200};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: ${({ theme }) => theme.zIndex.sticky};
   
   position: sticky;
   top: 7rem;
@@ -74,7 +75,7 @@ export const NavItem = styled.a<{ $active?: boolean }>`
   padding: 0.4rem 0;
   white-space: nowrap;
 
-  font-weight: ${({ $active }) => ($active ? 600 : 500)};
+  font-weight: ${({ $active, theme }) => ($active ? theme.fontWeight.bold : theme.fontWeight.medium)};
   color: ${({ $active, theme }) => ($active ? theme.colors.surface : theme.colors.gray300)};
 
   @media ${({ theme }) => theme.devices.mobile} {
@@ -83,7 +84,7 @@ export const NavItem = styled.a<{ $active?: boolean }>`
 `;
 
 export const NavCta = styled(NavItem)`
-  font-weight: 700;
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
   color: ${({ theme }) => theme.colors.primary300};
 
   &:hover {
@@ -92,6 +93,7 @@ export const NavCta = styled(NavItem)`
 `;
 
 // --- Section 공통 스타일 ---
+// 각 섹션별 공통 레이아웃 및 타이틀 스타일 정의
 export const StyledBaseSection = {
   Section: styled.section`
     display: flex;
@@ -118,7 +120,7 @@ export const StyledBaseSection = {
     gap: 1.2rem;
   `,
   SectionTitle: styled.h3`
-    font-weight: 700;
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
     font-size: ${({ theme }) => theme.fontSize.xl};
     color: ${({ theme }) => theme.colors.surface};
 
@@ -130,7 +132,7 @@ export const StyledBaseSection = {
     display: flex;
     justify-content: center;
     gap: 0.4rem;
-    font-weight: 600;
+    font-weight: ${({ theme }) => theme.fontWeight.bold};
     font-size: ${({ theme }) => theme.fontSize.md};
     color: ${({ theme }) => theme.colors.primary300};
     text-align: center;

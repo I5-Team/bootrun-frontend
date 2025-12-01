@@ -3,14 +3,17 @@ import Button from '../components/Button';
 import Profile from '../components/Profile';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../router/RouteConfig';
+import { Flex } from './Box';
+import { Text } from './Typography';
 
 import SvgPlay from '../assets/icons/icon-play.svg?react';
 import SvgMyPage from '../assets/icons/icon-mypage.svg?react';
 import { useProfile } from '../queries/useUserQueries';
+
 import { getFullImageUrl } from '../utils/imageUtils';
 
 // profileCard
-const StyledPofileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
+const StyledProfileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
   width: clamp(25rem, 24vw, 29rem);
   min-width: 25rem;
   height: 100%;
@@ -67,23 +70,8 @@ const StyledEmail = styled.p`
   color: ${({ theme }) => theme.colors.gray300};
 `;
 
-// !loggedIn > text
-const StyledText = styled.p`
-  line-height: 2.2rem;
-`;
 
-// loggedIn > actionList
-const StyledActionList = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  gap: 1.2rem;
-  margin-top: 0.8rem;
-  width: 14.8rem;
-  min-width: fit-content;
-`;
-const StlyedLink = styled(Link)`
+const StyledLink = styled(Link)`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -116,19 +104,23 @@ const AdminActionList = () => {
 // components
 const UserActionList = () => {
   return (
-    <StyledActionList>
-      <StlyedLink to={ROUTES.MY_LECTURES}>
+    <Flex direction="column" align="flex-start" gap={12} mt={8} width="14.8rem" style={{ minWidth: 'fit-content' }}>
+      <StyledLink to={ROUTES.MY_LECTURES}>
         <SvgPlay />내 강의 목록 보기
-      </StlyedLink>
-      <StlyedLink to={ROUTES.MYPAGE}>
+      </StyledLink>
+      <StyledLink to={ROUTES.MYPAGE}>
         <SvgMyPage />
         마이페이지
-      </StlyedLink>
-    </StyledActionList>
+      </StyledLink>
+    </Flex>
   );
 };
 
+// 프로필 카드 컴포넌트
+// 로그인 상태에 따라 사용자 정보 또는 로그인 버튼 표시
+// variant props에 따라 메인 화면용(main) 또는 사이드바용(sidebar) 스타일 적용
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
+
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const isLoggedIn = Boolean(token);
@@ -143,7 +135,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   };
 
   return (
-    <StyledPofileCard $variant={variant}>
+    <StyledProfileCard $variant={variant}>
       <StyledUserInfo>
         {isLoggedIn ? <Profile size={10} src={profileImageUrl} /> : <Profile size={10} />}
         <StyledInfoText>
@@ -153,10 +145,10 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
       </StyledUserInfo>
 
       {!isLoggedIn && (
-        <StyledText>
+        <Text style={{ lineHeight: '2.2rem' }}>
           부트런에 로그인 후<br />
           커뮤니티와 함께 성장하세요.
-        </StyledText>
+        </Text>
       )}
 
       {isLoggedIn ? (
@@ -170,7 +162,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
           로그인
         </Button>
       )}
-    </StyledPofileCard>
+    </StyledProfileCard>
   );
 };
 

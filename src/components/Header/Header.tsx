@@ -18,7 +18,6 @@ import {
   StyledHeader,
   StyledHeaderInner,
   StyledLogo,
-  StyledActionList,
   StyledNavList,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
@@ -36,9 +35,11 @@ import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
 import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
 import { useProfile } from '../../queries/useUserQueries.ts';
 import { getFullImageUrl } from '../../utils/imageUtils.ts';
+import { Flex } from '../Box.tsx';
 
 const APP_ENV = import.meta.env.VITE_APP_ENV;
 
+// 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
   return (
     <Link to={ROUTES.HOME}>
@@ -47,7 +48,7 @@ const HeaderLogo = () => {
 
       {APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local')) ? (
         // 'dev' 또는 'local' 환경일 때만 배지 표시
-        <StyledDevBadge>{APP_ENV}</StyledDevBadge> 
+        <StyledDevBadge>{APP_ENV}</StyledDevBadge>
       ) : null}
     </Link>
   );
@@ -97,6 +98,7 @@ const SidebarOpenBtn = ({
   );
 };
 
+// 사용자 프로필 버튼 및 드롭다운 메뉴
 const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -174,7 +176,7 @@ const ActionLists = () => {
   };
 
   return (
-    <StyledActionList>
+    <Flex justify="flex-end" align="center" style={{ height: '100%', gap: '0 clamp(1.2rem, 1vw, 2rem)' }}>
       {isTablet ? (
         <>
           <SearchOpenBtn isActive={isSearchActive} onClick={handleOpenSearch} />
@@ -188,7 +190,7 @@ const ActionLists = () => {
           <UserProfileBtn />
         </>
       )}
-    </StyledActionList>
+    </Flex>
   );
 };
 
@@ -331,13 +333,13 @@ const LectureRoomHeader = () => {
   return (
     <StyledHeaderInnerLecture>
       {isMobile ? <ChapterBtn /> : !isLeftSidebarOpen ? <ChapterBtn /> : <HeaderLogo />}
-      <StyledActionList>
+      <Flex justify="flex-end" align="center" style={{ height: '100%', gap: '0 clamp(1.2rem, 1vw, 2rem)' }}>
         <DownloadBtn />
         <QnaBtn />
         <HomeBackBtn />
         <DiscordBtn />
         <UserProfileBtn />
-      </StyledActionList>
+      </Flex>
     </StyledHeaderInnerLecture>
   );
 };
@@ -351,6 +353,7 @@ const AdminHeader = () => {
   );
 };
 
+// 메인 헤더 컴포넌트 (페이지 타입에 따라 다른 헤더 렌더링)
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;

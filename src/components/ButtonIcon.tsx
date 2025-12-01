@@ -13,31 +13,15 @@ type ButtonProps = {
   tooltip?: string;
 };
 
+// 아이콘 버튼 스타일 정의 (툴팁 및 알림 닷 기능 포함)
 const StyledButtonIcon = styled.button<{
   $variant?: ButtonVariant;
   $hasAlert: boolean;
   $tooltip?: string;
   $active: boolean;
 }>`
-
-    width: 4.2rem;
-    height: 4.2rem;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    border-radius: ${({ theme }) => theme.radius.md};
-    aspect-ratio: 1 / 1;
-    position: relative;
-
-    svg {
-        width: 2.4rem;
-        height: 2.4rem;
-        vertical-align: bottom;
-        transition: fill 0.1s;
-    }
-
+  width: 4.2rem;
+  height: 4.2rem;
 
   display: flex;
   justify-content: center;
@@ -63,8 +47,8 @@ const StyledButtonIcon = styled.button<{
     cursor: pointer;
 
     ${(p) =>
-      p.$variant !== 'discord' &&
-      css`
+    p.$variant !== 'discord' &&
+    css`
         background-color: ${({ theme }) => theme.colors.primary100};
         color: ${({ theme }) => theme.colors.primary300};
       `}
@@ -82,7 +66,7 @@ const StyledButtonIcon = styled.button<{
       color: ${$active ? theme.colors.primary300 : theme.colors.gray300};
     `}
 
-    ${(p) =>
+  ${(p) =>
     p.$variant === 'discord' &&
     css`
       background-color: ${({ theme }) => theme.colors.gray400};
@@ -92,7 +76,7 @@ const StyledButtonIcon = styled.button<{
       }
     `}
 
-    ${(p) =>
+  ${(p) =>
     (p.$tooltip || p.$variant === 'discord') &&
     css`
       position: relative;
@@ -123,7 +107,7 @@ const StyledButtonIcon = styled.button<{
         background-color: ${({ theme }) => theme.colors.surface};
         color: ${({ theme }) => theme.colors.white};
         font-size: ${({ theme }) => theme.fontSize.caption};
-        box-shadow: ${({ theme }) => theme.colors.shadow};
+        box-shadow: ${({ theme }) => theme.shadows.sm};
       }
 
       &::before {
@@ -169,7 +153,7 @@ const StyledAlertDot = styled.span`
   animation: pulse 1.5s infinite;
 `;
 
-
+// 아이콘 전용 버튼 컴포넌트
 const ButtonIcon: React.FC<ButtonProps> = ({
   children,
   ariaLabel,

@@ -5,6 +5,7 @@ type ButtonVariant = 'primary' | 'outline'
 
 type ButtonSize = 'sm' | 'md' | 'lg'
 
+// 버튼 컴포넌트 Props 정의
 type ButtonProps = {
   as?: React.ElementType,
   to?: string,
@@ -20,12 +21,13 @@ type ButtonProps = {
   ariaLabel?: string,
 }
 
-const buttonPadding: Record<ButtonSize, {padding: string}> = {
-  lg: { padding: "1.4rem 2rem"},
-  md: { padding: "1.1rem 2rem"},
-  sm: { padding: "1rem 1.6rem"},
+const buttonPadding: Record<ButtonSize, { padding: string }> = {
+  lg: { padding: "1.4rem 2rem" },
+  md: { padding: "1.1rem 2rem" },
+  sm: { padding: "1rem 1.6rem" },
 }
 
+// 기본 버튼 스타일 정의 (크기, 변형에 따른 스타일 분기)
 const StyledBaseButton = styled.button<{
   $variant: ButtonVariant
   $size: ButtonSize
@@ -44,8 +46,8 @@ const StyledBaseButton = styled.button<{
   border: 1px solid transparent;
 
   font-size: ${({ theme }) => theme.fontSize.sm};
-  line-height: 100%;
-  font-weight: 500;
+  line-height: ${({ theme }) => theme.lineHeight.normal};
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
 
   white-space: nowrap;
   cursor: pointer;
@@ -59,7 +61,7 @@ const StyledBaseButton = styled.button<{
 
       &:hover:not(:disabled),
       &:active:not(:disabled) {
-        background-color: ${({theme}) => theme.colors.primaryDark};
+        background-color: ${({ theme }) => theme.colors.primaryDark};
       }
   `}
 
@@ -82,7 +84,7 @@ const StyledBaseButton = styled.button<{
     cursor: not-allowed;
   }
 `
-const StyledIcon = styled.span<{$variant: ButtonVariant}>`
+const StyledIcon = styled.span<{ $variant: ButtonVariant }>`
   width: auto;
   height: 1.75rem;
   object-fit: contain;
@@ -90,7 +92,7 @@ const StyledIcon = styled.span<{$variant: ButtonVariant}>`
   & svg, path {
     width: 100%;
     height: 100%;
-    fill: ${({$variant, theme}) => $variant === "outline" ? theme.colors.gray300 : 'currentColor'};
+    fill: ${({ $variant, theme }) => $variant === "outline" ? theme.colors.gray300 : 'currentColor'};
   }
 `
 const StyledLabel = styled.span`
@@ -101,6 +103,7 @@ const StyledLabel = styled.span`
   align-items: center;
 `
 
+// 공통 버튼 컴포넌트
 export const Button: React.FC<ButtonProps> = ({
   as = 'button',
   to,
@@ -127,10 +130,10 @@ export const Button: React.FC<ButtonProps> = ({
       aria-label={ariaLabel}
     >
       {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
-      
+
       <StyledLabel>{children}</StyledLabel>
 
-     
+
     </StyledBaseButton>
   )
 }
