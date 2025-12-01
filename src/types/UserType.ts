@@ -6,8 +6,8 @@ export interface UserProfile {
   id: number;
   email: string;
   nickname: string;
-  gender: 'male' | 'female' | 'none' | string;
-  birth_date: string; // "YYYY-MM-DD"
+  gender: 'male' | 'female' | 'other' | string;
+  birth_date: string | null; // "YYYY-MM-DD"
   role: string;
   is_active: boolean;
   is_email_verified: boolean;
@@ -25,8 +25,8 @@ export type ProfileResponse = ApiResponse<UserProfile>; // 프로필 조회 응�
 export interface ProfileUpdatePayload {
   // 프로필 수정 요청 페이로드
   nickname?: string;
-  gender?: 'male' | 'female' | 'none' | string;
-  birth_date?: string;
+  gender?: 'male' | 'female' | 'other' | string;
+  birth_date?: string | null;
   profile_image?: string; // (참고: 이미지는 별도 API로 처리하는 것이 좋습니다)
   password?: string;
   password_confirm?: string;

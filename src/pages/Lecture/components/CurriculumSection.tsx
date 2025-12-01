@@ -6,7 +6,7 @@ import type { LectureItem } from '../../../types/CourseType';
 
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
 import SvgPlay from '../../../assets/icons/icon-play.svg?react';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useLectureContext } from '../../../context/LectureContext';
 
 const CurriculumSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();

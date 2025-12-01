@@ -15,6 +15,7 @@ import { ROUTES } from '../../../router/RouteConfig';
 import { ErrorMessage } from '../../../components/HelperComponents';
 import { getFullImageUrl } from '../../../utils/imageUtils';
 import { SkeletonImage } from '../../../components/Skeleton';
+import { AxiosError } from 'axios';
 
 export interface Coupon {
   // 기본 정보
@@ -192,7 +193,7 @@ export default function LecturePaymentPage() {
           });
         }
       },
-      onError: (err: any) => {
+      onError: (err: AxiosError | Error) => {
         console.error('결제 실패', err);
         navigate({
           pathname: resultPath,
@@ -215,13 +216,13 @@ export default function LecturePaymentPage() {
             <S.LectureCard>
               <S.LectureThumbnail>
                 {!imgLoaded && <SkeletonImage />}
-                  <img 
-                    src={getFullImageUrl(courseData.thumbnail_url)}
-                    alt={courseData.title}
-                    onLoad={() => {
-                      setImgLoaded(true);
-                    }}
-                  />
+                <img
+                  src={getFullImageUrl(courseData.thumbnail_url)}
+                  alt={courseData.title}
+                  onLoad={() => {
+                    setImgLoaded(true);
+                  }}
+                />
               </S.LectureThumbnail>
               <S.LectureInfo>
                 <S.CategoryBadge aria-label="카테고리:">

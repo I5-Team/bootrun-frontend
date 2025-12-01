@@ -4,8 +4,8 @@ import Profile from '../../../components/Profile';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
-import { formatDate } from '../pages/LectureDetailPage';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { formatDate } from '../../../utils/dateUtils';
+import { useLectureContext } from '../../../context/LectureContext';
 import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const LectureHeaderSection = () => {

@@ -10,7 +10,81 @@ import SvgPlay from '../assets/icons/icon-play.svg?react';
 import SvgMyPage from '../assets/icons/icon-mypage.svg?react';
 import { useProfile } from '../queries/useUserQueries';
 
-const StyledLink = styled(Link)`
+// profileCard
+const StyledPofileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
+  width: clamp(25rem, 24vw, 29rem);
+  min-width: 25rem;
+  height: 100%;
+
+  padding: 0 3.2rem;
+  border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+  border-radius: ${({ theme }) => theme.radius.md};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1.6rem;
+  text-align: center;
+
+  ${({ $variant }) =>
+    $variant === 'sidebar' &&
+    css`
+      border: none;
+      border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+      border-radius: 0;
+      width: 100%;
+      height: 33rem;
+      z-index: 10;
+    `}
+`;
+
+// userInfo - name + email
+const StyledUserInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1.2rem;
+`;
+
+const StyledInfoText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+const StyledName = styled.p`
+  font-weight: 600;
+  text-align: center;
+  line-height: 2.2rem;
+`;
+
+const StyledEmail = styled.p`
+  line-height: 1;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.gray300};
+`;
+
+// !loggedIn > text
+const StyledText = styled.p`
+  line-height: 2.2rem;
+`;
+
+// loggedIn > actionList
+const StyledActionList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+  width: 14.8rem;
+  min-width: fit-content;
+`;
+const StlyedLink = styled(Link)`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -60,8 +134,7 @@ const UserActionList = () => {
 // variant props에 따라 메인 화면용(main) 또는 사이드바용(sidebar) 스타일 적용
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
   const theme = useTheme();
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
+
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
@@ -70,50 +143,21 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   const isAdmin = role === 'admin';
 
   const { data: userProfile } = useProfile();
-  let finalImageUrl: string | undefined = undefined;
-
-  if (userProfile?.profile_image && userProfile.profile_image !== DEFAULT_PLACEHOLDER_URL) {
-    finalImageUrl = `${API_BASE_URL}${userProfile.profile_image}`;
-  }
+  let profileImageUrl = getFullImageUrl(userProfile?.profile_image);
 
   const goLogin = () => {
     navigate(ROUTES.LOGIN);
   };
 
-  const isSidebar = variant === 'sidebar';
-
   return (
-    <Flex
-      as="article"
-      direction="column"
-      align="center"
-      justify="center"
-      gap={16}
-      style={{
-        width: isSidebar ? '100%' : 'clamp(25rem, 24vw, 29rem)',
-        minWidth: isSidebar ? undefined : '25rem',
-        height: isSidebar ? '33rem' : '100%',
-        padding: isSidebar ? '0 3.2rem' : '0 3.2rem',
-        border: isSidebar ? 'none' : `0.1rem solid ${theme.colors.gray200}`,
-        borderBottom: isSidebar ? `0.1rem solid ${theme.colors.gray200}` : undefined,
-        borderRadius: isSidebar ? '0' : theme.radius.md,
-        zIndex: isSidebar ? 10 : undefined,
-        textAlign: 'center'
-      }}
-    >
-      <Flex direction="column" align="center" gap={12}>
-        {isLoggedIn ? <Profile size={10} src={finalImageUrl} /> : <Profile size={10} />}
-        <Flex direction="column" align="center" gap={8}>
-          <Text weight="bold" style={{ lineHeight: '2.2rem' }}>
-            {isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}
-          </Text>
-          {isLoggedIn && (
-            <Text variant="sm" color="gray300" style={{ lineHeight: 1 }}>
-              {userProfile?.email}
-            </Text>
-          )}
-        </Flex>
-      </Flex>
+    <StyledPofileCard $variant={variant}>
+      <StyledUserInfo>
+        {isLoggedIn ? <Profile size={10} src={profileImageUrl} /> : <Profile size={10} />}
+        <StyledInfoText>
+          <StyledName>{isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}</StyledName>
+          {isLoggedIn && <StyledEmail>{userProfile?.email}</StyledEmail>}
+        </StyledInfoText>
+      </StyledUserInfo>
 
       {!isLoggedIn && (
         <Text style={{ lineHeight: '2.2rem' }}>

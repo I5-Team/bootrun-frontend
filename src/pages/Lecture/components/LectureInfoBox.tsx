@@ -4,14 +4,14 @@ import S from '../styles/LectureInfoBox.styled';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
-import { formatDate } from '../pages/LectureDetailPage';
+import { formatDate } from '../../../utils/dateUtils';
 
 import Button from '../../../components/Button';
 import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import SvgPlay from '../../../assets/icons/icon-play.svg?react';
 import ProgressBar from '../../../components/ProgressBar';
 import { useEnrollmentDetailQuery } from '../../../queries/useEnrollmentQueries';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useLectureContext } from '../../../context/LectureContext';
 import { LoadingSpinner } from '../../../components/HelperComponents';
 
 export const InfoBoxContent = () => {

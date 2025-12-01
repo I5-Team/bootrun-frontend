@@ -192,7 +192,7 @@ export const FilterMyCourseList = ({
     const filterParams: Partial<MyEnrollmentsApiParams> = {};
     searchParams.forEach((value, key) => {
         if (value) {
-            filterParams[key as keyof MyEnrollmentsApiParams] = value as any;
+            (filterParams as Record<string, unknown>)[key] = value;
         }
     });
     const { data: myEnrollments = [], isLoading } = useMyEnrollmentQuery(filterParams);

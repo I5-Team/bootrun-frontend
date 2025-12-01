@@ -2,7 +2,7 @@ import React from 'react';
 import Review from '../styles/ReviewSection.styled';
 import { StyledBaseSection as S } from '../styles/LectureDetailPage.styled';
 import SvgStar from '../../../assets/icons/icon-star.svg?react';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useLectureContext } from '../../../context/LectureContext';
 
 type ReviewItem = {
   student: string;
@@ -35,7 +35,7 @@ const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
     const rawReview = data?.student_reviews ?? '[]';
     const parsedReview = JSON.parse(rawReview);
     reviewData = Array.isArray(parsedReview) ? parsedReview : [];
-  } catch (e) {
+  } catch {
     reviewData = [];
   }
 
@@ -49,7 +49,7 @@ const ReviewSection = React.forwardRef<HTMLElement>((_, ref) => {
     averageRating:
       reviewDataArr.length > 0
         ? reviewDataArr.reduce((acc: number, cur: ReviewItem) => acc + (cur.rating || 0), 0) /
-          reviewDataArr.length
+        reviewDataArr.length
         : 0,
     totalReviews: reviewDataArr.length,
   };

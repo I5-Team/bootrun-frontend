@@ -34,11 +34,10 @@ import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
 import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
 import { useProfile } from '../../queries/useUserQueries.ts';
+import { getFullImageUrl } from '../../utils/imageUtils.ts';
 import { Flex } from '../Box.tsx';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const APP_ENV = import.meta.env.VITE_APP_ENV;
-const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
 
 // 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
@@ -46,13 +45,18 @@ const HeaderLogo = () => {
     <Link to={ROUTES.HOME}>
       <h1 className="sr-only">bootRun</h1>
       <StyledLogo src={logo} alt="" width={124} height={24} />
+
       {APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local')) ? (
-        <StyledDevBadge>{APP_ENV}</StyledDevBadge> // 'dev' 또는 'local' 환경일 때만 배지 표시
+        // 'dev' 또는 'local' 환경일 때만 배지 표시
+        <StyledDevBadge>{APP_ENV}</StyledDevBadge>
       ) : null}
     </Link>
   );
 };
 
+// ==================================
+// default Header Components
+// ==================================
 const NavList = () => {
   return (
     <StyledNavList>
@@ -101,10 +105,7 @@ const UserProfileBtn = () => {
   const { data: userProfile } = useProfile();
   const isLoggedIn = !!userProfile;
 
-  let finalImageUrl: string | undefined = undefined;
-  if (userProfile?.profile_image && userProfile.profile_image !== DEFAULT_PLACEHOLDER_URL) {
-    finalImageUrl = `${API_BASE_URL}${userProfile.profile_image}`;
-  }
+  let profileImageUrl = getFullImageUrl(userProfile?.profile_image);
 
   const handleOpenDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -146,7 +147,7 @@ const UserProfileBtn = () => {
       {isLoggedIn ? (
         <StyledDropdownWrapper ref={dropdownRef}>
           <button onClick={handleOpenDropdown}>
-            <Profile size={4.2} isActive={isDropdownOpen} src={finalImageUrl} />
+            <Profile size={4.2} isActive={isDropdownOpen} src={profileImageUrl} />
           </button>
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownWrapper>
@@ -193,7 +194,9 @@ const ActionLists = () => {
   );
 };
 
-// lectureRoom
+// ==================================
+// lectureRoom Components
+// ==================================
 const DownloadBtn = () => {
   const { toggleRightSidebar, rightSidebarType, currentLectureMaterialUrl, currentLectureId } =
     useLectureRoom();
@@ -303,7 +306,9 @@ const ChapterBtn = () => {
   );
 };
 
+// ==================================
 // render components
+// ==================================
 const DefaultHeader = () => {
   return (
     <StyledHeaderInner>
