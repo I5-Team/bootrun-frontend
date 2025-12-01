@@ -5,6 +5,7 @@
  */
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import DOMPurify from 'dompurify';
 import { Button } from '../../../components/Button';
 import SvgClose from "../../../assets/icons/icon-x.svg?react";
 
@@ -207,15 +208,15 @@ export const TermsModal: React.FC<TermsModalProps> = ({
   return (
     <ModalOverlay onClick={onClose}>
       <TermsModalContainer onClick={(e) => e.stopPropagation()}>
-          <ModalTitle>{title}</ModalTitle>
-          <CloseButton type="button" onClick={onClose} aria-label="닫기">
-            <SvgClose/>
-          </CloseButton>
+        <ModalTitle>{title}</ModalTitle>
+        <CloseButton type="button" onClick={onClose} aria-label="닫기">
+          <SvgClose />
+        </CloseButton>
 
         <TermsContent
           ref={contentRef}
           onScroll={onScroll}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
         />
 
         <ModalFooter>

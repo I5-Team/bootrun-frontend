@@ -8,6 +8,7 @@ import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../../queries/u
 import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '../../../components/HelperComponents';
 import type { PaymentStatus } from '../../../types/PaymentsType';
+import { AxiosError } from 'axios';
 
 export default function PaymentResultPage() {
   // hooks
@@ -44,10 +45,10 @@ export default function PaymentResultPage() {
           onSuccess: (data) => {
             setPaymentStatus(data?.status ?? 'completed');
           },
-          onError: (err: any) => {
+          onError: (err: AxiosError | Error) => {
             setErrorMessage('결제 확인을 실패했어요. 다시 시도해 주세요.');
-            if (err.isAxiosError && err.response?.data) {
-              setErrorMessage(err.response.data.detail);
+            if (err instanceof AxiosError && err.response?.data) {
+              setErrorMessage((err.response.data as { detail: string }).detail);
             } else if (err instanceof Error) {
               setErrorMessage(err.message);
             }
@@ -98,7 +99,7 @@ export default function PaymentResultPage() {
       <EmptyState
         className="payment-empty-state"
         iconAnimation={isSuccess ? 'success' : 'error'}
-        icon={isSuccess ? <SuccessIcon/> : <ErrorIcon/>}
+        icon={isSuccess ? <SuccessIcon /> : <ErrorIcon />}
         title={isSuccess ? '결제가 완료되었습니다' : '결제에 실패했어요'}
         description={isSuccess ? '수강 준비가 끝났어요. 지금 시작해볼까요?' : errorMessage}
         buttons={

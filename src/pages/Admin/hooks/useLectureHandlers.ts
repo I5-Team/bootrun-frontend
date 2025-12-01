@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { CreateCourseRequest } from '../../../types/AdminCourseType';
+import type { CreateCourseRequest, CourseListItem } from '../../../types/AdminCourseType';
 import { createChapter, updateChapter, createLecture, updateLecture } from '../../../api/adminApi';
 import type { useLectureMutations } from './useLectureMutations';
 import type { useLectureFormModal } from './useLectureFormModal';
@@ -7,7 +7,7 @@ import type { useLectureFormModal } from './useLectureFormModal';
 interface LectureHandlersProps {
   mutations: ReturnType<typeof useLectureMutations>;
   modal: ReturnType<typeof useLectureFormModal>;
-  courses: any[];
+  courses: CourseListItem[];
 }
 
 /**
