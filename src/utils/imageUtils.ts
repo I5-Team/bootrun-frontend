@@ -4,7 +4,7 @@
  * 이미지 URL이 없거나 유효하지 않을 경우 기본 이미지를 반환합니다.
  */
 
-import { DEFAULT_THUMBNAIL_URL, DEFAULT_INSTRUCTOR_IMAGE } from '../constants/apiConfig';
+import { DEFAULT_THUMBNAIL_URL, DEFAULT_PROFILE_IMAGE } from '../constants/apiConfig';
 
 // API 기본 URL (Vite는 import.meta.env 사용)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bootrun-backend.duckdns.org';
@@ -41,7 +41,7 @@ export const getThumbnailUrl = (url?: string | null): string => {
 
 export const getProfileImageUrl = (url?: string | null): string => {
   if (isInvalidUrl(url)) {
-    return DEFAULT_INSTRUCTOR_IMAGE;
+    return DEFAULT_PROFILE_IMAGE;
   }
   return getFullImageUrl(url!);
 };

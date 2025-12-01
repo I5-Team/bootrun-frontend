@@ -7,6 +7,7 @@ import { ROUTES } from '../router/RouteConfig';
 import SvgPlay from '../assets/icons/icon-play.svg?react';
 import SvgMyPage from '../assets/icons/icon-mypage.svg?react';
 import { useProfile } from '../queries/useUserQueries';
+import { getFullImageUrl } from '../utils/imageUtils';
 
 // profileCard
 const StyledPofileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
@@ -128,9 +129,6 @@ const UserActionList = () => {
 };
 
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/150';
-
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const isLoggedIn = Boolean(token);
@@ -138,26 +136,16 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   const isAdmin = role === 'admin';
 
   const { data: userProfile } = useProfile();
-  let finalImageUrl: string | undefined = undefined;
-
-  if (userProfile?.profile_image && userProfile.profile_image !== DEFAULT_PLACEHOLDER_URL) {
-    finalImageUrl = `${API_BASE_URL}${userProfile.profile_image}`;
-  }
+  let profileImageUrl = getFullImageUrl(userProfile?.profile_image);
 
   const goLogin = () => {
     navigate(ROUTES.LOGIN);
   };
 
-  //   const userInfo = {
-  //     profile_image: 'https://picsum.photos/id/237/200/200',
-  //     nickname: 'S부트런짱2',
-  //     email: 'bootruns2@email.com',
-  //   };
-
   return (
     <StyledPofileCard $variant={variant}>
       <StyledUserInfo>
-        {isLoggedIn ? <Profile size={10} src={finalImageUrl} /> : <Profile size={10} />}
+        {isLoggedIn ? <Profile size={10} src={profileImageUrl} /> : <Profile size={10} />}
         <StyledInfoText>
           <StyledName>{isLoggedIn ? userProfile?.nickname : '호기심 많은 개발자님'}</StyledName>
           {isLoggedIn && <StyledEmail>{userProfile?.email}</StyledEmail>}
