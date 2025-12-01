@@ -1,4 +1,4 @@
-import styled, { css, useTheme } from 'styled-components';
+import styled, { css } from 'styled-components';
 import Button from '../components/Button';
 import Profile from '../components/Profile';
 import { Link, useNavigate } from 'react-router-dom';
@@ -70,22 +70,7 @@ const StyledEmail = styled.p`
   color: ${({ theme }) => theme.colors.gray300};
 `;
 
-// !loggedIn > text
-const StyledText = styled.p`
-  line-height: 2.2rem;
-`;
 
-// loggedIn > actionList
-const StyledActionList = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  gap: 1.2rem;
-  margin-top: 0.8rem;
-  width: 14.8rem;
-  min-width: fit-content;
-`;
 const StyledLink = styled(Link)`
   display: flex;
   justify-content: start;
@@ -135,8 +120,6 @@ const UserActionList = () => {
 // 로그인 상태에 따라 사용자 정보 또는 로그인 버튼 표시
 // variant props에 따라 메인 화면용(main) 또는 사이드바용(sidebar) 스타일 적용
 export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar' }) => {
-  const theme = useTheme();
-
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');

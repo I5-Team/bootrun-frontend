@@ -1,6 +1,7 @@
 import FilterForm from '../../../components/FilterForm';
 import { FilterMyCourseList } from '../../../components/CourseList';
-import { StyledTitle } from './LectureListPage';
+import { StyledTitle } from '../../../components/CourseCard/CourseCard.styled';
+
 
 export default function MyLecturePage() {
   const filterData = [
