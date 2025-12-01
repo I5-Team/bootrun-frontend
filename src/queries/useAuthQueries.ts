@@ -26,6 +26,7 @@ export const useVerifyAuth = () => {
     queryKey: authKeys.verify, // 고정된 쿼리 키
     queryFn: verifyToken, // API 함수
     retry: false, // 토큰 검증 실패 시 재시도하지 않음
+    enabled: !!localStorage.getItem('accessToken'), // 토큰이 있을 때만 검증 실행
   });
 
   React.useEffect(() => {

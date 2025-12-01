@@ -61,6 +61,7 @@ const SignUpPage = () => {
     isSignUpEnabled: isFormValid,
     handleSignUp,
     apiMessage,
+    isSendingCode,
   } = useSignUpForm();
 
   // 약관 동의 로직
@@ -133,11 +134,16 @@ const SignUpPage = () => {
                   disabled={
                     !validateEmail(formState.email) ||
                     emailVerification.isEmailSent ||
-                    emailVerification.isEmailVerified
+                    emailVerification.isEmailVerified ||
+                    isSendingCode
                   }
                   onClick={handleEmailVerification}
                 >
-                  {emailVerification.isEmailVerified ? '인증 완료' : '인증'}
+                  {emailVerification.isEmailVerified
+                    ? '인증 완료'
+                    : isSendingCode
+                      ? '전송 중...'
+                      : '인증'}
                 </VerifyButton>
               </EmailInputWrapper>
               {errorState.email && <HelperMessage $type="error">{errorState.email}</HelperMessage>}
