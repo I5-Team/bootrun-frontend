@@ -1,4 +1,4 @@
-import styled, { useTheme } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import Button from '../components/Button';
 import Profile from '../components/Profile';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,8 +10,10 @@ import SvgPlay from '../assets/icons/icon-play.svg?react';
 import SvgMyPage from '../assets/icons/icon-mypage.svg?react';
 import { useProfile } from '../queries/useUserQueries';
 
+import { getFullImageUrl } from '../utils/imageUtils';
+
 // profileCard
-const StyledPofileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
+const StyledProfileCard = styled.article<{ $variant: 'main' | 'sidebar' }>`
   width: clamp(25rem, 24vw, 29rem);
   min-width: 25rem;
   height: 100%;
@@ -84,7 +86,7 @@ const StyledActionList = styled.div`
   width: 14.8rem;
   min-width: fit-content;
 `;
-const StlyedLink = styled(Link)`
+const StyledLink = styled(Link)`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -150,7 +152,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
   };
 
   return (
-    <StyledPofileCard $variant={variant}>
+    <StyledProfileCard $variant={variant}>
       <StyledUserInfo>
         {isLoggedIn ? <Profile size={10} src={profileImageUrl} /> : <Profile size={10} />}
         <StyledInfoText>
@@ -177,7 +179,7 @@ export const ProfileCard = ({ variant = 'main' }: { variant?: 'main' | 'sidebar'
           로그인
         </Button>
       )}
-    </Flex>
+    </StyledProfileCard>
   );
 };
 
