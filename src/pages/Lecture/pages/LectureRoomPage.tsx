@@ -196,6 +196,44 @@ export default function LectureRoomPage() {
     }
   }, [courseId]);
 
+  // 서버 응답 처리 함수
+  const handleProgressResponse = useCallback(
+    (result: unknown, targetLectureId: number) => {
+      type ProgressData = {
+        completion_rate?: number;
+        is_completed?: boolean;
+      };
+
+      // 서버 응답 구조: 배열이면 첫 요소, 객체면 data 속성 확인, 없으면 객체 자체
+      let progressData: ProgressData | undefined;
+      if (Array.isArray(result)) {
+        progressData = result[0];
+      } else {
+        const resultObj = result as { data?: ProgressData } & ProgressData;
+        progressData = resultObj.data || resultObj;
+      }
+
+      if (progressData?.completion_rate !== undefined) {
+        // 백엔드 디버깅용 로그 (서버 버그 확인용)
+        console.log('[LectureRoom] 서버 응답 - completion_rate:', progressData.completion_rate);
+        console.log('[LectureRoom] 서버 응답 - is_completed:', progressData.is_completed);
+
+        // 화면 표시용으로만 0-100 범위로 제한
+        const displayRate = Math.min(Math.max(progressData.completion_rate, 0), 100);
+
+        // 현재 보고 있는 강의에 대한 응답인 경우에만 진행률 업데이트
+        if (targetLectureId === currentLectureId && !isCurrentLectureCompleted) {
+          setCurrentVideoProgress(displayRate);
+        }
+
+        // 백엔드에서 completion_rate 버그 수정 후 뱃지 업데이트 로직 추가 예정
+        // 1) completion_rate가 95-100% 범위일 때만 is_completed
+        // 2) lectureData 업데이트로 커리큘럼 사이드바 뱃지 실시간 반영
+      }
+    },
+    [currentLectureId, isCurrentLectureCompleted]
+  );
+
   useEffect(() => {
     const loadLectureData = async () => {
       if (!courseId) {
@@ -361,60 +399,40 @@ export default function LectureRoomPage() {
 
       try {
         if (progressExists) {
-          // 기존 진행 정보 업데이트 (is_completed는 서버가 자동 처리)
+          // 기존 진행 정보 업데이트
           try {
             const result = await updateLectureProgress(currentLectureId, {
               watched_seconds: Math.floor(playedSeconds),
               last_position: Math.floor(playedSeconds),
             });
-            console.log('[LectureRoom] 진행률 업데이트 성공:', result);
-            // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
-            if (result && result[0]?.completion_rate !== undefined) {
-              setCurrentVideoProgress(result[0].completion_rate);
-              setIsCurrentLectureCompleted(result[0].is_completed || false);
-            }
+            handleProgressResponse(result, currentLectureId);
           } catch (updateErr: unknown) {
             // PATCH 404 에러: 진행 기록이 없으면 POST로 생성
             const axiosError = updateErr as { response?: { status?: number } };
             if (axiosError.response?.status === 404) {
-              console.log('[LectureRoom] 진행 기록 없음, POST로 생성 시도');
               const result = await createEnrollmentProgress({
                 lecture_id: currentLectureId,
                 watched_seconds: Math.floor(playedSeconds),
                 last_position: Math.floor(playedSeconds),
               });
               if (result) {
-                console.log('[LectureRoom] 진행률 생성 성공:', result);
                 setProgressExists(true);
-                // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
-                if (result[0]?.completion_rate !== undefined) {
-                  setCurrentVideoProgress(result[0].completion_rate);
-                  setIsCurrentLectureCompleted(result[0].is_completed || false);
-                }
-              } else {
-                console.warn('[LectureRoom] 진행률 생성 실패, progressExists 상태 유지');
+                handleProgressResponse(result, currentLectureId);
               }
             } else {
-              throw updateErr; // 다른 에러는 다시 throw
+              throw updateErr;
             }
           }
         } else {
-          // 새로운 진행 정보 생성 (is_completed는 서버가 자동 처리)
+          // 새로운 진행 정보 생성
           const result = await createEnrollmentProgress({
             lecture_id: currentLectureId,
             watched_seconds: Math.floor(playedSeconds),
             last_position: Math.floor(playedSeconds),
           });
           if (result) {
-            console.log('[LectureRoom] 진행률 생성 성공:', result);
             setProgressExists(true);
-            // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
-            if (result[0]?.completion_rate !== undefined) {
-              setCurrentVideoProgress(result[0].completion_rate);
-              setIsCurrentLectureCompleted(result[0].is_completed || false);
-            }
-          } else {
-            console.warn('[LectureRoom] 진행률 생성 실패, progressExists는 false 유지');
+            handleProgressResponse(result, currentLectureId);
           }
         }
 
@@ -424,13 +442,17 @@ export default function LectureRoomPage() {
         console.error('[LectureRoom] 진행률 저장 실패:', err);
       }
     },
-    [currentLectureId, progressExists, refreshCourseProgress, isCurrentLectureCompleted]
+    [
+      currentLectureId,
+      progressExists,
+      refreshCourseProgress,
+      isCurrentLectureCompleted,
+      handleProgressResponse,
+    ]
   );
 
-  // 강의 완료 처리 (실제 완료는 서버가 자동으로 95% 기준으로 처리)
+  // 강의 완료 처리
   const handleVideoEnded = useCallback(async () => {
-    console.log(`[LectureRoom] handleVideoEnded 호출됨 - 강의 ID: ${currentLectureId}`);
-
     if (!currentLectureId) return;
 
     // 타이머 기반 중복 방지: 최근 3초 이내에 자동 이동했으면 무시
@@ -442,37 +464,31 @@ export default function LectureRoomPage() {
     }
 
     try {
+      // 자동 이동 전에 현재 강의 ID 저장
+      const completedLectureId = currentLectureId;
+
       // 마지막 자동 이동 시간 기록
       lastAutoMoveTimeRef.current = now;
-      // 영상 끝 위치 저장 (is_completed는 서버가 자동 처리)
+      // 영상 끝 위치 저장
       if (progressExists) {
         try {
-          const result = await updateLectureProgress(currentLectureId, {
+          const result = await updateLectureProgress(completedLectureId, {
             watched_seconds: Math.floor(currentVideoDuration),
             last_position: Math.floor(currentVideoDuration),
           });
-          // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트 (100%로 설정)
-          if (result && result[0]?.completion_rate !== undefined) {
-            setCurrentVideoProgress(result[0].completion_rate);
-            setIsCurrentLectureCompleted(result[0].is_completed || false);
-          }
+          handleProgressResponse(result, completedLectureId);
         } catch (updateErr: unknown) {
           // PATCH 404 에러: 진행 기록이 없으면 POST로 생성
           const axiosError = updateErr as { response?: { status?: number } };
           if (axiosError.response?.status === 404) {
-            console.log('[LectureRoom] 진행 기록 없음, POST로 생성 시도');
             const result = await createEnrollmentProgress({
-              lecture_id: currentLectureId,
+              lecture_id: completedLectureId,
               watched_seconds: Math.floor(currentVideoDuration),
               last_position: Math.floor(currentVideoDuration),
             });
             if (result) {
               setProgressExists(true);
-              // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
-              if (result[0]?.completion_rate !== undefined) {
-                setCurrentVideoProgress(result[0].completion_rate);
-                setIsCurrentLectureCompleted(result[0].is_completed || false);
-              }
+              handleProgressResponse(result, completedLectureId);
             }
           } else {
             throw updateErr;
@@ -480,17 +496,13 @@ export default function LectureRoomPage() {
         }
       } else {
         const result = await createEnrollmentProgress({
-          lecture_id: currentLectureId,
+          lecture_id: completedLectureId,
           watched_seconds: Math.floor(currentVideoDuration),
           last_position: Math.floor(currentVideoDuration),
         });
         if (result) {
           setProgressExists(true);
-          // 서버 응답의 completion_rate를 사용하여 ProgressBar 업데이트
-          if (result[0]?.completion_rate !== undefined) {
-            setCurrentVideoProgress(result[0].completion_rate);
-            setIsCurrentLectureCompleted(result[0].is_completed || false);
-          }
+          handleProgressResponse(result, completedLectureId);
         }
       }
 
@@ -516,6 +528,7 @@ export default function LectureRoomPage() {
     refreshCourseProgress,
     lectureData,
     isCurrentLectureCompleted,
+    handleProgressResponse,
   ]);
 
   // 화면 맨 위로 부드럽게 스크롤

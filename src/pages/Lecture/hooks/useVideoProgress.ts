@@ -34,9 +34,6 @@ export const useVideoProgress = (
     // 설정된 간격(기본 5초)마다 진행률 저장
     if (currentTime - lastSavedTimeRef.current >= saveInterval) {
       lastSavedTimeRef.current = currentTime;
-      console.log(
-        `[VideoPlayer] 진행률 저장: ${Math.floor(currentTime)}초 / ${Math.floor(duration)}초`
-      );
       onProgress?.(currentTime, duration);
     }
   };
