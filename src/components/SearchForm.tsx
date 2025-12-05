@@ -1,21 +1,44 @@
 import styled from "styled-components";
+
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+
 import SvgSearch from "../assets/icons/icon-search.svg?react";
 import { ROUTES } from "../router/RouteConfig.ts";
 import { StyledIconBtn } from "./Header/Header.styled.ts";
-import { Box, Flex } from "./Box.tsx";
 
-// 검색 입력 필드 스타일 (투명 배경, 플레이스홀더 스타일링)
+const StyledSearchForm = styled.form`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    
+    background-color: ${({ theme }) => theme.colors.gray100};
+    width: clamp(26rem, 30vw, 32rem);
+    height: 4.2rem;
+    padding: 0 1.6rem;
+    border-radius: ${({ theme }) => theme.radius.md};
+    
+    transition: outline 0.1s;
+
+    &:focus-within {
+        outline: 0.2rem solid ${({ theme }) => theme.colors.primary300};
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+        width: 100%;
+        margin-top: 2.4rem;
+    }
+`;
+
 const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     flex: 1;
     min-width: 0;
     height: 100%;
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
-    border: none;
-    background: transparent;
-    outline: none;
+    text-align: left;
 
     white-space: nowrap;
     overflow: hidden;
@@ -43,13 +66,13 @@ const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     }
 `;
 
-// 헤더 검색 폼 컴포넌트
+
 export const SearchForm = () => {
     const [searchValue, setSearchValue] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const location = useLocation();
-
+    
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const queryString = `?keyword=${searchValue}`;
@@ -63,35 +86,22 @@ export const SearchForm = () => {
     }, [location.pathname]);
 
     return (
-        <Box
-            as="form"
-            onSubmit={handleSubmit}
-            bg="gray100"
-            style={{
-                width: 'clamp(26rem, 30vw, 32rem)',
-                height: '4.2rem',
-                padding: '0 1.6rem',
-                borderRadius: '1rem',
-                transition: 'outline 0.1s',
-            }}
-            className="search-form"
-        >
-            <Flex align="center" justify="space-between" gap={8} style={{ height: '100%' }}>
-                <label htmlFor="search" className="sr-only">검색어 입력</label>
-                <StyledSearchInput
-                    ref={inputRef}
-                    id="search"
-                    type="search"
-                    placeholder="검색어를 입력하세요."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+        <StyledSearchForm onSubmit={handleSubmit}>
+            <label htmlFor="search" className="sr-only">검색어 입력</label>
+            <StyledSearchInput
+                ref={inputRef}
+                id="search" 
+                type="search" 
+                placeholder="검색어를 입력하세요."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
                 />
-                <StyledIconBtn type="submit" aria-label="검색 실행">
-                    <SvgSearch />
-                </StyledIconBtn>
-            </Flex>
-        </Box>
+            <StyledIconBtn type="submit" aria-label="검색 실행">
+                <SvgSearch/>
+            </StyledIconBtn>
+        </StyledSearchForm>
     )
 }
+
 
 export default SearchForm;

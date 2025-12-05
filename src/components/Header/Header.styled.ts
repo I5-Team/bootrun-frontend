@@ -95,6 +95,10 @@ export const StyledIconBtn = styled.button`
   width: 2.4rem;
   padding: 0.15rem;
   aspect-ratio: 1 / 1;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   svg {
     width: 100%;

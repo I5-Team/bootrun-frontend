@@ -21,6 +21,7 @@ const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 500;
+  text-align: left;
 
   ${({ $variant }) =>
     $variant === 'sidebar' &&
