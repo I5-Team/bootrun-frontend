@@ -11,7 +11,7 @@ import ShareIcon from '../../../assets/icons/icon-share.svg?react';
 import SvgPlay from '../../../assets/icons/icon-play.svg?react';
 import ProgressBar from '../../../components/ProgressBar';
 import { useEnrollmentDetailQuery } from '../../../queries/useEnrollmentQueries';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 import { LoadingSpinner } from '../../../components/HelperComponents';
 
 export const InfoBoxContent = () => {

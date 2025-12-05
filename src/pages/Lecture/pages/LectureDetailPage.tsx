@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import type { SectionRefs } from '../../../types/LectureType';
 import useMediaQuery from '../../../hooks/useMediaQuery';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 
 // 스타일
 import { ContentWrapper, SectionWrapper } from '../styles/LectureDetailPage.styled';

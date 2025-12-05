@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import FAQ from '../styles/FAQSection.styled';
 import { StyledBaseSection as S } from '../styles/LectureDetailPage.styled';
 import SvgArrowDown from '../../../assets/icons/icon-arrow-down.svg?react';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 
 type FaqItem = {
   question: string;

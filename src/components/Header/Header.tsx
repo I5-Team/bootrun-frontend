@@ -32,12 +32,17 @@ import Profile from '../Profile.tsx';
 import SearchForm from '../SearchForm.tsx';
 import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
-import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
+import { useLectureRoom } from '@/pages/Lecture/contexts/LectureRoomContext.tsx';
 import { useProfile } from '../../queries/useUserQueries.ts';
 import { getFullImageUrl } from '../../utils/imageUtils.ts';
 import { Flex } from '../Box.tsx';
 
 const APP_ENV = import.meta.env.VITE_APP_ENV;
+
+
+// ==================================
+// default Header Components
+// ==================================
 
 // 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
@@ -54,9 +59,6 @@ const HeaderLogo = () => {
   );
 };
 
-// ==================================
-// default Header Components
-// ==================================
 const NavList = () => {
   return (
     <StyledNavList>

@@ -1,5 +1,5 @@
 import { LectureContext } from './LectureContext';
-import type { CoursesDetailItem } from '../types/CourseType';
+import type { CoursesDetailItem } from '@/types/CourseType';
 
 type LectureContextProps = {
     courseId: number;

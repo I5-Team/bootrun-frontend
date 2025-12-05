@@ -5,7 +5,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
 import { formatDate } from '../../../utils/dateUtils';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 import { getFullImageUrl } from '../../../utils/imageUtils';
 
 const LectureHeaderSection = () => {
