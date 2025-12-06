@@ -67,7 +67,7 @@ export interface Lecture {
   description: string;
   video_url: string;
   video_type: 'vod' | 'youtube';
-  duration_seconds: number;
+  duration_seconds?: number;
   order_number: number;
   material_url?: string;
   created_at?: string;
@@ -123,7 +123,7 @@ export interface LectureRequest {
   description: string;
   video_url: string;
   video_type: 'vod' | 'youtube';
-  duration_seconds: number;
+  duration_seconds?: number;
   order_number: number;
   material_url?: string;
 }
@@ -141,7 +141,7 @@ export interface LectureResponse {
     description: string;
     video_url: string;
     video_type: 'vod' | 'youtube';
-    duration_seconds: number;
+    duration_seconds?: number;
     order_number: number;
     material_url?: string;
     is_completed: boolean;

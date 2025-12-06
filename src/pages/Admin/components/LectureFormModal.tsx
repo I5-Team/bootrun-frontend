@@ -27,6 +27,18 @@ interface LectureFormModalProps {
 
 type Step = 1 | 2 | 3;
 
+// duration_seconds 시/분/초 단위로 표시
+const formatDuration = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  if (hours > 0) {
+    return `${hours}시간 ${minutes}분 ${secs}초`;
+  }
+  return `${minutes}분 ${secs}초`;
+};
+
 /**
  * 강의 추가/수정 모달 (3단계)
  * Step 1: 기본 정보
@@ -669,7 +681,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
               type="text"
               value={basicInfo.instructor_name}
               onChange={(e) => onChange('instructor_name', e.target.value)}
-              placeholder="강사명을 입력하세요"
+              placeholder="강사명을 ���력하세요"
               disabled={disabled}
               required
             />
@@ -917,7 +929,6 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
       description: '',
       video_url: '',
       video_type: 'youtube',
-      duration_seconds: 0,
       order_number: chapters[chapterIndex].lectures.length + 1,
       material_url: '',
     };
@@ -1081,22 +1092,23 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
 
                               <S.FormRow>
                                 <S.FormGroup>
-                                  <S.Label>영상 URL</S.Label>
+                                  <S.Label>학습 자료 URL (선택)</S.Label>
                                   <S.Input
                                     type="text"
-                                    value={lecture.video_url}
+                                    value={lecture.material_url || ''}
                                     onChange={(e) =>
                                       handleUpdateLecture(
                                         chapterIndex,
                                         lectureIndex,
-                                        'video_url',
+                                        'material_url',
                                         e.target.value
                                       )
                                     }
                                     disabled={disabled}
-                                    placeholder="https://youtube.com/watch?v=..."
+                                    placeholder="https://example.com/materials/lecture.pdf"
                                   />
                                 </S.FormGroup>
+
                                 <S.FormGroup>
                                   <S.Label>영상 유형</S.Label>
                                   <S.Select
@@ -1119,41 +1131,44 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
 
                               <S.FormRow>
                                 <S.FormGroup>
-                                  <S.Label>재생 시간 (초)</S.Label>
-                                  <S.Input
-                                    type="number"
-                                    value={lecture.duration_seconds}
-                                    onChange={(e) =>
-                                      handleUpdateLecture(
-                                        chapterIndex,
-                                        lectureIndex,
-                                        'duration_seconds',
-                                        parseInt(e.target.value) || 0
-                                      )
-                                    }
-                                    disabled={disabled}
-                                    placeholder="600"
-                                    min="0"
-                                  />
-                                </S.FormGroup>
-                                <S.FormGroup>
-                                  <S.Label>학습 자료 URL (선택)</S.Label>
+                                  <S.Label>영상 URL</S.Label>
                                   <S.Input
                                     type="text"
-                                    value={lecture.material_url || ''}
+                                    value={lecture.video_url}
                                     onChange={(e) =>
                                       handleUpdateLecture(
                                         chapterIndex,
                                         lectureIndex,
-                                        'material_url',
+                                        'video_url',
                                         e.target.value
                                       )
                                     }
                                     disabled={disabled}
-                                    placeholder="https://example.com/materials/lecture.pdf"
+                                    placeholder="https://youtube.com/watch?v=..."
                                   />
+                                  {/* URL 입력했지만 아직 재생시간이 없는 경우 (강의 새롭게 추가) */}
+                                  {lecture.video_url && !lecture.duration_seconds && (
+                                    <S.InfoMessage>
+                                      재생시간은 저장 후 자동으로 계산됩니다.
+                                    </S.InfoMessage>
+                                  )}
                                 </S.FormGroup>
                               </S.FormRow>
+
+                              {lecture.duration_seconds !== undefined &&
+                                lecture.duration_seconds > 0 && (
+                                  <S.FormRow>
+                                    <S.FormGroup>
+                                      <S.Label>재생시간 (자동 계산)</S.Label>
+                                      <S.ReadOnlyGroup>
+                                        <S.ReadOnlyValue>
+                                          {formatDuration(lecture.duration_seconds)} (
+                                          {lecture.duration_seconds}초)
+                                        </S.ReadOnlyValue>
+                                      </S.ReadOnlyGroup>
+                                    </S.FormGroup>
+                                  </S.FormRow>
+                                )}
                             </S.LectureForm>
                           </S.LectureItem>
                         ))}

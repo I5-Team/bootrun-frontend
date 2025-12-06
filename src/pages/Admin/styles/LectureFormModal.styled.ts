@@ -517,6 +517,37 @@ export const LectureFormModalStyles = {
     color: ${({ theme }) => theme.colors.gray300};
     font-size: 1.4rem;
   `,
+  // 재생시간 - 읽기 전용
+  ReadOnlyGroup: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1.2rem 1.6rem;
+    background-color: ${({ theme }) => theme.colors.gray100};
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+  `,
+  ReadOnlyValue: styled.div`
+    font-size: 1.4rem;
+    color: ${({ theme }) => theme.colors.gray400};
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  `,
+
+  InfoMessage: styled.div`
+    padding: 1rem 1.2rem;
+    background-color: ${({ theme }) => theme.colors.gray100};
+    border-left: 3px solid ${({ theme }) => theme.colors.primary300};
+    border-radius: ${({ theme }) => theme.radius.sm};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.primary300};
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  `,
 };
 
 export default LectureFormModalStyles;
