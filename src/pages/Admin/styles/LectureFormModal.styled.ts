@@ -230,7 +230,10 @@ export const LectureFormModalStyles = {
     border: 2px solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.xs};
     background-color: ${({ theme }) => theme.colors.white};
-    accent-color: ${({ theme }) => theme.colors.primary300};
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     &:checked {
       background-color: ${({ theme }) => theme.colors.primary300};
@@ -239,11 +242,14 @@ export const LectureFormModalStyles = {
 
     &:checked::after {
       content: '✓';
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: ${({ theme }) => theme.colors.white};
+      font-size: ${({ theme }) => theme.fontSize.sm};
       font-weight: bold;
+      line-height: 1;
     }
 
     &:disabled {
