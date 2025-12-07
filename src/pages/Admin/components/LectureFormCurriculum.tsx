@@ -6,6 +6,7 @@ import type { Chapter, Lecture } from '../../../types/AdminCourseType';
 import { Button } from '../../../components/Button';
 import { deleteLecture, deleteChapter as deleteChapterApi } from '../../../api/adminApi';
 import { formatDuration } from '../hooks/useLectureFormUtils';
+import { sanitizeYouTubeUrl } from '../../../utils/videoUtils';
 import S from '../styles/LectureFormCurriculum.styled.ts';
 
 interface LectureFormCurriculumProps {
@@ -133,10 +134,17 @@ const LectureFormCurriculum: React.FC<LectureFormCurriculumProps> = ({
     value: string | number
   ) => {
     const newChapters = [...chapters];
-    newChapters[chapterIndex].lectures[lectureIndex] = {
+    const updatedLecture = {
       ...newChapters[chapterIndex].lectures[lectureIndex],
       [field]: value,
     };
+
+    // video_url이 비워지면 duration_seconds를 0으로 처리
+    if (field === 'video_url' && !value) {
+      updatedLecture.duration_seconds = 0;
+    }
+
+    newChapters[chapterIndex].lectures[lectureIndex] = updatedLecture;
     setChapters(newChapters);
   };
 
@@ -320,14 +328,16 @@ const LectureFormCurriculum: React.FC<LectureFormCurriculumProps> = ({
                                   <S.Input
                                     type="text"
                                     value={lecture.video_url}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      // YouTube URL 입력 시 자동 정규화
+                                      const sanitizedUrl = sanitizeYouTubeUrl(e.target.value);
                                       handleUpdateLecture(
                                         chapterIndex,
                                         lectureIndex,
                                         'video_url',
-                                        e.target.value
-                                      )
-                                    }
+                                        sanitizedUrl
+                                      );
+                                    }}
                                     disabled={disabled}
                                     placeholder="https://youtube.com/watch?v=..."
                                   />
