@@ -10,17 +10,13 @@ export const uploadImage = async (file: File): Promise<string> => {
     if (!token) {
       throw new Error('로그인 후 이용해주세요.');
     }
-    const response = await fetch(
-      `${BASE_URL}/storage/upload/image
-`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }
-    );
+    const response = await fetch(`${BASE_URL}/storage/upload/image`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
     if (!response.ok) {
       throw new Error('이미지 업로드에 실패했습니다.');
     }

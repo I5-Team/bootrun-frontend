@@ -533,12 +533,31 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
       setIsUploadingThumbnail(true);
       const url = await uploadImage(file);
       onChange('thumbnail_url', url);
-      alert('강의 썸네일 이미지가 업로드되었습니다!');
+      alert('강의 썸네일 이미지 업로드가 완료되었습니다!');
     } catch (error) {
       alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
       console.error('이미지 업로드 실패: ', error);
     } finally {
       setIsUploadingThumbnail(false);
+    }
+  };
+
+  const [isUploadingInstructorImage, setIsUploadingInstructorImage] = useState(false);
+  const handleInstructorImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!validateImage(file)) return;
+    try {
+      setIsUploadingInstructorImage(true);
+      const url = await uploadImage(file);
+      onChange('instructor_image', url);
+      alert('강사 이미지 업로드가 완료되었습니다!');
+    } catch (error) {
+      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      console.error('이미지 업로드 실패: ', error);
+    } finally {
+      setIsUploadingInstructorImage(false);
     }
   };
   // FAQ 추가
@@ -752,15 +771,30 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
         <S.FormRow>
           <S.FormGroup>
-            <S.Label htmlFor="instructor_image">강사 이미지 URL</S.Label>
-            <S.Input
+            <S.Label htmlFor="instructor_image">
+              강사 프로필 이미지
+              <S.LabelDescription>* 최대 10MB, JPEG, PNG, GIF, WEBP 형식 지원</S.LabelDescription>
+            </S.Label>
+
+            <S.FileInput
               id="instructor_image"
-              type="text"
-              value={basicInfo.instructor_image}
-              onChange={(e) => onChange('instructor_image', e.target.value)}
-              placeholder="https://example.com/instructor.jpg (비워두면 기본 이미지)"
-              disabled={disabled}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleInstructorImageUpload}
+              disabled={isUploadingInstructorImage}
             />
+            {isUploadingInstructorImage && (
+              <S.LoadingText>이미지를 업로드 중입니다...</S.LoadingText>
+            )}
+            {basicInfo.instructor_image && !isUploadingInstructorImage && (
+              <S.PreviewContainer>
+                <S.PreviewImage
+                  src={basicInfo.instructor_image}
+                  alt="강사 프로필 이미지 미리보기"
+                />
+                <S.SuccessText>✓ 업로드 완료</S.SuccessText>
+              </S.PreviewContainer>
+            )}
           </S.FormGroup>
         </S.FormRow>
       </S.SectionBox>

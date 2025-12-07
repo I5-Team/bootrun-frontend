@@ -292,7 +292,7 @@ export const LectureFormModalStyles = {
     text-align: center;
   `,
   LoadingText: styled.p`
-    font-size: ${({ theme }) => theme.fontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray400};
     margin: 0;
@@ -578,6 +578,7 @@ export const LectureFormModalStyles = {
   `,
 
   PreviewImage: styled.img`
+    max-width: 30rem;
     width: 100%;
     height: auto;
     object-fit: cover;
