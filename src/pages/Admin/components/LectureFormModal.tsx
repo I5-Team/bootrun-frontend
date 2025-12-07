@@ -13,11 +13,11 @@ import type {
   Lecture,
 } from '../../../types/AdminCourseType';
 import { Button } from '../../../components/Button';
-import { fetchCourseDetail } from '../../../api/adminApi';
+import { fetchCourseDetail, deleteLecture } from '../../../api/adminApi';
 
 interface LectureFormModalProps {
   isOpen: boolean;
-  mode: 'add' | 'edit'; // 추가 vs 수정 모드
+  mode: 'add' | 'edit';
   courseId?: number | null; // 수정 모드일 때만 필요
   isSaving?: boolean;
   onClose: () => void;
@@ -445,7 +445,12 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
                 />
               )}
               {currentStep === 2 && (
-                <Step2Curriculum chapters={chapters} setChapters={setChapters} disabled={false} />
+                <Step2Curriculum
+                  chapters={chapters}
+                  setChapters={setChapters}
+                  courseId={courseId}
+                  disabled={false}
+                />
               )}
               {currentStep === 3 && (
                 <Step3Mission missions={missions} setMissions={setMissions} disabled={false} />
@@ -681,7 +686,7 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
               type="text"
               value={basicInfo.instructor_name}
               onChange={(e) => onChange('instructor_name', e.target.value)}
-              placeholder="강사명을 ���력하세요"
+              placeholder="강사명을 입력하세요"
               disabled={disabled}
               required
             />
@@ -889,10 +894,16 @@ interface Step2Props {
   setChapters: React.Dispatch<
     React.SetStateAction<Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[]>
   >;
+  courseId?: number | null;
   disabled?: boolean;
 }
 
-const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled = false }) => {
+const Step2Curriculum: React.FC<Step2Props> = ({
+  chapters,
+  setChapters,
+  courseId,
+  disabled = false,
+}) => {
   const [expandedChapterIndex, setExpandedChapterIndex] = useState<number | null>(null);
 
   // 챕터 추가
@@ -938,8 +949,37 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
   };
 
   // 강의 영상 삭제
-  const handleDeleteLecture = () => {
-    alert('강의 영상 삭제 기능은 추후 구현 예정입니다.');
+  const handleDeleteLecture = async (chapterIndex: number, lectureIndex: number) => {
+    const lecture = chapters[chapterIndex].lectures[lectureIndex];
+    const confirmMessage = `[${lecture.title}] 강의를 삭제하시겠습니까?\n\n 이 작업은 되돌릴 수 없습니다.`;
+    if (!window.confirm(confirmMessage)) return;
+
+    // 기존 강의
+    if (lecture.id) {
+      try {
+        const chapter = chapters[chapterIndex] as Chapter;
+        if (!chapter.id || !courseId) {
+          alert('강의 삭제 불가: 강의 정보를 찾을 수 없습니다.');
+          return;
+        }
+        await deleteLecture(courseId, chapter.id, lecture.id);
+      } catch (error) {
+        console.error('강의 삭제 실패: ', error);
+        alert('강의 삭제에 실패했습니다. 다시 시도해주세요.');
+        return;
+      }
+    }
+
+    const newChapters = [...chapters];
+    newChapters[chapterIndex].lectures = newChapters[chapterIndex].lectures
+      .filter((_, idx) => idx !== lectureIndex)
+      .map((lec, idx) => ({
+        ...lec,
+        order_number: idx + 1,
+      }));
+    setChapters(newChapters);
+
+    alert('강의가 성공적으로 삭제되었습니다.');
   };
 
   // 강의 영상 수정
@@ -1043,7 +1083,9 @@ const Step2Curriculum: React.FC<Step2Props> = ({ chapters, setChapters, disabled
                             <S.LectureHeader>
                               <span>강의 {lecture.order_number}</span>
                               {!disabled && (
-                                <S.DeleteButton onClick={() => handleDeleteLecture()}>
+                                <S.DeleteButton
+                                  onClick={() => handleDeleteLecture(chapterIndex, lectureIndex)}
+                                >
                                   삭제
                                 </S.DeleteButton>
                               )}
