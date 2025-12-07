@@ -58,9 +58,8 @@ export const StyledHeaderInnerAdmin = styled.div`
 
 // logo
 export const StyledLogo = styled.img`
+  display: block;
   width: 12.4rem;
-  height: auto;
-  vertical-align: bottom;
 
   @media ${({ theme }) => theme.devices.tablet} {
     width: 10rem;

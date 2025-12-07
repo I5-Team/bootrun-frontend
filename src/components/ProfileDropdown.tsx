@@ -4,9 +4,13 @@ import { ROUTES } from '../router/RouteConfig';
 import { useLogout } from '../queries/useAuthQueries';
 
 // profile dropdown
-export const StyledDropdownWrapper = styled.div`
+export const StyledDropdownBtn = styled.button`
   position: relative;
   cursor: pointer;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown' | 'sidebar' }>`
