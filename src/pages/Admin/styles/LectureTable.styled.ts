@@ -121,6 +121,8 @@ export const LectureTableStyles = {
       $isPublished ? theme.colors.white : theme.colors.gray400};
     cursor: pointer;
     transition: all 0.2s ease;
+    width: 5rem;
+    text-align: center;
 
     &:hover {
       background-color: ${({ $isPublished, theme }) =>

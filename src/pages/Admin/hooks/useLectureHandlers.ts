@@ -10,9 +10,6 @@ interface LectureHandlersProps {
   courses: CourseListItem[];
 }
 
-/**
- * 강의 관리 비즈니스 로직 핸들러
- */
 export const useLectureHandlers = ({ mutations, modal, courses }: LectureHandlersProps) => {
   const { createCourseMutation, updateCourseMutation, deleteCourseMutation } = mutations;
   const { handleCloseModal } = modal;
@@ -42,16 +39,23 @@ export const useLectureHandlers = ({ mutations, modal, courses }: LectureHandler
       const course = courses.find((c) => c.id === courseId);
       if (!course) return;
 
+      const newStatus = !currentStatus;
+      const statusText = newStatus ? '공개' : '비공개';
+      const confirmMessage = `[${course.title}] 강의를 ${statusText}로 변경하시겠습니까?`;
+
+      const confirmed = window.confirm(confirmMessage);
+      if (!confirmed) return;
+
       updateCourseMutation.mutate(
         {
           courseId,
           courseData: {
-            is_published: !currentStatus,
+            is_published: newStatus,
           },
         },
         {
           onSuccess: () => {
-            alert('공개 상태가 변경되었습니다!');
+            alert(`강의가 ${statusText}로 변경되었습니다!`);
           },
           onError: (error: unknown) => {
             console.error('공개 상태 변경 실패:', error);
