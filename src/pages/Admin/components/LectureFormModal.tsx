@@ -13,7 +13,11 @@ import type {
   Lecture,
 } from '../../../types/AdminCourseType';
 import { Button } from '../../../components/Button';
-import { fetchCourseDetail, deleteLecture } from '../../../api/adminApi';
+import {
+  fetchCourseDetail,
+  deleteLecture,
+  deleteChapter as deleteChapterApi,
+} from '../../../api/adminApi';
 import { uploadImage, validateImage } from '../../../api/storageApi';
 
 interface LectureFormModalProps {
@@ -92,7 +96,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 
   // 커리큘럼 상태
   const [chapters, setChapters] = useState<
-    Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[]
+    (Omit<Chapter, 'course_id' | 'created_at' | 'updated_at'> & { id?: number })[]
   >([]);
 
   // 원본 챕터 데이터 (수정 모드에서 변경사항 추적용)
@@ -953,9 +957,9 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
 // ========== Step 2: 커리큘럼 ==========
 interface Step2Props {
-  chapters: Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[];
+  chapters: (Omit<Chapter, 'course_id' | 'created_at' | 'updated_at'> & { id?: number })[];
   setChapters: React.Dispatch<
-    React.SetStateAction<Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'>[]>
+    React.SetStateAction<(Omit<Chapter, 'course_id' | 'created_at' | 'updated_at'> & { id?: number })[]>
   >;
   courseId?: number | null;
   disabled?: boolean;
@@ -971,7 +975,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({
 
   // 챕터 추가
   const handleAddChapter = () => {
-    const newChapter: Omit<Chapter, 'id' | 'course_id' | 'created_at' | 'updated_at'> = {
+    const newChapter: Omit<Chapter, 'course_id' | 'created_at' | 'updated_at'> & { id?: number } = {
       title: `챕터 ${chapters.length + 1}`,
       description: '',
       order_number: chapters.length + 1,
@@ -981,8 +985,30 @@ const Step2Curriculum: React.FC<Step2Props> = ({
   };
 
   // 챕터 삭제
-  const handleDeleteChapter = () => {
-    alert('챕터 삭제 기능은 추후 구현 예정입니다.');
+  const handleDeleteChapter = async (chapterIndex: number) => {
+    const chapter = chapters[chapterIndex];
+    const confirmMessage = `[${chapter.title}] 챕터를 삭제하시겠습니까?\n\n 이 작업은 되돌릴 수 없습니다.`;
+    if (!window.confirm(confirmMessage)) return;
+
+    // 기존 챕터
+    if (chapter.id && courseId) {
+      try {
+        await deleteChapterApi(courseId, chapter.id);
+      } catch (error) {
+        console.error('챕터 삭제 실패: ', error);
+        alert('챕터 삭제에 실패했습니다. 다시 시도해주세요.');
+        return;
+      }
+    }
+
+    const newChapters = chapters
+      .filter((_, idx) => idx !== chapterIndex)
+      .map((ch, idx) => ({
+        ...ch,
+        order_number: idx + 1,
+      }));
+    setChapters(newChapters);
+    alert('챕터가 성공적으로 삭제되었습니다.');
   };
 
   // 챕터 수정
@@ -1120,7 +1146,7 @@ const Step2Curriculum: React.FC<Step2Props> = ({
                       />
                     </S.FormGroup>
                     {!disabled && (
-                      <S.DeleteChapterButton onClick={() => handleDeleteChapter()}>
+                      <S.DeleteChapterButton onClick={() => handleDeleteChapter(chapterIndex)}>
                         챕터 삭제
                       </S.DeleteChapterButton>
                     )}
