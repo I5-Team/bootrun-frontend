@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-
 // 공통 스타일은 LectureFormModal.styled.ts에서 import
 import LectureFormModalStyles from './LectureFormModal.styled';
 

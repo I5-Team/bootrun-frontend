@@ -11,7 +11,7 @@ interface LectureFormMissionProps {
   disabled?: boolean;
 }
 
-const LectureFormMission: React.FC<LectureFormMissionProps> = ({ disabled = false }) => {
+const LectureFormMission: React.FC<LectureFormMissionProps> = () => {
   return (
     <S.PlaceholderContainer>
       <S.PlaceholderText>미션 추가 기능은 추후 구현 예정입니다.</S.PlaceholderText>
