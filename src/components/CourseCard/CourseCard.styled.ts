@@ -107,30 +107,6 @@ export const StyledContentWrapper = styled.div`
   min-width: 0;
 `;
 
-export const StyledTitle = styled.h3<{ $size?: "sm" | "lg" }>` 
-  font-weight: 600;
-  line-height: 1.4;
-  color: ${({ theme }) => theme.colors.surface};
-  margin: 0;
-  width: 100%;
-  min-width: 0;
-
-  word-break: break-all;
-  overflow-wrap: break-word;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  font-size: ${({ $size, theme }) => $size === "sm" ? theme.mobileFontSize.xl : theme.fontSize.lg};
-
-  @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ $size, theme }) => $size === "sm" ?  theme.mobileFontSize.xl : theme.mobileFontSize.xxl};
-  }
-  `;
-
 // CardContent
 export const StyledTeacherSection = styled.div`
   display: flex;

@@ -17,16 +17,6 @@ const S = {
     display: flex;
     gap: 0.8rem;
   `,
-  Title: styled.h2`
-    word-break: keep-all;
-    font-size: ${({ theme }) => theme.fontSize.xxl};
-    line-height: 1.4;
-    font-weight: 700;
-
-    @media ${({ theme }) => theme.devices.tablet} {
-      font-size: ${({ theme }) => theme.fontSize.xl};
-    }
-  `,
   Description: styled.p`
     color: ${({ theme }) => theme.colors.gray400};
     word-break: keep-all;

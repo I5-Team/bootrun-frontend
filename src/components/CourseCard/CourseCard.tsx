@@ -15,17 +15,19 @@ import {
   StyledTagList,
   StyledThumbnailImage,
   StyledThumbnailWrapper,
-  StyledTitle,
   StyledThumbnailLink,
   StlyedThumbnailNotice,
   StyledLearning,
+  StyledTeacherDetails,
+  StyledTeacherInfo,
+  StyledTeacherName,
+  StyledTeacherRole,
+  StyledTeacherSection,
 } from './CourseCard.styled';
 import Tag from '../Tag';
 import Profile from '../Profile';
 import ProgressBar from '../ProgressBar';
 import Button from '../Button';
-import { Flex } from '../Box';
-import { Text } from '../Typography';
 
 // import - assets
 import SvgHeart from '../../assets/icons/icon-heart.svg?react';
@@ -35,6 +37,7 @@ import SvgCertificate from '../../assets/icons/icon-certificate.svg?react';
 
 // import - utils
 import { getFullImageUrl } from '../../utils/imageUtils';
+import { Heading3, Heading4 } from '../Typography';
 
 // types
 // 강의 카드 컴포넌트 타입 정의 (정보형/학습형)
@@ -115,10 +118,10 @@ const CardHeader = ({
 
       {variant === 'info' ? (
         <Link to={linkTo}>
-          <StyledTitle $size="lg">{title}</StyledTitle>
+          <Heading4>{title}</Heading4>
         </Link>
       ) : (
-        <StyledTitle $size="sm">{title}</StyledTitle>
+        <Heading3>{title}</Heading3>
       )}
     </>
   );
@@ -164,23 +167,23 @@ const CardInfoContent = ({
 
   return (
     <StyledContentWrapper>
-      <Flex direction="column" gap={16}>
-        <Flex align="center" gap={12}>
+      <StyledTeacherSection>
+        <StyledTeacherInfo>
           <Profile
             size={4.6}
             src={getFullImageUrl(teacherImage)}
             alt={`${teacherName} 강사 프로필`}
           />
-          <Flex align="center" gap={8} style={{ flex: 1, overflow: 'hidden' }}>
-            <Text weight="bold" variant="md" style={{ whiteSpace: 'nowrap' }}>{teacherName}</Text>
-            <Text variant="sm" color="gray300" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{teacherRole}</Text>
-          </Flex>
-        </Flex>
+          <StyledTeacherDetails>
+            <StyledTeacherName>{teacherName}</StyledTeacherName>
+            <StyledTeacherRole>{teacherRole}</StyledTeacherRole>
+          </StyledTeacherDetails>
+        </StyledTeacherInfo>
 
         <StyledDescriptionBox>
           <p>{description}</p>
         </StyledDescriptionBox>
-      </Flex>
+      </StyledTeacherSection>
 
       {isEnrolled ? (
         <StyledLearning>

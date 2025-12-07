@@ -9,7 +9,7 @@ import SvgMore from "../assets/icons/icon-category-more.svg?react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
-import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper, StyledTitle } from "./MainPage.styled";
+import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper } from "./MainPage.styled";
 import { FilterCourseList } from "../components/CourseList";
 import { ProfileCard } from "../components/ProfileCard";
 import Banner from "../components/Banner";
@@ -18,6 +18,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 import type { CourseType } from "../types/CourseType";
 import { useState } from "react";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { Heading2 } from "@/components/Typography";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -46,7 +47,7 @@ const SectionHead = ({ courseType }: { courseType: CourseType }) => {
     const showMorePath = `${ROUTES.LECTURE_LIST}?course_types=${courseType}`
     return (
         <StyledSectionHead>
-            <StyledTitle>{title}</StyledTitle>
+            <Heading2>{title}</Heading2>
             <Link to={showMorePath} aria-label={`강의 목록 더보기`}>
                 <StyledShowMore>
                     더 보기
@@ -61,8 +62,6 @@ const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
     const [resultCount, setResultCount] = useState(0);
     const { isLaptop } = useMediaQuery();
     const cardCount = isLaptop ? 4 : 3;
-
-
 
     return (
         <StyledSection $isVisible={resultCount > 0 ? true : false}>

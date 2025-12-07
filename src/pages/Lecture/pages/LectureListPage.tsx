@@ -1,8 +1,7 @@
 import { FilterCourseList } from '../../../components/CourseList';
 import FilterForm from '../../../components/FilterForm';
 import { usePageMeta } from '../../../hooks/usePageMeta';
-import { Heading } from '../../../components/Typography';
-import { Box } from '../../../components/Box';
+import { Heading1 } from '../../../components/Typography';
 
 // 강의 목록 페이지 컴포넌트
 // 필터 데이터 정의 및 메인 레이아웃 구성
@@ -59,16 +58,9 @@ export default function LectureListPage() {
     <>
       {metaHelmet}
       {/* 디자인 시스템 Box 컴포넌트로 상단 여백(mt=64) 적용 */}
-      <Box mt={64}>
-        <Heading
-          as="h2"
-          variant="xxl"
-          weight="bold"
-          style={{ wordBreak: 'keep-all', lineHeight: 1.3 }}
-        >
+        <Heading1 marginTop={6.4}>
           어떤 강의를 찾으시나요?
-        </Heading>
-      </Box>
+        </Heading1>
       <FilterForm filterData={filterData} />
       <FilterCourseList />
     </>
