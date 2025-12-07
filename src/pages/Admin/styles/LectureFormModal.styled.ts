@@ -175,6 +175,7 @@ export const LectureFormModalStyles = {
       cursor: not-allowed;
     }
   `,
+
   Textarea: styled.textarea`
     padding: 1.2rem 1.6rem;
     border: 1px solid ${({ theme }) => theme.colors.gray200};
@@ -291,7 +292,7 @@ export const LectureFormModalStyles = {
     text-align: center;
   `,
   LoadingText: styled.p`
-    font-size: 1.6rem;
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray400};
     margin: 0;
@@ -553,6 +554,41 @@ export const LectureFormModalStyles = {
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
+  `,
+  LabelDescription: styled.span`
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.primary300};
+    margin-left: 0.5rem;
+  `,
+  FileInput: styled.input`
+    font-size: 1.4rem;
+    padding: 0.5rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: 0.4rem;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  `,
+
+  PreviewContainer: styled.div`
+    margin-top: 1rem;
+  `,
+
+  PreviewImage: styled.img`
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+  `,
+
+  SuccessText: styled.p`
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.primary300};
   `,
 };
 

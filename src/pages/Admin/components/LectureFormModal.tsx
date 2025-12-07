@@ -14,6 +14,7 @@ import type {
 } from '../../../types/AdminCourseType';
 import { Button } from '../../../components/Button';
 import { fetchCourseDetail, deleteLecture } from '../../../api/adminApi';
+import { uploadImage, validateImage } from '../../../api/storageApi';
 
 interface LectureFormModalProps {
   isOpen: boolean;
@@ -522,6 +523,24 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
   setFaqs,
   disabled = false,
 }) => {
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!validateImage(file)) return;
+    try {
+      setIsUploadingThumbnail(true);
+      const url = await uploadImage(file);
+      onChange('thumbnail_url', url);
+      alert('강의 썸네일 이미지가 업로드되었습니다!');
+    } catch (error) {
+      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      console.error('이미지 업로드 실패: ', error);
+    } finally {
+      setIsUploadingThumbnail(false);
+    }
+  };
   // FAQ 추가
   const handleAddFaq = () => {
     setFaqs((prev) => [...prev, { question: '', answer: '' }]);
@@ -659,15 +678,25 @@ const Step1BasicInfo: React.FC<Step1Props> = ({
 
         <S.FormRow>
           <S.FormGroup>
-            <S.Label htmlFor="thumbnail_url">썸네일 URL</S.Label>
-            <S.Input
+            <S.Label htmlFor="thumbnail_url">
+              썸네일 이미지
+              <S.LabelDescription>* 최대 10MB, JPEG, PNG, GIF, WEBP 형식 지원</S.LabelDescription>
+            </S.Label>
+
+            <S.FileInput
               id="thumbnail_url"
-              type="text"
-              value={basicInfo.thumbnail_url}
-              onChange={(e) => onChange('thumbnail_url', e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              disabled={disabled}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleThumbnailUpload}
+              disabled={isUploadingThumbnail}
             />
+            {isUploadingThumbnail && <S.LoadingText>이미지를 업로드 중입니다...</S.LoadingText>}
+            {basicInfo.thumbnail_url && !isUploadingThumbnail && (
+              <S.PreviewContainer>
+                <S.PreviewImage src={basicInfo.thumbnail_url} alt="썸네일 미리보기" />
+                <S.SuccessText>✓ 업로드 완료</S.SuccessText>
+              </S.PreviewContainer>
+            )}
           </S.FormGroup>
         </S.FormRow>
       </S.SectionBox>
