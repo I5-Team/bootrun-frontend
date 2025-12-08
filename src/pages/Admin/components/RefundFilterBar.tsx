@@ -118,7 +118,7 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: 2.4rem;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
     display: flex;
     flex-wrap: wrap;
     gap: 1.6rem;

@@ -13,17 +13,16 @@ import {
   StyledLikeButton,
   StyledPrice,
   StyledTagList,
+  StyledThumbnailImage,
+  StyledThumbnailWrapper,
+  StyledThumbnailLink,
+  StlyedThumbnailNotice,
+  StyledLearning,
   StyledTeacherDetails,
   StyledTeacherInfo,
   StyledTeacherName,
   StyledTeacherRole,
   StyledTeacherSection,
-  StyledThumbnailImage,
-  StyledThumbnailWrapper,
-  StyledTitle,
-  StyledThumbnailLink,
-  StlyedThumbnailNotice,
-  StyledLearning,
 } from './CourseCard.styled';
 import Tag from '../Tag';
 import Profile from '../Profile';
@@ -38,8 +37,10 @@ import SvgCertificate from '../../assets/icons/icon-certificate.svg?react';
 
 // import - utils
 import { getFullImageUrl } from '../../utils/imageUtils';
+import { Heading3, Heading4 } from '../Typography';
 
 // types
+// 강의 카드 컴포넌트 타입 정의 (정보형/학습형)
 type CourseCardProps = BaseProps & (InfoContentProps | StudyContentProps);
 type VariantType = 'info' | 'study';
 
@@ -117,10 +118,10 @@ const CardHeader = ({
 
       {variant === 'info' ? (
         <Link to={linkTo}>
-          <StyledTitle $size="lg">{title}</StyledTitle>
+          <Heading3>{title}</Heading3>
         </Link>
       ) : (
-        <StyledTitle $size="sm">{title}</StyledTitle>
+        <Heading4>{title}</Heading4>
       )}
     </>
   );
@@ -237,6 +238,8 @@ const CardStudyContent = ({
   );
 };
 
+// 강의 카드 메인 컴포넌트
+// variant props에 따라 정보형(info) 또는 학습형(study)으로 렌더링
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
   const { variant, courseId, thumbnail, tags, title, isActive, isCompleted } = props;
   return (

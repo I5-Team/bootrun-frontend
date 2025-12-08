@@ -31,7 +31,7 @@ export const AdminPageStyles = {
   `,
 
   PageTitle: styled.h2`
-    font-size: clamp(2.2rem, 4vw, ${({ theme }) => theme.fontSize.xl});
+    font-size: clamp(2.2rem, 4vw, ${({ theme }) => theme.fontSize.headingLg});
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
     margin: 0;

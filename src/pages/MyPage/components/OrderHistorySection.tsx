@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponents';
+import { AxiosError } from 'axios';
 import Tag from '../../../components/Tag';
 import Button from '../../../components/Button';
-import { Container, Title, Header } from '../styles/ProfilePage.styled';
+import { Container, Header } from '../styles/ProfilePage.styled';
 import {
   Card,
   CardHeader,
@@ -17,8 +18,9 @@ import {
 } from '../styles/OrderHistorySection.styled';
 import type { PaymentsItem } from '../../../types/PaymentsType';
 import { usePostPaymentRefund, usePaymentsQuery, useMyRefunds } from '../../../queries/usePaymentsQueries';
+import { Heading2 } from '@/components/Typography';
 
-  const paymentLabels: Record<string, string> = {
+const paymentLabels: Record<string, string> = {
   card: '카드결제',
   toss: '토스결제',
   transfer: '계좌이체',
@@ -35,20 +37,20 @@ const formattedDate = (date: string) => new Date(date).toLocaleString('ko-KR', {
 });
 
 // 주문 내역 아이템 카드 컴포넌트
-const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined, refundLabel: string }> = ({ 
-  order, 
+const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined, refundLabel: string }> = ({
+  order,
   isRefunded,
   refundLabel
 }) => {
   const isCompleted = order.status === 'completed';
 
   const { mutate: refundPayment } = usePostPaymentRefund();
-  
+
   const handleRefund = (id: number) => {
     const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
     if (reason.length < 10) {
-        alert('환불 사유를 최소 10자 이상 입력해주세요.');
-        return;
+      alert('환불 사유를 최소 10자 이상 입력해주세요.');
+      return;
     }
 
     const confirmed = window.confirm('정말 환불을 진행하시겠습니까?');
@@ -61,18 +63,21 @@ const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined
       onSuccess: () => {
         alert('환불 요청이 완료되었습니다.');
       },
-      onError: (err: any) => {
-        alert(err?.response?.data?.detail || '환불 요청이 실패하였습니다. 다시 시도해 주세요.');
+      onError: (err: AxiosError | Error) => {
+        const errorMessage = err instanceof AxiosError && err.response?.data
+          ? (err.response.data as { detail: string }).detail
+          : '환불 요청이 실패하였습니다. 다시 시도해 주세요.';
+        alert(errorMessage);
       }
     })
   }
 
   return (
     <Card>
-      <Button 
-        size="sm" 
-        variant='outline' 
-        disabled={isRefunded} 
+      <Button
+        size="sm"
+        variant='outline'
+        disabled={isRefunded}
         onClick={() => handleRefund(order.id)}
       >{refundLabel}</Button>
       <CardHeader>
@@ -117,7 +122,7 @@ type FilterStatus = 'all' | 'pending' | 'completed';
 
 const OrderHistoryPage: React.FC = () => {
   const [filter, setFilter] = useState<FilterStatus>('all');
-  
+
   // 결제 내역 
   const { data: orderHistory, isLoading: isLoadingOrders, error: ordersError } = usePaymentsQuery({});
   // 환불 내역
@@ -169,7 +174,7 @@ const OrderHistoryPage: React.FC = () => {
   return (
     <Container>
       <Header>
-        <Title as="h2">결제 내역</Title>
+        <Heading2 as="h2">결제 내역</Heading2>
         <FilterGroup role="group" aria-label="결제 내역 필터">
           <Button size="sm"
             variant={filter === 'all' ? 'primary' : 'outline'}
@@ -202,13 +207,13 @@ const OrderHistoryPage: React.FC = () => {
             const refundLabel = refundItem
               ? refundItem.status === 'pending' ? '환불 신청중'
                 : refundItem.status === 'approved' ? '환불 완료'
-                : '환불 거절'
+                  : '환불 거절'
               : '환불 신청';
 
             return (
-              <OrderCard 
-                key={order.id} 
-                order={order}  
+              <OrderCard
+                key={order.id}
+                order={order}
                 isRefunded={!!refundItem}
                 refundLabel={refundLabel}
               />

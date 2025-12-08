@@ -4,9 +4,13 @@ import { ROUTES } from '../router/RouteConfig';
 import { useLogout } from '../queries/useAuthQueries';
 
 // profile dropdown
-export const StyledDropdownWrapper = styled.div`
+export const StyledDropdownBtn = styled.button`
   position: relative;
   cursor: pointer;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown' | 'sidebar' }>`
@@ -17,10 +21,11 @@ const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown
   border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md};
   background-color: ${({ theme }) => theme.colors.white};
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: ${({ theme }) => theme.shadows.md};
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 500;
+  text-align: left;
 
   ${({ $variant }) =>
     $variant === 'sidebar' &&

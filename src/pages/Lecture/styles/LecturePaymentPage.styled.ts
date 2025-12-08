@@ -49,14 +49,14 @@ export const RightSection = styled.section`
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   line-height: 3.2rem;
   color: ${({ theme }) => theme.colors.surface};
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     line-height: 2.4rem;
   }
 `;
@@ -136,7 +136,7 @@ export const CategoryBadge = styled.span`
   width: fit-content;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -154,7 +154,7 @@ export const LectureTitle = styled.h3`
   word-break: break-word;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
     line-height: 2rem;
     -webkit-line-clamp: 3;
   }
@@ -168,7 +168,7 @@ export const LectureInstructor = styled.p`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -180,7 +180,7 @@ export const LecturePrice = styled.p`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -203,7 +203,7 @@ export const PriceRow = styled.div`
   line-height: 2.2rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -234,18 +234,18 @@ export const TotalLabel = styled.span`
   color: ${({ theme }) => theme.colors.gray300};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
 export const TotalPrice = styled.span`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   line-height: 3.2rem;
   color: ${({ theme }) => theme.colors.primary300};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     line-height: 2.4rem;
   }
 `;
@@ -296,7 +296,7 @@ export const CheckboxLabel = styled.label`
   cursor: pointer;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -308,7 +308,7 @@ export const CheckboxLabelText = styled.span`
   cursor: pointer;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -332,7 +332,7 @@ export const CouponRow = styled.div`
   line-height: 2.2rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -366,7 +366,7 @@ export const CouponButton = styled.button`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
     padding: 0.5rem 1rem;
   }
 `;
@@ -389,7 +389,7 @@ export const SelectedCouponText = styled.span`
   color: ${({ theme }) => theme.colors.primary300};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -415,7 +415,7 @@ export const RemoveCouponButton = styled.button`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -450,7 +450,7 @@ export const PaymentMethodOption = styled.div<{ $selected?: boolean }>`
 
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 1.4rem;
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

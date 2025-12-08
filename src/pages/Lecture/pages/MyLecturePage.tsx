@@ -1,6 +1,7 @@
 import FilterForm from '../../../components/FilterForm';
 import { FilterMyCourseList } from '../../../components/CourseList';
-import { StyledTitle } from './LectureListPage';
+import { Heading1 } from '@/components/Typography';
+
 
 export default function MyLecturePage() {
   const filterData = [
@@ -37,7 +38,7 @@ export default function MyLecturePage() {
 
   return (
     <>
-      <StyledTitle>내 강의 목록</StyledTitle>
+      <Heading1 marginTop={6.4}>내 강의 목록</Heading1>
       <FilterForm filterData={filterData} inputType="radio" hasTags={false} />
       <FilterMyCourseList />
     </>

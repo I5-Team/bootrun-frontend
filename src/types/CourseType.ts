@@ -3,7 +3,7 @@ export type CourseType = 'boost_community' | 'vod' | 'kdc';
 export type CategoryType = 'frontend' | 'backend' | 'data_analysis' | 'ai' | 'design' | 'other';
 
 export type PriceType = 'free' | 'paid' | 'national_support';
- 
+
 export type DifficultyType = "beginner" | "intermediate" | "advanced";
 
 export type EnrollmentState = 'None' | 'available' | 'expired';
@@ -11,25 +11,25 @@ export type EnrollmentState = 'None' | 'available' | 'expired';
 export type LearningState = 'None' | 'not_started' | 'in_progress' | 'completed';
 
 // 타입별 라벨
-export const courseTypeLabel : Record<CourseType, string> = {
-    boost_community : '부스트 커뮤니티',
-    vod : 'VOD',
-    kdc : 'KDC', 
+export const courseTypeLabel: Record<CourseType, string> = {
+  boost_community: '부스트 커뮤니티',
+  vod: 'VOD',
+  kdc: 'KDC',
 }
 
-export const categoryLabel : Record<CategoryType, string> = {
-    frontend : '프론트엔드',
-    backend : '백엔드',
-    data_analysis : '데이터 분석', 
-    ai: 'AI',
-    design: '디자인', 
-    other: '기타',
+export const categoryLabel: Record<CategoryType, string> = {
+  frontend: '프론트엔드',
+  backend: '백엔드',
+  data_analysis: '데이터 분석',
+  ai: 'AI',
+  design: '디자인',
+  other: '기타',
 }
 
-export const difficultyLabel : Record<DifficultyType, string> = {
-    beginner : '초급',
-    intermediate : '중급',
-    advanced : '실무', 
+export const difficultyLabel: Record<DifficultyType, string> = {
+  beginner: '초급',
+  intermediate: '중급',
+  advanced: '실무',
 }
 
 
@@ -110,7 +110,7 @@ export type LectureItem = {
 }
 
 // [POST] /enrollments
-export type EnrollmentResponse = { 
+export type EnrollmentResponse = {
   id: number,
   user_id: number,
   course_id: number,
@@ -160,44 +160,44 @@ export type MyEnrollmentItem = {
 
 // [GET] /enrollments/dashboard
 export type EnrollmentDashboadItem = {
-    total_enrollments: number,
-    active_enrollments: number,
-    completed_courses: number,
-    total_study_time: number,
-    avg_progress_rate: number,
-    recent_activities?: Array<{[key: string]: any}>,
-    upcoming_expiries?: Array<{[key: string]: any}>,
+  total_enrollments: number,
+  active_enrollments: number,
+  completed_courses: number,
+  total_study_time: number,
+  avg_progress_rate: number,
+  recent_activities?: Array<Record<string, unknown>>,
+  upcoming_expiries?: Array<Record<string, unknown>>,
 }
 
 // GET /enrollments/{enrollment_id}
 export type EnrollmentDetailItem = {
-    id: number,
-    category_type: CategoryType,
-    course_type: CourseType,
-    title: string,
-    description: string,
-    thumbnail_url: string,
-    instructor_name: string,
-    instructor_bio: string,
-    instructor_description?: string,
-    instructor_image: string,
-    price_type: PriceType,
-    price: number,
-    difficulty: DifficultyType,
-    total_duration: number,
-    enrollment_status: EnrollmentState,
-    learning_status: LearningState,
-    enrolled_at: string,
-    expires_at?: string,
-    total_lectures: number,
-    completed_lectures: number,
-    progress_rate: number,
-    last_watched_chapter_id?: number,
-    last_watched_lecture_id?: number,
-    last_watched_at?: string,
-    chapters?: ChapterItem[],
-    created_at: string,
-    updated_at: string
+  id: number,
+  category_type: CategoryType,
+  course_type: CourseType,
+  title: string,
+  description: string,
+  thumbnail_url: string,
+  instructor_name: string,
+  instructor_bio: string,
+  instructor_description?: string,
+  instructor_image: string,
+  price_type: PriceType,
+  price: number,
+  difficulty: DifficultyType,
+  total_duration: number,
+  enrollment_status: EnrollmentState,
+  learning_status: LearningState,
+  enrolled_at: string,
+  expires_at?: string,
+  total_lectures: number,
+  completed_lectures: number,
+  progress_rate: number,
+  last_watched_chapter_id?: number,
+  last_watched_lecture_id?: number,
+  last_watched_at?: string,
+  chapters?: ChapterItem[],
+  created_at: string,
+  updated_at: string
 }
 
 // POST /enrollments/progress
@@ -209,16 +209,16 @@ export interface EnrollmentProgressBodyData {
 }
 
 export type EnrollmentProgressResponse = {
-    id: number,
-    user_id: number,
-    lecture_id: number,
-    lecture_title: string,
-    watched_seconds: number,
-    last_position: number,
-    is_completed: boolean,
-    completion_rate: number,
-    last_watched_at: string,
-    completed_at: string
+  id: number,
+  user_id: number,
+  lecture_id: number,
+  lecture_title: string,
+  watched_seconds: number,
+  last_position: number,
+  is_completed: boolean,
+  completion_rate: number,
+  last_watched_at: string,
+  completed_at: string
 }
 
 // PATCH /enrollments/progress/lecture/{lecture_id}
@@ -229,16 +229,16 @@ export interface LectureProgressBodyData {
 }
 
 export type LectureProgressResponse = {
-    id: number,
-    user_id: number,
-    lecture_id: number,
-    lecture_title: string,
-    watched_seconds: number,
-    last_position: number,
-    is_completed: boolean,
-    completion_rate: number,
-    last_watched_at: string,
-    completed_at: string
+  id: number,
+  user_id: number,
+  lecture_id: number,
+  lecture_title: string,
+  watched_seconds: number,
+  last_position: number,
+  is_completed: boolean,
+  completion_rate: number,
+  last_watched_at: string,
+  completed_at: string
 }
 
 // GET /enrollments/progress/course/{course_id}
@@ -256,14 +256,14 @@ export type CourseProgressItem = {
 
 // GET /enrollments/progress/lecture/{lecture_id}
 export type LectureProgressItem = {
-    id: number,
-    user_id: number,
-    lecture_id: number,
-    lecture_title: string,
-    watched_seconds: number,
-    last_position: number,
-    is_completed: boolean,
-    completion_rate: number,
-    last_watched_at: string,
-    completed_at: string | null,
+  id: number,
+  user_id: number,
+  lecture_id: number,
+  lecture_title: string,
+  watched_seconds: number,
+  last_position: number,
+  is_completed: boolean,
+  completion_rate: number,
+  last_watched_at: string,
+  completed_at: string | null,
 }

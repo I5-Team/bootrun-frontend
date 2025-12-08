@@ -9,7 +9,7 @@ import MaterialsTab from '../components/MaterialsTab';
 import QnaTab from '../components/QnaTab';
 import ProgressBar from '../../../components/ProgressBar';
 import { SkeletonLectureRoom } from '../../../components/Skeleton';
-import { useLectureRoom } from '../../../contexts/LectureRoomContext';
+import { useLectureRoom } from '@/pages/Lecture/contexts/LectureRoomContext';
 import {
   fetchLectureRoomData,
   fetchLectureProgress,

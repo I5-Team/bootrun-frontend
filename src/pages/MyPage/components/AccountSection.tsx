@@ -5,7 +5,7 @@ import { useDeleteAccountHandler } from '../../../hooks/useDeleteAccountHandler'
 import { useChangePasswordForm } from '../../../hooks/useChangePasswordForm';
 import { useProfile } from '../../../queries/useUserQueries';
 import Button from '../../../components/Button';
-import { Header, Title } from '../styles/ProfilePage.styled';
+import { Header } from '../styles/ProfilePage.styled';
 import {
   Container,
   ArrowIcon,
@@ -24,6 +24,7 @@ import {
   ModalLoadingWrapper,
   FormGroup,
 } from '../styles/AccountSection.styled';
+import { Heading2 } from '@/components/Typography';
 
 const AccountSection: React.FC = () => {
   const { data, isLoading: loading, error } = useProfile();
@@ -54,11 +55,6 @@ const AccountSection: React.FC = () => {
     onClose: () => setIsDeleteModalOpen(false), // 성공 시 모달 닫기 콜백
   });
 
-  // const handleGithubLink = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   alert('GitHub 계정 연동 페이지로 이동합니다.');
-  // };
-
   if (loading)
     return (
       <Container>
@@ -77,32 +73,12 @@ const AccountSection: React.FC = () => {
     <>
       <Container>
         <Header>
-          <Title as="h2">계정 관리</Title>
+          <Heading2 as="h2">계정 관리</Heading2>
         </Header>
           <FormGroup>
             <label htmlFor="email">이메일</label>
             <EmailInput id="email" disabled readOnly type="email" value={data.email} />
           </FormGroup>
-
-          {/* <FormGroup>
-            <FormLabel>GitHub 계정</FormLabel>
-            {data.social_provider === 'github' ? (
-              <GithubLinked>
-                <span>{data.email}</span>
-                <button
-                  type="button"
-                  onClick={handleGithubLink}
-                  aria-label={`${data.email} GitHub 계정 연동 해제`}
-                >
-                  연동 해제
-                </button>
-              </GithubLinked>
-            ) : (
-              <GithubLink type="button" onClick={handleGithubLink}>
-                ※ GitHub 계정 로그인
-              </GithubLink>
-            )}
-          </FormGroup> */}
 
           <FormGroup>
             <FormLabel>비밀번호</FormLabel>
@@ -125,10 +101,21 @@ const AccountSection: React.FC = () => {
         </DangerContent>
       </DangerZone>
 
+      {/* 비밀번호 변경 모달 */}
       <BaseModal
         isOpen={isPwModalOpen}
         onClose={() => setIsPwModalOpen(false)}
         title="비밀번호 변경"
+        footer={
+          <ModalFooter>
+            <Button
+              onClick={handleConfirmPasswordChange}
+              disabled={isChangingPassword}
+            >
+              {isChangingPassword ? '변경 중...' : '변경하기'}
+            </Button>
+          </ModalFooter>
+        }
       >
         <ModalFormGroup>
           <label htmlFor="currentPassword">현재 비밀번호</label>
@@ -171,24 +158,27 @@ const AccountSection: React.FC = () => {
             {pwApiMessage.message}
           </ModalErrorMessage>
         )}
-
-        <ModalFooter>
-          <ModalButton onClick={() => setIsPwModalOpen(false)} disabled={isChangingPassword}>
-            취소
-          </ModalButton>
-          <ModalButton
-            $primary={true}
-            onClick={handleConfirmPasswordChange}
-            disabled={isChangingPassword}
-          >
-            {isChangingPassword ? '변경 중...' : '변경하기'}
-          </ModalButton>
-        </ModalFooter>
       </BaseModal>
+
+      {/* 회원 탈퇴 모달 */}
       <BaseModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         title="회원 탈퇴"
+        footer={
+          <ModalFooter>
+            <ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
+              취소
+            </ModalButton>
+            <ModalButton
+              $danger={true}
+              onClick={handleConfirmWithdrawal}
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
+            </ModalButton>
+          </ModalFooter>        
+        }
       >
         {isDeletingAccount ? (
           <ModalLoadingWrapper>
@@ -219,18 +209,6 @@ const AccountSection: React.FC = () => {
             )}
           </>
         )}
-        <ModalFooter>
-          <ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
-            취소
-          </ModalButton>
-          <ModalButton
-            $danger={true}
-            onClick={handleConfirmWithdrawal}
-            disabled={isDeletingAccount}
-          >
-            {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
-          </ModalButton>
-        </ModalFooter>
       </BaseModal>
     </>
   );

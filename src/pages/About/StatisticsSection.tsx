@@ -22,13 +22,13 @@ const StyledContainer = styled.div`
 `;
 
 const StyledSectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.headingLg};
   font-weight: 700;
   text-align: center;
   margin-bottom: 6rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     margin-bottom: 4rem;
   }
 `;
@@ -53,18 +53,18 @@ const StyledStatItem = styled.div`
 `;
 
 const StyledNumber = styled.div`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary200};
   margin-bottom: 1.2rem;
   line-height: 1.2;
 
   @media ${({ theme }) => theme.devices.laptop} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
@@ -74,7 +74,7 @@ const StyledLabel = styled.div`
   font-weight: 500;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -135,13 +135,15 @@ function StatCounter({ stat }: { stat: Statistic }) {
       { threshold: 0.3 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);

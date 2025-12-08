@@ -2,60 +2,72 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig.ts';
 import useMediaQuery from '../../hooks/useMediaQuery.ts';
+import { useTheme } from 'styled-components';
+import { useLectureRoom } from '@/pages/Lecture/contexts/LectureRoomContext.tsx';
+import { useProfile } from '../../queries/useUserQueries.ts';
+import { getFullImageUrl } from '../../utils/imageUtils.ts';
+
 
 // svg
-import logo from '../../assets/logos/logo-typo.svg';
-import SvgHamberger from '../../assets/icons/icon-hambuger.svg?react';
-import SvgDownload from '../../assets/icons/icon-download-folder.svg?react';
-import SvgMemo from '../../assets/icons/icon-memo.svg?react';
-import SvgHomeBack from '../../assets/icons/icon-home-back.svg?react';
-import SvgDiscord from '../../assets/icons/icon-sns-discord.svg?react';
-import SvgChapter from '../../assets/icons/icon-chapter.svg?react';
-import SvgSearch from '../../assets/icons/icon-search.svg?react';
+import logo from '@/assets/logos/logo-typo.svg';
+import SvgHamberger from '@/assets/icons/icon-hambuger.svg?react';
+import SvgDownload from '@/assets/icons/icon-download-folder.svg?react';
+import SvgHomeBack from '@/assets/icons/icon-home-back.svg?react';
+import SvgDiscord from '@/assets/icons/icon-sns-discord.svg?react';
+import SvgChapter from '@/assets/icons/icon-chapter.svg?react';
+import SvgSearch from '@/assets/icons/icon-search.svg?react';
+import SvgQnA from "@/assets/icons/icon-qna.svg?react"
 
 // components
 import {
   StyledHeader,
   StyledHeaderInner,
   StyledLogo,
-  StyledActionList,
   StyledNavList,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
   StyledHeaderInnerAdmin,
   StyledDevBadge,
+  StyledActionList,
 } from './Header.styled.ts';
 
 import Button from '../Button.tsx';
-import ButtonIcon from '../ButtonIcon.tsx';
+import IconButton from '@/components/IconButton.tsx';
 import Profile from '../Profile.tsx';
 import SearchForm from '../SearchForm.tsx';
 import HeaderSidebar from './HeaderSidebar.tsx';
-import { ProfileDropdown, StyledDropdownWrapper } from '../ProfileDropdown.tsx';
-import { useLectureRoom } from '../../contexts/LectureRoomContext.tsx';
-import { useProfile } from '../../queries/useUserQueries.ts';
-import { getFullImageUrl } from '../../utils/imageUtils.ts';
+import { ProfileDropdown, StyledDropdownBtn } from '../ProfileDropdown.tsx';
 
 const APP_ENV = import.meta.env.VITE_APP_ENV;
 
-const HeaderLogo = () => {
-  return (
-    <Link to={ROUTES.HOME}>
-      <h1 className="sr-only">bootRun</h1>
-      <StyledLogo src={logo} alt="" width={124} height={24} />
-
-      {APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local')) ? (
-        // 'dev' 또는 'local' 환경일 때만 배지 표시
-        <StyledDevBadge>{APP_ENV}</StyledDevBadge> 
-      ) : null}
-    </Link>
-  );
-};
 
 // ==================================
 // default Header Components
 // ==================================
+
+// 헤더 로고 컴포넌트 (환경 배지 포함)
+const HeaderLogo = () => {
+  const isDev = APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local'));
+
+  return (
+    isDev ? (
+    <span style={{ display: 'flex' }}>
+      <Link to={ROUTES.HOME}>
+        <h1 className="sr-only">bootRun</h1>
+        <StyledLogo src={logo} alt="" width={124} height={24} />
+      </Link>
+      <StyledDevBadge>{APP_ENV}</StyledDevBadge>
+    </span>
+    ) : (
+      <Link to={ROUTES.HOME}>
+        <h1 className="sr-only">bootRun</h1>
+        <StyledLogo src={logo} alt="" width={124} height={24} />
+      </Link>
+    )
+  );
+};
+
 const NavList = () => {
   return (
     <StyledNavList>
@@ -76,10 +88,16 @@ const SearchOpenBtn = ({
   isActive: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
+  const theme = useTheme();
+
   return (
-    <ButtonIcon ariaLabel="검색창 열기" active={isActive} onClick={onClick}>
-      <SvgSearch />
-    </ButtonIcon>
+    <IconButton 
+      iconSvg={<SvgSearch/>}
+      ariaLabel="검색창 열기" 
+      active={isActive} 
+      onClick={onClick}
+      iconColor={theme.colors.surface}
+    />
   );
 };
 
@@ -90,16 +108,23 @@ const SidebarOpenBtn = ({
   isActive?: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
+  const theme = useTheme();
+
   return (
-    <ButtonIcon ariaLabel="메뉴 열기" active={isActive} onClick={onClick}>
-      <SvgHamberger />
-    </ButtonIcon>
+    <IconButton
+      iconSvg={<SvgHamberger/>}
+      ariaLabel="메뉴 열기"
+      active={isActive} 
+      onClick={onClick}
+      iconColor={theme.colors.surface}
+    />
   );
 };
 
+// 사용자 프로필 버튼 및 드롭다운 메뉴
 const UserProfileBtn = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const { data: userProfile } = useProfile();
   const isLoggedIn = !!userProfile;
 
@@ -143,12 +168,10 @@ const UserProfileBtn = () => {
   return (
     <>
       {isLoggedIn ? (
-        <StyledDropdownWrapper ref={dropdownRef}>
-          <button onClick={handleOpenDropdown}>
+        <StyledDropdownBtn ref={dropdownRef} onClick={handleOpenDropdown}>
             <Profile size={4.2} isActive={isDropdownOpen} src={profileImageUrl} />
-          </button>
           <ProfileDropdown isOpen={isDropdownOpen} />
-        </StyledDropdownWrapper>
+        </StyledDropdownBtn>
       ) : (
         <Button as={Link} to={ROUTES.LOGIN} type="">
           로그인
@@ -177,9 +200,17 @@ const ActionLists = () => {
     <StyledActionList>
       {isTablet ? (
         <>
-          <SearchOpenBtn isActive={isSearchActive} onClick={handleOpenSearch} />
-          <SidebarOpenBtn onClick={handleSidebarOpen} />
-          <HeaderSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <SearchOpenBtn 
+            isActive={isSearchActive} 
+            onClick={handleOpenSearch} 
+          />
+          <SidebarOpenBtn 
+            onClick={handleSidebarOpen} 
+          />
+          <HeaderSidebar 
+            isOpen={isSidebarOpen} 
+            setIsOpen={setIsSidebarOpen} 
+          />
         </>
       ) : (
         <>
@@ -233,16 +264,14 @@ const DownloadBtn = () => {
   );
 
   return (
-    <ButtonIcon
+    <IconButton
+      iconSvg={<SvgDownload/>}
       ariaLabel="자료 다운로드"
-      variant="light"
       hasAlert={showAlert}
       onClick={handleClick}
       className={rightSidebarType === 'materials' ? 'active' : ''}
       tooltip="자료 다운로드"
-    >
-      <SvgDownload />
-    </ButtonIcon>
+    />
   );
 };
 
@@ -254,15 +283,13 @@ const QnaBtn = () => {
   };
 
   return (
-    <ButtonIcon
+    <IconButton
+      iconSvg={<SvgQnA/>}
       ariaLabel="Q&A"
-      variant="light"
       onClick={handleClick}
       className={rightSidebarType === 'qna' ? 'active' : ''}
       tooltip="Q&A"
-    >
-      <SvgMemo />
-    </ButtonIcon>
+    />
   );
 };
 
@@ -273,9 +300,11 @@ const HomeBackBtn = () => {
 
   return (
     <Link to={`/lectures/${lectureId}`}>
-      <ButtonIcon ariaLabel="강의 상세 페이지로 돌아가기" variant="light" tooltip="강의 상세보기">
-        <SvgHomeBack />
-      </ButtonIcon>
+      <IconButton 
+        iconSvg={<SvgHomeBack/>}
+        ariaLabel="강의 상세 페이지로 돌아가기" 
+        tooltip="강의 상세보기"
+      />
     </Link>
   );
 };
@@ -287,9 +316,12 @@ const DiscordBtn = () => {
       target="_blank"
       rel="noopener noreferrer" // 보안을 위한 코드(새 창에서 원본 페이지에 접근 못하게 할 수 있는 속성 - 개인정보 보호, 피싱 방지)
     >
-      <ButtonIcon ariaLabel="디스코드 참여하기" variant="discord">
-        <SvgDiscord />
-      </ButtonIcon>
+      <IconButton
+        iconSvg={<SvgDiscord/>}
+        ariaLabel="디스코드 참여하기" 
+        variant="dark"
+        tooltip="디스코드 참여하기"
+      />
     </a>
   );
 };
@@ -351,6 +383,7 @@ const AdminHeader = () => {
   );
 };
 
+// 메인 헤더 컴포넌트 (페이지 타입에 따라 다른 헤더 렌더링)
 export default function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === ROUTES.LOGIN;

@@ -185,7 +185,7 @@ const S = {
     position: absolute;
     width: 100%;
     z-index: 10;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
 
     /* S.NavList의 'a' 스타일을 그대로 복사 */
     a {

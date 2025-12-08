@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
+// 전역 스타일 및 CSS Reset 설정
 export const GlobalStyle = createGlobalStyle`
   ${reset}
 
@@ -9,9 +10,9 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   body {
-    font-size: 1.6rem;
-    line-height: 1.3;
-    color: ${({ theme }) => theme.colors.surface}
+    font-size: ${({ theme }) => theme.fontSize.md};
+    line-height: ${({ theme }) => theme.lineHeight.normal};
+    color: ${({ theme }) => theme.colors.surface};
   }
   
 
@@ -49,8 +50,8 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-    color: #121314;
-    background: #ffffff;
+    color: ${({ theme }) => theme.colors.surface};
+    background: ${({ theme }) => theme.colors.white};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

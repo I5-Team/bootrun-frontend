@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { StyledAddress, StyledAddressOpen, StyledColumnGroup, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinkItem, StyledLinksList } from "./Footer.styled";
+import { StyledAddress, StyledAddressOpen, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinkItem } from "./Footer.styled";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { Flex } from "../Box";
 
 import SvgHome from "../../assets/icons/icon-sns-home.svg?react";
 import SvgInflearn from "../../assets/icons/icon-sns-inflearn.svg?react";
@@ -20,7 +21,6 @@ const LogoCopyright = () => {
         </StyledCopyright>
     )
 }
-
 const Address = () => {
     return (
         <StyledAddress aria-label="회사 정보">
@@ -35,46 +35,46 @@ const Address = () => {
 
 const Links = () => {
     return (
-        <StyledLinksList>
+        <Flex as="ul" gap={8}>
             <StyledLinkItem>
-                <a 
-                    href="/" 
+                <a
+                    href="/"
                     aria-label="홈으로 이동"
-                ><SvgHome/></a>
+                ><SvgHome /></a>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a 
+                <a
                     href="https://www.inflearn.com/" target="_blank"
                     aria-label="인프런으로 이동"
-                ><SvgInflearn/></a>
+                ><SvgInflearn /></a>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a 
+                <a
                     href="https://www.youtube.com/"
-                    target="_blank" 
+                    target="_blank"
                     aria-label="유튜브로 이동"
-                ><SvgYoutube/></a>
+                ><SvgYoutube /></a>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a 
-                    href="https://section.blog.naver.com/" target="_blank" 
+                <a
+                    href="https://section.blog.naver.com/" target="_blank"
                     aria-label="블로그로 이동"
-                ><SvgBlog/></a>
+                ><SvgBlog /></a>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a 
-                    href="https://www.instagram.com/" target="_blank" 
+                <a
+                    href="https://www.instagram.com/" target="_blank"
                     aria-label="인스타그램으로 이동"
-                ><SvgInstagram/></a>
+                ><SvgInstagram /></a>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a 
-                    href="https://discord.com/" 
-                    target="_blank" 
+                <a
+                    href="https://discord.com/"
+                    target="_blank"
                     aria-label="디스코드로 이동"
-                ><SvgDiscord/></a>
+                ><SvgDiscord /></a>
             </StyledLinkItem>
-        </StyledLinksList>
+        </Flex>
     )
 }
 
@@ -85,26 +85,27 @@ const AddressAccordion = () => {
         <>
             <StyledAddressOpen $isOpen={isAddressOpen} onClick={() => setIsAddressOpen(prev => !prev)}>
                 (주)부트런 사업자 정보
-                <SvgArrowDown/>
+                <SvgArrowDown />
             </StyledAddressOpen>
-            { isAddressOpen && 
-            <Address/>
+            {isAddressOpen &&
+                <Address />
             }
         </>
     )
 }
 
+// 푸터 컴포넌트 (반응형 레이아웃 적용)
 export default function Footer() {
     const { isMobile } = useMediaQuery();
 
     return (
         <StyledFooter>
             <StyledInnerFooter>
-                    <StyledColumnGroup>
-                        <LogoCopyright/>
-                        { isMobile ? <Links/> : <Address/> }
-                    </StyledColumnGroup>
-                    { isMobile ? <AddressAccordion/> : <Links/> }
+                <Flex direction="column" gap={20} align="flex-start">
+                    <LogoCopyright />
+                    {isMobile ? <Links /> : <Address />}
+                </Flex>
+                {isMobile ? <AddressAccordion /> : <Links />}
             </StyledInnerFooter>
         </StyledFooter>
     );

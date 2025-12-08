@@ -62,7 +62,7 @@ export const LogoIcon = styled.div`
 
 export const Title = styled.h2`
   font-family: 'Pretendard', sans-serif;
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   line-height: 1.6;
   text-align: center;
@@ -70,13 +70,13 @@ export const Title = styled.h2`
   margin-bottom: 4rem;
 
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
     line-height: 1.4;
     margin-bottom: 4.4rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
     margin-bottom: 4.8rem;
   }
 `;
@@ -114,7 +114,7 @@ export const InputLabel = styled.label`
   color: ${({ theme }) => theme.colors.gray400};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -136,7 +136,7 @@ export const LinkGroup = styled.div`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
     margin-bottom: 2rem;
   }
 `;
@@ -197,7 +197,7 @@ export const DividerText = styled.span`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
     margin-top: 0.4rem;
     margin-bottom: 0.4rem;
   }

@@ -58,17 +58,17 @@ const StyledLogo = styled.img`
 `;
 
 const StyledTitle = styled.h1`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   font-weight: 700;
   margin-bottom: 1.6rem;
   line-height: 1.4;
 
   @media ${({ theme }) => theme.devices.laptop} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
     margin-bottom: 1.2rem;
   }
 `;
@@ -80,7 +80,7 @@ const StyledDescription = styled.p`
   color: ${({ theme }) => theme.colors.primary100};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
     margin-bottom: 2.4rem;
   }
 `;

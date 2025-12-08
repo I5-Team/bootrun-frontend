@@ -1,7 +1,7 @@
 
 import S from '../styles/LectureBannerSection.styled';
 import { getFullImageUrl } from '../../../utils/imageUtils';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 import { useState } from 'react';
 import { SkeletonImage } from '../../../components/Skeleton';
 

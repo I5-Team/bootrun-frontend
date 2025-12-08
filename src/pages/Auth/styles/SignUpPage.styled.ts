@@ -32,7 +32,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.headingLg};
   font-weight: 600;
   line-height: 1;
   color: ${({ theme }) => theme.colors.surface};
@@ -40,7 +40,7 @@ export const Title = styled.h2`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
   }
 `;
 
@@ -75,7 +75,7 @@ export const InputLabel = styled.label<{ $hasError?: boolean; $isFocused?: boole
   transition: color 0.2s ease;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -125,7 +125,7 @@ export const VerificationCodeTitle = styled.h3`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -137,7 +137,7 @@ export const VerificationCodeDescription = styled.p`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -170,7 +170,7 @@ export const VerificationHelpText = styled.p`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -398,7 +398,7 @@ export const CheckboxLabel = styled.label`
   flex: 1;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -432,7 +432,7 @@ export const TermsErrorMessage = styled.span`
   line-height: 1.6rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMyRefunds, fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
+import { AxiosError } from 'axios';
 import type { PaymentsParams, PaymentsItem, PaymentsBodyData, PaymentRefundBodyData } from "../types/PaymentsType";
 
 const useToken = () => localStorage.getItem('accessToken');
@@ -13,12 +14,12 @@ export const usePostPayments = () => {
   const token = useToken();
 
   return useMutation({
-    mutationFn: (bodyData: PaymentsBodyData) => {           
-        if (!token) throw new Error('로그인이 필요합니다');
-        return postPayments(bodyData);
+    mutationFn: (bodyData: PaymentsBodyData) => {
+      if (!token) throw new Error('로그인이 필요합니다');
+      return postPayments(bodyData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payments']});
+      queryClient.invalidateQueries({ queryKey: ['payments'] });
     },
   });
 };
@@ -61,15 +62,15 @@ export const usePostPaymentConfirm = () => {
   const token = useToken();
 
   return useMutation({
-    mutationFn: ({ payment_id, transaction_id }: { 
+    mutationFn: ({ payment_id, transaction_id }: {
       payment_id: number,
       transaction_id: string,
     }) => {
-        if (!token) throw new Error('로그인이 필요합니다');
-        return postPaymentConfirm(payment_id, transaction_id);
+      if (!token) throw new Error('로그인이 필요합니다');
+      return postPaymentConfirm(payment_id, transaction_id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['paymentDetail']});
+      queryClient.invalidateQueries({ queryKey: ['paymentDetail'] });
     },
   });
 };
@@ -84,11 +85,11 @@ export const usePostPaymentCancel = () => {
 
   return useMutation({
     mutationFn: (payment_id: number) => {
-        if (!token) throw new Error('로그인이 필요합니다');
-        return postPaymentCancel(payment_id);
+      if (!token) throw new Error('로그인이 필요합니다');
+      return postPaymentCancel(payment_id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['paymentDetail']});
+      queryClient.invalidateQueries({ queryKey: ['paymentDetail'] });
     },
   });
 };
@@ -111,7 +112,7 @@ export const usePostPaymentRefund = () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       console.log('환불 요청 성공, 관련 쿼리 무효화 완료');
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError | Error) => {
       console.error('환불 요청 실패', err);
     }
   });

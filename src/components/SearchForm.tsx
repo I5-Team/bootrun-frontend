@@ -13,7 +13,7 @@ const StyledSearchForm = styled.form`
     justify-content: space-between;
     align-items: center;
     gap: 0.8rem;
-
+    
     background-color: ${({ theme }) => theme.colors.gray100};
     width: clamp(26rem, 30vw, 32rem);
     height: 4.2rem;
@@ -38,6 +38,7 @@ const StyledSearchInput = styled.input.attrs({ type: 'search' })`
     height: 100%;
     font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
+    text-align: left;
 
     white-space: nowrap;
     overflow: hidden;

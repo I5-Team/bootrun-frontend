@@ -55,6 +55,7 @@ interface UseSignUpFormReturn {
   formState: FormState;
   errorState: ErrorState;
   emailVerification: EmailVerificationState;
+  isSendingCode: boolean;
 
   // 핸들러 함수들
   handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -100,9 +101,9 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
   const [nickNameError, setNickNameError] = useState<string | boolean>(false);
 
   // 인증 상태
-  const [isEmailSent, setIsEmailSent] = useState(false);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [showEmailHelp, setShowEmailHelp] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);    // 이메일 인증 요청 상태
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 완료 상태
+  const [showEmailHelp, setShowEmailHelp] = useState(false);  // 이메일 도움말 상태
 
   // API 메시지 상태
   const [apiMessage, setApiMessage] = useState<ApiMessageState>({
@@ -225,12 +226,13 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     requestVerifyMutate(
       { email },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
+          // 이제는 code를 리턴하지 않음, 이메일에서 확이하여 직접 입력해야함.
+          // 인증 요청후 응답이 올때까지 인증버튼이 활성화 되어있어서 여러번 누를 수 있는 문제 상태가 있음
           setIsEmailSent(true);
-          const code = data.detail.split(': ')[1] || '???';
           setApiMessage({
             type: 'success',
-            message: `인증 코드가 발송되었습니다. (코드: ${code})`,
+            message: '인증 코드가 발송되었습니다.',
           });
         },
         onError: (error) => {
@@ -274,12 +276,11 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     requestVerifyMutate(
       { email },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           setIsEmailSent(true);
-          const code = data.detail.split(': ')[1] || '???';
           setApiMessage({
             type: 'success',
-            message: `인증 코드가 재전송되었습니다. (코드: ${code})`,
+            message: '인증 코드가 재전송되었습니다.',
           });
         },
         onError: (error) => {
@@ -340,6 +341,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       isEmailVerified,
       showEmailHelp,
     },
+    isSendingCode,
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,

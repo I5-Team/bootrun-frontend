@@ -11,7 +11,7 @@ export const DevToggle = styled.button`
   border-radius: ${({ theme }) => theme.radius.md};
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 600;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   z-index: 1000;
   transition: all 0.2s ease;
 

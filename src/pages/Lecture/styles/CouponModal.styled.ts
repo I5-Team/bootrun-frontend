@@ -23,7 +23,7 @@ export const ModalContainer = styled.div`
   margin-top: 7rem;
   display: flex;
   flex-direction: column;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: ${({ theme }) => theme.shadows.md};
 
   @media ${({ theme }) => theme.devices.mobile} {
     max-width: 100%;
@@ -43,14 +43,14 @@ export const ModalHeader = styled.div`
 `;
 
 export const ModalTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   line-height: 3.2rem;
   color: ${({ theme }) => theme.colors.surface};
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
@@ -172,7 +172,7 @@ export const CouponName = styled.h3<{ $available: boolean }>`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -184,7 +184,7 @@ export const CouponDescription = styled.p<{ $available: boolean }>`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -195,7 +195,7 @@ export const CouponWarning = styled.span`
   color: ${({ theme }) => theme.colors.alert};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -209,7 +209,7 @@ export const DiscountAmount = styled.span<{ $available: boolean }>`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

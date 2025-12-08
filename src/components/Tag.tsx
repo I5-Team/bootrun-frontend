@@ -12,6 +12,7 @@ type TagProps = {
   ariaHidden?: boolean,
 }
 
+// 태그 컴포넌트 스타일 정의 (variant에 따른 색상 변경)
 const StyledTag = styled.span<{ $variant: TagVariant }>`
   display: inline-flex;
   align-items: center;
@@ -25,22 +26,22 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
   white-space: nowrap;
 
   background-color: ${({ $variant, theme }) =>
-    $variant === 'dark' ? theme.colors.gray400 
-    : $variant === 'light' ? theme.colors.white
-    : theme.colors.primary300};
+    $variant === 'dark' ? theme.colors.gray400
+      : $variant === 'light' ? theme.colors.white
+        : theme.colors.primary300};
 
   color: ${({ $variant, theme }) =>
-    $variant === 'dark' ? theme.colors.white 
-    : $variant === 'light' ? theme.colors.gray400
-    : theme.colors.white};
+    $variant === 'dark' ? theme.colors.white
+      : $variant === 'light' ? theme.colors.gray400
+        : theme.colors.white};
 
   outline: ${({ $variant, theme }) =>
-    $variant === 'dark' ? '0.1rem solid transparent'  
-    : $variant === 'light' ? '0.1rem solid' + theme.colors.gray200
-    : '0.1rem solid transparent'};
+    $variant === 'dark' ? '0.1rem solid transparent'
+      : $variant === 'light' ? '0.1rem solid ' + theme.colors.gray200
+        : '0.1rem solid transparent'};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 
   svg path {
@@ -48,9 +49,10 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
   }
 `
 
+// 공통 태그 컴포넌트
 export const Tag: React.FC<TagProps> = ({ children, variant = 'light', hasDelete, ariaHidden }) => {
   return (
-    <StyledTag 
+    <StyledTag
       $variant={variant}
       aria-hidden={ariaHidden}
     >

@@ -9,9 +9,10 @@ import SearchForm from '../../../components/SearchForm';
 import Button from '../../../components/Button';
 import EmptyState from '../../../components/EmptyState/EmptyState';
 import SvgAlert from '../../../assets/icons/icon-status-alert.svg?react';
+import { Heading1 } from '@/components/Typography';
 
 const StyledTitleWrapper = styled.div`
-  margin-top: 6rem;
+  margin-top: 6.4rem;
   margin-bottom: 3.2rem;
 
   display: flex;
@@ -28,25 +29,13 @@ const StyledTitleWrapper = styled.div`
   }
 `;
 
-const StyledTitle = styled.div`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
-  font-weight: 700;
-
-  word-break: keep-all;
-  line-height: 1.3;
-
-  @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
-  }
-`;
-
 const StyledResult = styled.span`
   color: ${({ theme }) => theme.colors.gray300};
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
 
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
@@ -89,7 +78,7 @@ export default function LectureSearchPage() {
         <h2 className="sr-only">강의 목록 검색 결과 페이지</h2>
         {!(isTablet && keyword === '') && (
           <>
-            <StyledTitle>{keyword}</StyledTitle>
+            <Heading1>{keyword}</Heading1>
             <StyledResult>검색 결과: {resultCount}건</StyledResult>
           </>
         )}

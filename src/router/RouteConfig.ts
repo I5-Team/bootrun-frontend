@@ -1,5 +1,6 @@
 export const ROUTES = {
-    HOME: '/',                                  // 메인 페이지
+    INTRO: '/',                                 // 인트로 페이지
+    HOME: '/home',                              // 메인 페이지
     ABOUT: '/about',                            // 부트런 소개 페이지
     REVIEW: '/review',                          // 수강생 후기 페이지
     LOGIN: '/login',                            // 로그인 페이지

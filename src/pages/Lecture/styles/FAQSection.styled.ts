@@ -14,7 +14,7 @@ const FAQ = {
     border-radius: ${({ theme }) => theme.radius.xl};
     overflow: hidden;
     transition: all 0.2s ease-out;
-    ${({ $open, theme }) => $open && theme.colors.shadow};
+    ${({ $open, theme }) => $open && theme.shadows.md};
   `,
   QuestionButton: styled.button`
     width: 100%;
@@ -38,12 +38,12 @@ const FAQ = {
     gap: 1.2rem;
 
     .prefix {
-      font-size: ${({ theme }) => theme.fontSize.lg};
+      font-size: ${({ theme }) => theme.fontSize.headingMd};
       font-weight: 600;
       color: ${({ theme }) => theme.colors.primary300};
 
       @media ${({ theme }) => theme.devices.mobile} {
-        font-size: ${({ theme }) => theme.mobileFontSize.xl};
+        font-size: ${({ theme }) => theme.fontSize.lg};
       }
     }
 

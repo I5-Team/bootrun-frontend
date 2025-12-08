@@ -111,7 +111,7 @@ export const TextGroup = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   font-weight: 600;
   line-height: 5.6rem;
   color: ${({ theme }) => theme.colors.surface};
@@ -119,18 +119,18 @@ export const Title = styled.h2`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.laptop} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
     line-height: 4rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     line-height: 3rem;
   }
 `;
 
 export const SubTitle = styled.p`
-  font-size: ${({ theme }) => theme.mobileFontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: 600;
   text-align: center;
 
@@ -149,7 +149,7 @@ export const Description = styled.p`
   margin: 0;
 
   @media ${({ theme }) => theme.devices.laptop} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
     line-height: 2rem;
   }
 `;

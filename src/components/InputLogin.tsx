@@ -7,6 +7,7 @@ import styled from 'styled-components';
  * @param fullWidth - 전체 너비 사용 여부
  * @param ariaLabel - 레이블이 없을 때 사용할 접근성 레이블
  */
+// 로그인/회원가입용 입력 필드 컴포넌트
 export interface InputLoginProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean | string;
   fullWidth?: boolean;
@@ -37,7 +38,7 @@ const StyledInput = styled.input<{
 }>`
   width: 100%;
   height: 4.2rem;
-  padding: 1rem 0.8rem;
+  padding: ${({ theme }) => `${theme.space[10]} ${theme.space[8]}`};
   // 포커스일 때만 배경색 변경
   background-color: ${({ $isFocused, theme }) =>
     $isFocused ? theme.colors.gray100 : theme.colors.white};
@@ -45,15 +46,15 @@ const StyledInput = styled.input<{
   // 에러 > 포커스 > 기본 순서로 테두리 색상 결정
   border-bottom: 0.2rem solid
     ${({ $error, $isFocused, theme }) => {
-      if ($error) return theme.colors.alert;
-      if ($isFocused) return theme.colors.primary300;
-      return theme.colors.gray200;
-    }};
+    if ($error) return theme.colors.alert;
+    if ($isFocused) return theme.colors.primary300;
+    return theme.colors.gray200;
+  }};
 
   font-family: 'Pretendard', sans-serif;
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 400;
-  line-height: 2.2rem;
+  line-height: ${({ theme }) => theme.lineHeight.normal};
   color: ${({ theme }) => theme.colors.surface};
 
   // 모든 스타일 변경에 0.2초 전환 효과 적용
@@ -74,7 +75,7 @@ const StyledInput = styled.input<{
 
   // 모바일 환경에서 폰트 크기 축소
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -84,13 +85,13 @@ const StyledInput = styled.input<{
  * - 모바일 환경 고려한 폰트 크기
  */
 const ErrorMessage = styled.span`
-  margin-top: 0.4rem;
+  margin-top: ${({ theme }) => theme.space[4]};
   font-size: ${({ theme }) => theme.fontSize.caption};
   color: ${({ theme }) => theme.colors.alert};
-  line-height: 1.6rem;
+  line-height: ${({ theme }) => theme.lineHeight.normal};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

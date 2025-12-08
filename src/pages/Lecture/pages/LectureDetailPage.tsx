@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import type { SectionRefs } from '../../../types/LectureType';
 import useMediaQuery from '../../../hooks/useMediaQuery';
-import { useLectureContext } from '../../../layouts/LectureDetailLayout';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 
 // 스타일
 import { ContentWrapper, SectionWrapper } from '../styles/LectureDetailPage.styled';
@@ -20,21 +20,7 @@ import { LectureInfoBox, InfoBoxButtons } from '../components/LectureInfoBox';
 import { usePageMeta } from '../../../hooks/usePageMeta';
 
 // 함수
-export const formatDate = (dateString: string): string => {
-  const [datePart] = dateString.split('T');
-  const [year, month, day] = datePart.split('-');
 
-  const date = new Date(Number(year), Number(month) - 1, Number(day));
-
-  const weekDayNames = ['일', '월', '화', '수', '목', '금', '토'];
-  const weekDay = weekDayNames[date.getDay()];
-
-  // 월과 일을 2자리로 패딩 (예: "01", "05")
-  const paddedMonth = String(month).padStart(2, '0');
-  const paddedDay = String(day).padStart(2, '0');
-
-  return `${year}.${paddedMonth}.${paddedDay}(${weekDay})`;
-};
 
 //
 export default function LectureDetailPage() {

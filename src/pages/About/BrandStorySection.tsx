@@ -67,13 +67,13 @@ const StyledContent = styled.div`
 `;
 
 const StyledSectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.headingLg};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.surface};
   margin-bottom: 4rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     margin-bottom: 3rem;
   }
 `;
@@ -125,13 +125,13 @@ const StyledTextContent = styled.div`
 `;
 
 const StyledItemTitle = styled.h3`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.surface};
   margin-bottom: 0.8rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -141,7 +141,7 @@ const StyledItemDescription = styled.p`
   color: ${({ theme }) => theme.colors.gray400};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

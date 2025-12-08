@@ -21,18 +21,18 @@ const StyledHeroSection = styled.section`
 `;
 
 const StyledTitle = styled.h1`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.surface};
   margin-bottom: 1.6rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
   }
 `;
 
 const StyledSubtitle = styled.p`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   color: ${({ theme }) => theme.colors.gray400};
 
   span {
@@ -41,7 +41,7 @@ const StyledSubtitle = styled.p`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -74,7 +74,7 @@ const StyledReviewCard = styled.article`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.radius.lg};
   padding: 3.2rem;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   transition: all 0.3s ease;
 
   &:hover {
@@ -112,7 +112,7 @@ const StyledUserName = styled.h3`
   margin-bottom: 0.4rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -122,7 +122,7 @@ const StyledCourseName = styled.p`
   margin-bottom: 0.8rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -148,7 +148,7 @@ const StyledReviewText = styled.p`
   margin-bottom: 2rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -159,7 +159,7 @@ const StyledChangeLabel = styled.div`
   margin-bottom: 0.8rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -172,7 +172,7 @@ const StyledChangeText = styled.p`
   border-radius: ${({ theme }) => theme.radius.sm};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

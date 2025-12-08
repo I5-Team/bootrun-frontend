@@ -1,3 +1,4 @@
+import { Heading1 } from '../Typography';
 import * as S from './EmptyState.styled';
 
 export type EmptyStateProps = {
@@ -25,7 +26,7 @@ export default function EmptyState({
         <S.IconWrapper $animation={iconAnimation}>{icon}</S.IconWrapper>
 
         <S.TextGroup>
-          {title && <S.Title>{title}</S.Title>}
+          {title && <Heading1>{title}</Heading1>}
           {subTitle && <S.SubTitle>{subTitle}</S.SubTitle>}
           {description && <S.Description>{description}</S.Description>}
         </S.TextGroup>

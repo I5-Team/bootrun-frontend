@@ -1,20 +1,10 @@
-import styled from 'styled-components';
 import { FilterCourseList } from '../../../components/CourseList';
 import FilterForm from '../../../components/FilterForm';
 import { usePageMeta } from '../../../hooks/usePageMeta';
+import { Heading1 } from '../../../components/Typography';
 
-export const StyledTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
-  font-weight: 600;
-  margin-top: 6rem;
-  word-break: keep-all;
-  line-height: 1.3;
-
-  @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
-  }
-`;
-
+// 강의 목록 페이지 컴포넌트
+// 필터 데이터 정의 및 메인 레이아웃 구성
 export default function LectureListPage() {
   const filterData = [
     {
@@ -67,7 +57,10 @@ export default function LectureListPage() {
   return (
     <>
       {metaHelmet}
-      <StyledTitle>어떤 강의를 찾으시나요?</StyledTitle>
+      {/* 디자인 시스템 Box 컴포넌트로 상단 여백(mt=64) 적용 */}
+        <Heading1 marginTop={6.4}>
+          어떤 강의를 찾으시나요?
+        </Heading1>
       <FilterForm filterData={filterData} />
       <FilterCourseList />
     </>
