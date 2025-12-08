@@ -31,11 +31,11 @@ const StyledTitleWrapper = styled.div`
 
 const StyledResult = styled.span`
   color: ${({ theme }) => theme.colors.gray300};
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
 
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 

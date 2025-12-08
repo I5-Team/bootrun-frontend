@@ -55,7 +55,7 @@ const S = {
   ScheduleTitle: styled.p`
     display: block;
     line-height: 2.4rem;
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
     margin-bottom: 1.2rem;

@@ -111,17 +111,17 @@ export const StyledSectionHead = styled.div`
 `;
 
 export const StyledTitle = styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
     font-weight: 600;
     line-height: 1.3;
     word-break: keep-all;
 
     @media ${({ theme }) => theme.devices.tablet} {
-        font-size: ${({ theme }) => theme.fontSize.lg};
+        font-size: ${({ theme }) => theme.fontSize.headingMd};
     }
 
     @media ${({ theme }) => theme.devices.mobile} {
-        font-size: ${({ theme }) => theme.mobileFontSize.xl};
+        font-size: ${({ theme }) => theme.fontSize.lg};
     }
 `;
 

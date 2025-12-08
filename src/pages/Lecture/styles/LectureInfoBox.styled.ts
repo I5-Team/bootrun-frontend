@@ -24,7 +24,7 @@ const S = {
     }
   `,
   Title: styled.p`
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
     margin: 0;
@@ -80,7 +80,7 @@ const S = {
     }}
   `,
   Price: styled.p<{ $status?: string }>`
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
     font-weight: 600;
     color: ${({ $status, theme }) =>
       $status === 'learning' ? theme.colors.surface : theme.colors.primary300};

@@ -7,7 +7,7 @@ export const PaymentManagePageStyles = {
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.radius.md};
     padding: 0.8rem;
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
     margin-bottom: 2rem;
   `,
 

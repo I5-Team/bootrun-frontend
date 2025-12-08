@@ -118,10 +118,10 @@ const CardHeader = ({
 
       {variant === 'info' ? (
         <Link to={linkTo}>
-          <Heading4>{title}</Heading4>
+          <Heading3>{title}</Heading3>
         </Link>
       ) : (
-        <Heading3>{title}</Heading3>
+        <Heading4>{title}</Heading4>
       )}
     </>
   );

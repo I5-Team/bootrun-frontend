@@ -44,7 +44,7 @@ export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
   }
   @media ${({ theme }) => theme.devices.mobile} {
     padding: 1.2rem 1.6rem;
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -266,7 +266,7 @@ export const TextContent = styled.div`
   white-space: pre-wrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -285,12 +285,12 @@ export const QuizContentWrapper = styled.div`
 `;
 
 export const QuizPlaceholder = styled.div`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   color: ${({ theme }) => theme.colors.gray400};
   font-weight: 500;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -386,7 +386,7 @@ export const NavButton = styled.button<{ $variant?: 'outline' | 'primary' }>`
     padding: ${({ $variant }) => ($variant === 'primary' ? '1.2rem 2rem' : '1.2rem')};
     min-width: 4.4rem;
     height: 4.4rem;
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

@@ -91,7 +91,7 @@ const S = {
 
     strong {
       color: ${({ theme }) => theme.colors.surface};
-      font-weight: ${({ theme }) => theme.fontWeight.bold};
+      font-weight: 700;
     }
   `,
 };

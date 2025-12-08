@@ -37,7 +37,7 @@ export const InfoText = styled.p`
   line-height: 1.5;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -58,7 +58,7 @@ export const NavigateButton = styled.button`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
     padding: 1.4rem 2rem;
   }
 `;
@@ -80,6 +80,6 @@ export const Description = styled.p`
   padding: 0 1.2rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;

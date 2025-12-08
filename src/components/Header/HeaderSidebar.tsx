@@ -15,7 +15,7 @@ const StyledSidebar = styled.aside<{ $isOpen: boolean }>`
 
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
     
     transition: transform 0.3s ease, visibility 0.3s ease;
     transform: ${({ $isOpen }) => $isOpen ? 'translateX(0)' : 'translateX(100%)'};

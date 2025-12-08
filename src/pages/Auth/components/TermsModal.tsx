@@ -116,11 +116,11 @@ const TermsContent = styled.div`
     padding: 1.6rem;
 
     h3 {
-      font-size: ${({ theme }) => theme.mobileFontSize.md};
+      font-size: ${({ theme }) => theme.fontSize.sm};
     }
 
     p {
-      font-size: ${({ theme }) => theme.mobileFontSize.sm};
+      font-size: ${({ theme }) => theme.fontSize.caption};
       line-height: 2rem;
     }
   }
@@ -143,7 +143,7 @@ const ScrollHint = styled.p`
   line-height: 1.6rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

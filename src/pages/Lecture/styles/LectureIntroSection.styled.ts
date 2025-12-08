@@ -15,17 +15,17 @@ const Intro = {
   Title: styled.p`
     word-break: keep-all;
     width: 80%;
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
     font-weight: 700;
     text-align: center;
 
     @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.fontSize.lg};
+      font-size: ${({ theme }) => theme.fontSize.headingMd};
     }
   `,
   Desc: styled.p`
     word-break: keep-all;
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     color: ${({ theme }) => theme.colors.gray400};
     text-align: center;
     line-height: 1.6;

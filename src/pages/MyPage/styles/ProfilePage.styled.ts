@@ -167,10 +167,10 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
   }
 `;
 

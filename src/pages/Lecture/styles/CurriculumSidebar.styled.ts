@@ -57,7 +57,7 @@ export const ChapterTitle = styled.h3`
   text-align: left;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -122,7 +122,7 @@ export const LectureTitle = styled.span<{ $isCurrent: boolean }>`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -131,7 +131,7 @@ export const LectureDuration = styled.span`
   color: ${({ theme }) => theme.colors.gray300};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 

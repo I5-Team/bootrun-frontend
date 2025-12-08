@@ -51,7 +51,7 @@ const StyledInput = styled.input<{ $disabled?: boolean; $readOnly?: boolean }>`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -76,7 +76,7 @@ const DropdownValue = styled.div<{ $placeholder?: boolean; $disabled?: boolean }
   white-space: pre;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -111,7 +111,7 @@ const OptionItem = styled.div<{ $isSelected?: boolean; $isHovered?: boolean }>`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

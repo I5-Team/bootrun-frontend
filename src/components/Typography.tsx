@@ -20,36 +20,36 @@ export const Text = styled.span<TextProps>`
   text-align: ${({ align }) => align || 'left'};
   
   ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme, variant = 'md' }) => theme.mobileFontSize[variant]};
+    font-size: ${({ theme, variant = 'md' }) => theme.fontSize[variant]};
   }
 `;
 
 // Heading1 컴포넌트
 export const Heading1 = styled.h2<{ marginTop?: number }>`
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   font-weight: 600;
   line-height: ${({ theme }) => theme.lineHeight.normal};
   margin-top: ${({ marginTop }) => `${marginTop ?? 0}rem`};
   word-break: keep-all;
 
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
   }
 `;
 
 // Heading2 컴포넌트
 export const Heading2 = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.headingLg};
   font-weight: 600;
   line-height: ${({theme }) => theme.lineHeight.normal};
   word-break: keep-all;
 
   @media ${({ theme }) => theme.devices.tablet} {
-      font-size: ${({ theme }) => theme.fontSize.lg};
+      font-size: ${({ theme }) => theme.fontSize.headingMd};
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.mobileFontSize.xl};
+      font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
@@ -71,18 +71,18 @@ export const Heading3 = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  font-size: ${({ theme }) => theme.mobileFontSize.xl};
-  
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
+
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xxl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
   }
 `;
 
 export const Heading4 = styled(Heading3)`
   font-size: ${({ theme }) => theme.fontSize.lg};
-
+  
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.xl};
   }
 `;
 

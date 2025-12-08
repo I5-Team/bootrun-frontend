@@ -35,7 +35,7 @@ export const SearchInput = styled.input`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -92,7 +92,7 @@ export const QuestionTitle = styled.h3`
   white-space: nowrap;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -108,7 +108,7 @@ export const QuestionContent = styled.p`
   -webkit-box-orient: vertical;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -120,7 +120,7 @@ export const QuestionMeta = styled.div`
   font-size: ${({ theme }) => theme.fontSize.caption};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
     flex-direction: column;
     align-items: flex-start;
     gap: 0.8rem;
@@ -173,7 +173,7 @@ export const WriteButton = styled.button`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -193,7 +193,7 @@ export const FormHeader = styled.div`
 `;
 
 export const FormTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.surface};
 `;
@@ -237,7 +237,7 @@ export const WarningText = styled.p`
   line-height: 1.5;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
@@ -264,7 +264,7 @@ export const Label = styled.label`
   color: ${({ theme }) => theme.colors.surface};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

@@ -53,7 +53,7 @@ const StyledInput = styled.input<{
 
   font-family: 'Pretendard', sans-serif;
   font-size: ${({ theme }) => theme.fontSize.md};
-  font-weight: ${({ theme }) => theme.fontWeight.regular};
+  font-weight: 400;
   line-height: ${({ theme }) => theme.lineHeight.normal};
   color: ${({ theme }) => theme.colors.surface};
 
@@ -75,7 +75,7 @@ const StyledInput = styled.input<{
 
   // 모바일 환경에서 폰트 크기 축소
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
@@ -91,7 +91,7 @@ const ErrorMessage = styled.span`
   line-height: ${({ theme }) => theme.lineHeight.normal};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.caption};
+    font-size: ${({ theme }) => theme.fontSize.caption};
   }
 `;
 
