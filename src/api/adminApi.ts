@@ -1176,6 +1176,43 @@ export const updateLecture = async (
   }
 };
 
+/**
+ * DELETE /admin/courses/{course_id}/chapters/{chapter_id}/lectures/{lecture_id}
+ * 강의 영상 삭제
+ */
+
+export const deleteLecture = async (
+  courseId: number,
+  chapterId: number,
+  lectureId: number
+): Promise<{ success: boolean; message: string; detail: string }> => {
+  console.log(
+    `강의 삭제 - 강의 ID: ${courseId}, 챕터 ID: ${chapterId}, 강의 영상 ID: ${lectureId}`
+  );
+
+  if (USE_MOCK_DATA) {
+    // Mock 데이터 응답
+    const mockResponse = {
+      success: true,
+      message: '강의 영상이 성공적으로 삭제되었습니다.',
+      detail: '학습 진행 기록이 함께 삭제되고 강의 전체 시간이 업데이트되었습니다.',
+    };
+    return simulateFetch(mockResponse, API_DELAY);
+  }
+
+  try {
+    const response = await apiClient.delete(
+      API_URL.ADMIN_COURSES.DELETE_LECTURE(courseId, chapterId, lectureId)
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'DELETE /admin/courses/{course_id}/chapters/{chapter_id}/lectures/{lecture_id} API Error:',
+      error
+    );
+    throw error;
+  }
+};
 // 다음은 각 CRUD 예시 템플릿입니다. 필요에 따라 주석 해제 후 사용하세요. --------------------------
 // GET 예시
 // 목록 조회 (필터링, 페이지네이션)

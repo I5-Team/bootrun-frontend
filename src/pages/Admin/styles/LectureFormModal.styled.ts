@@ -175,6 +175,7 @@ export const LectureFormModalStyles = {
       cursor: not-allowed;
     }
   `,
+
   Textarea: styled.textarea`
     padding: 1.2rem 1.6rem;
     border: 1px solid ${({ theme }) => theme.colors.gray200};
@@ -230,7 +231,10 @@ export const LectureFormModalStyles = {
     border: 2px solid ${({ theme }) => theme.colors.gray200};
     border-radius: ${({ theme }) => theme.radius.xs};
     background-color: ${({ theme }) => theme.colors.white};
-    accent-color: ${({ theme }) => theme.colors.primary300};
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     &:checked {
       background-color: ${({ theme }) => theme.colors.primary300};
@@ -239,11 +243,14 @@ export const LectureFormModalStyles = {
 
     &:checked::after {
       content: '✓';
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: ${({ theme }) => theme.colors.white};
+      font-size: ${({ theme }) => theme.fontSize.sm};
       font-weight: bold;
+      line-height: 1;
     }
 
     &:disabled {
@@ -285,7 +292,7 @@ export const LectureFormModalStyles = {
     text-align: center;
   `,
   LoadingText: styled.p`
-    font-size: 1.6rem;
+    font-size: ${({ theme }) => theme.fontSize.sm};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.gray400};
     margin: 0;
@@ -516,6 +523,73 @@ export const LectureFormModalStyles = {
     text-align: center;
     color: ${({ theme }) => theme.colors.gray300};
     font-size: 1.4rem;
+  `,
+  // 재생시간 - 읽기 전용
+  ReadOnlyGroup: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1.2rem 1.6rem;
+    background-color: ${({ theme }) => theme.colors.gray100};
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+  `,
+  ReadOnlyValue: styled.div`
+    font-size: 1.4rem;
+    color: ${({ theme }) => theme.colors.gray400};
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  `,
+
+  InfoMessage: styled.div`
+    padding: 1rem 1.2rem;
+    background-color: ${({ theme }) => theme.colors.gray100};
+    border-left: 3px solid ${({ theme }) => theme.colors.primary300};
+    border-radius: ${({ theme }) => theme.radius.sm};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.primary300};
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  `,
+  LabelDescription: styled.span`
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.primary300};
+    margin-left: 0.5rem;
+  `,
+  FileInput: styled.input`
+    font-size: 1.4rem;
+    padding: 0.5rem;
+    border: 1px solid ${({ theme }) => theme.colors.gray200};
+    border-radius: 0.4rem;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  `,
+
+  PreviewContainer: styled.div`
+    margin-top: 1rem;
+  `,
+
+  PreviewImage: styled.img`
+    max-width: 30rem;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+  `,
+
+  SuccessText: styled.p`
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.primary300};
   `,
 };
 
