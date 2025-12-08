@@ -16,6 +16,7 @@ import { ErrorMessage } from '../../../components/HelperComponents';
 import { getFullImageUrl } from '../../../utils/imageUtils';
 import { SkeletonImage } from '../../../components/Skeleton';
 import { AxiosError } from 'axios';
+import { Heading3 } from '@/components/Typography';
 
 export interface Coupon {
   // 기본 정보
@@ -212,7 +213,7 @@ export default function LecturePaymentPage() {
       <S.PageContainer>
         <S.ContentWrapper>
           <S.LeftSection>
-            <S.SectionTitle as="h2">강의 구매</S.SectionTitle>
+            <Heading3 as="h2">강의 구매</Heading3>
             <S.LectureCard>
               <S.LectureThumbnail>
                 {!imgLoaded && <SkeletonImage />}

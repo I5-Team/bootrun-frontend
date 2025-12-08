@@ -21,7 +21,7 @@ const StyledTag = styled.span<{ $variant: TagVariant }>`
   border-radius: ${({ theme }) => theme.radius.xs};
 
   font-size: ${({ theme }) => theme.fontSize.sm};
-  font-weight: 700;
+  font-weight: 600;
   line-height: 2rem;
   white-space: nowrap;
 

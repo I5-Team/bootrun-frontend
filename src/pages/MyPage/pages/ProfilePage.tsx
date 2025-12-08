@@ -21,11 +21,11 @@ import {
   ProfileFormContainer,
   Select,
   SubmitButtonWrapper,
-  Title,
 } from '../styles/ProfilePage.styled';
 import Button from '../../../components/Button';
 import Profile from '../../../components/Profile';
 import { getFullImageUrl } from '../../../utils/imageUtils';
+import { Heading2 } from '@/components/Typography';
 
 const ProfilePage: React.FC = () => {
   const { data, isLoading, isError } = useProfile(); // 내 프로필 정보 조회 쿼리 훅
@@ -138,7 +138,7 @@ const ProfilePage: React.FC = () => {
     <Form onSubmit={handleSubmit}>
       <Container>
         <Header>
-          <Title as="h2">프로필 설정</Title>
+          <Heading2 as="h2">프로필 설정</Heading2>
         </Header>
         <ProfileFormContainer>
           <ProfileContainer>
