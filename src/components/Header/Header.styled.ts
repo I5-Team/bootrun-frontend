@@ -16,7 +16,7 @@ export const StyledHeader = styled.header`
 
   position: sticky;
   top: 0;
-  z-index: ${({ theme }) => theme.zIndex.sticky};
+  z-index: ${({ theme }) => theme.zIndex.header};
 
   @media ${({ theme }) => theme.devices.tablet} {
     height: 5.6rem;

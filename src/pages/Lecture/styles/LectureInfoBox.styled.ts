@@ -16,6 +16,7 @@ const S = {
     background: ${({ theme }) => theme.colors.white};
     position: sticky;
     top: calc(7rem + 1.6rem);
+    z-index: ${({ theme }) => theme.zIndex.sticky};
 
     @media ${({ theme }) => theme.devices.laptop} {
       display: none;
@@ -113,7 +114,7 @@ const S = {
       position: fixed;
       left: 0;
       bottom: 0;
-      z-index: 1000;
+      z-index: ${({ theme }) => theme.zIndex.fixed};
 
       border-top: 0.1rem solid ${({ theme }) => theme.colors.gray200};
       background-color: ${({ theme }) => theme.colors.white};
