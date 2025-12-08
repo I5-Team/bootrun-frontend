@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteAccount } from '../queries/useUserQueries';
 import type { ResponseErrorDeleteAccount } from '../types/api';
+import { ROUTES } from '../router/RouteConfig';
 
 interface UseDeleteAccountHandlerProps {
   onClose: () => void; // 모달 닫기 콜백
@@ -37,7 +38,7 @@ export const useDeleteAccountHandler = ({ onClose }: UseDeleteAccountHandlerProp
           queryClient.clear(); // 모든 캐시 삭제
           localStorage.clear(); // (권장) 스토리지 클리어
           onClose();
-          navigate('/'); // 홈으로 이동
+          navigate(ROUTES.HOME); // 홈으로 이동
         },
         onError: (error) => {
           const errorResponse = error as ResponseErrorDeleteAccount;

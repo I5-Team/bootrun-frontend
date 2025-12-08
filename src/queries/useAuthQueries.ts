@@ -17,6 +17,7 @@ import type {
 import type { ResponseError } from '../types/api';
 import { useNavigate } from 'react-router-dom';
 import { authKeys, userKeys } from './queryKeys';
+import { ROUTES } from '../router/RouteConfig';
 
 export const useVerifyAuth = () => {
   const queryClient = useQueryClient();
@@ -62,7 +63,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       console.log('로그인 성공:', data);
       queryClient.setQueryData(userKeys.me, data.user); // 사용자 데이터 캐시에 저장
-      navigate('/'); // 로그인 성공 시 메인 페이지로 이동
+      navigate(ROUTES.HOME); // 로그인 성공 시 메인 페이지로 이동
     },
     onError: (error: ResponseError) => {
       console.error('로그인 실패:', error.response?.data?.detail?.detail);

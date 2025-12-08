@@ -31,6 +31,7 @@ const MyLecturePage = lazy(() => import('../pages/Lecture/pages/MyLecturePage'))
 const LectureRoomPage = lazy(() => import('../pages/Lecture/pages/LectureRoomPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
+const IntroPage = lazy(() => import('../pages/Intro/IntroPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ReviewPage = lazy(() => import('../pages/ReviewPage'));
 const OrderHistorySection = lazy(() => import('../pages/MyPage/components/OrderHistorySection'));
@@ -48,6 +49,9 @@ export default function AppRouter() {
     <BrowserRouter basename="/bootrun-frontend">
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
+          {/* 그룹 0: 인트로 페이지 (루트) */}
+          <Route path={ROUTES.INTRO} element={<IntroPage />} />
+
           {/* 그룹 1: 비로그인 사용자만 접근 (로그인, 회원가입) */}
           <Route element={<PublicOnly />}>
             <Route element={<AuthLayout />}>
