@@ -47,7 +47,7 @@ const StyledBaseButton = styled.button<{
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   line-height: ${({ theme }) => theme.lineHeight.normal};
-  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  font-weight: 500;
 
   white-space: nowrap;
   cursor: pointer;

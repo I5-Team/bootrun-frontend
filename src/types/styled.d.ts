@@ -3,7 +3,6 @@ import type {
   ColorTypes,
   DeviceTypes,
   FontSizeTypes,
-  MobileFontSizeTypes,
   RadiusTypes,
   SpaceTypes,
   LineHeightTypes,
@@ -18,7 +17,6 @@ declare module 'styled-components' {
     devices: DeviceTypes;
     radius: RadiusTypes;
     fontSize: FontSizeTypes;
-    mobileFontSize: MobileFontSizeTypes;
     breakpoints: BreakpointsTypes;
     space: SpaceTypes;
     lineHeight: LineHeightTypes;

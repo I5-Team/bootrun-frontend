@@ -5,8 +5,9 @@ import useMediaQuery from '../../../hooks/useMediaQuery';
 import { InfoBoxContent } from './LectureInfoBox';
 import { categoryLabel, courseTypeLabel, difficultyLabel } from '../../../types/CourseType';
 import { formatDate } from '../../../utils/dateUtils';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 import { getFullImageUrl } from '../../../utils/imageUtils';
+import { Heading1 } from '@/components/Typography';
 
 const LectureHeaderSection = () => {
   const { data } = useLectureContext();
@@ -34,7 +35,7 @@ const LectureHeaderSection = () => {
             </li>
           ))}
         </S.TagList>
-        <S.Title>{title}</S.Title>
+        <Heading1>{title}</Heading1>
         <S.Description>{description}</S.Description>
       </S.LectureInfo>
 

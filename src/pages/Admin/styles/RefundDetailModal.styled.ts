@@ -34,7 +34,7 @@ export const RefundDetailModalStyles = {
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   `,
   ModalTitle: styled.h2`
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
   `,

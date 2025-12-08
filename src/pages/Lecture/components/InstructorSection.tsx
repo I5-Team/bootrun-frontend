@@ -4,7 +4,7 @@ import { StyledBaseSection as S } from '../styles/LectureDetailPage.styled';
 import Profile from '../../../components/Profile';
 
 import { getFullImageUrl } from '../../../utils/imageUtils';
-import { useLectureContext } from '../../../context/LectureContext';
+import { useLectureContext } from '@/pages/Lecture/contexts/LectureContext';
 
 const InstructorSection = React.forwardRef<HTMLElement>((_, ref) => {
   const { data } = useLectureContext();

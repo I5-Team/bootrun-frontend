@@ -6,12 +6,12 @@ import {
   ErrorImage,
   TextAndButtonWrapper,
   TextWrapper,
-  Title,
   Description,
   ButtonWrapper,
 } from './NotFoundPage.styled';
 import Button from '../components/Button';
 import errorImage from '../assets/images/bg-404.png';
+import { Heading1 } from '@/components/Typography';
 import { ROUTES } from '../router/RouteConfig';
 
 export default function NotFoundPage() {
@@ -42,13 +42,13 @@ export default function NotFoundPage() {
         <ErrorImage src={errorImage} alt="" role="presentation" aria-hidden="true" />
       </ImageWrapper>
 
-      <TextAndButtonWrapper>
-        <TextWrapper>
-          <Title id="not-found-title">페이지를 찾을 수 없습니다.</Title>
-          <Description>
-            앗, 이 페이지는 없는 것 같아요. 주소를 다시 확인하거나 메인 페이지로 돌아가주세요.
-          </Description>
-        </TextWrapper>
+        <TextAndButtonWrapper>
+          <TextWrapper>
+            <Heading1 id="not-found-title">페이지를 찾을 수 없습니다.</Heading1>
+            <Description>
+              앗, 이 페이지는 없는 것 같아요. 주소를 다시 확인하거나 메인 페이지로 돌아가주세요.
+            </Description>
+          </TextWrapper>
 
         <ButtonWrapper>
           <Button variant="primary" size="md" onClick={handleGoHome}>

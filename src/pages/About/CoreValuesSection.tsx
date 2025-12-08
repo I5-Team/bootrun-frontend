@@ -24,14 +24,14 @@ const StyledContainer = styled.div`
 `;
 
 const StyledSectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSize.xl};
+  font-size: ${({ theme }) => theme.fontSize.headingLg};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.surface};
   text-align: center;
   margin-bottom: 6rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     margin-bottom: 4rem;
   }
 `;
@@ -52,7 +52,7 @@ const StyledCard = styled.article`
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.lg};
   padding: 4rem 3.2rem;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -100,13 +100,13 @@ const StyledIconWrapper = styled.div`
 `;
 
 const StyledCardTitle = styled.h3`
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.headingMd};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.surface};
   margin-bottom: 1.2rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
@@ -117,7 +117,7 @@ const StyledCardDescription = styled.p`
   white-space: pre-line;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 

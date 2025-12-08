@@ -65,6 +65,7 @@ type BaseCourseListProps<T> = {
     courseCard: (item: T) => React.ReactNode;
     onCountChange?: (count: number) => void;
     isLoading?: boolean;
+    cardCount?: number;
 }
 
 // 공통 강의 목록 컴포넌트 (데이터 필터링, 정렬, 스켈레톤 처리)
@@ -77,6 +78,7 @@ const BaseCourseList = <T,>({
     courseCard,
     onCountChange,
     isLoading,
+    cardCount,
 }: BaseCourseListProps<T>) => {
     const courseList = data;
     const filteredList = filterFn ? courseList.filter(filterFn) : courseList;
@@ -85,14 +87,18 @@ const BaseCourseList = <T,>({
     const refinedList = slicedList;
 
     useEffect(() => {
-        onCountChange?.(refinedList.length);
+        if (isLoading) {
+            onCountChange?.(100);
+        } else {
+            onCountChange?.(refinedList.length);
+        }
     }, [refinedList, onCountChange])
 
     return (
         <div className="card-list">
             {isLoading || !refinedList ? (
                 <StyledCardGrid>
-                    {Array(9).fill(0).map((_, index) =>
+                    {Array(cardCount || 9).fill(0).map((_, index) =>
                         variant === "info"
                             ? <SkeletonCard key={index} />
                             : <SkeletonMyCourseCard key={index} />
@@ -179,6 +185,7 @@ export const FilterCourseList = ({
             courseCard={courseCardItem}
             onCountChange={onCountChange}
             isLoading={isLoading}
+            cardCount={cardCount}
         />
     )
 }

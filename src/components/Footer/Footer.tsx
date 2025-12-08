@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { StyledAddress, StyledAddressOpen, StyledFooter, StyledInnerFooter, StyledLinkItem } from "./Footer.styled";
+import { StyledAddress, StyledAddressOpen, StyledCopyright, StyledFooter, StyledInnerFooter, StyledLinkItem } from "./Footer.styled";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import { Flex, Box } from "../Box";
-import { Text } from "../Typography";
+import { Flex } from "../Box";
 
 import SvgHome from "../../assets/icons/icon-sns-home.svg?react";
 import SvgInflearn from "../../assets/icons/icon-sns-inflearn.svg?react";
@@ -16,15 +15,12 @@ import SvgArrowDown from "../../assets/icons/icon-arrow-down.svg?react";
 
 const LogoCopyright = () => {
     return (
-        <Flex align="center" gap={16} style={{ width: '100%', flex: '1 0 100%' }}>
-            <Box width="13rem">
-                <SvgLogo width="100%" height="auto" />
-            </Box>
-            <Text variant="sm" color="gray300">© BootRun All rights reserved</Text>
-        </Flex>
+        <StyledCopyright>
+            <SvgLogo/>
+            <p>© BootRun All rights reserved</p>
+        </StyledCopyright>
     )
 }
-
 const Address = () => {
     return (
         <StyledAddress aria-label="회사 정보">

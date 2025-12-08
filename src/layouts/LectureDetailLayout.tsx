@@ -1,6 +1,6 @@
 import { Outlet, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { LectureProvider } from '../context/LectureProvider';
+import { LectureProvider } from '@/pages/Lecture/contexts/LectureProvider';
 
 import { useIsEnrolled } from '../pages/Lecture/hooks/useIsEnrolled';
 import { useCourseDetailQuery } from '../queries/useCourseQueries';

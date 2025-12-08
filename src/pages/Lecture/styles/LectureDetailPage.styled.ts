@@ -75,16 +75,16 @@ export const NavItem = styled.a<{ $active?: boolean }>`
   padding: 0.4rem 0;
   white-space: nowrap;
 
-  font-weight: ${({ $active, theme }) => ($active ? theme.fontWeight.bold : theme.fontWeight.medium)};
+  font-weight: ${({ $active }) => $active ? 700 : 500};
   color: ${({ $active, theme }) => ($active ? theme.colors.surface : theme.colors.gray300)};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.md};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;
 
 export const NavCta = styled(NavItem)`
-  font-weight: ${({ theme }) => theme.fontWeight.bold};
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.primary300};
 
   &:hover {
@@ -120,19 +120,19 @@ export const StyledBaseSection = {
     gap: 1.2rem;
   `,
   SectionTitle: styled.h3`
-    font-weight: ${({ theme }) => theme.fontWeight.bold};
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-weight: 700;
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
     color: ${({ theme }) => theme.colors.surface};
 
     @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.fontSize.lg};
+      font-size: ${({ theme }) => theme.fontSize.headingMd};
     }
   `,
   SectionSubtitle: styled.p`
     display: flex;
     justify-content: center;
     gap: 0.4rem;
-    font-weight: ${({ theme }) => theme.fontWeight.bold};
+    font-weight: 700;
     font-size: ${({ theme }) => theme.fontSize.md};
     color: ${({ theme }) => theme.colors.primary300};
     text-align: center;

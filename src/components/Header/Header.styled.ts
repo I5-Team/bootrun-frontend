@@ -16,7 +16,7 @@ export const StyledHeader = styled.header`
 
   position: sticky;
   top: 0;
-  z-index: ${({ theme }) => theme.zIndex.sticky};
+  z-index: ${({ theme }) => theme.zIndex.header};
 
   @media ${({ theme }) => theme.devices.tablet} {
     height: 5.6rem;
@@ -58,9 +58,8 @@ export const StyledHeaderInnerAdmin = styled.div`
 
 // logo
 export const StyledLogo = styled.img`
+  display: block;
   width: 12.4rem;
-  height: auto;
-  vertical-align: bottom;
 
   @media ${({ theme }) => theme.devices.tablet} {
     width: 10rem;
@@ -95,6 +94,10 @@ export const StyledIconBtn = styled.button`
   width: 2.4rem;
   padding: 0.15rem;
   aspect-ratio: 1 / 1;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   svg {
     width: 100%;

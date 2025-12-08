@@ -17,16 +17,6 @@ const S = {
     display: flex;
     gap: 0.8rem;
   `,
-  Title: styled.h2`
-    word-break: keep-all;
-    font-size: ${({ theme }) => theme.fontSize.xxl};
-    line-height: 1.4;
-    font-weight: 700;
-
-    @media ${({ theme }) => theme.devices.tablet} {
-      font-size: ${({ theme }) => theme.fontSize.xl};
-    }
-  `,
   Description: styled.p`
     color: ${({ theme }) => theme.colors.gray400};
     word-break: keep-all;
@@ -65,7 +55,7 @@ const S = {
   ScheduleTitle: styled.p`
     display: block;
     line-height: 2.4rem;
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     font-weight: 700;
     color: ${({ theme }) => theme.colors.surface};
     margin-bottom: 1.2rem;

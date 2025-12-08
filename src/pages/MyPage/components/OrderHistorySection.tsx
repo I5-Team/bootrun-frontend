@@ -3,7 +3,7 @@ import { LoadingSpinner, ErrorMessage } from '../../../components/HelperComponen
 import { AxiosError } from 'axios';
 import Tag from '../../../components/Tag';
 import Button from '../../../components/Button';
-import { Container, Title, Header } from '../styles/ProfilePage.styled';
+import { Container, Header } from '../styles/ProfilePage.styled';
 import {
   Card,
   CardHeader,
@@ -18,6 +18,7 @@ import {
 } from '../styles/OrderHistorySection.styled';
 import type { PaymentsItem } from '../../../types/PaymentsType';
 import { usePostPaymentRefund, usePaymentsQuery, useMyRefunds } from '../../../queries/usePaymentsQueries';
+import { Heading2 } from '@/components/Typography';
 
 const paymentLabels: Record<string, string> = {
   card: '카드결제',
@@ -173,7 +174,7 @@ const OrderHistoryPage: React.FC = () => {
   return (
     <Container>
       <Header>
-        <Title as="h2">결제 내역</Title>
+        <Heading2 as="h2">결제 내역</Heading2>
         <FilterGroup role="group" aria-label="결제 내역 필터">
           <Button size="sm"
             variant={filter === 'all' ? 'primary' : 'outline'}

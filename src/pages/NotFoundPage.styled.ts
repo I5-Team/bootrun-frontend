@@ -101,18 +101,18 @@ export const TextWrapper = styled.div`
 export const Title = styled.h1`
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
-  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-size: ${({ theme }) => theme.fontSize.headingXl};
   line-height: 5.6rem;
   color: ${({ theme }) => theme.colors.surface};
   margin: 0;
 
   @media ${({ theme }) => theme.devices.tablet} {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.headingLg};
     line-height: 4.2rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     line-height: 2.4rem;
   }
 `;
@@ -132,7 +132,7 @@ export const Description = styled.p`
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    font-size: ${({ theme }) => theme.mobileFontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.caption};
     line-height: 1.8rem;
   }
 `;

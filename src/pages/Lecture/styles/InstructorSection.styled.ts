@@ -52,7 +52,7 @@ const Instructor = {
   `,
   Name: styled.p`
     white-space: nowrap;
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
     font-weight: 700;
   `,
   SubName: styled.span`

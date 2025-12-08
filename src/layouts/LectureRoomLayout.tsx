@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { LectureRoomContext } from '../contexts/LectureRoomContext';
+import { LectureRoomContext } from '@/pages/Lecture/contexts/LectureRoomContext';
 import Header from '../components/Header/Header';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { StyledMainContainer, StyledWrapper } from './MainLayout';

@@ -104,7 +104,7 @@ export const ChartAreaStyles = {
     border: 1px solid ${({ theme }) => theme.colors.gray200};
     padding: 1.2rem;
     border-radius: ${({ theme }) => theme.radius.sm};
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
     .label {
       font-size: 1.4rem;
       font-weight: 600;

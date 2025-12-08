@@ -19,7 +19,7 @@ const StyledCircleButton = styled.button<{ $isVisible: boolean }>`
     background-color: ${({ theme }) => theme.colors.white};
     border-radius: 50%;
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-    box-shadow: ${({ theme }) => theme.colors.shadow};
+    box-shadow: ${({ theme }) => theme.shadows.md};
 
     z-index: 1000;
 

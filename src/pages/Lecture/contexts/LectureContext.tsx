@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { CoursesDetailItem } from '../types/CourseType';
+import type { CoursesDetailItem } from '@/types/CourseType';
 
 // Context & Provider
 type LectureContextProps = {
