@@ -1,29 +1,27 @@
 import React, { useEffect, type ReactNode } from 'react';
-import styled, { useTheme } from 'styled-components';
-import { Box, Flex } from './Box';
-import { Text } from './Typography';
-
-// (임시) 닫기 아이콘
-const CloseIcon = () => <>X</>;
+import styled from 'styled-components';
+import SvgClose from "@/assets/icons/icon-x.svg?react";
 
 // 기본 모달 컴포넌트 Props 정의
 interface BaseModalProps {
-  /** 모달의 열림/닫힘 상태 */
   isOpen: boolean;
-  /** 닫기 버튼 또는 오버레이 클릭 시 호출될 함수 */
   onClose: () => void;
-  /** 모달의 제목 (선택 사항) */
   title: string;
-  /** 모달의 본문 내용 (React 컴포넌트) */
   children: ReactNode;
-  /** 모달의 하단 버튼 영역 (React 컴포넌트) */
   footer?: ReactNode;
+  hasCloseBtn?: boolean;
 }
 
 // 재사용 가능한 기본 모달 컴포넌트
 // Box와 Typography 컴포넌트를 사용하여 디자인 시스템 적용
-const BaseModal: React.FC<BaseModalProps> = ({ isOpen, onClose, title, children, footer }) => {
-  const theme = useTheme();
+const BaseModal: React.FC<BaseModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  children, 
+  footer,
+  hasCloseBtn = true,
+ }) => {
   const titleId = 'base-modal-title';
   const descriptionId = 'base-modal-description';
 
@@ -43,54 +41,43 @@ const BaseModal: React.FC<BaseModalProps> = ({ isOpen, onClose, title, children,
   }
 
   // 오버레이 클릭 시 닫기
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   return (
-    <Overlay onClick={handleOverlayClick}>
-      <Box
-        width="90%"
-        bg="white"
-        style={{
-          maxWidth: '60rem',
-          borderRadius: theme.radius.md,
-          boxShadow: theme.shadows.lg,
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
-      >
-        <Flex justify="space-between" align="center" p={20} style={{ borderBottom: `1px solid ${theme.colors.gray100}` }}>
-          <Text id={titleId} variant="lg" weight="bold">{title}</Text>
-          <CloseButton onClick={onClose} aria-label="모달 닫기">
-            <CloseIcon />
-          </CloseButton>
-        </Flex>
+    <Overlay onClick={handleClose}>
+        <ModalContainer
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+        >
+        
+        <ModalHeader>
+          {hasCloseBtn && (
+            <CloseButton type="button" onClick={onClose} aria-label="닫기">
+              <SvgClose />
+            </CloseButton>
+          )}
+          <ModalTitle>{title}</ModalTitle>
+        </ModalHeader>
 
-        {/* 1. 본문(children)이 주입되는 곳 */}
-        <Box p={24} style={{ maxHeight: '60vh', overflowY: 'auto' }} id={descriptionId}>
+        <ModalMain>
           {children}
-        </Box>
+        </ModalMain>
 
-        {/* 2. 푸터(footer)가 주입되는 곳 */}
         {footer && (
-          <Flex justify="flex-end" gap={12} p={20} style={{ borderTop: `1px solid ${theme.colors.gray100}` }}>
-            {footer}
-          </Flex>
+          <ModalFooter>{footer}</ModalFooter>
         )}
-      </Box>
+        </ModalContainer>
     </Overlay>
   );
 };
 
 // --- Styles ---
-// Overlay needs fixed position which Box doesn't support directly yet without style prop
 // 모달 배경 오버레이 스타일 (화면 전체 덮음)
 const Overlay = styled.div`
   position: fixed;
@@ -105,12 +92,88 @@ const Overlay = styled.div`
   align-items: center;
 `;
 
+const ModalContainer = styled.div`
+  position: relative;
+  
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  border-radius: ${({ theme }) => theme.radius.md};
+  z-index: ${({ theme }) => theme.zIndex.modal};
+
+  width: fit-content;
+  max-width: 80vw;
+  max-height: 80vh;
+  padding: 2.8rem 3.2rem;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+`;
+
+const ModalHeader = styled.header`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  flex-direction: column;
+  padding-block: 1.2rem;
+`;
+
+const ModalTitle = styled.h2`
+  width: 100%;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fontSize.md};
+  font-weight: 700;
+  line-height: ${({ theme }) => theme.lineHeight.normal};
+  color: ${({ theme }) => theme.colors.surface};
+  margin: 0;
+`;
+
+const ModalMain = styled.main`
+  padding-block: 2rem;
+`;
+
+const ModalFooter = styled.footer`
+  padding-top: 1.2rem;
+`;
+
 const CloseButton = styled.button`
-  background: none;
-  border: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0.8rem;
+  border-radius: ${({ theme }) => theme.radius.xs};
+  color: ${({ theme }) => theme.colors.gray400};
   cursor: pointer;
-  font-size: 1.8rem;
-  color: ${({ theme }) => theme.colors.gray300};
+
+  svg { 
+    width: 100%;
+    height: 100%;
+    path {
+      fill: currentColor;
+    }
+  }
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.surface};
+    background-color: ${({ theme }) => theme.colors.gray100};
+  }
+
+  &:focus-visible {
+    outline-offset: 0.1rem;
+    outline: 0.2rem solid ${({ theme }) => theme.colors.focus};
+  }
 `;
 
 export default BaseModal;

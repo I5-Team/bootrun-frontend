@@ -101,10 +101,21 @@ const AccountSection: React.FC = () => {
         </DangerContent>
       </DangerZone>
 
+      {/* 비밀번호 변경 모달 */}
       <BaseModal
         isOpen={isPwModalOpen}
         onClose={() => setIsPwModalOpen(false)}
         title="비밀번호 변경"
+        footer={
+          <ModalFooter>
+            <Button
+              onClick={handleConfirmPasswordChange}
+              disabled={isChangingPassword}
+            >
+              {isChangingPassword ? '변경 중...' : '변경하기'}
+            </Button>
+          </ModalFooter>
+        }
       >
         <ModalFormGroup>
           <label htmlFor="currentPassword">현재 비밀번호</label>
@@ -147,24 +158,27 @@ const AccountSection: React.FC = () => {
             {pwApiMessage.message}
           </ModalErrorMessage>
         )}
-
-        <ModalFooter>
-          <ModalButton onClick={() => setIsPwModalOpen(false)} disabled={isChangingPassword}>
-            취소
-          </ModalButton>
-          <ModalButton
-            $primary={true}
-            onClick={handleConfirmPasswordChange}
-            disabled={isChangingPassword}
-          >
-            {isChangingPassword ? '변경 중...' : '변경하기'}
-          </ModalButton>
-        </ModalFooter>
       </BaseModal>
+
+      {/* 회원 탈퇴 모달 */}
       <BaseModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         title="회원 탈퇴"
+        footer={
+          <ModalFooter>
+            <ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
+              취소
+            </ModalButton>
+            <ModalButton
+              $danger={true}
+              onClick={handleConfirmWithdrawal}
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
+            </ModalButton>
+          </ModalFooter>        
+        }
       >
         {isDeletingAccount ? (
           <ModalLoadingWrapper>
@@ -195,18 +209,6 @@ const AccountSection: React.FC = () => {
             )}
           </>
         )}
-        <ModalFooter>
-          <ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
-            취소
-          </ModalButton>
-          <ModalButton
-            $danger={true}
-            onClick={handleConfirmWithdrawal}
-            disabled={isDeletingAccount}
-          >
-            {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
-          </ModalButton>
-        </ModalFooter>
       </BaseModal>
     </>
   );
