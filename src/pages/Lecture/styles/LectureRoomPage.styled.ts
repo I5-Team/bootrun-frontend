@@ -7,11 +7,15 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 7rem);
   background-color: ${({ theme }) => theme.colors.white};
   overflow: hidden;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
+
+  @media ${({ theme }) => theme.devices.tablet} {
+    height: calc(100vh - 5.6rem);
+  }
 `;
 
 export const MainContent = styled.div`
@@ -22,19 +26,15 @@ export const MainContent = styled.div`
 `;
 
 export const BreadcrumbBar = styled.div<{ $compact?: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 1.3rem 2rem;
+  padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.colors.white};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fontSize.sm};
-  height: 5rem;
-  z-index: 10;
+  flex-shrink: 0;
+  width: 100%;
 
   @media ${({ theme }) => theme.devices.desktop} {
     font-size: ${({ theme, $compact }) => ($compact ? theme.fontSize.caption : theme.fontSize.sm)};
@@ -177,10 +177,7 @@ export const CenterContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
-  position: relative;
-  padding: 0;
+  min-height: 0;
 `;
 
 export const ContentArea = styled.div`
@@ -189,41 +186,45 @@ export const ContentArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 6rem 2rem 2rem;
-  overflow-y: auto;
+  padding: 0;
+  overflow: hidden;
 
   @media ${({ theme }) => theme.devices.laptop} {
-    padding: 5.5rem 1.5rem 1.5rem;
+    padding: 1.5rem 0 0;
   }
 
   @media ${({ theme }) => theme.devices.tablet} {
-    padding: 5rem 1rem 1rem;
+    padding: 1.5rem 0 0;
+  }
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    padding: 1rem 0 0;
   }
 `;
 
 export const VideoPlayerWrapper = styled.div`
-  width: 80%;
-  max-width: none;
+  width: 100%;
+  max-width: 100rem;
   aspect-ratio: 16 / 9;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
 
-  /* 큰 화면에서는 적당한 크기 */
   @media (min-width: 1440px) {
-    width: 70%;
-    max-width: 120rem;
+    width: 75%;
   }
 
-  /* laptop 사이즈에서 조정 */
   @media ${({ theme }) => theme.devices.laptop} {
-    width: 95%;
+    width: 70%;
   }
 
-  /* tablet에서는 거의 전체 너비 */
   @media ${({ theme }) => theme.devices.tablet} {
-    width: 98%;
+    width: 85%;
+  }
+
+  @media ${({ theme }) => theme.devices.mobile} {
+    width: 90%;
   }
 `;
 
@@ -293,20 +294,19 @@ export const QuizPlaceholder = styled.div`
     font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
-
 export const BottomNavigation = styled.nav`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  padding: 4rem 0rem;
+  padding: 1.5rem 0;
   width: 100%;
-  flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.white};
   border-top: 1px solid ${({ theme }) => theme.colors.gray200};
 
   @media ${({ theme }) => theme.devices.mobile} {
-    padding: 3rem 0rem;
+    padding: 1.2rem 0;
   }
 `;
 
@@ -340,13 +340,11 @@ export const NavButton = styled.button<{ $variant?: 'outline' | 'primary' }>`
   white-space: nowrap;
   position: relative;
 
-  /* 내부 span 요소 정렬 */
   & span {
     display: inline-block;
     vertical-align: middle;
   }
 
-  /* 내부 img 요소 정렬 */
   & img {
     display: inline-block;
     vertical-align: middle;

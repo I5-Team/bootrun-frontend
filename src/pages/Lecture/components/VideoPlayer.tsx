@@ -30,16 +30,28 @@ export default function VideoPlayer({
         width="100%"
         height="100%"
         controls
+        muted={false}
         onProgress={handleProgress}
         onEnded={onEnded}
         onReady={() => {
+          console.log('[VideoPlayer] 비디오 준비 완료');
           if (lastPosition > 0) {
             playerRef.current?.seekTo(lastPosition);
           }
         }}
+        onError={(e) => {
+          console.error('[VideoPlayer] 에러 발생:', e);
+        }}
         config={{
           youtube: {
-            playerVars: { showinfo: 1 },
+            playerVars: {
+              showinfo: 1,
+              fs: 1,
+              modestbranding: 1,
+            },
+            onUnstarted: () => {
+              console.log('[YouTube] Unstarted state');
+            },
           },
         }}
       />
