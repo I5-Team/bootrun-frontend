@@ -78,6 +78,8 @@ export default function AppRouter() {
             <Route element={<MainLayout />}>
               <Route path={ROUTES.LECTURE_PAYMENT} element={<LecturePaymentPage />} />
               <Route path={ROUTES.LECTURE_PAYMENT_RESULT} element={<PaymentResultPage />} />
+              <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentResultPage />} />
+              <Route path={ROUTES.PAYMENT_FAIL} element={<PaymentResultPage />} />
               <Route path={ROUTES.MY_LECTURES} element={<MyLecturePage />} />
 
               <Route path={ROUTES.MYPAGE} element={<MyPageLayout />}>
