@@ -17,6 +17,7 @@ import { getFullImageUrl } from '../../../utils/imageUtils';
 import { SkeletonImage } from '../../../components/Skeleton';
 import { AxiosError } from 'axios';
 import { Heading3 } from '@/components/Typography';
+import { requestTossPayment } from '../../../utils/tossPayments';
 
 export interface Coupon {
   // 기본 정보
@@ -185,12 +186,29 @@ export default function LecturePaymentPage() {
     const resultPath = ROUTES.LECTURE_PAYMENT_RESULT.replace(':id', String(courseId));
 
     postPaymentMutation.mutate(paymentBodyData, {
-      onSuccess: (data) => {
-        if (data?.id) {
-          const paymentId = data.id;
+      onSuccess: async (data) => {
+        if (data && selectedPaymentMethod === 'toss') {
+          try {
+            await requestTossPayment({
+              orderId: data.order_id,
+              amount: data.final_amount,
+              orderName: '부트런 강의 수강권',
+              successUrl: `${window.location.origin}/bootrun-frontend/payment/success?paymentId=${data.id}`,
+              failUrl: `${window.location.origin}/bootrun-frontend/payment/fail`,
+              customerName: '구매자',
+              customerEmail: 'user@example.com',
+            });
+          } catch (error) {
+            console.error('토스 결제 실패:', error);
+            navigate({
+              pathname: resultPath,
+              search: `?status=fail`,
+            });
+          }
+        } else {
           navigate({
             pathname: resultPath,
-            search: `?paymentId=${paymentId}`,
+            search: `?paymentId=${data?.id}`,
           });
         }
       },
