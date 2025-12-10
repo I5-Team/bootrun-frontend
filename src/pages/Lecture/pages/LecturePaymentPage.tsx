@@ -342,7 +342,11 @@ export default function LecturePaymentPage() {
                   onChange={(e) => setIsAgreed(e.target.checked)}
                   aria-describedby="agreement-label"
                 />
-                <S.CustomCheckbox $checked={isAgreed} aria-hidden="true">
+                <S.CustomCheckbox
+                  $checked={isAgreed}
+                  aria-hidden="true"
+                  onClick={() => setIsAgreed(!isAgreed)}
+                >
                   {isAgreed ? <CheckRectActive /> : <CheckRectDefault />}
                 </S.CustomCheckbox>
                 <S.CheckboxLabel htmlFor="agreement" id="agreement-label">
