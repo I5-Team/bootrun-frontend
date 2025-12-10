@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { LoadingDots } from './HelperComponents'
 
 type ButtonVariant = 'primary' | 'outline'
 
@@ -14,6 +15,7 @@ type ButtonProps = {
   size?: ButtonSize,
   fullWidth?: boolean,
   disabled?: boolean,
+  isLoading?: boolean,
   isActive?: boolean,
   iconSvg?: React.ReactNode,
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
@@ -112,6 +114,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   fullWidth,
   disabled,
+  isLoading,
   iconSvg,
   onClick,
   type = 'button',
@@ -131,9 +134,11 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
 
-      <StyledLabel>{children}</StyledLabel>
-
-
+      {isLoading ? (
+        <LoadingDots/>
+      ) : (
+        <StyledLabel>{children}</StyledLabel>
+      )}
     </StyledBaseButton>
   )
 }
