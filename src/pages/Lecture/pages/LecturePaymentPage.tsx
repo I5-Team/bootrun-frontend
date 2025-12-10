@@ -147,7 +147,7 @@ export default function LecturePaymentPage() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>('toss');
 
   // hooks
   const [imgLoaded, setImgLoaded] = useState(false);
