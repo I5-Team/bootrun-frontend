@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../../components/Button';
 import CouponModal from '../components/CouponModal';
 import * as S from '../styles/LecturePaymentPage.styled';
@@ -140,6 +140,9 @@ const PaymentMethodButton = ({
 
 //
 export default function LecturePaymentPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // useState
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
