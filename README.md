@@ -26,7 +26,7 @@
 
 > "강사와 수강생이 함께 성장하는 실무 중심의 학습 플랫폼"
 
-저희 i5팀은 인프런, 클래스101과 같은 기존 이러닝 플랫폼을 벤치마킹하되, 일방적인 영상 시청을 넘어 **체계적인 학습 관리(LMS)**와 **강사-수강생 간의 소통**이 가능한 전문 플랫폼을 구축하고자 했습니다.
+저희 i5팀은 인프런, 클래스101과 같은 기존 이러닝 플랫폼을 벤치마킹하되, 일방적인 영상 시청을 넘어 체계적인 학습 관리(LMS)와 **강사-수강생 간의 소통**이 가능한 전문 플랫폼을 구축하고자 했습니다.
 
 특히 **구체적인 실무 역량**을 기를 수 있는 강의에 초점을 맞춘, 강사와 수강생이 **서로 공존할 수 있는 공간**을 만드는 것이 목표였습니다.
 
@@ -37,65 +37,65 @@
 영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
 
 - **강의실 > 진행률 - Progress Bar**
-<video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"></video>
+  <video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"></video>
 
 - **강의실 > 자료 다운로드 링크 이동**
-<video src="https://github.com/user-attachments/assets/b0678a05-0ed3-488c-937c-e3c6886501f1"></video>
-
+  <video src="https://github.com/user-attachments/assets/b0678a05-0ed3-488c-937c-e3c6886501f1"></video>
 
 #### 강의
 
-강의 목록(필터링), 강의 상세, 수강 신청
+강의 목록(필터링), 강의 상세, 수강 신청, 강의 결제(토스페이)
 
 - **강의 > 강의 목록 필터링**
-<video src="https://github.com/user-attachments/assets/08360770-bbdc-4b76-8b90-d0ef007fef31"></video>
+  <video src="https://github.com/user-attachments/assets/08360770-bbdc-4b76-8b90-d0ef007fef31"></video>
 
 - **강의 > 강의 상세 조회**
-<video src="https://github.com/user-attachments/assets/112d6fb3-f893-41bc-bfd1-e8824f190d66"></video>
+  <video src="https://github.com/user-attachments/assets/112d6fb3-f893-41bc-bfd1-e8824f190d66"></video>
 
 - **강의 > 수강 신청**
-<video src="https://github.com/user-attachments/assets/d7ad3960-9626-4653-9f11-8f8a9c635aeb"></video>
+  <video src="https://github.com/user-attachments/assets/d7ad3960-9626-4653-9f11-8f8a9c635aeb"></video>
 
+- **강의 > 강의 구매**
+  <video src="https://github.com/user-attachments/assets/a41f7d29-1f68-400b-ba4a-1b418638b5ff"></video>
 
 #### 인증
 
 회원가입(이메일 인증), 로그인(JWT)
 
 - **회원가입**
-<video src="https://github.com/user-attachments/assets/fd39c8cc-ecac-42a8-afb0-9a26b2824130"></video>
-
+  <video src="https://github.com/user-attachments/assets/fd39c8cc-ecac-42a8-afb0-9a26b2824130"></video>
 
 - **로그인 > 수강생, 관리자**
-<video src="https://github.com/user-attachments/assets/83fe11a7-bfcb-4467-bd93-2a0b42c7bbb3"></video>
+  <video src="https://github.com/user-attachments/assets/83fe11a7-bfcb-4467-bd93-2a0b42c7bbb3"></video>
 
 #### 마이페이지
 
 내 강의 목록, 프로필 수정(이미지 업로드/삭제), 계정 관리(비밀번호 변경/탈퇴)
 
 - **마이페이지 > 프로필 설정**
-<video src="https://github.com/user-attachments/assets/02787e1c-ff44-4f71-aaa9-f8726c1c847b"></video>
+  <video src="https://github.com/user-attachments/assets/02787e1c-ff44-4f71-aaa9-f8726c1c847b"></video>
 
 - **마이페이지 > 비밀번호 변경/탈퇴**
-<video src="https://github.com/user-attachments/assets/5e1a9ed6-fa76-4d9a-b4cf-289f3d7e3c8e"></video>
+  <video src="https://github.com/user-attachments/assets/5e1a9ed6-fa76-4d9a-b4cf-289f3d7e3c8e"></video>
 
 #### 관리자
 
 대시보드, 강의/사용자/결제 내역 관리
 
 - **관리자 > 대시보드**
-<video src="https://github.com/user-attachments/assets/e28784d0-a656-4246-b1cf-a5e7fe81b914"></video>
+  <video src="https://github.com/user-attachments/assets/e28784d0-a656-4246-b1cf-a5e7fe81b914"></video>
 
 - **관리자 > 강의 관리 > 강의 추가 및 조회**
-<video src="https://github.com/user-attachments/assets/dbd45c34-305c-412d-b584-07b04e60407f"></video>
+  <video src="https://github.com/user-attachments/assets/dbd45c34-305c-412d-b584-07b04e60407f"></video>
 
 - **관리자 > 강의 관리 > 수정 및 삭제, 공개 변경**
-<video src="https://github.com/user-attachments/assets/d96a0806-0b50-4b28-a0a0-0cd167bcc9d1"></video>
+  <video src="https://github.com/user-attachments/assets/d96a0806-0b50-4b28-a0a0-0cd167bcc9d1"></video>
 
 - **관리자 > 결제 관리 > 결제 내역 엑셀 다운로드**
-<video src="https://github.com/user-attachments/assets/72932412-a053-4c36-bb8b-4558f8930bd4"></video>
+  <video src="https://github.com/user-attachments/assets/72932412-a053-4c36-bb8b-4558f8930bd4"></video>
 
 - **관리자 > 사용자 관리 > 조회**
-<video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
+  <video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
 
 ### 2-3. 백엔드 핵심 설계
 
@@ -140,12 +140,12 @@ graph TD
         %% --- Lightsail Instance ---
         subgraph INSTANCE["Lightsail Instance"]
             NGINX[Nginx Reverse Proxy<br/>HTTPS/SSL]
-            
+
             subgraph DOCKER["Docker Compose"]
                 API[FastAPI Container<br/>Uvicorn ASGI Server]
                 REDIS[(Redis Container<br/>Cache & Rate Limit)]
             end
-            
+
             UPLOADS["/uploads Volume<br/>Local File Storage"]
             NGINX --> API
             API --> REDIS
@@ -171,8 +171,8 @@ graph TD
     %% Manual Deployment
     %% ===============================
     MANUAL[Deployment - SSH + docker-compose]
-    
-    
+
+
     %% ===============================
     %% External Services
     %% ===============================
@@ -180,7 +180,7 @@ graph TD
         VIDEO[YouTube / External Video URLs]
     end
 
-   
+
     %% ===============================
     %% API Request 흐름
     %% ===============================
@@ -316,24 +316,24 @@ graph TD
     subgraph Router["Router Layer - 라우터"]
         R[auth.py<br/>API 엔드포인트 정의]
     end
-    
+
     %% Service Layer
     subgraph Service["Service Layer - 서비스"]
         S[user_service.py<br/>비즈니스 로직 처리]
     end
-    
+
     %% Data Layer
     subgraph Data["Data Layer - 데이터"]
         Schema[schemas/user.py<br/>Pydantic 스키마]
         Model[models/user.py<br/>SQLAlchemy 모델]
     end
-    
+
     %% Database
     DB[(PostgreSQL)]
-    
+
     %% Flow
     Client[Client Request]
-    
+
     Client -->|1. POST /api/v1/auth/signup| R
     R -->|2. 요청 데이터 검증| Schema
     R -->|3. 비즈니스 로직 호출| S
@@ -345,7 +345,7 @@ graph TD
     S -->|9. 응답 생성| Schema
     Schema -->|10. JSON 응답| R
     R -->|11. HTTP Response| Client
- ```
+```
 
 - **Router (라우터):** `routers/auth.py`, `routers/admin/dashboard.py`
   - HTTP 요청을 받아 적절한 서비스로 라우팅하는 "진입점" 역할을 합니다.
@@ -373,8 +373,8 @@ bootrun-backend/
 │   │   ├── database.py         # PostgreSQL 연결 및 세션 관리
 │   │   ├── redis.py            # Redis 캐시 초기화 및 관리
 │   │   ├── security.py         # JWT 토큰 생성/검증, 비밀번호 해싱
-│   │   ├── dependencies.py     # FastAPI 의존성 주입 
-│   │   └── logging_config.py   # 구조화된 로깅 설정 
+│   │   ├── dependencies.py     # FastAPI 의존성 주입
+│   │   └── logging_config.py   # 구조화된 로깅 설정
 │   │
 │   ├── models/                 # SQLAlchemy ORM 모델
 │   │   ├── base.py             # 기본 모델 클래스
@@ -389,19 +389,19 @@ bootrun-backend/
 │   │   ├── enrollment.py       # 수강 등록 스키마
 │   │   ├── payment.py          # 결제 스키마
 │   │   ├── admin.py            # 관리자 대시보드 응답 스키마
-│   │   └── common.py           # 공통 응답 스키마 
+│   │   └── common.py           # 공통 응답 스키마
 │   │
 │   ├── routers/                # API 엔드포인트
-│   │   ├── auth.py             # 인증 API 
-│   │   ├── user.py             # 사용자 API 
-│   │   ├── course.py           # 강의 조회 API 
+│   │   ├── auth.py             # 인증 API
+│   │   ├── user.py             # 사용자 API
+│   │   ├── course.py           # 강의 조회 API
 │   │   ├── enrollment.py       # 수강 등록 API
-│   │   ├── payment.py          # 결제 API 
+│   │   ├── payment.py          # 결제 API
 │   │   └── admin/              # 관리자 API
 │   │       ├── dashboard.py    # 대시보드 통계 API
 │   │       ├── users.py        # 사용자 관리 API
-│   │       ├── courses.py      # 강의 관리 API 
-│   │       └── payments.py     # 결제 관리 API 
+│   │       ├── courses.py      # 강의 관리 API
+│   │       └── payments.py     # 결제 관리 API
 │   │
 │   ├── services/               # 비즈니스 로직 계층
 │   │   ├── user_service.py                 # 사용자 서비스
@@ -416,10 +416,10 @@ bootrun-backend/
 │   │   └── rate_limit.py       # API 요청 속도 제한
 │   │
 │   ├── exceptions/             # 커스텀 예외 처리
-│   │   └── responses.py        # 표준화된 에러 응답 
+│   │   └── responses.py        # 표준화된 에러 응답
 │   │
 │   └── utils/                  # 유틸리티 함수
-│       └── file_utils.py       # 파일 업로드/삭제 유틸   
+│       └── file_utils.py       # 파일 업로드/삭제 유틸
 │
 ├── alembic/                    # 데이터베이스 마이그레이션
 │   ├── versions/               # 마이그레이션 버전 파일
@@ -445,7 +445,7 @@ bootrun-backend/
 ├── .dockerignore               # Docker 빌드 시 제외 파일
 ├── requirements.txt            # Python 패키지 의존성
 ├── alembic.ini                # Alembic 설정 파일
-├── .env                       # 환경 변수 
+├── .env                       # 환경 변수
 ├── .env.example               # 환경 변수 예제
 ├── .gitignore                 # Git 제외 파일 목록
 ├── deploy-ec2.sh              # EC2 배포 스크립트
@@ -491,7 +491,7 @@ cd bootrun-backend
 
 # 3. 환경 변수 설정
 cp .env.example .env
-nano .env 
+nano .env
 
 # 4. Docker Compose 실행
 docker-compose up -d --build
@@ -582,8 +582,8 @@ docker-compose ps
 - **김규호 (Front-End, 팀장):** 프로젝트 총괄, 인증(로그인/회원가입), 마이페이지 개발, CI/CD 구축 및 관리
 - **김민주 (Front-End):** 강의 목록, 강의 상세 페이지, UI/UX 디자인 시스템, SEO 및 웹 접근성 구축, 사용자 결제 관리
 - **김채현 (Front-End):** 강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리)
-- **신가람 (Back-End):** DB 설계, 인증/사용자/강의/학습 진행/관리자(강의) API 개발, 서버 배포   
-- **장민경 (Back-End):** 환경 설정(env/config), 결제/관리자(사용자·결제·대시보드) API 개발, 로컬 서버 구축  
+- **신가람 (Back-End):** DB 설계, 인증/사용자/강의/학습 진행/관리자(강의) API 개발, 서버 배포
+- **장민경 (Back-End):** 환경 설정(env/config), 결제/관리자(사용자·결제·대시보드) API 개발, 로컬 서버 구축
 
 # 9. 소감
 
