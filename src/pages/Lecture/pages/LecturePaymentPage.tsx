@@ -102,8 +102,6 @@ interface PaymentMethodInterface {
 
 const paymentMethodList: PaymentMethodInterface[] = [
   { payment_method: 'toss', displayName: '토스페이', icon: tossIcon },
-  { payment_method: 'transfer', displayName: '계좌이체' },
-  { payment_method: 'card', displayName: '신용/체크카드' },
 ];
 
 const PaymentMethodButton = ({
