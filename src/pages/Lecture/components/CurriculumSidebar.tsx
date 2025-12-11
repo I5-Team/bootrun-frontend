@@ -1,7 +1,7 @@
 /**
  * 커리큘럼 사이드바 - 챕터/강의 목록, 완료 상태 표시
  */
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import IconPlay from '../../../assets/icons/icon-play.svg?react';
 import IconPage from '../../../assets/icons/icon-page.svg?react';
 import IconQuiz from '../../../assets/icons/icon-quiz.svg?react';
@@ -33,7 +33,7 @@ interface CurriculumSidebarProps {
   onLectureClick: (lectureId: number) => void;
 }
 
-export default function CurriculumSidebar({ chapters, onLectureClick }: CurriculumSidebarProps) {
+function CurriculumSidebar({ chapters, onLectureClick }: CurriculumSidebarProps) {
   const [expandedChapters, setExpandedChapters] = useState<number[]>([1]); // 첫 번째 챕터는 기본 확장
 
   const toggleChapter = (chapterId: number) => {
@@ -51,13 +51,13 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
   const getLectureIcon = (lectureType: 'video' | 'text' | 'quiz') => {
     switch (lectureType) {
       case 'video':
-        return <IconPlay/>;
+        return <IconPlay />;
       case 'text':
-        return <IconPage/>;
+        return <IconPage />;
       case 'quiz':
-        return <IconQuiz/>;
+        return <IconQuiz />;
       default:
-        return <IconPlay/>;
+        return <IconPlay />;
     }
   };
 
@@ -74,7 +74,7 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
               aria-label={`${chapter.title} ${isExpanded ? '접기' : '펼치기'}`}
             >
               <S.ChapterIcon $isExpanded={isExpanded}>
-                <IconDownArrow/>
+                <IconDownArrow />
                 {/* <img src={IconDownArrow} alt="" /> */}
               </S.ChapterIcon>
               <S.ChapterTitle>{chapter.title}</S.ChapterTitle>
@@ -104,14 +104,14 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
                         {formatDuration(lecture.duration_seconds)}
                       </S.LectureDuration>
                     </S.LectureInfo>
-                    <S.CompletionBadge 
+                    <S.CompletionBadge
                       $isCompleted={lecture.is_completed}
                       aria-label={lecture.is_completed ? '완료' : '미완료'}
                     >
                       {lecture.is_completed ? (
-                        <IconCheckCircleActive/>
+                        <IconCheckCircleActive />
                       ) : (
-                        <IconCheckCircleDefault/>
+                        <IconCheckCircleDefault />
                       )}
                     </S.CompletionBadge>
                   </S.LectureItem>
@@ -124,3 +124,5 @@ export default function CurriculumSidebar({ chapters, onLectureClick }: Curricul
     </S.Container>
   );
 }
+
+export default memo(CurriculumSidebar);

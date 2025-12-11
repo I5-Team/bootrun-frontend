@@ -177,15 +177,14 @@ export default function LectureRoomPage() {
 
     try {
       const courseProgress = await fetchCourseProgress(Number(courseId));
-      console.log('[LectureRoom] 전체 진행률 조회 결과:', courseProgress);
+
       if (courseProgress) {
         const newProgressRate = courseProgress.progress_rate;
-        console.log(`[LectureRoom] 진행률 업데이트: ${newProgressRate}%`);
+
         setLectureData((prev) => {
           if (!prev) return prev;
           // 값이 실제로 변경되었을 때만 새 객체 반환
           if (prev.progress_rate === newProgressRate) {
-            console.log('[LectureRoom] 진행률 변경 없음, 리렌더링 스킵');
             return prev;
           }
           return { ...prev, progress_rate: newProgressRate };
@@ -214,10 +213,6 @@ export default function LectureRoomPage() {
       }
 
       if (progressData?.completion_rate !== undefined) {
-        // 백엔드 디버깅용 로그 (서버 버그 확인용)
-        console.log('[LectureRoom] 서버 응답 - completion_rate:', progressData.completion_rate);
-        console.log('[LectureRoom] 서버 응답 - is_completed:', progressData.is_completed);
-
         // 화면 표시용으로만 0-100 범위로 제한
         const displayRate = Math.min(Math.max(progressData.completion_rate, 0), 100);
 
@@ -226,9 +221,40 @@ export default function LectureRoomPage() {
           setCurrentVideoProgress(displayRate);
         }
 
-        // 백엔드에서 completion_rate 버그 수정 후 뱃지 업데이트 로직 추가 예정
-        // 1) completion_rate가 95-100% 범위일 때만 is_completed
-        // 2) lectureData 업데이트로 커리큘럼 사이드바 뱃지 실시간 반영
+        // 커리큘럼 사이드바 뱃지 색상 실시간 변경
+        if (progressData.is_completed) {
+          setLectureData((prev) => {
+            if (!prev) return prev;
+
+            // 이미 완료된 강의는 업데이트 스킵(최적화 처리)
+            const targetChapter = prev.chapters?.find((ch) =>
+              ch.lectures?.some((lec) => lec.id === targetLectureId)
+            );
+            const targetLecture = targetChapter?.lectures?.find(
+              (lec) => lec.id === targetLectureId
+            );
+
+            // 이미 완료 상태면 업데이트 X
+            if (targetLecture?.is_completed) {
+              return prev;
+            }
+
+            return {
+              ...prev,
+              chapters: prev.chapters?.map((chapter) => ({
+                ...chapter,
+                lectures: chapter.lectures?.map((lecture) =>
+                  lecture.id === targetLectureId ? { ...lecture, is_completed: true } : lecture
+                ),
+              })),
+            };
+          });
+
+          // 현재 강의 완료 상태도 업데이트
+          if (targetLectureId === currentLectureId) {
+            setIsCurrentLectureCompleted(true);
+          }
+        }
       }
     },
     [currentLectureId, isCurrentLectureCompleted]
@@ -248,7 +274,6 @@ export default function LectureRoomPage() {
       }
 
       try {
-        console.log('[LectureRoom] 강의 데이터 로드 시작, courseId:', courseIdNum);
         const data = await fetchLectureRoomData(courseIdNum);
 
         if (data) {
@@ -299,15 +324,9 @@ export default function LectureRoomPage() {
     }));
   }, [currentLectureId, lectureData]);
 
-  const handleLectureClick = (lectureId: number) => {
-    resetLectureProgress();
-    setCurrentLectureId(lectureId);
-  };
-
   // 현재 강의의 자료 URL과 강의 ID를 Layout context에 업데이트
   useEffect(() => {
     if (currentLectureInfo && outletContext?.setCurrentLectureMaterialUrl) {
-      console.log('[LectureRoom] 자료 URL 업데이트:', currentLectureInfo.lecture.material_url);
       outletContext.setCurrentLectureMaterialUrl(currentLectureInfo.lecture.material_url);
     }
     if (outletContext?.setCurrentLectureId) {
@@ -325,6 +344,15 @@ export default function LectureRoomPage() {
     setIsCurrentLectureCompleted(false);
     lastServerSaveTimeRef.current = 0;
   }, []);
+
+  // 강의 클릭 핸들러
+  const handleLectureClick = useCallback(
+    (lectureId: number) => {
+      resetLectureProgress();
+      setCurrentLectureId(lectureId);
+    },
+    [resetLectureProgress]
+  );
 
   // 강의 영상별 진행 정보 조회 (이어보기)
   useEffect(() => {
@@ -364,11 +392,6 @@ export default function LectureRoomPage() {
           }
         } else {
           // 진행 정보가 없으면 초기 상태로 설정 (첫 시청 또는 데이터 없음)
-          console.log(
-            '[LectureRoom] 강의 ID',
-            currentLectureId,
-            '에 대한 진행 정보 없음 (초기 상태)'
-          );
           setLastPosition(0);
           setProgressExists(false);
           // 진행 정보가 없으면 0%로 초기화
@@ -458,19 +481,12 @@ export default function LectureRoomPage() {
           }
         }
 
-        // 전체 진행률 새로고침
-        await refreshCourseProgress();
+        // 완료되면 handleVideoEnded에서 refreshCourseProgress 호출됨
       } catch (err) {
         console.error('[LectureRoom] 진행률 저장 실패:', err);
       }
     },
-    [
-      currentLectureId,
-      progressExists,
-      refreshCourseProgress,
-      isCurrentLectureCompleted,
-      handleProgressResponse,
-    ]
+    [currentLectureId, progressExists, isCurrentLectureCompleted, handleProgressResponse]
   );
 
   // 강의 완료 처리
@@ -614,9 +630,6 @@ export default function LectureRoomPage() {
     const allLectures = getAllLectures();
     return getCurrentLectureIndex() === allLectures.length - 1;
   };
-
-  // 디버깅용 로그
-  console.log('[LectureRoom] 현재 ProgressBar에 전달되는 값:', currentVideoProgress);
 
   // 로딩 상태: lectureData가 없으면 스켈레톤 UI 표시
   if (!lectureData) {
