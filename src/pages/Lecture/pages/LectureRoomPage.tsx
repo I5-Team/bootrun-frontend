@@ -300,6 +300,7 @@ export default function LectureRoomPage() {
   }, [currentLectureId, lectureData]);
 
   const handleLectureClick = (lectureId: number) => {
+    resetLectureProgress();
     setCurrentLectureId(lectureId);
   };
 
@@ -314,6 +315,17 @@ export default function LectureRoomPage() {
     }
   }, [currentLectureId, currentLectureInfo, outletContext]);
 
+  // 마지막 서버 저장 시간 추적
+  const lastServerSaveTimeRef = useRef<number>(0);
+  const SERVER_SAVE_INTERVAL = 5; // 초 단위
+
+  // 강의 진도율 리셋 함수
+  const resetLectureProgress = useCallback(() => {
+    setCurrentVideoProgress(0);
+    setIsCurrentLectureCompleted(false);
+    lastServerSaveTimeRef.current = 0;
+  }, []);
+
   // 강의 영상별 진행 정보 조회 (이어보기)
   useEffect(() => {
     const loadLectureProgress = async () => {
@@ -321,6 +333,9 @@ export default function LectureRoomPage() {
 
       // 새 강의로 바뀌면 완료 플래그 리셋
       isMovingToNextRef.current = false;
+
+      // 강의 변경 시 즉시 진도율 0으로 리셋
+      resetLectureProgress();
 
       try {
         const progressData = await fetchLectureProgress(currentLectureId);
@@ -382,20 +397,27 @@ export default function LectureRoomPage() {
     };
 
     loadLectureProgress();
-  }, [currentLectureId, currentLectureInfo]);
+  }, [currentLectureId, currentLectureInfo, resetLectureProgress]);
 
-  // 진행률 저장 (5초마다 자동 호출됨)
+  // 진행률 업데이트 (실시간) 및 저장 (5초마다)
   const handleVideoProgress = useCallback(
     async (playedSeconds: number, totalSeconds: number) => {
       if (!currentLectureId) return;
 
       const completionRate = totalSeconds > 0 ? (playedSeconds / totalSeconds) * 100 : 0;
 
-      // 완료된 강의면 진도율 업데이트 하지 않음 (100% 유지)
-      if (!isCurrentLectureCompleted) {
-        setCurrentVideoProgress(completionRate);
-        setCurrentVideoDuration(totalSeconds);
-      }
+      setCurrentVideoProgress(completionRate);
+      setCurrentVideoDuration(totalSeconds);
+
+      // 완료된 강의는 서버 저장 스킵
+      if (isCurrentLectureCompleted) return;
+
+      // 서버 저장은 5초 간격으로만 수행
+      const shouldSaveToServer =
+        playedSeconds - lastServerSaveTimeRef.current >= SERVER_SAVE_INTERVAL;
+      if (!shouldSaveToServer) return;
+
+      lastServerSaveTimeRef.current = playedSeconds;
 
       try {
         if (progressExists) {
@@ -436,7 +458,7 @@ export default function LectureRoomPage() {
           }
         }
 
-        // 전체 진행률 새로고침 (매번)
+        // 전체 진행률 새로고침
         await refreshCourseProgress();
       } catch (err) {
         console.error('[LectureRoom] 진행률 저장 실패:', err);
@@ -514,6 +536,7 @@ export default function LectureRoomPage() {
       const currentIndex = allLectures.findIndex((lec) => lec.id === currentLectureId);
       if (currentIndex >= 0 && currentIndex < allLectures.length - 1) {
         setTimeout(() => {
+          resetLectureProgress();
           setCurrentLectureId(allLectures[currentIndex + 1].id);
           scrollToTop();
         }, 1000); // 1초 후 다음 강의로 이동
@@ -529,6 +552,7 @@ export default function LectureRoomPage() {
     lectureData,
     isCurrentLectureCompleted,
     handleProgressResponse,
+    resetLectureProgress,
   ]);
 
   // 화면 맨 위로 부드럽게 스크롤
@@ -564,11 +588,12 @@ export default function LectureRoomPage() {
     const currentIndex = getCurrentLectureIndex();
 
     if (currentIndex > 0) {
+      resetLectureProgress();
       setCurrentLectureId(allLectures[currentIndex - 1].id);
       scrollToTop();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLectureId, lectureData]);
+  }, [currentLectureId, lectureData, resetLectureProgress]);
 
   // 다음 강의로 이동
   const handleNextLecture = useCallback(() => {
@@ -576,11 +601,12 @@ export default function LectureRoomPage() {
     const currentIndex = getCurrentLectureIndex();
 
     if (currentIndex < allLectures.length - 1) {
+      resetLectureProgress();
       setCurrentLectureId(allLectures[currentIndex + 1].id);
       scrollToTop();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLectureId, lectureData]);
+  }, [currentLectureId, lectureData, resetLectureProgress]);
 
   // 현재 강의가 첫 번째/마지막 강의인지 확인
   const isFirstLecture = getCurrentLectureIndex() === 0;
