@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 // header
@@ -57,12 +58,17 @@ export const StyledHeaderInnerAdmin = styled.div`
 `;
 
 // logo
-export const StyledLogo = styled.img`
-  display: block;
-  width: 12.4rem;
+export const StyledLogoLink = styled(Link)`
+  svg {
+    display: block;
+    width: 12.4rem;
+    height: auto;
+  }
 
   @media ${({ theme }) => theme.devices.tablet} {
-    width: 10rem;
+    svg {
+      width: 10rem;
+    }
   }
 `;
 
