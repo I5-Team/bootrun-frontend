@@ -19,7 +19,7 @@ import type { CourseType } from "../types/CourseType";
 import { useRef, useState } from "react";
 import { usePageMeta } from "../hooks/usePageMeta";
 import { Heading2 } from "@/components/Typography";
-import { useClickAnimation } from "@/animations/ButtonAnimation";
+import { useButtonClickAnimation } from "@/animations/ButtonAnimation";
 
 
 const CategoryBtn = ({ icon, title, onClick }: { 
@@ -28,7 +28,7 @@ const CategoryBtn = ({ icon, title, onClick }: {
     onClick?: () => void
 }) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
-    useClickAnimation(buttonRef);
+    useButtonClickAnimation(buttonRef);
     
     return (
         <StyledCategoryBtn type="button" onClick={onClick} ref={buttonRef}>

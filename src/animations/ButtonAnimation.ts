@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { useEffect } from "react";
 
-export const useClickAnimation = (
+export const useButtonClickAnimation = (
     ref: React.RefObject<HTMLButtonElement | HTMLAnchorElement>
 ) => {
     useEffect(() => {
