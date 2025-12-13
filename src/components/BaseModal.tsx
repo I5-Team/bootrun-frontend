@@ -1,6 +1,7 @@
-import React, { useEffect, type ReactNode } from 'react';
+import React, { useEffect, useRef, type ReactNode } from 'react';
 import styled from 'styled-components';
 import SvgClose from "@/assets/icons/icon-x.svg?react";
+import { useModalAnimation } from '@/animations/ModalAnimation';
 
 // 기본 모달 컴포넌트 Props 정의
 interface BaseModalProps {
@@ -25,6 +26,10 @@ const BaseModal: React.FC<BaseModalProps> = ({
   const titleId = 'base-modal-title';
   const descriptionId = 'base-modal-description';
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const backdropRef = useRef<HTMLDivElement | null>(null);
+  useModalAnimation(modalRef, backdropRef, isOpen);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleEscapeKey = (e: KeyboardEvent) => {
@@ -36,10 +41,6 @@ const BaseModal: React.FC<BaseModalProps> = ({
     return () => document.removeEventListener('keydown', handleEscapeKey);
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   // 오버레이 클릭 시 닫기
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -48,14 +49,14 @@ const BaseModal: React.FC<BaseModalProps> = ({
   };
 
   return (
-    <Overlay onClick={handleClose}>
+    <Overlay onClick={handleClose} ref={backdropRef}>
         <ModalContainer
+          ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
         >
-        
         <ModalHeader>
           {hasCloseBtn && (
             <CloseButton type="button" onClick={onClose} aria-label="닫기">
