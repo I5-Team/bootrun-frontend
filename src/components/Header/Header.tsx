@@ -25,7 +25,6 @@ import {
   StyledHeaderInnerLogo,
   StyledIconBtn,
   StyledHeaderInnerAdmin,
-  StyledDevBadge,
   StyledActionList,
   StyledLogoLink,
 } from './Header.styled.ts';
@@ -38,8 +37,6 @@ import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownBtn } from '../ProfileDropdown.tsx';
 import Logo from '../Logo.tsx';
 
-const APP_ENV = import.meta.env.VITE_APP_ENV;
-
 
 // ==================================
 // default Header Components
@@ -47,24 +44,12 @@ const APP_ENV = import.meta.env.VITE_APP_ENV;
 
 // 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
-  const isDev = APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local'));
-
   return (
-    !isDev ? (
-    <span style={{ display: 'flex' }}>
-      <StyledLogoLink to={ROUTES.HOME}>
-        <h1 className="sr-only">bootRun</h1>
-        <Logo variant='animation'/>
-      </StyledLogoLink>
-      <StyledDevBadge>{APP_ENV}</StyledDevBadge>
-    </span>
-    ) : (
       <StyledLogoLink to={ROUTES.HOME}>
         <h1 className="sr-only">bootRun</h1>
         <Logo variant='animation'/>
       </StyledLogoLink>
     )
-  );
 };
 
 const NavList = () => {
