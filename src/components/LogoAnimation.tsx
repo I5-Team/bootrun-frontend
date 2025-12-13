@@ -5,9 +5,10 @@ export default function LogoAnimation() {
     const rocketRef = useRef<SVGGElement | null>(null);
     const dotTopRef = useRef<SVGPathElement | null>(null);
     const dotBottomRef = useRef<SVGPathElement | null>(null);
-    const tl = gsap.timeline();
+    const tl = useRef<gsap.core.Timeline | null>(null);
 
     useEffect(() => {
+        // 초기 상태
         gsap.set(rocketRef.current, {
             scale: 0,
             rotate: 0,
@@ -24,43 +25,59 @@ export default function LogoAnimation() {
             scale: 1,
             y: 0,
             transformOrigin: '50% 50%',
-        });       
+        });   
+        
+        // timeline Ref
+        tl.current = gsap.timeline({
+            paused: true,
+            defaults: {
+                overwrite: 'auto',
+            },
+        });
+
+        tl.current
+            .addLabel('dots-out')
+            .to(dotTopRef.current, {
+                y: 40,
+                scale: 0,
+                duration: 0.4,
+                ease: "power3.in",
+            }, 'dots-out')
+            .to(dotBottomRef.current, {
+                scale: 0,
+                duration: 0.1,
+                ease: "power3.in",
+            }, ">-0.1")
+            
+            .addLabel('rocket-in')
+            .to(rocketRef.current, {
+                y: -120,
+                x: 14,
+                scale: 3.5,
+                rotation: 45,
+                duration: 0.6,
+                ease: "power3.out",
+            }, ">")
+
+            .addLabel('rocket-out')
+            .to(rocketRef.current, {
+                y: 0,
+                scale: 0,
+                duration: 0.4,
+                rotation: 0,
+                ease: "power3.in",
+            },"rocket-out")
+            .to([dotTopRef.current, dotBottomRef.current], {
+                y: 0,
+                scale: 1,
+                duration: 0.4,
+                ease: "power3.in",
+            }, ">-0.3")    
     }, []);
 
     const handleEnter = () => {
-        tl.clear()
-        .to(dotTopRef.current, {
-            y: 40,
-            scale: 0,
-            duration: 0.4,
-            ease: "power3.in",
-        })
-        .to(dotBottomRef.current, {
-            scale: 0,
-            duration: 0.1,
-            ease: "power3.in",
-        }, "-=0.1")
-        .to(rocketRef.current, {
-            y: -120,
-            x: 10,
-            scale: 3.5,
-            rotation: 45,
-            duration: 0.6,
-            ease: "power3.out",
-        }, "-=0.1")
-        .to(rocketRef.current, {
-            y: 0,
-            scale: 0,
-            duration: 0.4,
-            rotation: 0,
-            ease: "power3.in",
-        },"=0.2")
-        .to([dotTopRef.current, dotBottomRef.current], {
-            y: 0,
-            scale: 1,
-            duration: 0.4,
-            ease: "power3.in",
-        }, "-=0.4")    
+        if (!tl.current || tl.current.isActive()) return;
+        tl.current?.restart();
     };
 
     return (
