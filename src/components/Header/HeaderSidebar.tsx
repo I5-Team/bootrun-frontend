@@ -11,7 +11,7 @@ const StyledSidebar = styled.aside<{ $isOpen: boolean }>`
     right: 0;
     width: 29rem;
     height: 100vh;
-    z-index: 1000;
+    z-index: ${({ theme }) => theme.zIndex.sidebar};
 
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 0.1rem solid ${({ theme }) => theme.colors.gray200};

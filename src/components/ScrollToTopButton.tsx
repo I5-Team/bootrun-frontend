@@ -21,7 +21,7 @@ const StyledCircleButton = styled.button<{ $isVisible: boolean }>`
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     box-shadow: ${({ theme }) => theme.shadows.md};
 
-    z-index: 1000;
+    z-index: ${({ theme }) => theme.zIndex.fixed};
 
     svg {
         width: auto;
