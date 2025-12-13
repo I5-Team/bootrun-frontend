@@ -7,13 +7,11 @@ import { useVerifyAuth } from './queries/useAuthQueries';
 
 function App() {
   const { isLoading } = useVerifyAuth();
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <AppRouter />
+      {isLoading ? <LoadingSpinner/> : <AppRouter />}
     </ThemeProvider>
   );
 }
