@@ -16,15 +16,14 @@ import {
   DangerZone,
   EmailInput,
   FormLabel,
-  ModalButton,
   ModalErrorMessage,
-  ModalFooter,
   ModalFormGroup,
   ModalInput,
   ModalLoadingWrapper,
   FormGroup,
 } from '../styles/AccountSection.styled';
 import { Heading2 } from '@/components/Typography';
+import SvgArrowDown from '@/assets/icons/icon-arrow-down.svg?react';
 
 const AccountSection: React.FC = () => {
   const { data, isLoading: loading, error } = useProfile();
@@ -91,13 +90,15 @@ const AccountSection: React.FC = () => {
       <DangerZone>
         <DangerSummary>
           <span>회원 탈퇴</span>
-          <ArrowIcon aria-hidden="true" />
+          <ArrowIcon>
+            <SvgArrowDown/>
+          </ArrowIcon>
         </DangerSummary>
         <DangerContent>
           <DangerDescription>
             회원 탈퇴 시 계정의 모든 정보가 영구적으로 삭제되며 복구할 수 없습니다.
           </DangerDescription>
-          <Button onClick={() => setIsDeleteModalOpen(true)}>회원 탈퇴하기</Button>
+          <Button variant="alert" onClick={() => setIsDeleteModalOpen(true)}>회원 탈퇴하기</Button>
         </DangerContent>
       </DangerZone>
 
@@ -107,14 +108,16 @@ const AccountSection: React.FC = () => {
         onClose={() => setIsPwModalOpen(false)}
         title="비밀번호 변경"
         footer={
-          <ModalFooter>
+          <>
             <Button
+              fullWidth
               onClick={handleConfirmPasswordChange}
               disabled={isChangingPassword}
+              isLoading={isChangingPassword}
             >
-              {isChangingPassword ? '변경 중...' : '변경하기'}
+              변경하기
             </Button>
-          </ModalFooter>
+          </>
         }
       >
         <ModalFormGroup>
@@ -166,18 +169,17 @@ const AccountSection: React.FC = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         title="회원 탈퇴"
         footer={
-          <ModalFooter>
-            <ModalButton onClick={() => setIsDeleteModalOpen(false)} disabled={isDeletingAccount}>
-              취소
-            </ModalButton>
-            <ModalButton
-              $danger={true}
+          <>
+            <Button
+              fullWidth
+              variant="alert"
               onClick={handleConfirmWithdrawal}
               disabled={isDeletingAccount}
+              isLoading={isDeletingAccount}
             >
-              {isDeletingAccount ? '탈퇴 중...' : '탈퇴'}
-            </ModalButton>
-          </ModalFooter>        
+              탈퇴하기
+            </Button>
+          </>        
         }
       >
         {isDeletingAccount ? (

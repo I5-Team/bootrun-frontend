@@ -70,7 +70,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
         </ModalMain>
 
         {footer && (
-          <ModalFooter>{footer}</ModalFooter>
+          <footer>{footer}</footer>
         )}
         </ModalContainer>
     </Overlay>
@@ -101,16 +101,17 @@ const ModalContainer = styled.div`
   z-index: ${({ theme }) => theme.zIndex.modal};
 
   width: fit-content;
-  max-width: 80vw;
+  min-width: 44rem;
   max-height: 80vh;
   padding: 2.8rem 3.2rem;
 
   display: flex;
   flex-direction: column;
   position: relative;
+  gap: 2.4rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    max-width: 90vw;
+    min-width: 90vw;
     max-height: 85vh;
   }
 `;
@@ -135,11 +136,7 @@ const ModalTitle = styled.h2`
 `;
 
 const ModalMain = styled.main`
-  padding-block: 2rem;
-`;
-
-const ModalFooter = styled.footer`
-  padding-top: 1.2rem;
+  overflow: auto;
 `;
 
 const CloseButton = styled.button`
