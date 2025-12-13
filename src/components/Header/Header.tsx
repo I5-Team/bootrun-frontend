@@ -7,7 +7,6 @@ import { useLectureRoom } from '@/pages/Lecture/contexts/LectureRoomContext.tsx'
 import { useProfile } from '../../queries/useUserQueries.ts';
 import { getFullImageUrl } from '../../utils/imageUtils.ts';
 
-
 // svg
 import SvgHamberger from '@/assets/icons/icon-hambuger.svg?react';
 import SvgDownload from '@/assets/icons/icon-download-folder.svg?react';
@@ -37,9 +36,9 @@ import Profile from '../Profile.tsx';
 import SearchForm from '../SearchForm.tsx';
 import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownBtn } from '../ProfileDropdown.tsx';
+import Logo from '../Logo.tsx';
 
 const APP_ENV = import.meta.env.VITE_APP_ENV;
-import LogoAnimation from '../LogoAnimation';
 
 
 // ==================================
@@ -55,14 +54,14 @@ const HeaderLogo = () => {
     <span style={{ display: 'flex' }}>
       <StyledLogoLink to={ROUTES.HOME}>
         <h1 className="sr-only">bootRun</h1>
-        <LogoAnimation/>
+        <Logo variant='animation'/>
       </StyledLogoLink>
       <StyledDevBadge>{APP_ENV}</StyledDevBadge>
     </span>
     ) : (
       <StyledLogoLink to={ROUTES.HOME}>
         <h1 className="sr-only">bootRun</h1>
-        <LogoAnimation/>
+        <Logo variant='animation'/>
       </StyledLogoLink>
     )
   );

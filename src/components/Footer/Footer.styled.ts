@@ -39,7 +39,7 @@ export const StyledColumnGroup = styled.div`
     gap: 1.8rem 0;
 `;
 
-export const StyledCopyright = styled.div`
+export const StyledCopyright = styled.span`
     flex: 1 0 100%;
     width: 100%;
 
@@ -53,6 +53,7 @@ export const StyledCopyright = styled.div`
 
     svg {
         width: clamp(10rem, 10vw, 13rem);
+        height: auto;
     }
 
     svg path {
