@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { LoadingDots } from './HelperComponents'
+import { useClickAnimation } from '@/animations/ButtonAnimation'
 
 type ButtonVariant = 'primary' | 'outline'
 
@@ -120,8 +121,12 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'button',
   ariaLabel,
 }: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useClickAnimation(buttonRef);
+
   return (
     <StyledBaseButton
+      ref={buttonRef}
       as={as}
       to={to}
       {...(type ? { type } : {})}
