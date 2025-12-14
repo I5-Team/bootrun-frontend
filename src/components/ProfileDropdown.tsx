@@ -123,11 +123,11 @@ export const ProfileDropdown = ({
         </StyledItemWrapper>
       ) : (
         <StyledItemWrapper>
-          <StyledItem as={Link} to="*">
+          <StyledItem as={Link} to={ROUTES.ABOUT}>
             부트런 소개
           </StyledItem>
-          <StyledItem as={Link} to="*">
-            수강생 후기
+          <StyledItem as={Link} to={ROUTES.ABOUT_TEAM}>
+            Team I5
           </StyledItem>
         </StyledItemWrapper>
       )}
