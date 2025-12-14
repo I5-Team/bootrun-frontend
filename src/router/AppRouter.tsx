@@ -33,7 +33,7 @@ const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
 const IntroPage = lazy(() => import('../pages/Intro/IntroPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
-const ReviewPage = lazy(() => import('../pages/ReviewPage'));
+const AboutTeamPage = lazy(() => import('../pages/AboutTeam/pages/AboutTeamPage'));
 const OrderHistorySection = lazy(() => import('../pages/MyPage/components/OrderHistorySection'));
 const AccountSection = lazy(() => import('../pages/MyPage/components/AccountSection'));
 
@@ -65,7 +65,7 @@ export default function AppRouter() {
           <Route element={<MainLayout />}>
             <Route path={ROUTES.HOME} element={<MainPage />} />
             <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-            <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
+            <Route path={ROUTES.ABOUT_TEAM} element={<AboutTeamPage />} />
             <Route path={ROUTES.LECTURE_LIST} element={<LectureListPage />} />
             <Route path={ROUTES.LECTURE_LIST_SEARCH} element={<LectureSearchPage />} />
           </Route>
