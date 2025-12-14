@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { LetterStatus } from '../../../types/AboutTeamType';
 import { TARGET_WORD, KOREAN_KEY_MAP } from '../constants/keyboardLayout';
 
@@ -97,7 +97,6 @@ export function useTypingGame(onSuccess: () => void) {
     window.addEventListener('keydown', handleTypingGameKey);
     return () => window.removeEventListener('keydown', handleTypingGameKey);
   }, [showTypingGame, processKeyPress]);
-
 
   return {
     showTypingGame,
