@@ -26,20 +26,51 @@ export const EasterEggSuccessPopupStyles = {
     border: 0.3rem solid ${({ theme }) => theme.colors.primary300};
     max-width: 50rem;
     margin: 0;
-    font-size: ${({ theme }) => theme.fontSize.lg};
-    font-weight: 700;
 
     @media ${({ theme }) => theme.devices.mobile} {
-      padding: 2.5rem 3rem;
-      max-width: 85%;
+      padding: 3rem 3.5rem;
+      max-width: 92%;
+      min-height: 20rem;
+    }
+  `,
+
+  SuccessMessageContent: styled.div`
+    font-size: ${({ theme }) => theme.fontSize.lg};
+    line-height: 1.6;
+    opacity: 0.95;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+
+    span {
+      word-break: keep-all;
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
       font-size: ${({ theme }) => theme.fontSize.lg};
+      gap: 1.5rem;
+    }
+
+    @media ${({ theme }) => theme.devices.laptop} {
+      font-size: ${({ theme }) => theme.fontSize.md};
     }
   `,
 
   SuccessMessageHighlightedText: styled.span`
-    display: inline-block;
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    display: block;
+    font-size: ${({ theme }) => theme.fontSize.headingMd};
     color: ${({ theme }) => theme.colors.primary300};
+    font-weight: 700;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.headingLg};
+    }
+
+    @media ${({ theme }) => theme.devices.laptop} {
+      font-size: ${({ theme }) => theme.fontSize.md};
+    }
   `,
 };
 

@@ -37,10 +37,16 @@ export default function HeroSection({
         />
       )}
 
+      {isEasterEggUnlocked && (
+        <S.RocketImageContainer>
+          <S.StaticRocketImage src={rocketImage} alt="부트런 이스터에그" />
+        </S.RocketImageContainer>
+      )}
       <S.Title>
-        {isEasterEggUnlocked && <S.StaticRocketImage src={rocketImage} alt="BootRun" />}
-        TEAM <S.ClickableI5>I5</S.ClickableI5>
-        <TooltipI5 show={showI5Tooltip} onToggle={() => setShowI5Tooltip(!showI5Tooltip)} />{' '}
+        <S.TitleText>
+          TEAM <S.ClickableI5>I5</S.ClickableI5>
+          <TooltipI5 show={showI5Tooltip} onToggle={() => setShowI5Tooltip(!showI5Tooltip)} />
+        </S.TitleText>{' '}
         개발자 소개
       </S.Title>
       <S.Subtitle>

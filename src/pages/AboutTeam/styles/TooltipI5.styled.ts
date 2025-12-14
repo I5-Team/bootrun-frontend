@@ -84,11 +84,13 @@ export const TooltipI5Styles = {
     }
 
     @media ${({ theme }) => theme.devices.mobile} {
-      font-size: ${({ theme }) => theme.fontSize.caption};
-      padding: 1rem 1.2rem;
+      font-size: ${({ theme }) => theme.fontSize.sm};
+      padding: 1.2rem 1.6rem;
       white-space: normal;
-      max-width: 20rem;
+      max-width: calc(100vw - 4rem);
+      width: max-content;
       text-align: center;
+      line-height: 1.5;
     }
   `,
 };
