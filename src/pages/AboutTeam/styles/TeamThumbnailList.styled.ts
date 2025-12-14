@@ -12,34 +12,33 @@ export const TeamThumbnailListStyles = {
       width: 100%;
       overflow-x: auto;
       overflow-y: hidden;
-      padding-bottom: 1rem;
+      padding-bottom: 1.2rem;
       -webkit-overflow-scrolling: touch;
-      scrollbar-color: ${({ theme }) => theme.colors.primary300} ${({ theme }) => theme.colors.gray200};
-      scrollbar-width: thin;
+      scrollbar-color: ${({ theme }) => theme.colors.primary300} transparent;
+      scrollbar-width: auto;
 
       &::-webkit-scrollbar {
-        height: 0.8rem;
+        height: 1.2rem;
         -webkit-appearance: none;
       }
 
       &::-webkit-scrollbar-track {
-        background: ${({ theme }) => theme.colors.gray200};
-        border-radius: 0.4rem;
+        background: transparent;
+        border-radius: 0.6rem;
       }
 
       &::-webkit-scrollbar-thumb {
         background: ${({ theme }) => theme.colors.primary300};
-        border-radius: 0.4rem;
-        border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
-        min-width: 4rem;
+        border-radius: 0.6rem;
+        min-width: 6rem;
       }
 
       &::-webkit-scrollbar-thumb:hover {
-        background: ${({ theme }) => theme.colors.primaryDark};
+        background: ${({ theme }) => theme.colors.primary300};
       }
 
       &::-webkit-scrollbar-thumb:active {
-        background: ${({ theme }) => theme.colors.primaryDark};
+        background: ${({ theme }) => theme.colors.primary300};
       }
     }
 
