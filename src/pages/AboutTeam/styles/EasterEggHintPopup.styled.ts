@@ -28,8 +28,9 @@ export const EasterEggHintPopupStyles = {
     margin: 0;
 
     @media ${({ theme }) => theme.devices.mobile} {
-      padding: 2.5rem 3rem;
-      max-width: 85%;
+      padding: 3rem 3.5rem;
+      max-width: 92%;
+      min-height: 20rem;
     }
   `,
 
@@ -47,6 +48,11 @@ export const EasterEggHintPopupStyles = {
       word-break: keep-all;
     }
 
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.lg};
+      gap: 1.5rem;
+    }
+
     @media ${({ theme }) => theme.devices.laptop} {
       font-size: ${({ theme }) => theme.fontSize.md};
     }
@@ -61,6 +67,10 @@ export const EasterEggHintPopupStyles = {
     display: block;
     font-size: ${({ theme }) => theme.fontSize.headingMd};
     font-weight: 700;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      font-size: ${({ theme }) => theme.fontSize.headingLg};
+    }
 
     @media ${({ theme }) => theme.devices.laptop} {
       font-size: ${({ theme }) => theme.fontSize.md};

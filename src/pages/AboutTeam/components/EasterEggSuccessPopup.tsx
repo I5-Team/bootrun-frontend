@@ -22,9 +22,10 @@ export default function EasterEggSuccessPopup({ show }: EasterEggSuccessPopupPro
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
-            <S.SuccessMessageHighlightedText>이스터에그 해제!</S.SuccessMessageHighlightedText>
-            <br />
-            <span>개발자 소개에 숨겨진 스토리가 나타났어요.</span>
+            <S.SuccessMessageContent>
+              <S.SuccessMessageHighlightedText>이스터에그 해제!</S.SuccessMessageHighlightedText>
+              <span>개발자 소개에 숨겨진 스토리가 나타났어요.</span>
+            </S.SuccessMessageContent>
           </S.SuccessMessage>
         </>
       )}

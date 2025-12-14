@@ -11,20 +11,35 @@ export const TeamThumbnailListStyles = {
       flex-direction: row;
       width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
       padding-bottom: 1rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-color: ${({ theme }) => theme.colors.primary300} ${({ theme }) => theme.colors.gray200};
+      scrollbar-width: thin;
 
       &::-webkit-scrollbar {
-        height: 0.6rem;
+        height: 0.8rem;
+        -webkit-appearance: none;
       }
 
       &::-webkit-scrollbar-track {
         background: ${({ theme }) => theme.colors.gray200};
-        border-radius: 0.3rem;
+        border-radius: 0.4rem;
       }
 
       &::-webkit-scrollbar-thumb {
         background: ${({ theme }) => theme.colors.primary300};
-        border-radius: 0.3rem;
+        border-radius: 0.4rem;
+        border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
+        min-width: 4rem;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: ${({ theme }) => theme.colors.primaryDark};
+      }
+
+      &::-webkit-scrollbar-thumb:active {
+        background: ${({ theme }) => theme.colors.primaryDark};
       }
     }
 
