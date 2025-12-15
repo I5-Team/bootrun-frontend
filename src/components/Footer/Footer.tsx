@@ -11,12 +11,14 @@ import SvgInstagram from "../../assets/icons/icon-sns-instagram.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 import SvgLogo from "../../assets/logos/logo-typo.svg?react";
 import SvgArrowDown from "../../assets/icons/icon-arrow-down.svg?react";
+import { ROUTES } from "@/router/RouteConfig";
+import { Link } from "react-router-dom";
 
 
 const LogoCopyright = () => {
     return (
         <StyledCopyright>
-            <SvgLogo/>
+            <SvgLogo />
             <p>© BootRun All rights reserved</p>
         </StyledCopyright>
     )
@@ -37,42 +39,37 @@ const Links = () => {
     return (
         <Flex as="ul" gap={8}>
             <StyledLinkItem>
-                <a
-                    href="/"
-                    aria-label="홈으로 이동"
-                ><SvgHome /></a>
+                <Link to={ROUTES.HOME}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                >
+
+                    <SvgHome />
+                </Link>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a
-                    href="https://www.inflearn.com/" target="_blank"
-                    aria-label="인프런으로 이동"
-                ><SvgInflearn /></a>
+                <Link to="https://www.inflearn.com/" target="_blank">
+                    <SvgInflearn />
+                </Link>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a
-                    href="https://www.youtube.com/"
-                    target="_blank"
-                    aria-label="유튜브로 이동"
-                ><SvgYoutube /></a>
+                <Link to="https://www.youtube.com/" target="_blank">
+                    <SvgYoutube />
+                </Link>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a
-                    href="https://section.blog.naver.com/" target="_blank"
-                    aria-label="블로그로 이동"
-                ><SvgBlog /></a>
+                <Link to="https://section.blog.naver.com/" target="_blank">
+                    <SvgBlog />
+                </Link>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a
-                    href="https://www.instagram.com/" target="_blank"
-                    aria-label="인스타그램으로 이동"
-                ><SvgInstagram /></a>
+                <Link to="https://www.instagram.com/" target="_blank">
+                    <SvgInstagram />
+                </Link>
             </StyledLinkItem>
             <StyledLinkItem>
-                <a
-                    href="https://discord.com/"
-                    target="_blank"
-                    aria-label="디스코드로 이동"
-                ><SvgDiscord /></a>
+                <Link to="https://discord.com/" target="_blank">
+                    <SvgDiscord />
+                </Link>
             </StyledLinkItem>
         </Flex>
     )

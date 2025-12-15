@@ -50,14 +50,18 @@ const HeaderLogo = () => {
 
   return isDev ? (
     <span style={{ display: 'flex' }}>
-      <Link to={ROUTES.HOME}>
+      <Link to={ROUTES.HOME}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
         <h1 className="sr-only">bootRun</h1>
         <StyledLogo src={logo} alt="" width={124} height={24} />
       </Link>
       <StyledDevBadge>{APP_ENV}</StyledDevBadge>
     </span>
   ) : (
-    <Link to={ROUTES.HOME}>
+    <Link to={ROUTES.HOME}
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    >
       <h1 className="sr-only">bootRun</h1>
       <StyledLogo src={logo} alt="" width={124} height={24} />
     </Link>
