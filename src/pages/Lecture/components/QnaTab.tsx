@@ -120,7 +120,7 @@ const MOCK_QUESTIONS: Question[] = [
 ];
 
 export default function QnaTab() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
   const [isWriting, setIsWriting] = useState<boolean>(false);
 
   // TODO: 나중에 검색/정렬 로직 붙이기
