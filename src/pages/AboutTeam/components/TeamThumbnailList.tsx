@@ -14,7 +14,7 @@ export default function TeamThumbnailList({
 }: TeamThumbnailListProps) {
   return (
     <>
-      <S.ScrollHint>스와이프하여 다른 개발자 보기 →</S.ScrollHint>
+      <S.ScrollHint>스와이프하여 다른 개발자 보기 ↓</S.ScrollHint>
       <S.ThumbnailList>
         {developers.map((dev, index) => (
           <S.Thumbnail
