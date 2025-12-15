@@ -94,6 +94,13 @@
 - **관리자 > 사용자 관리 > 조회**
   <video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
 
+
+#### 팀 소개(Team I5)
+
+- **Team I5**(이스터에그가 숨겨져 있음)
+  <video src="https://github.com/user-attachments/assets/174cc485-b407-442e-b863-a91255b7eaf6"></video>
+
+
 ### 2-3. 백엔드 핵심 설계
 
 - **API 아키텍처**: 비동기 처리(AsyncIO + AsyncPG), Router-Service 계층 분리
