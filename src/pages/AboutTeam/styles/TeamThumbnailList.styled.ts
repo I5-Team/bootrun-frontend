@@ -1,6 +1,19 @@
 import styled from 'styled-components';
 
 export const TeamThumbnailListStyles = {
+  ScrollHint: styled.p`
+    display: none;
+
+    @media ${({ theme }) => theme.devices.mobile} {
+      display: block;
+      text-align: center;
+      font-size: ${({ theme }) => theme.fontSize.sm};
+      color: ${({ theme }) => theme.colors.gray300};
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+  `,
+
   ThumbnailList: styled.div`
     display: flex;
     flex-direction: column;
@@ -12,20 +25,11 @@ export const TeamThumbnailListStyles = {
       width: 100%;
       overflow-x: auto;
       overflow-y: hidden;
+      position: relative;
       padding-bottom: 1.2rem;
       -webkit-overflow-scrolling: touch;
       scrollbar-color: ${({ theme }) => theme.colors.primary300} transparent;
       scrollbar-width: auto;
-
-      &::-webkit-scrollbar {
-        height: 1.2rem;
-        -webkit-appearance: none;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: transparent;
-        border-radius: 0.6rem;
-      }
 
       &::-webkit-scrollbar-thumb {
         background: ${({ theme }) => theme.colors.primary300};
@@ -39,6 +43,17 @@ export const TeamThumbnailListStyles = {
 
       &::-webkit-scrollbar-thumb:active {
         background: ${({ theme }) => theme.colors.primary300};
+      }
+      &::after {
+        content: '';
+        position: sticky;
+        right: 0;
+        top: 0;
+        width: 3.2rem;
+        height: 100%;
+        pointer-events: none;
+
+        background: linear-gradient(to left, ${({ theme }) => theme.colors.white}, transparent);
       }
     }
 
