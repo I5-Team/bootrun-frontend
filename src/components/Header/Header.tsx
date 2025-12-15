@@ -7,7 +7,6 @@ import { useLectureRoom } from '@/pages/Lecture/contexts/LectureRoomContext.tsx'
 import { useProfile } from '../../queries/useUserQueries.ts';
 import { getFullImageUrl } from '../../utils/imageUtils.ts';
 
-
 // svg
 import logo from '@/assets/logos/logo-typo.svg';
 import SvgHamberger from '@/assets/icons/icon-hambuger.svg?react';
@@ -16,7 +15,7 @@ import SvgHomeBack from '@/assets/icons/icon-home-back.svg?react';
 import SvgDiscord from '@/assets/icons/icon-sns-discord.svg?react';
 import SvgChapter from '@/assets/icons/icon-chapter.svg?react';
 import SvgSearch from '@/assets/icons/icon-search.svg?react';
-import SvgQnA from "@/assets/icons/icon-qna.svg?react"
+import SvgQnA from '@/assets/icons/icon-qna.svg?react';
 
 // components
 import {
@@ -41,7 +40,6 @@ import { ProfileDropdown, StyledDropdownBtn } from '../ProfileDropdown.tsx';
 
 const APP_ENV = import.meta.env.VITE_APP_ENV;
 
-
 // ==================================
 // default Header Components
 // ==================================
@@ -50,8 +48,7 @@ const APP_ENV = import.meta.env.VITE_APP_ENV;
 const HeaderLogo = () => {
   const isDev = APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local'));
 
-  return (
-    isDev ? (
+  return isDev ? (
     <span style={{ display: 'flex' }}>
       <Link to={ROUTES.HOME}>
         <h1 className="sr-only">bootRun</h1>
@@ -59,12 +56,11 @@ const HeaderLogo = () => {
       </Link>
       <StyledDevBadge>{APP_ENV}</StyledDevBadge>
     </span>
-    ) : (
-      <Link to={ROUTES.HOME}>
-        <h1 className="sr-only">bootRun</h1>
-        <StyledLogo src={logo} alt="" width={124} height={24} />
-      </Link>
-    )
+  ) : (
+    <Link to={ROUTES.HOME}>
+      <h1 className="sr-only">bootRun</h1>
+      <StyledLogo src={logo} alt="" width={124} height={24} />
+    </Link>
   );
 };
 
@@ -75,7 +71,7 @@ const NavList = () => {
         <Link to={ROUTES.ABOUT}>부트런 소개</Link>
       </li>
       <li>
-        <Link to={ROUTES.REVIEW}>수강생 이야기</Link>
+        <Link to={ROUTES.ABOUT_TEAM}>Team I5</Link>
       </li>
     </StyledNavList>
   );
@@ -91,10 +87,10 @@ const SearchOpenBtn = ({
   const theme = useTheme();
 
   return (
-    <IconButton 
-      iconSvg={<SvgSearch/>}
-      ariaLabel="검색창 열기" 
-      active={isActive} 
+    <IconButton
+      iconSvg={<SvgSearch />}
+      ariaLabel="검색창 열기"
+      active={isActive}
       onClick={onClick}
       iconColor={theme.colors.surface}
     />
@@ -112,9 +108,9 @@ const SidebarOpenBtn = ({
 
   return (
     <IconButton
-      iconSvg={<SvgHamberger/>}
+      iconSvg={<SvgHamberger />}
       ariaLabel="메뉴 열기"
-      active={isActive} 
+      active={isActive}
       onClick={onClick}
       iconColor={theme.colors.surface}
     />
@@ -169,7 +165,7 @@ const UserProfileBtn = () => {
     <>
       {isLoggedIn ? (
         <StyledDropdownBtn ref={dropdownRef} onClick={handleOpenDropdown}>
-            <Profile size={4.2} isActive={isDropdownOpen} src={profileImageUrl} />
+          <Profile size={4.2} isActive={isDropdownOpen} src={profileImageUrl} />
           <ProfileDropdown isOpen={isDropdownOpen} />
         </StyledDropdownBtn>
       ) : (
@@ -200,17 +196,9 @@ const ActionLists = () => {
     <StyledActionList>
       {isTablet ? (
         <>
-          <SearchOpenBtn 
-            isActive={isSearchActive} 
-            onClick={handleOpenSearch} 
-          />
-          <SidebarOpenBtn 
-            onClick={handleSidebarOpen} 
-          />
-          <HeaderSidebar 
-            isOpen={isSidebarOpen} 
-            setIsOpen={setIsSidebarOpen} 
-          />
+          <SearchOpenBtn isActive={isSearchActive} onClick={handleOpenSearch} />
+          <SidebarOpenBtn onClick={handleSidebarOpen} />
+          <HeaderSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         </>
       ) : (
         <>
@@ -254,18 +242,9 @@ const DownloadBtn = () => {
   const hasMaterial = !!currentLectureMaterialUrl?.trim();
   const showAlert = hasMaterial && !materialViewed;
 
-  console.log(
-    '[DownloadBtn] 자료 URL:',
-    currentLectureMaterialUrl,
-    '| 본상태:',
-    materialViewed,
-    '| 뱃지 표시:',
-    showAlert
-  );
-
   return (
     <IconButton
-      iconSvg={<SvgDownload/>}
+      iconSvg={<SvgDownload />}
       ariaLabel="자료 다운로드"
       hasAlert={showAlert}
       onClick={handleClick}
@@ -284,7 +263,7 @@ const QnaBtn = () => {
 
   return (
     <IconButton
-      iconSvg={<SvgQnA/>}
+      iconSvg={<SvgQnA />}
       ariaLabel="Q&A"
       onClick={handleClick}
       className={rightSidebarType === 'qna' ? 'active' : ''}
@@ -300,9 +279,9 @@ const HomeBackBtn = () => {
 
   return (
     <Link to={`/lectures/${lectureId}`}>
-      <IconButton 
-        iconSvg={<SvgHomeBack/>}
-        ariaLabel="강의 상세 페이지로 돌아가기" 
+      <IconButton
+        iconSvg={<SvgHomeBack />}
+        ariaLabel="강의 상세 페이지로 돌아가기"
         tooltip="강의 상세보기"
       />
     </Link>
@@ -317,8 +296,8 @@ const DiscordBtn = () => {
       rel="noopener noreferrer" // 보안을 위한 코드(새 창에서 원본 페이지에 접근 못하게 할 수 있는 속성 - 개인정보 보호, 피싱 방지)
     >
       <IconButton
-        iconSvg={<SvgDiscord/>}
-        ariaLabel="디스코드 참여하기" 
+        iconSvg={<SvgDiscord />}
+        ariaLabel="디스코드 참여하기"
         variant="dark"
         tooltip="디스코드 참여하기"
       />
