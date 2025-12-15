@@ -9,14 +9,14 @@ import SvgYoutube from "../../assets/icons/icon-sns-youtube.svg?react";
 import SvgBlog from "../../assets/icons/icon-sns-blog.svg?react";
 import SvgInstagram from "../../assets/icons/icon-sns-instagram.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
-import SvgLogo from "../../assets/logos/logo-typo.svg?react";
 import SvgArrowDown from "../../assets/icons/icon-arrow-down.svg?react";
+import Logo from "@/components/Logo";
 
 
 const LogoCopyright = () => {
     return (
         <StyledCopyright>
-            <SvgLogo/>
+            <Logo variant="mono"/>
             <p>© BootRun All rights reserved</p>
         </StyledCopyright>
     )

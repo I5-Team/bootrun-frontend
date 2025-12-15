@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../router/RouteConfig';
 import { useIsEnrolled } from '../../pages/Lecture/hooks/useIsEnrolled';
@@ -38,6 +38,7 @@ import SvgCertificate from '../../assets/icons/icon-certificate.svg?react';
 // import - utils
 import { getFullImageUrl } from '../../utils/imageUtils';
 import { Heading3, Heading4 } from '../Typography';
+import { useCardHoverAnimation } from '@/animations/CardAnimation';
 
 // types
 // 강의 카드 컴포넌트 타입 정의 (정보형/학습형)
@@ -242,8 +243,14 @@ const CardStudyContent = ({
 // variant props에 따라 정보형(info) 또는 학습형(study)으로 렌더링
 export const CourseCard: React.FC<CourseCardProps> = (props) => {
   const { variant, courseId, thumbnail, tags, title, isActive, isCompleted } = props;
+
+  const cardRef = useRef<HTMLElement | null>(null);
+  if (variant === 'info') {
+    useCardHoverAnimation(cardRef);
+  }
+
   return (
-    <StyledCardArticle>
+    <StyledCardArticle ref={cardRef}>
       <CardHeader
         variant={variant}
         courseId={courseId}

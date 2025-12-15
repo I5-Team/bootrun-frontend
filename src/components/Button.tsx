@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { LoadingDots } from './HelperComponents'
+import { useButtonClickAnimation } from '@/animations/ButtonAnimation'
 
-type ButtonVariant = 'primary' | 'outline' | 'primaryDark';
+type ButtonVariant = 'primary' | 'outline' | 'alert';
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -84,17 +85,16 @@ const StyledBaseButton = styled.button<{
     `}
 
   ${(p) =>
-    p.$variant === 'primaryDark' &&
+    p.$variant === 'alert' &&
     css`
-      background-color: ${({ theme }) => theme.colors.surface};
+      background-color: ${({ theme }) => theme.colors.gray400};
       color: ${({ theme }) => theme.colors.white};
 
       &:hover:not(:disabled),
-      &:active:not(:disabled) {
-        background-color: ${({ theme }) => theme.colors.primaryDark};
+      &:active:not(:disabled)  {
+        background-color: ${({ theme }) => theme.colors.alert};
       }
     `}
-
   &:disabled {
     background: ${({ theme }) => theme.colors.gray200};
     color: ${({ theme }) => theme.colors.gray300};
@@ -137,8 +137,12 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'button',
   ariaLabel,
 }: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useButtonClickAnimation(buttonRef);
+
   return (
     <StyledBaseButton
+      ref={buttonRef}
       as={as}
       to={to}
       {...(type ? { type } : {})}

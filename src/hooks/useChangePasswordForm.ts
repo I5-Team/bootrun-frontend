@@ -26,6 +26,8 @@ export const useChangePasswordForm = ({ onClose }: UseChangePasswordFormProps) =
     setNewPassword(value);
     if (value && !validatePassword(value)) {
       setPasswordError('8~32자의 영문 대/소문자, 숫자, 특수문자를 사용해야 합니다.');
+    } else if (value === currentPassword) {
+      setPasswordError('새 비밀번호는 현재 비밀번호와 달라야 합니다.');
     } else {
       setPasswordError(false);
     }

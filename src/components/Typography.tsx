@@ -34,6 +34,7 @@ export const Heading1 = styled.h2<{ marginTop?: number }>`
 
   @media ${({ theme }) => theme.devices.tablet} {
     font-size: ${({ theme }) => theme.fontSize.headingLg};
+    line-height: ${({ theme }) => theme.lineHeight.tight};
   }
 `;
 
@@ -46,6 +47,7 @@ export const Heading2 = styled.h2`
 
   @media ${({ theme }) => theme.devices.tablet} {
       font-size: ${({ theme }) => theme.fontSize.headingMd};
+      line-height: ${({ theme }) => theme.lineHeight.tight};
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
@@ -75,6 +77,7 @@ export const Heading3 = styled.h3`
 
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.fontSize.lg};
+    line-height: ${({ theme }) => theme.lineHeight.tight};
   }
 `;
 
@@ -83,6 +86,7 @@ export const Heading4 = styled(Heading3)`
   
   @media ${({ theme }) => theme.devices.mobile} {
     font-size: ${({ theme }) => theme.fontSize.xl};
+    line-height: ${({ theme }) => theme.lineHeight.tight};
   }
 `;
 

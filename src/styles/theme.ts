@@ -95,10 +95,11 @@ const fontWeight = {
 
 const zIndex = {
   base: 0,
-  header: 100,
-  dropdown: 110,
-  sticky: 300,
-  fixed: 310,
+  sticky: 100,
+  fixed: 110,
+  header: 300,
+  dropdown: 310,
+  sidebar: 400,
   modalBackdrop: 500,
   modal: 510,
   tooltip: 600,

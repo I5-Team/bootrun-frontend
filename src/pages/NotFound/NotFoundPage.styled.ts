@@ -1,67 +1,44 @@
-import styled, { keyframes } from 'styled-components';
-
-const bounce = keyframes`
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-15px);
-  }
-  60% {
-    transform: translateY(-7px);
-  }
-`;
+import styled from 'styled-components';
 
 export const ContentWrapper = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 56.3rem;
+  flex: 1;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 1.2rem;
-  padding: 0 2rem;
+  flex-direction: column;
+  gap: clamp(1rem, 10vw, 2rem);
+  padding-block: 6rem 8rem;
+  overflow: auto;
 
   @media ${({ theme }) => theme.devices.tablet} {
     width: 100%;
     max-width: 50rem;
-    gap: 1rem;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
     width: 100%;
     max-width: 35rem;
-    gap: 0.8rem;
   }
 `;
 
 export const ImageWrapper = styled.div`
   position: relative;
-  width: 30rem;
-  height: 24rem;
+  width: clamp(26rem, 30vw, 32rem);
+  height: auto;
 
-  @media ${({ theme }) => theme.devices.tablet} {
-    width: 24rem;
-    height: 19.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   @media ${({ theme }) => theme.devices.mobile} {
-    width: 18rem;
-    height: 14.4rem;
-  }
-`;
-
-export const ErrorImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  animation: ${bounce} 2s ease-in-out infinite;
-
-  &:hover {
-    animation-play-state: paused;
+    width: 22rem;
   }
 `;
 

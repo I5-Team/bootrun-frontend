@@ -40,6 +40,7 @@ interface EmailVerificationModalProps {
   showHelp: boolean;
   /** 도움말 표시 토글 핸들러 */
   onToggleHelp: () => void;
+  isConfirmingCode: boolean;
 }
 
 /**
@@ -55,6 +56,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
   onResend,
   showHelp,
   onToggleHelp,
+  isConfirmingCode,
 }) => {
   return (
     <VerificationCodeSection>
@@ -77,7 +79,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
             fullWidth
           />
         </InputLoginWrapper>
-        <Button size="md" onClick={onVerify} disabled={!verificationCode}>
+        <Button size="md" onClick={onVerify} disabled={!verificationCode || isConfirmingCode} isLoading={isConfirmingCode}>
           확인
         </Button>
       </VerificationCodeInputWrapper>

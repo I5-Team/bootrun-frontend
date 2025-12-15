@@ -128,7 +128,6 @@ const S = {
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
-    padding: 0 1.2rem;
     height: 1.8rem;
   `,
   

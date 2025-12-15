@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
-// import DevNavigator from '../components/DevNavigator';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
@@ -11,7 +10,6 @@ export default function MainLayout() {
             <StyledMainContainer>
                 <Outlet />
             </StyledMainContainer>
-            {/* <DevNavigator/>    */}
             <Footer/>
         </StyledWrapper>
     );
@@ -30,4 +28,6 @@ export const StyledMainContainer = styled.main`
     max-width: ${({ theme }) => theme.breakpoints.desktop};
     width: calc(100% - 3.2rem);
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 `;

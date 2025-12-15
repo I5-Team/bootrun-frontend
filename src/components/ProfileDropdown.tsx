@@ -22,6 +22,7 @@ const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown
   border-radius: ${({ theme }) => theme.radius.md};
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.md};
+  z-index: ${({ theme }) => theme.zIndex.dropdown};
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 500;
