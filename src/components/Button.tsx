@@ -1,5 +1,6 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { LoadingDots } from './HelperComponents'
 
 type ButtonVariant = 'primary' | 'outline' | 'primaryDark';
 
@@ -7,19 +8,20 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 
 // 버튼 컴포넌트 Props 정의
 type ButtonProps = {
-  as?: React.ElementType;
-  to?: string;
-  children: React.ReactNode;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  fullWidth?: boolean;
-  disabled?: boolean;
-  isActive?: boolean;
-  iconSvg?: React.ReactNode;
-  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
-  type?: 'button' | 'submit' | 'reset' | '';
-  ariaLabel?: string;
-};
+  as?: React.ElementType,
+  to?: string,
+  children: React.ReactNode,
+  variant?: ButtonVariant,
+  size?: ButtonSize,
+  fullWidth?: boolean,
+  disabled?: boolean,
+  isLoading?: boolean,
+  isActive?: boolean,
+  iconSvg?: React.ReactNode,
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
+  type?: 'button' | 'submit' | 'reset' | '',
+  ariaLabel?: string,
+}
 
 const buttonPadding: Record<ButtonSize, { padding: string }> = {
   lg: { padding: '1.4rem 2rem' },
@@ -129,6 +131,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   fullWidth,
   disabled,
+  isLoading,
   iconSvg,
   onClick,
   type = 'button',
@@ -148,7 +151,11 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
 
-      <StyledLabel>{children}</StyledLabel>
+      {isLoading ? (
+        <LoadingDots/>
+      ) : (
+        <StyledLabel>{children}</StyledLabel>
+      )}
     </StyledBaseButton>
   );
 };
