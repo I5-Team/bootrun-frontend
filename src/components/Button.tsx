@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { LoadingDots } from './HelperComponents'
 import { useButtonClickAnimation } from '@/animations/ButtonAnimation'
 
-type ButtonVariant = 'primary' | 'outline' | 'alert';
+type ButtonVariant = 'primary' | 'outline' | 'alert' | 'primaryDark';
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -95,6 +95,19 @@ const StyledBaseButton = styled.button<{
         background-color: ${({ theme }) => theme.colors.alert};
       }
     `}
+
+  ${(p) =>
+    p.$variant === 'primaryDark' &&
+    css`
+      background-color: ${({ theme }) => theme.colors.surface};
+      color: ${({ theme }) => theme.colors.white};
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled) {
+        background-color: ${({ theme }) => theme.colors.primaryDark};
+      }
+    `}
+
   &:disabled {
     background: ${({ theme }) => theme.colors.gray200};
     color: ${({ theme }) => theme.colors.gray300};
