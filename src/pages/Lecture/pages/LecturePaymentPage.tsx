@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../../components/Button';
 import CouponModal from '../components/CouponModal';
 import * as S from '../styles/LecturePaymentPage.styled';
@@ -17,6 +17,7 @@ import { getFullImageUrl } from '../../../utils/imageUtils';
 import { SkeletonImage } from '../../../components/Skeleton';
 import { AxiosError } from 'axios';
 import { Heading3 } from '@/components/Typography';
+import { requestTossPayment } from '../../../utils/tossPayments';
 
 export interface Coupon {
   // 기본 정보
@@ -101,8 +102,6 @@ interface PaymentMethodInterface {
 
 const paymentMethodList: PaymentMethodInterface[] = [
   { payment_method: 'toss', displayName: '토스페이', icon: tossIcon },
-  { payment_method: 'transfer', displayName: '계좌이체' },
-  { payment_method: 'card', displayName: '신용/체크카드' },
 ];
 
 const PaymentMethodButton = ({
@@ -141,11 +140,14 @@ const PaymentMethodButton = ({
 
 //
 export default function LecturePaymentPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // useState
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>('toss');
 
   // hooks
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -185,12 +187,29 @@ export default function LecturePaymentPage() {
     const resultPath = ROUTES.LECTURE_PAYMENT_RESULT.replace(':id', String(courseId));
 
     postPaymentMutation.mutate(paymentBodyData, {
-      onSuccess: (data) => {
-        if (data?.id) {
-          const paymentId = data.id;
+      onSuccess: async (data) => {
+        if (data && selectedPaymentMethod === 'toss') {
+          try {
+            await requestTossPayment({
+              orderId: data.order_id,
+              amount: data.final_amount,
+              orderName: '부트런 강의 수강권',
+              successUrl: `${window.location.origin}/bootrun-frontend/payment/success?paymentId=${data.id}`,
+              failUrl: `${window.location.origin}/bootrun-frontend/payment/fail`,
+              customerName: '구매자',
+              customerEmail: 'user@example.com',
+            });
+          } catch (error) {
+            console.error('토스 결제 실패:', error);
+            navigate({
+              pathname: resultPath,
+              search: `?status=fail`,
+            });
+          }
+        } else {
           navigate({
             pathname: resultPath,
-            search: `?paymentId=${paymentId}`,
+            search: `?paymentId=${data?.id}`,
           });
         }
       },
@@ -323,7 +342,11 @@ export default function LecturePaymentPage() {
                   onChange={(e) => setIsAgreed(e.target.checked)}
                   aria-describedby="agreement-label"
                 />
-                <S.CustomCheckbox $checked={isAgreed} aria-hidden="true">
+                <S.CustomCheckbox
+                  $checked={isAgreed}
+                  aria-hidden="true"
+                  onClick={() => setIsAgreed(!isAgreed)}
+                >
                   {isAgreed ? <CheckRectActive /> : <CheckRectDefault />}
                 </S.CustomCheckbox>
                 <S.CheckboxLabel htmlFor="agreement" id="agreement-label">
