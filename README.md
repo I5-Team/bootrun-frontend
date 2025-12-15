@@ -58,6 +58,8 @@
 - **강의 > 강의 구매**
   <video src="https://github.com/user-attachments/assets/a41f7d29-1f68-400b-ba4a-1b418638b5ff"></video>
 
+
+
 #### 인증
 
 회원가입(이메일 인증), 로그인(JWT)
@@ -96,6 +98,12 @@
 
 - **관리자 > 사용자 관리 > 조회**
   <video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
+
+#### 팀 소개(Team I5)
+
+- **Team I5**(이스터에그가 숨겨져 있음)
+  <video src="https://github.com/user-attachments/assets/174cc485-b407-442e-b863-a91255b7eaf6"></video>
+
 
 ### 2-3. 백엔드 핵심 설계
 
