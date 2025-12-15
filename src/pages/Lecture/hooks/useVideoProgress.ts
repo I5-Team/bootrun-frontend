@@ -31,11 +31,14 @@ export const useVideoProgress = (
     const currentTime = state.playedSeconds;
     const duration = playerRef.current?.getDuration() || 0;
 
-    // 설정된 간격(기본 5초)마다 진행률 저장
-    if (currentTime - lastSavedTimeRef.current >= saveInterval) {
+    const shouldSave = currentTime - lastSavedTimeRef.current >= saveInterval;
+
+    if (shouldSave) {
       lastSavedTimeRef.current = currentTime;
-      onProgress?.(currentTime, duration);
     }
+
+    // Progress Bar 업데이트는 항상 실행
+    onProgress?.(currentTime, duration);
   };
 
   return { playerRef, handleProgress };

@@ -242,15 +242,6 @@ const DownloadBtn = () => {
   const hasMaterial = !!currentLectureMaterialUrl?.trim();
   const showAlert = hasMaterial && !materialViewed;
 
-  console.log(
-    '[DownloadBtn] 자료 URL:',
-    currentLectureMaterialUrl,
-    '| 본상태:',
-    materialViewed,
-    '| 뱃지 표시:',
-    showAlert
-  );
-
   return (
     <IconButton
       iconSvg={<SvgDownload />}

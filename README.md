@@ -34,7 +34,7 @@
 
 #### (핵심) 강의실
 
-영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
+영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹, 강의 완료 뱃지 실시간 업데이트, 강의 자료 알림
 
 - **강의실 > 진행률 - Progress Bar**
   <video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"></video>
@@ -94,10 +94,12 @@
 - **관리자 > 사용자 관리 > 조회**
   <video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
 
+
 #### 팀 소개(Team I5)
 
 - **Team I5**(이스터에그가 숨겨져 있음)
   <video src="https://github.com/user-attachments/assets/174cc485-b407-442e-b863-a91255b7eaf6"></video>
+
 
 ### 2-3. 백엔드 핵심 설계
 
