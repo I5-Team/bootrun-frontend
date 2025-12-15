@@ -4,20 +4,24 @@ import SuccessIcon from '../../../assets/icons/icon-status-success.svg?react';
 import ErrorIcon from '../../../assets/icons/icon-status-error.svg?react';
 import { ROUTES } from '../../../router/RouteConfig';
 import EmptyState from '../../../components/EmptyState/EmptyState';
-import { usePaymentDetailQuery, usePostPaymentConfirm } from '../../../queries/usePaymentsQueries';
-import { useEffect, useState } from 'react';
+import { usePostPaymentConfirm } from '../../../queries/usePaymentsQueries';
+import { useEffect, useState, useRef } from 'react';
 import { LoadingSpinner } from '../../../components/HelperComponents';
 import type { PaymentStatus } from '../../../types/PaymentsType';
 import { AxiosError } from 'axios';
+import { getTossPaymentResult } from '../../../utils/tossPayments';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function PaymentResultPage() {
   // hooks
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isMinTimeElapsed, setIsMinTimeElapsed] = useState(false);
   const MIN_DELAY_MS = 300;
+  const isProcessing = useRef(false);
 
   // paymentId 유효성 검사
   const paymentIdParam = searchParams.get('paymentId');
@@ -29,43 +33,56 @@ export default function PaymentResultPage() {
     !isNaN(paymentId) &&
     paymentId > 0;
 
-  // queries: transaction_id
-  const { mutate: confirmPayment } = usePostPaymentConfirm();
-  const { data: paymentDetailData, isLoading } = usePaymentDetailQuery(Number(paymentId));
+  const { mutateAsync: confirmPayment } = usePostPaymentConfirm();
 
-  // 결제 확인
+  // 결제 확인 - 토스 페이
   useEffect(() => {
-    if (isValidPaymentId && paymentDetailData?.transaction_id) {
-      confirmPayment(
-        {
-          payment_id: Number(paymentId),
-          transaction_id: paymentDetailData.transaction_id,
-        },
-        {
-          onSuccess: (data) => {
-            setPaymentStatus(data?.status ?? 'completed');
-          },
-          onError: (err: AxiosError | Error) => {
-            setErrorMessage('결제 확인을 실패했어요. 다시 시도해 주세요.');
-            if (err instanceof AxiosError && err.response?.data) {
-              setErrorMessage((err.response.data as { detail: string }).detail);
-            } else if (err instanceof Error) {
-              setErrorMessage(err.message);
-            }
-            console.error('결제 확인 실패:', err);
-            setPaymentStatus('failed');
-          },
+    if (isProcessing.current) {
+      return;
+    }
+
+    if (paymentStatus !== null) {
+      return;
+    }
+
+    const { paymentKey, orderId, amount } = getTossPaymentResult();
+
+    if (paymentKey && orderId && amount && isValidPaymentId) {
+      console.log('결제 승인 시작:', { paymentId, paymentKey, orderId, amount });
+      isProcessing.current = true;
+
+      const processPayment = async () => {
+        try {
+          const data = await confirmPayment({
+            payment_id: Number(paymentId),
+            payment_key: paymentKey,
+            order_id: orderId,
+            amount: amount,
+          });
+
+          const status = data?.status ?? 'completed';
+          setPaymentStatus(status);
+
+          queryClient.invalidateQueries({ queryKey: ['paymentDetail'] });
+          queryClient.invalidateQueries({ queryKey: ['payments'] });
+        } catch (err) {
+          setErrorMessage('결제 승인에 실패했어요. 다시 시도해 주세요.');
+          if (err instanceof AxiosError && err.response?.data) {
+            setErrorMessage((err.response.data as { detail: string }).detail);
+          } else if (err instanceof Error) {
+            setErrorMessage(err.message);
+          }
+          console.error('토스 결제 승인 실패:', err);
+          setPaymentStatus('failed');
         }
-      );
-    }
-  }, [isValidPaymentId, paymentDetailData?.transaction_id, paymentId, confirmPayment]);
+      };
 
-  //
-  useEffect(() => {
-    if (!isValidPaymentId || !paymentDetailData) {
+      processPayment();
+    } else if (!paymentKey) {
       setPaymentStatus('failed');
+      setErrorMessage('결제 승인에 실패했어요. 다시 시도해 주세요.');
     }
-  }, [isValidPaymentId, paymentDetailData]);
+  }, [isValidPaymentId, paymentId, confirmPayment, paymentStatus, queryClient]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -89,7 +106,7 @@ export default function PaymentResultPage() {
   };
 
   // 조건부 렌더링: 예외 처리
-  if (isLoading || paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed)
+  if (paymentStatus === null || paymentStatus === 'pending' || !isMinTimeElapsed)
     return <LoadingSpinner />;
 
   const isSuccess = paymentStatus === 'completed';

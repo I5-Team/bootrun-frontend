@@ -2,7 +2,6 @@
  * Q&A 탭 - 질문 목록, 검색, 작성 기능 (UI만, 정렬/검색 로직 제외 버전)
  */
 import { useState } from 'react';
-import iconWarning from '../../../assets/icons/icon-category-FE.svg';
 import iconSearch from '../../../assets/icons/icon-search.svg';
 import Button from '../../../components/Button';
 import * as S from '../styles/QnaTab.styled';
@@ -121,8 +120,8 @@ const MOCK_QUESTIONS: Question[] = [
 ];
 
 export default function QnaTab() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isWriting, setIsWriting] = useState(false);
+  const [searchQuery] = useState('');
+  const [isWriting, setIsWriting] = useState<boolean>(false);
 
   // TODO: 나중에 검색/정렬 로직 붙이기
   // 지금은 UI만, 데이터는 그대로 사용
@@ -137,9 +136,10 @@ export default function QnaTab() {
             <S.SearchInput
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={() => alert('질문 검색 기능은 준비 중입니다.')}
               placeholder="질문 검색..."
               aria-label="질문 검색"
+              onClick={() => alert('질문 검색 기능은 준비 중입니다.')}
             />
             <S.SearchIcon>
               <img src={iconSearch} alt="" />
@@ -172,24 +172,22 @@ export default function QnaTab() {
           </S.WriteButton>
         </>
       ) : (
-        <WriteForm setIsWriting={setIsWriting} />
+        <WriteForm />
       )}
     </S.Container>
   );
 }
 
-function WriteForm({ setIsWriting }: { setIsWriting: (value: boolean) => void }) {
+function WriteForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handleSubmit = () => {
-    console.log('질문 작성:', { title, content });
-    // TODO: API 연동
-    setIsWriting(false);
+    alert('질문 작성 기능은 준비 중입니다.');
   };
 
   const handleCancel = () => {
-    setIsWriting(false);
+    alert('질문 작성 취소 기능은 준비 중입니다.');
   };
 
   return (
@@ -202,9 +200,6 @@ function WriteForm({ setIsWriting }: { setIsWriting: (value: boolean) => void })
       </S.FormHeader>
 
       <S.WarningBanner>
-        <S.WarningIcon>
-          <img src={iconWarning} alt="부트런 자주 묻는 질문 안내" />
-        </S.WarningIcon>
         <S.WarningText>부트런 서비스 질문은 챗봇 자주 묻는 질문에서 확인해주세요.</S.WarningText>
       </S.WarningBanner>
 

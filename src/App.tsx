@@ -7,7 +7,6 @@ import { useVerifyAuth } from './queries/useAuthQueries';
 
 function App() {
   const { isLoading } = useVerifyAuth();
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

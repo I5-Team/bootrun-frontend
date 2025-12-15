@@ -34,7 +34,6 @@ export default function VideoPlayer({
         onProgress={handleProgress}
         onEnded={onEnded}
         onReady={() => {
-          console.log('[VideoPlayer] 비디오 준비 완료');
           if (lastPosition > 0) {
             playerRef.current?.seekTo(lastPosition);
           }
@@ -49,9 +48,7 @@ export default function VideoPlayer({
               fs: 1,
               modestbranding: 1,
             },
-            onUnstarted: () => {
-              console.log('[YouTube] Unstarted state');
-            },
+            onUnstarted: () => {},
           },
         }}
       />

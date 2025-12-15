@@ -1,7 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchMyRefunds, fetchPaymentDetail, fetchPayments, postPaymentCancel, postPaymentConfirm, postPaymentRefund, postPayments } from "../api/paymentsApi";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  fetchMyRefunds,
+  fetchPaymentDetail,
+  fetchPayments,
+  postPaymentCancel,
+  postPaymentConfirm,
+  postPaymentRefund,
+  postPayments,
+} from '../api/paymentsApi';
 import { AxiosError } from 'axios';
-import type { PaymentsParams, PaymentsItem, PaymentsBodyData, PaymentRefundBodyData } from "../types/PaymentsType";
+import type {
+  PaymentsParams,
+  PaymentsItem,
+  PaymentsBodyData,
+  PaymentRefundBodyData,
+} from '../types/PaymentsType';
 
 const useToken = () => localStorage.getItem('accessToken');
 
@@ -32,7 +45,7 @@ export const usePaymentsQuery = (params: PaymentsParams) => {
   const token = useToken();
 
   return useQuery<PaymentsItem[] | null>({
-    queryKey: ["payments", params],
+    queryKey: ['payments', params],
     queryFn: () => fetchPayments(params),
     placeholderData: [],
     enabled: !!token,
@@ -47,7 +60,7 @@ export const usePaymentDetailQuery = (payment_id: number) => {
   const token = useToken();
 
   return useQuery({
-    queryKey: ["paymentDetail", payment_id],
+    queryKey: ['paymentDetail', payment_id],
     queryFn: () => fetchPaymentDetail(payment_id),
     enabled: !!token && !!payment_id,
   });
@@ -58,19 +71,22 @@ export const usePaymentDetailQuery = (payment_id: number) => {
  * 결제 확인
  */
 export const usePostPaymentConfirm = () => {
-  const queryClient = useQueryClient();
   const token = useToken();
 
   return useMutation({
-    mutationFn: ({ payment_id, transaction_id }: {
-      payment_id: number,
-      transaction_id: string,
+    mutationFn: ({
+      payment_id,
+      payment_key,
+      order_id,
+      amount,
+    }: {
+      payment_id: number;
+      payment_key: string;
+      order_id: string;
+      amount: number;
     }) => {
       if (!token) throw new Error('로그인이 필요합니다');
-      return postPaymentConfirm(payment_id, transaction_id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['paymentDetail'] });
+      return postPaymentConfirm(payment_id, { payment_key, order_id, amount });
     },
   });
 };
@@ -114,7 +130,7 @@ export const usePostPaymentRefund = () => {
     },
     onError: (err: AxiosError | Error) => {
       console.error('환불 요청 실패', err);
-    }
+    },
   });
 };
 
@@ -126,7 +142,7 @@ export const useMyRefunds = () => {
   const token = useToken();
 
   return useQuery({
-    queryKey: ["myRefunds"],
+    queryKey: ['myRefunds'],
     queryFn: () => fetchMyRefunds(),
     enabled: !!token,
   });
