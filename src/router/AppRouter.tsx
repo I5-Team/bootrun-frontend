@@ -29,7 +29,7 @@ const LecturePaymentPage = lazy(() => import('../pages/Lecture/pages/LecturePaym
 const PaymentResultPage = lazy(() => import('../pages/Lecture/pages/PaymentResultPage'));
 const MyLecturePage = lazy(() => import('../pages/Lecture/pages/MyLecturePage'));
 const LectureRoomPage = lazy(() => import('../pages/Lecture/pages/LectureRoomPage'));
-const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const NotFoundPage = lazy(() => import('../pages/NotFound/NotFoundPage'));
 const MainPage = lazy(() => import('../pages/MainPage'));
 const IntroPage = lazy(() => import('../pages/Intro/IntroPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
