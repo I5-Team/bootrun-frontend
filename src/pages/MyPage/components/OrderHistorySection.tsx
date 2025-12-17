@@ -19,7 +19,7 @@ import {
 import type { PaymentsItem } from '../../../types/PaymentsType';
 import { usePostPaymentRefund, usePaymentsQuery, useMyRefunds } from '../../../queries/usePaymentsQueries';
 import { Heading2 } from '@/components/Typography';
-import { useModal } from '@/contexts/ModalContext';
+import ComingSoonModal from '@/components/ComingSoonModal';
 
 const paymentLabels: Record<string, string> = {
   card: '카드결제',
@@ -138,7 +138,7 @@ type FilterStatus = 'all' | 'pending' | 'completed';
 
 const OrderHistoryPage: React.FC = () => {
   const [filter, setFilter] = useState<FilterStatus>('all');
-  const { openModal } = useModal();
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
 
 
   // 결제 내역 
@@ -234,7 +234,7 @@ const OrderHistoryPage: React.FC = () => {
                 order={order}
                 isRefunded={!!refundItem}
                 refundLabel={refundLabel}
-                onReceiptClick={() => openModal('COMING_SOON')}
+                onReceiptClick={() => setIsReceiptModalOpen(true)}
               />
             );
           })
@@ -242,6 +242,7 @@ const OrderHistoryPage: React.FC = () => {
           <EmptyState>결제 내역이 없습니다.</EmptyState>
         )}
       </OrderList>
+      <ComingSoonModal isOpen={isReceiptModalOpen} onClose={() => setIsReceiptModalOpen(false)} />
     </Container>
   );
 }
