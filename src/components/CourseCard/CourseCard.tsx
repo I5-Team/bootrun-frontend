@@ -141,7 +141,7 @@ const CardTagList = ({ tags }: { tags: BaseProps['tags'] }) => {
   );
 };
 
-const LikeButton = ({ courseId }: { courseId: number }) => {
+const LikeButton = ({ courseId: _courseId }: { courseId: number }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClickLike = (e: React.MouseEvent) => {
