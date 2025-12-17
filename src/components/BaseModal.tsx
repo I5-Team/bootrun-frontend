@@ -10,18 +10,20 @@ interface BaseModalProps {
   children: ReactNode;
   footer?: ReactNode;
   hasCloseBtn?: boolean;
+  zIndex?: number;
 }
 
 // 재사용 가능한 기본 모달 컴포넌트
 // Box와 Typography 컴포넌트를 사용하여 디자인 시스템 적용
-const BaseModal: React.FC<BaseModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const BaseModal: React.FC<BaseModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   footer,
   hasCloseBtn = true,
- }) => {
+  zIndex,
+}) => {
   const titleId = 'base-modal-title';
   const descriptionId = 'base-modal-description';
 
@@ -48,14 +50,14 @@ const BaseModal: React.FC<BaseModalProps> = ({
   };
 
   return (
-    <Overlay onClick={handleClose}>
-        <ModalContainer
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          aria-describedby={descriptionId}
-        >
-        
+    <Overlay onClick={handleClose} $zIndex={zIndex}>
+      <ModalContainer
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+      >
+
         <ModalHeader>
           {hasCloseBtn && (
             <CloseButton type="button" onClick={onClose} aria-label="닫기">
@@ -72,21 +74,21 @@ const BaseModal: React.FC<BaseModalProps> = ({
         {footer && (
           <ModalFooter>{footer}</ModalFooter>
         )}
-        </ModalContainer>
+      </ModalContainer>
     </Overlay>
   );
 };
 
 // --- Styles ---
 // 모달 배경 오버레이 스타일 (화면 전체 덮음)
-const Overlay = styled.div`
+const Overlay = styled.div<{ $zIndex?: number }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.6); // 어두운 오버레이
-  z-index: ${({ theme }) => theme.zIndex.modalBackdrop};
+  z-index: ${({ theme, $zIndex }) => $zIndex ?? theme.zIndex.backdrop};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,6 +104,7 @@ const ModalContainer = styled.div`
 
   width: fit-content;
   max-width: 80vw;
+  min-width: 35vw;
   max-height: 80vh;
   padding: 2.8rem 3.2rem;
 

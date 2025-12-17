@@ -44,7 +44,7 @@ const radius = {
 } as const;
 
 // 폰트 크기 정의 (rem 단위)
-const fontSize = { 
+const fontSize = {
   // heading
   headingXl: '4rem',
   headingLg: '3.2rem',
@@ -94,15 +94,29 @@ const fontWeight = {
 } as const;
 
 const zIndex = {
+  // level 0 - 기본
   base: 0,
-  header: 100,
-  dropdown: 110,
-  sticky: 300,
-  fixed: 310,
-  modalBackdrop: 500,
-  modal: 510,
+  // level 1 - 장식, 강조, 드롭다운 
+  above: 10,
+  dropdown: 50,  // 드롭다운
+
+  // level 2 - 네비게이션 및 고정
+  header: 100,  // 헤더
+  sticky: 300,  // 고정
+  fixed: 310,  // 고정
+  sidebar: 400,  // 네비게이션
+
+  // level 3 - 툴팁
   tooltip: 600,
-  toast: 700,
+
+  // level 4 - 모달
+  backdrop: 1000,
+  modal: 1010,
+  confirmBackdrop: 1100,
+  confirmModal: 1110,
+
+  // level 5 - 토스트
+  toast: 1200,
 } as const;
 
 const shadows = {

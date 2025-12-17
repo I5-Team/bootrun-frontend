@@ -21,8 +21,8 @@ import { usePageMeta } from "../hooks/usePageMeta";
 import { Heading2 } from "@/components/Typography";
 
 
-const CategoryBtn = ({ icon, title, onClick }: { 
-    icon: React.ReactNode, 
+const CategoryBtn = ({ icon, title, onClick }: {
+    icon: React.ReactNode,
     title: string,
     onClick?: () => void
 }) => {
@@ -37,10 +37,10 @@ const CategoryBtn = ({ icon, title, onClick }: {
 }
 
 const SectionHead = ({ courseType }: { courseType: CourseType }) => {
-    const titleByType : Record<CourseType, string> = {
-        'boost_community' : "부스트 커뮤니티에서 소통하며 학습",
-        'vod' : "VOD로 원하는 시간에 자유롭게 학습",
-        'kdc' : "KDC를 통해 실무 역량으로 도약"
+    const titleByType: Record<CourseType, string> = {
+        'boost_community': "부스트 커뮤니티에서 소통하며 학습",
+        'vod': "VOD로 원하는 시간에 자유롭게 학습",
+        'kdc': "KDC를 통해 실무 역량으로 도약"
     }
 
     const title = titleByType[courseType];
@@ -51,22 +51,22 @@ const SectionHead = ({ courseType }: { courseType: CourseType }) => {
             <Link to={showMorePath} aria-label={`강의 목록 더보기`}>
                 <StyledShowMore>
                     더 보기
-                    <SvgArrowRight/>
+                    <SvgArrowRight />
                 </StyledShowMore>
             </Link>
         </StyledSectionHead>
     )
 }
 
-const SectionByType = ({ courseType }:{ courseType: CourseType }) => {
+const SectionByType = ({ courseType }: { courseType: CourseType }) => {
     const [resultCount, setResultCount] = useState(0);
     const { isLaptop } = useMediaQuery();
     const cardCount = isLaptop ? 4 : 3;
 
     return (
         <StyledSection $isVisible={resultCount > 0 ? true : false}>
-            <SectionHead courseType={courseType}/>
-            <FilterCourseList 
+            <SectionHead courseType={courseType} />
+            <FilterCourseList
                 courseTypeOpt={courseType}
                 cardCount={cardCount}
                 onCountChange={setResultCount}
@@ -95,46 +95,46 @@ export default function MainPage() {
             {metaHelmet}
 
             <StyledHeroWrapper>
-                <Banner/>
-                {!isTablet && <ProfileCard/>}
+                <Banner />
+                {!isTablet && <ProfileCard />}
             </StyledHeroWrapper>
 
             <StyledCategoryList role="group" aria-label="카테고리별 강의 보러가기:">
-                <CategoryBtn icon={<SvgAll/>} 
-                    title="전체 보기" 
+                <CategoryBtn icon={<SvgAll />}
+                    title="전체 보기"
                     onClick={() => goCategoryList()}
                 />
-                <CategoryBtn icon={<SvgFE/>} 
+                <CategoryBtn icon={<SvgFE />}
                     title="프론트엔드"
                     onClick={() => goCategoryList("frontend")}
                 />
-                <CategoryBtn icon={<SvgBE/>} 
+                <CategoryBtn icon={<SvgBE />}
                     title="백엔드"
                     onClick={() => goCategoryList("backend")}
                 />
-                <CategoryBtn icon={<SvgDA/>}
+                <CategoryBtn icon={<SvgDA />}
                     title="데이터 분석"
                     onClick={() => goCategoryList("data_analysis")}
                 />
-                <CategoryBtn icon={<SvgAI/>}
+                <CategoryBtn icon={<SvgAI />}
                     title="AI"
                     onClick={() => goCategoryList("ai")}
                 />
-                <CategoryBtn icon={<SvgDesign/>}
+                <CategoryBtn icon={<SvgDesign />}
                     title="디자인"
                     onClick={() => goCategoryList("design")}
                 />
-                <CategoryBtn icon={<SvgMore/>}
+                <CategoryBtn icon={<SvgMore />}
                     title="기타"
                     onClick={() => goCategoryList("other")}
                 />
             </StyledCategoryList>
 
-            <SectionByType courseType="boost_community"/>
-            <SectionByType courseType="vod"/>
-            <SectionByType courseType="kdc"/>
+            <SectionByType courseType="boost_community" />
+            <SectionByType courseType="vod" />
+            <SectionByType courseType="kdc" />
 
-            <ScrollToTopButton/>
+            <ScrollToTopButton />
         </>
     );
 }

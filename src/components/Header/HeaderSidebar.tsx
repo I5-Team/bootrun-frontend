@@ -11,7 +11,7 @@ const StyledSidebar = styled.aside<{ $isOpen: boolean }>`
     right: 0;
     width: 29rem;
     height: 100vh;
-    z-index: 1000;
+    z-index: ${({ theme }) => theme.zIndex.sidebar};
 
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 0.1rem solid ${({ theme }) => theme.colors.gray200};
@@ -37,7 +37,7 @@ const StyledCloseBtn = styled.button`
     right: 0;
     padding: 0.6rem;
     margin: 1.2rem;
-    z-index: 100;
+    z-index: ${({ theme }) => theme.zIndex.header};
 
 
     display: flex;
@@ -63,7 +63,7 @@ const StyledDimmed = styled.div`
     background-color: #0000004d;
 `;
 
-export default function HeaderSidebar({ isOpen, setIsOpen }: { 
+export default function HeaderSidebar({ isOpen, setIsOpen }: {
     isOpen: boolean;
     setIsOpen: React.Dispatch<SetStateAction<boolean>>;
 }) {
@@ -101,14 +101,14 @@ export default function HeaderSidebar({ isOpen, setIsOpen }: {
         <>
             <StyledSidebar $isOpen={isOpen} ref={sidebarRef}>
                 <StyledSidebarInner>
-                    <StyledCloseBtn 
+                    <StyledCloseBtn
                         aria-label="사이드바 닫기"
                         onClick={handleClose}
                     >
-                        <SvgClose/>
+                        <SvgClose />
                     </StyledCloseBtn>
-                    <ProfileCard variant="sidebar"/>
-                    <ProfileDropdown variant="sidebar"/>
+                    <ProfileCard variant="sidebar" />
+                    <ProfileDropdown variant="sidebar" />
                 </StyledSidebarInner>
             </StyledSidebar>
             {isOpen && <StyledDimmed ref={dimmedRef}></StyledDimmed>}

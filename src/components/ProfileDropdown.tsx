@@ -22,6 +22,7 @@ const StyledProfileDropdown = styled.div<{ $isOpen: boolean; $variant: 'dropdown
   border-radius: ${({ theme }) => theme.radius.md};
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.md};
+  z-index: ${({ theme }) => theme.zIndex.fixed};
 
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: 500;
@@ -54,6 +55,7 @@ const StyledItemWrapper = styled.div`
   justify-content: center;
   align-items: start;
   flex-direction: column;
+  z-index: ${({ theme }) => theme.zIndex.sidebar}
 
   &:not(:last-child) {
     border-bottom: 0.1rem solid ${({ theme }) => theme.colors.gray200};

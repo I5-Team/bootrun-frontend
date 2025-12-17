@@ -20,8 +20,7 @@ const StyledCircleButton = styled.button<{ $isVisible: boolean }>`
     border-radius: 50%;
     border: 0.1rem solid ${({ theme }) => theme.colors.gray200};
     box-shadow: ${({ theme }) => theme.shadows.md};
-
-    z-index: 1000;
+    z-index: ${({ theme }) => theme.zIndex.fixed};
 
     svg {
         width: auto;
@@ -55,7 +54,7 @@ const ScrollToTopButton = () => {
         window.addEventListener('scroll', handleShowButton);
         return () => window.removeEventListener('scroll', handleShowButton);
     }, [isTablet])
-    
+
     return (
         <StyledCircleButton
             $isVisible={isVisible}
@@ -63,7 +62,7 @@ const ScrollToTopButton = () => {
             aria-label="페이지 상단으로 이동"
             onClick={onScrollToTop}
         >
-            <SvgArrowUp/>
+            <SvgArrowUp />
         </StyledCircleButton>
     )
 }

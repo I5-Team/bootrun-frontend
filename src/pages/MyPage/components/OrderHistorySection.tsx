@@ -106,6 +106,7 @@ const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined
             <dt>결제 수단</dt>
             <PaymentInfo as="dd">
               <span>{paymentLabels[order.payment_method]}</span>
+              {/*영수증 보기 기능은 comming soon */}
               <a href={order.receipt_url ?? '#'} target="_blank" rel="noopener noreferrer">
                 영수증 보기 <span aria-hidden="true">↗</span>
                 <span className="sr-only">(새 창)</span>

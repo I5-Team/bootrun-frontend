@@ -109,7 +109,7 @@ const StyledIcon = styled.span<{ $variant: ButtonVariant }>`
     width: 100%;
     height: 100%;
     fill: ${({ $variant, theme }) =>
-      $variant === 'outline' ? theme.colors.gray300 : 'currentColor'};
+    $variant === 'outline' ? theme.colors.gray300 : 'currentColor'};
   }
 `;
 const StyledLabel = styled.span`
