@@ -19,6 +19,7 @@ import {
 import type { PaymentsItem } from '../../../types/PaymentsType';
 import { usePostPaymentRefund, usePaymentsQuery, useMyRefunds } from '../../../queries/usePaymentsQueries';
 import { Heading2 } from '@/components/Typography';
+import ComingSoonModal from '@/components/ComingSoonModal';
 
 const paymentLabels: Record<string, string> = {
   card: '카드결제',
@@ -37,92 +38,108 @@ const formattedDate = (date: string) => new Date(date).toLocaleString('ko-KR', {
 });
 
 // 주문 내역 아이템 카드 컴포넌트
-const OrderCard: React.FC<{ order: PaymentsItem, isRefunded: boolean | undefined, refundLabel: string }> = ({
+const OrderCard: React.FC<{
+  order: PaymentsItem;
+  isRefunded: boolean | undefined;
+  refundLabel: string;
+  onReceiptClick: () => void;
+}> = ({
   order,
   isRefunded,
-  refundLabel
+  refundLabel,
+  onReceiptClick,
 }) => {
-  const isCompleted = order.status === 'completed';
 
-  const { mutate: refundPayment } = usePostPaymentRefund();
 
-  const handleRefund = (id: number) => {
-    const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
-    if (reason.length < 10) {
-      alert('환불 사유를 최소 10자 이상 입력해주세요.');
-      return;
+    const isCompleted = order.status === 'completed';
+
+    const { mutate: refundPayment } = usePostPaymentRefund();
+
+    const handleRefund = (id: number) => {
+      const reason = window.prompt('환불 사유는 최소 10자 이상 입력해주세요.')?.trim() ?? '';
+      if (reason.length < 10) {
+        alert('환불 사유를 최소 10자 이상 입력해주세요.');
+        return;
+      }
+
+      const confirmed = window.confirm('정말 환불을 진행하시겠습니까?');
+      if (!confirmed) return;
+
+      refundPayment({
+        payment_id: id,
+        reason,
+      }, {
+        onSuccess: () => {
+          alert('환불 요청이 완료되었습니다.');
+        },
+        onError: (err: AxiosError | Error) => {
+          const errorMessage = err instanceof AxiosError && err.response?.data
+            ? (err.response.data as { detail: string }).detail
+            : '환불 요청이 실패하였습니다. 다시 시도해 주세요.';
+          alert(errorMessage);
+        }
+      })
     }
 
-    const confirmed = window.confirm('정말 환불을 진행하시겠습니까?');
-    if (!confirmed) return;
-
-    refundPayment({
-      payment_id: id,
-      reason,
-    }, {
-      onSuccess: () => {
-        alert('환불 요청이 완료되었습니다.');
-      },
-      onError: (err: AxiosError | Error) => {
-        const errorMessage = err instanceof AxiosError && err.response?.data
-          ? (err.response.data as { detail: string }).detail
-          : '환불 요청이 실패하였습니다. 다시 시도해 주세요.';
-        alert(errorMessage);
-      }
-    })
-  }
-
-  return (
-    <Card>
-      <Button
-        size="sm"
-        variant='outline'
-        disabled={isRefunded}
-        onClick={() => handleRefund(order.id)}
-      >{refundLabel}</Button>
-      <CardHeader>
-        <Tag variant={isCompleted ? 'primary' : 'dark'}>{isCompleted ? '결제 완료' : '결제 대기'}</Tag>
-        <CourseName>{order.course_title}</CourseName>
-      </CardHeader>
-      <CardBody>
-        <InfoGrid>
-          <InfoItem>
-            <dt>결제 금액</dt>
-            <dd className="price">{order.amount.toLocaleString()}원</dd>
-          </InfoItem>
-          <InfoItem>
-            <dt>주문 번호</dt>
-            <dd>{order.transaction_id}</dd>
-          </InfoItem>
-          <InfoItem>
-            <dt>주문 일시</dt>
-            <dd>{formattedDate(order.paid_at ? order.paid_at : '0')}</dd>
-          </InfoItem>
-          <InfoItem>
-            <dt>승인 일시</dt>
-            <dd>{formattedDate(order.created_at ? order.created_at : '0')}</dd>
-          </InfoItem>
-          <InfoItem>
-            <dt>결제 수단</dt>
-            <PaymentInfo as="dd">
-              <span>{paymentLabels[order.payment_method]}</span>
-              {/*영수증 보기 기능은 comming soon */}
-              <a href={order.receipt_url ?? '#'} target="_blank" rel="noopener noreferrer">
-                영수증 보기 <span aria-hidden="true">↗</span>
-                <span className="sr-only">(새 창)</span>
-              </a>
-            </PaymentInfo>
-          </InfoItem>
-        </InfoGrid>
-      </CardBody>
-    </Card>
-  );
-};
+    return (
+      <Card>
+        <Button
+          size="sm"
+          variant='outline'
+          disabled={isRefunded}
+          onClick={() => handleRefund(order.id)}
+        >{refundLabel}</Button>
+        <CardHeader>
+          <Tag variant={isCompleted ? 'primary' : 'dark'}>{isCompleted ? '결제 완료' : '결제 대기'}</Tag>
+          <CourseName>{order.course_title}</CourseName>
+        </CardHeader>
+        <CardBody>
+          <InfoGrid>
+            <InfoItem>
+              <dt>결제 금액</dt>
+              <dd className="price">{order.amount.toLocaleString()}원</dd>
+            </InfoItem>
+            <InfoItem>
+              <dt>주문 번호</dt>
+              <dd>{order.transaction_id}</dd>
+            </InfoItem>
+            <InfoItem>
+              <dt>주문 일시</dt>
+              <dd>{formattedDate(order.paid_at ? order.paid_at : '0')}</dd>
+            </InfoItem>
+            <InfoItem>
+              <dt>승인 일시</dt>
+              <dd>{formattedDate(order.created_at ? order.created_at : '0')}</dd>
+            </InfoItem>
+            <InfoItem>
+              <dt>결제 수단</dt>
+              <PaymentInfo as="dd">
+                <span>{paymentLabels[order.payment_method]}</span>
+                {/*영수증 보기 기능은 comming soon */}
+                <a
+                  href={order.receipt_url ?? '#'}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onReceiptClick();
+                  }}
+                >
+                  영수증 보기 <span aria-hidden="true">↗</span>
+                  <span className="sr-only">(새 창)</span>
+                </a>
+              </PaymentInfo>
+            </InfoItem>
+          </InfoGrid>
+        </CardBody>
+      </Card>
+    );
+  };
 
 type FilterStatus = 'all' | 'pending' | 'completed';
 
 const OrderHistoryPage: React.FC = () => {
   const [filter, setFilter] = useState<FilterStatus>('all');
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+
 
   // 결제 내역 
   const { data: orderHistory, isLoading: isLoadingOrders, error: ordersError } = usePaymentsQuery({});
@@ -217,6 +234,7 @@ const OrderHistoryPage: React.FC = () => {
                 order={order}
                 isRefunded={!!refundItem}
                 refundLabel={refundLabel}
+                onReceiptClick={() => setIsReceiptModalOpen(true)}
               />
             );
           })
@@ -224,6 +242,7 @@ const OrderHistoryPage: React.FC = () => {
           <EmptyState>결제 내역이 없습니다.</EmptyState>
         )}
       </OrderList>
+      <ComingSoonModal isOpen={isReceiptModalOpen} onClose={() => setIsReceiptModalOpen(false)} />
     </Container>
   );
 }
