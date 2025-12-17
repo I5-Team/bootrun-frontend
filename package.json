@@ -13,8 +13,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.2",
     "@tanstack/react-query": "^5.90.7",
+    "@tosspayments/payment-sdk": "^1.9.2",
     "axios": "^1.13.2",
     "dompurify": "^3.3.0",
+    "gsap": "^3.14.2",
     "framer-motion": "^12.23.26",
     "qs": "^6.14.0",
     "react": "^18.3.1",

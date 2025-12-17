@@ -16,9 +16,10 @@ import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import type { CourseType } from "../types/CourseType";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePageMeta } from "../hooks/usePageMeta";
 import { Heading2 } from "@/components/Typography";
+import { useButtonClickAnimation } from "@/animations/ButtonAnimation";
 
 
 const CategoryBtn = ({ icon, title, onClick }: {
@@ -26,8 +27,11 @@ const CategoryBtn = ({ icon, title, onClick }: {
     title: string,
     onClick?: () => void
 }) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    useButtonClickAnimation(buttonRef);
+    
     return (
-        <StyledCategoryBtn type="button" onClick={onClick}>
+        <StyledCategoryBtn type="button" onClick={onClick} ref={buttonRef}>
             <StyledCategoryIcon>
                 {icon}
             </StyledCategoryIcon>

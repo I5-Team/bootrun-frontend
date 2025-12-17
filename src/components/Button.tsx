@@ -1,25 +1,28 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+import React, { useRef } from 'react'
+import styled, { css } from 'styled-components'
+import { LoadingDots } from './HelperComponents'
+import { useButtonClickAnimation } from '@/animations/ButtonAnimation'
 
-type ButtonVariant = 'primary' | 'outline' | 'primaryDark';
+type ButtonVariant = 'primary' | 'outline' | 'alert' | 'primaryDark';
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 // 버튼 컴포넌트 Props 정의
 type ButtonProps = {
-  as?: React.ElementType;
-  to?: string;
-  children: React.ReactNode;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  fullWidth?: boolean;
-  disabled?: boolean;
-  isActive?: boolean;
-  iconSvg?: React.ReactNode;
-  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
-  type?: 'button' | 'submit' | 'reset' | '';
-  ariaLabel?: string;
-};
+  as?: React.ElementType,
+  to?: string,
+  children: React.ReactNode,
+  variant?: ButtonVariant,
+  size?: ButtonSize,
+  fullWidth?: boolean,
+  disabled?: boolean,
+  isLoading?: boolean,
+  isActive?: boolean,
+  iconSvg?: React.ReactNode,
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
+  type?: 'button' | 'submit' | 'reset' | '',
+  ariaLabel?: string,
+}
 
 const buttonPadding: Record<ButtonSize, { padding: string }> = {
   lg: { padding: '1.4rem 2rem' },
@@ -82,6 +85,18 @@ const StyledBaseButton = styled.button<{
     `}
 
   ${(p) =>
+    p.$variant === 'alert' &&
+    css`
+      background-color: ${({ theme }) => theme.colors.gray400};
+      color: ${({ theme }) => theme.colors.white};
+
+      &:hover:not(:disabled),
+      &:active:not(:disabled)  {
+        background-color: ${({ theme }) => theme.colors.alert};
+      }
+    `}
+
+  ${(p) =>
     p.$variant === 'primaryDark' &&
     css`
       background-color: ${({ theme }) => theme.colors.surface};
@@ -129,13 +144,18 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   fullWidth,
   disabled,
+  isLoading,
   iconSvg,
   onClick,
   type = 'button',
   ariaLabel,
 }: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useButtonClickAnimation(buttonRef);
+
   return (
     <StyledBaseButton
+      ref={buttonRef}
       as={as}
       to={to}
       {...(type ? { type } : {})}
@@ -148,7 +168,11 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {iconSvg && <StyledIcon $variant={variant}>{iconSvg}</StyledIcon>}
 
-      <StyledLabel>{children}</StyledLabel>
+      {isLoading ? (
+        <LoadingDots/>
+      ) : (
+        <StyledLabel>{children}</StyledLabel>
+      )}
     </StyledBaseButton>
   );
 };

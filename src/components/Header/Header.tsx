@@ -8,7 +8,6 @@ import { useProfile } from '../../queries/useUserQueries.ts';
 import { getFullImageUrl } from '../../utils/imageUtils.ts';
 
 // svg
-import logo from '@/assets/logos/logo-typo.svg';
 import SvgHamberger from '@/assets/icons/icon-hambuger.svg?react';
 import SvgDownload from '@/assets/icons/icon-download-folder.svg?react';
 import SvgHomeBack from '@/assets/icons/icon-home-back.svg?react';
@@ -21,14 +20,13 @@ import SvgQnA from '@/assets/icons/icon-qna.svg?react';
 import {
   StyledHeader,
   StyledHeaderInner,
-  StyledLogo,
   StyledNavList,
   StyledHeaderInnerLecture,
   StyledHeaderInnerLogo,
   StyledIconBtn,
   StyledHeaderInnerAdmin,
-  StyledDevBadge,
   StyledActionList,
+  StyledLogoLink,
 } from './Header.styled.ts';
 
 import Button from '../Button.tsx';
@@ -37,8 +35,7 @@ import Profile from '../Profile.tsx';
 import SearchForm from '../SearchForm.tsx';
 import HeaderSidebar from './HeaderSidebar.tsx';
 import { ProfileDropdown, StyledDropdownBtn } from '../ProfileDropdown.tsx';
-
-const APP_ENV = import.meta.env.VITE_APP_ENV;
+import Logo from '../Logo.tsx';
 
 // ==================================
 // default Header Components
@@ -46,26 +43,12 @@ const APP_ENV = import.meta.env.VITE_APP_ENV;
 
 // 헤더 로고 컴포넌트 (환경 배지 포함)
 const HeaderLogo = () => {
-  const isDev = APP_ENV && (APP_ENV.includes('dev') || APP_ENV.includes('local'));
-
-  return isDev ? (
-    <span style={{ display: 'flex' }}>
-      <Link to={ROUTES.HOME}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
+  return (
+      <StyledLogoLink to={ROUTES.HOME}>
         <h1 className="sr-only">bootRun</h1>
-        <StyledLogo src={logo} alt="" width={124} height={24} />
-      </Link>
-      <StyledDevBadge>{APP_ENV}</StyledDevBadge>
-    </span>
-  ) : (
-    <Link to={ROUTES.HOME}
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-    >
-      <h1 className="sr-only">bootRun</h1>
-      <StyledLogo src={logo} alt="" width={124} height={24} />
-    </Link>
-  );
+        <Logo variant='animation'/>
+      </StyledLogoLink>
+    )
 };
 
 const NavList = () => {
@@ -245,15 +228,6 @@ const DownloadBtn = () => {
   // 자료가 있고 아직 보지 않았을 때만 알림 뱃지 표시
   const hasMaterial = !!currentLectureMaterialUrl?.trim();
   const showAlert = hasMaterial && !materialViewed;
-
-  console.log(
-    '[DownloadBtn] 자료 URL:',
-    currentLectureMaterialUrl,
-    '| 본상태:',
-    materialViewed,
-    '| 뱃지 표시:',
-    showAlert
-  );
 
   return (
     <IconButton

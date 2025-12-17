@@ -56,6 +56,7 @@ interface UseSignUpFormReturn {
   errorState: ErrorState;
   emailVerification: EmailVerificationState;
   isSendingCode: boolean;
+  isConfirmingCode: boolean;
 
   // 핸들러 함수들
   handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -72,6 +73,7 @@ interface UseSignUpFormReturn {
 
   // 회원가입 가능 여부
   isSignUpEnabled: boolean;
+  isRegistering: boolean;
 
   // 회원가입 처리 함수
   handleSignUp: () => void;
@@ -342,6 +344,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
       showEmailHelp,
     },
     isSendingCode,
+    isConfirmingCode,
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,
@@ -352,6 +355,7 @@ export const useSignUpForm = (): UseSignUpFormReturn => {
     handleResendCode,
     setShowEmailHelp,
     isSignUpEnabled,
+    isRegistering,
     handleSignUp,
     apiMessage,
   };

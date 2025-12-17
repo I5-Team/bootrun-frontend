@@ -12,7 +12,7 @@ export const FormGroup = styled.div`
   gap: 0.8rem;
 
   label {
-    font-size: ${({ theme }) => theme.fontSize.md}; /* 1.4rem */
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 500;
     color: ${({ theme }) => theme.colors.surface};
   }
@@ -29,7 +29,7 @@ export const EmailInput = styled.input`
   padding: 0 1.6rem;
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   border-radius: ${({ theme }) => theme.radius.md};
-  font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
+  font-size: ${({ theme }) => theme.fontSize.md};
   background: ${({ theme }) => theme.colors.gray100};
   color: ${({ theme }) => theme.colors.gray300};
 `;
@@ -73,7 +73,7 @@ export const GithubLinked = styled.div`
 export const PasswordButton = styled.button`
   width: fit-content;
   padding: 1.4rem 2.4rem;
-  font-size: ${({ theme }) => theme.fontSize.md}; /* 1.6rem */
+  font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.white};
   background-color: ${({ theme }) => theme.colors.primary300};
@@ -126,20 +126,17 @@ export const DangerSummary = styled.summary`
     border-bottom-right-radius: 0;
   }
 `;
-export const ArrowIcon = styled.span.attrs({
-  'aria-hidden': 'true',
-})`
-  &::before {
-    content: '▼';
-    display: inline-block;
-    font-size: 1rem;
-    color: ${({ theme }) => theme.colors.gray300};
-    transition: transform 0.2s ease;
+export const ArrowIcon = styled.span`
+  width: 2rem;
+  height: 2rem;
 
-    /* details[open] 상태일 때 <summary> 내부의 화살표 회전 */
-    details[open] & {
-      transform: rotate(180deg);
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+
+  details[open] & {
+    transform: rotate(180deg);
   }
 `;
 export const ModalFormGroup = styled.div`
@@ -154,6 +151,7 @@ export const ModalFormGroup = styled.div`
   }
 `;
 export const ModalInput = styled.input`
+  width: 100%;
   height: 4.8rem;
   padding: 0 1.6rem;
   border: 1px solid ${({ theme }) => theme.colors.gray200};
@@ -174,73 +172,16 @@ export const ModalFooter = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 2.4rem;
-`;
-
-export const ModalButton = styled.button<{ $danger?: boolean; $primary?: boolean }>`
-  padding: 1rem 1.8rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  border-radius: ${({ theme }) => theme.radius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  cursor: pointer;
-
-  // 기본 버튼 (취소)
-  color: ${({ theme }) => theme.colors.gray400};
-  background: ${({ theme }) => theme.colors.white};
-
-  // 확인 버튼 (Primary)
-  ${({ theme, $primary }) =>
-    $primary &&
-    `
-      background: ${theme.colors.primary300};
-      border-color: ${theme.colors.primary300};
-      color: ${theme.colors.white};
-      &:hover:not(:disabled) {
-        background: ${theme.colors.primaryDark}; // (테마에 primary400이 있다고 가정)
-      }
-    `}
-
-  // 위험 버튼 (Danger)
-    ${({ theme, $danger }) =>
-    $danger &&
-    `
-      background: ${theme.colors.alert};
-      border-color: ${theme.colors.alert};
-      color: ${theme.colors.white};
-      &:hover:not(:disabled) {
-        opacity: 0.8;
-      }
-    `}
-
-    &:hover:not(:disabled) {
-    background: ${({ theme, $primary, $danger }) =>
-      !$primary && !$danger ? theme.colors.gray100 : 'auto'};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 export const DangerContent = styled.div`
   padding: 2.4rem;
   padding-top: 0;
-
-  button {
-    background-color: ${({ theme }) => theme.colors.gray400};
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled) {
-      background-color: ${({ theme }) => theme.colors.surface};
-    }
-  }
 `;
 export const DangerTitle = styled.h3`
   font-size: 1.8rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.alert}; // ◀ Red
+  color: ${({ theme }) => theme.colors.alert};
   margin: 0 0 0.8rem 0;
 `;
 export const DangerDescription = styled.p`
@@ -254,7 +195,7 @@ export const DangerButton = styled.button`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.alert}; // ◀ Red
+  background-color: ${({ theme }) => theme.colors.alert};
   border: none;
   border-radius: ${({ theme }) => theme.radius.md};
   cursor: pointer;
@@ -271,7 +212,7 @@ export const ModalLoadingWrapper = styled.div`
   align-items: center;
   gap: 2rem;
   padding: 2rem 0;
-  min-height: 12rem; /* 모달 내용 최소 높이 */
+  min-height: 12rem;
 
   p {
     font-size: 1.6rem;

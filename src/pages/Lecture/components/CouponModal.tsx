@@ -24,7 +24,6 @@ export default function CouponModal({
   onClose,
   coupons,
   selectedCoupon,
-  onSelectCoupon,
   lecturePrice,
 }: CouponModalProps) {
   const [tempSelectedCoupon, setTempSelectedCoupon] = useState<Coupon | null>(selectedCoupon);
@@ -91,7 +90,7 @@ export default function CouponModal({
   };
 
   const handleApply = () => {
-    onSelectCoupon(tempSelectedCoupon);
+    alert('쿠폰 기능은 준비 중입니다.');
     onClose();
   };
 

@@ -26,7 +26,7 @@
 
 > "강사와 수강생이 함께 성장하는 실무 중심의 학습 플랫폼"
 
-저희 i5팀은 인프런, 클래스101과 같은 기존 이러닝 플랫폼을 벤치마킹하되, 일방적인 영상 시청을 넘어 **체계적인 학습 관리(LMS)**와 **강사-수강생 간의 소통**이 가능한 전문 플랫폼을 구축하고자 했습니다.
+저희 i5팀은 인프런, 클래스101과 같은 기존 이러닝 플랫폼을 벤치마킹하되, 일방적인 영상 시청을 넘어 체계적인 학습 관리(LMS)와 **강사-수강생 간의 소통**이 가능한 전문 플랫폼을 구축하고자 했습니다.
 
 특히 **구체적인 실무 역량**을 기를 수 있는 강의에 초점을 맞춘, 강사와 수강생이 **서로 공존할 수 있는 공간**을 만드는 것이 목표였습니다.
 
@@ -34,7 +34,7 @@
 
 #### (핵심) 강의실
 
-영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹
+영상 이어보기, 진행률 자동 저장, 강의 완료 처리, 커리큘럼 트래킹, 강의 완료 뱃지 실시간 업데이트, 강의 자료 알림
 
 - **강의실 > 진행률 - Progress Bar**
   <video src="https://github.com/user-attachments/assets/26e4ac6e-7496-4273-8371-f2ae8c37ba79"></video>
@@ -44,7 +44,7 @@
 
 #### 강의
 
-강의 목록(필터링), 강의 상세, 수강 신청
+강의 목록(필터링), 강의 상세, 수강 신청, 강의 결제(토스페이)
 
 - **강의 > 강의 목록 필터링**
   <video src="https://github.com/user-attachments/assets/08360770-bbdc-4b76-8b90-d0ef007fef31"></video>
@@ -54,6 +54,11 @@
 
 - **강의 > 수강 신청**
   <video src="https://github.com/user-attachments/assets/d7ad3960-9626-4653-9f11-8f8a9c635aeb"></video>
+
+- **강의 > 강의 구매**
+  <video src="https://github.com/user-attachments/assets/a41f7d29-1f68-400b-ba4a-1b418638b5ff"></video>
+
+
 
 #### 인증
 
@@ -94,10 +99,12 @@
 - **관리자 > 사용자 관리 > 조회**
   <video src="https://github.com/user-attachments/assets/580fa5b1-3e6b-4bca-8d37-c71a2c0c7d56"></video>
 
+
 #### 팀 소개(Team I5)
 
 - **Team I5**(이스터에그가 숨겨져 있음)
   <video src="https://github.com/user-attachments/assets/174cc485-b407-442e-b863-a91255b7eaf6"></video>
+
 
 ### 2-3. 백엔드 핵심 설계
 

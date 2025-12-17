@@ -1,6 +1,7 @@
-import React, { useEffect, type ReactNode } from 'react';
+import React, { useEffect, useRef, type ReactNode } from 'react';
 import styled from 'styled-components';
 import SvgClose from "@/assets/icons/icon-x.svg?react";
+import { useModalAnimation } from '@/animations/ModalAnimation';
 
 // 기본 모달 컴포넌트 Props 정의
 interface BaseModalProps {
@@ -27,6 +28,10 @@ const BaseModal: React.FC<BaseModalProps> = ({
   const titleId = 'base-modal-title';
   const descriptionId = 'base-modal-description';
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const backdropRef = useRef<HTMLDivElement | null>(null);
+  useModalAnimation(modalRef, backdropRef, isOpen);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleEscapeKey = (e: KeyboardEvent) => {
@@ -38,10 +43,6 @@ const BaseModal: React.FC<BaseModalProps> = ({
     return () => document.removeEventListener('keydown', handleEscapeKey);
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   // 오버레이 클릭 시 닫기
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -50,14 +51,14 @@ const BaseModal: React.FC<BaseModalProps> = ({
   };
 
   return (
-    <Overlay onClick={handleClose} $zIndex={zIndex}>
-      <ModalContainer
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
-      >
-
+    <Overlay onClick={handleClose} ref={backdropRef} $zIndex={zIndex}>
+        <ModalContainer
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+        >
         <ModalHeader>
           {hasCloseBtn && (
             <CloseButton type="button" onClick={onClose} aria-label="닫기">
@@ -72,7 +73,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
         </ModalMain>
 
         {footer && (
-          <ModalFooter>{footer}</ModalFooter>
+          <footer>{footer}</footer>
         )}
       </ModalContainer>
     </Overlay>
@@ -103,17 +104,17 @@ const ModalContainer = styled.div`
   z-index: ${({ theme }) => theme.zIndex.modal};
 
   width: fit-content;
-  max-width: 80vw;
-  min-width: 35vw;
+  min-width: 44rem;
   max-height: 80vh;
   padding: 2.8rem 3.2rem;
 
   display: flex;
   flex-direction: column;
   position: relative;
+  gap: 2.4rem;
 
   @media ${({ theme }) => theme.devices.mobile} {
-    max-width: 90vw;
+    min-width: 90vw;
     max-height: 85vh;
   }
 `;
@@ -138,11 +139,7 @@ const ModalTitle = styled.h2`
 `;
 
 const ModalMain = styled.main`
-  padding-block: 2rem;
-`;
-
-const ModalFooter = styled.footer`
-  padding-top: 1.2rem;
+  overflow: auto;
 `;
 
 const CloseButton = styled.button`

@@ -154,9 +154,8 @@ const FilterTags = ({ selectedTags, setSelectedTags }: {
             </Button>
             <StyledTagList aria-label="선택된 필터">
                 {selectedTags.map(tag => (
-                    <li>
+                    <li key={tag.value}>
                         <button 
-                            key={tag.value} 
                             data-label={tag.label} 
                             onClick={handleDelete}
                             aria-label={`${tag.label} 필터 제거`}

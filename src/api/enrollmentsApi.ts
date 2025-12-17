@@ -26,10 +26,8 @@ export const postEnrollments = async (course_id: number): Promise<EnrollmentResp
       course_id,
     });
     if (response) {
-      console.log('[API 요청 성공]');
       return response.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -47,7 +45,6 @@ export const fetchMyEnrollments = async (
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.MY_ENROLLMENTS, { params });
     if (response?.data?.data?.items) {
-      console.log('[API 요청 성공]');
       return response.data.data.items;
     }
     console.warn('[API 데이터 없음] mock 데이터로 대체');
@@ -68,10 +65,9 @@ export const fetchEnrollmentDashboard = async (): Promise<EnrollmentDashboadItem
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.DASHBOARD);
     if (response?.data?.data) {
-      console.log('[API 요청 성공]');
       return response.data.data;
     }
-    console.log('[API 데이터 없음]');
+
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -89,10 +85,8 @@ export const fetchEnrollmentDetail = async (
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.ENROLLMENT_DETAIL(enrollment_id));
     if (response) {
-      console.log('[API 요청 성공]');
       return response.data.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -110,10 +104,9 @@ export const createEnrollmentProgress = async (
   try {
     const response = await apiClient.post(API_URL.ENROLLMENT.CREATE_PROGRESS, bodyData);
     if (response) {
-      console.log('[API 요청 성공]');
       return response.data;
     }
-    console.log('[API 데이터 없음]');
+
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -135,10 +128,8 @@ export const updateLectureProgress = async (
       bodyData
     );
     if (response) {
-      console.log('[API 요청 성공]');
       return response.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -161,10 +152,8 @@ export const fetchCourseProgress = async (
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.COURSE_PROGRESS(course_id));
     if (response?.data?.data) {
-      console.log('[API 요청 성공]');
       return response.data.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -182,10 +171,8 @@ export const fetchLectureProgress = async (
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.LECTURE_PROGRESS(lecture_id));
     if (response?.data?.data) {
-      console.log('[API 요청 성공] 강의 진행 데이터:', response.data.data);
       return response.data.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패]', err);
@@ -203,10 +190,8 @@ export const fetchLectureRoomData = async (
   try {
     const response = await apiClient.get(API_URL.ENROLLMENT.LECTURE_ROOM(courseId));
     if (response?.data?.data) {
-      console.log('[API 요청 성공]');
       return response.data.data;
     }
-    console.log('[API 데이터 없음]');
     return null;
   } catch (err) {
     console.error('[API 요청 실패] 강의실 데이터:', err);

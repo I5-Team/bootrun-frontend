@@ -4,14 +4,11 @@ import { InputLogin } from '../../../components/InputLogin.tsx';
 import { Button } from '../../../components/Button.tsx';
 import { ROUTES } from '../../../router/RouteConfig.ts';
 import LogoSymbol from '../../../assets/logos/logo-symbol.svg?react';
-// import GithubIcon from '../../../assets/icons/icon-oatuth-github.svg?react';
-// import GoogleIcon from '../../../assets/icons/icon-oauth-google.svg?react';
 import {
   PageContainer,
   LoginContainer,
   LogoContainer,
   LogoIcon,
-  Title,
   LoginForm,
   InputGroup,
   InputWrapper,
@@ -20,14 +17,9 @@ import {
   StyledLink,
   LinkText,
   LinkDivider,
-  // Divider,
-  // DividerLine,
-  // DividerText,
-  // SocialLoginSection,
-  // SocialButtonGroup,
-  // OriginalColorIcon,
 } from '../styles/LoginPage.styled.ts';
 import { useLogin } from '../../../queries/useAuthQueries.ts';
+import { Heading3 } from '@/components/Typography.tsx';
 
 const LoginPage: React.FC = () => {
   const { mutate: login, isPending } = useLogin();
@@ -91,17 +83,6 @@ const LoginPage: React.FC = () => {
     if (passwordError) setPasswordError(false);
   };
 
-  // // 소셜 로그인 핸들러
-  // const handleGithubLogin = () => {
-  //   // TODO:(선택) GitHub 로그인 구현
-  //   console.log('GitHub 로그인');
-  // };
-
-  // const handleGoogleLogin = () => {
-  //   // TODO:(선택) Google 로그인 구현
-  //   console.log('Google 로그인');
-  // };
-
   // 로그인 버튼 활성화 여부
   const isFormValid = email.trim() !== '' && password.trim() !== '';
 
@@ -114,11 +95,11 @@ const LoginPage: React.FC = () => {
           </LogoIcon>
         </LogoContainer>
 
-        <Title>
+        <Heading3 style={{textAlign: 'center'}}>
           부트런에 로그인 후
           <br />
           커뮤니티와 함께 성장해보세요.
-        </Title>
+        </Heading3>
 
         <LoginForm onSubmit={handleSubmit} noValidate>
           <InputGroup>
@@ -159,6 +140,7 @@ const LoginPage: React.FC = () => {
             size="md"
             fullWidth
             disabled={!isFormValid || isPending}
+            isLoading={isPending}
           >
             로그인
           </Button>

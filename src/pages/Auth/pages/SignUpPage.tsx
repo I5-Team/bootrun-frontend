@@ -22,7 +22,6 @@ import {
   InputWrapper,
   InputLabel,
   EmailInputWrapper,
-  VerifyButton,
   HelperMessage,
 } from '../styles/SignUpPage.styled';
 import { validateEmail } from '../../../utils/validation';
@@ -62,6 +61,8 @@ const SignUpPage = () => {
     handleSignUp,
     apiMessage,
     isSendingCode,
+    isConfirmingCode,
+    isRegistering,
   } = useSignUpForm();
 
   // 약관 동의 로직
@@ -129,7 +130,7 @@ const SignUpPage = () => {
                   disabled={emailVerification.isEmailVerified}
                   autoComplete="email"
                 />
-                <VerifyButton
+                <Button
                   size="md"
                   disabled={
                     !validateEmail(formState.email) ||
@@ -137,14 +138,12 @@ const SignUpPage = () => {
                     emailVerification.isEmailVerified ||
                     isSendingCode
                   }
+                  isLoading={isSendingCode}
                   onClick={handleEmailVerification}
                 >
                   {emailVerification.isEmailVerified
-                    ? '인증 완료'
-                    : isSendingCode
-                      ? '전송 중...'
-                      : '인증'}
-                </VerifyButton>
+                    ? '인증 완료' : '인증'}
+                </Button>
               </EmailInputWrapper>
               {errorState.email && <HelperMessage $type="error">{errorState.email}</HelperMessage>}
               {!errorState.email && apiMessage.message && (
@@ -162,6 +161,7 @@ const SignUpPage = () => {
                   onResend={handleResendCode}
                   showHelp={emailVerification.showEmailHelp}
                   onToggleHelp={() => setShowEmailHelp(!emailVerification.showEmailHelp)}
+                  isConfirmingCode={isConfirmingCode}
                 />
               )}
             </InputWrapper>
@@ -248,7 +248,7 @@ const SignUpPage = () => {
           />
 
           {/* 가입하기 버튼 */}
-          <Button size="lg" fullWidth disabled={!isSignUpEnabled} onClick={handleSignUpWithTerms}>
+          <Button size="lg" fullWidth disabled={!isSignUpEnabled} isLoading={isRegistering} onClick={handleSignUpWithTerms}>
             회원가입
           </Button>
         </FormContainer>

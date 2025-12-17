@@ -3,16 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import {
   ContentWrapper,
   ImageWrapper,
-  ErrorImage,
   TextAndButtonWrapper,
   TextWrapper,
   Description,
   ButtonWrapper,
 } from './NotFoundPage.styled';
-import Button from '../components/Button';
-import errorImage from '../assets/images/bg-404.png';
+import Button from '@/components/Button';
 import { Heading1 } from '@/components/Typography';
-import { ROUTES } from '../router/RouteConfig';
+import { ROUTES } from '@/router/RouteConfig';
+import NotFoundImage from './components/NotFoundImage';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
@@ -37,16 +36,16 @@ export default function NotFoundPage() {
   };
 
   return (
-    <ContentWrapper role="main" id="main-content" tabIndex={-1} aria-labelledby="not-found-title">
+    <ContentWrapper id="main-content" tabIndex={-1} aria-labelledby="not-found-title">
       <ImageWrapper>
-        <ErrorImage src={errorImage} alt="" role="presentation" aria-hidden="true" />
+        <NotFoundImage/>
       </ImageWrapper>
 
         <TextAndButtonWrapper>
           <TextWrapper>
-            <Heading1 id="not-found-title">페이지를 찾을 수 없습니다.</Heading1>
+            <Heading1 as="h1" id="not-found-title">페이지를 찾을 수 없습니다.</Heading1>
             <Description>
-              앗, 이 페이지는 없는 것 같아요. 주소를 다시 확인하거나 메인 페이지로 돌아가주세요.
+              앗, 이 페이지는 없는 것 같아요.<br/>주소를 다시 확인하거나 메인 페이지로 돌아가주세요.
             </Description>
           </TextWrapper>
 
