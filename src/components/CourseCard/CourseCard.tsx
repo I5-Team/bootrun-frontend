@@ -28,7 +28,7 @@ import Tag from '../Tag';
 import Profile from '../Profile';
 import ProgressBar from '../ProgressBar';
 import Button from '../Button';
-import ComingSoonModal from '../ComingSoonModal';
+import { useModal } from '@/contexts/ModalContext';
 
 // import - assets
 import SvgHeart from '../../assets/icons/icon-heart.svg?react';
@@ -142,27 +142,18 @@ const CardTagList = ({ tags }: { tags: BaseProps['tags'] }) => {
 };
 
 const LikeButton = ({ courseId: _courseId }: { courseId: number }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal } = useModal();
 
   const handleClickLike = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsModalOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsModalOpen(false);
+    openModal('COMING_SOON');
   };
 
   return (
-    <>
-      <StyledLikeButton onClick={handleClickLike} aria-label="강의 좋아요 추가" type="button">
-        <SvgHeart />
-      </StyledLikeButton>
-
-      {/* 준비중 알림 모달 */}
-      <ComingSoonModal isOpen={isModalOpen} onClose={handleClose} />
-    </>
+    <StyledLikeButton onClick={handleClickLike} aria-label="강의 좋아요 추가" type="button">
+      <SvgHeart />
+    </StyledLikeButton>
   );
 };
 
