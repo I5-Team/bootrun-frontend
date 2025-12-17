@@ -10,6 +10,8 @@ import SvgBlog from "../../assets/icons/icon-sns-blog.svg?react";
 import SvgInstagram from "../../assets/icons/icon-sns-instagram.svg?react";
 import SvgDiscord from "../../assets/icons/icon-sns-discord.svg?react";
 import SvgArrowDown from "../../assets/icons/icon-arrow-down.svg?react";
+import SvgLogo from "../../assets/logos/logo-typo.svg?react";
+
 import { ROUTES } from "@/router/RouteConfig";
 import { Link } from "react-router-dom";
 
