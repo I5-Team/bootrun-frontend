@@ -12,6 +12,7 @@ import type {
 } from '../../../types/AdminCourseType';
 import { Button } from '../../../components/Button';
 import { fetchCourseDetail } from '../../../api/adminApi';
+import ConfirmModal from '../../../components/ConfirmModal';
 import LectureFormBasicInfo from './LectureFormBasicInfo';
 import LectureFormCurriculum from './LectureFormCurriculum';
 import LectureFormMission from './LectureFormMission';
@@ -34,6 +35,31 @@ type Step = 1 | 2 | 3;
  * Step 2: 커리큘럼 (챕터 + 강의)
  * Step 3: 미션
  */
+const DEFAULT_BASIC_INFO = {
+  title: '',
+  description: '',
+  category_type: 'frontend',
+  course_type: 'vod',
+  difficulty: 'beginner',
+  price_type: 'paid',
+  price: 50000,
+  thumbnail_url: '',
+  instructor_name: '',
+  instructor_bio: '',
+  instructor_description: '',
+  instructor_image: '',
+  // 수강 관련
+  access_duration_days: 365,
+  max_students: 100,
+  recruitment_start_date: '',
+  recruitment_end_date: '',
+  course_start_date: '',
+  course_end_date: '',
+  // 기타
+  student_reviews: '[]',
+  is_published: false,
+};
+
 const LectureFormModal: React.FC<LectureFormModalProps> = ({
   isOpen,
   mode,
@@ -45,35 +71,13 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const prevSavingRef = useRef(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // 기본 정보 상태
-  const [basicInfo, setBasicInfo] = useState({
-    title: '',
-    description: '',
-    category_type: 'frontend',
-    course_type: 'vod',
-    difficulty: 'beginner',
-    price_type: 'paid',
-    price: 50000,
-    thumbnail_url: '',
-    instructor_name: '',
-    instructor_bio: '',
-    instructor_description: '',
-    instructor_image: '',
-    // 수강 관련
-    access_duration_days: 365,
-    max_students: 100,
-    recruitment_start_date: '',
-    recruitment_end_date: '',
-    course_start_date: '',
-    course_end_date: '',
-    // 기타
-    student_reviews: '[]',
-    is_published: false,
-  });
+  const [basicInfo, setBasicInfo] = useState(DEFAULT_BASIC_INFO);
 
   // FAQ 상태 (동적 추가/삭제)
   const [faqs, setFaqs] = useState<FaqItem[]>([]);
@@ -225,28 +229,7 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
     if (prevSavingRef.current && !isSaving && isOpen) {
       // handleClose 호출 (state 초기화 필요)
       setCurrentStep(1);
-      setBasicInfo({
-        title: '',
-        description: '',
-        category_type: 'frontend',
-        course_type: 'vod',
-        difficulty: 'beginner',
-        price_type: 'paid',
-        price: 50000,
-        thumbnail_url: '',
-        instructor_name: '',
-        instructor_bio: '',
-        instructor_description: '',
-        instructor_image: '',
-        access_duration_days: 365,
-        max_students: 100,
-        recruitment_start_date: '',
-        recruitment_end_date: '',
-        course_start_date: '',
-        course_end_date: '',
-        student_reviews: '[]',
-        is_published: false,
-      });
+      setBasicInfo(DEFAULT_BASIC_INFO);
       setFaqs([]);
       setChapters([]);
       setOriginalChapters([]);
@@ -256,39 +239,40 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
     prevSavingRef.current = isSaving || false;
   }, [isSaving, isOpen, onClose]);
 
-  // 모달 닫기 + 초기화
-  const handleClose = useCallback(() => {
+  // 변경사항 확인 (현재는 'add' 모드일 때만 체크)
+  // useMemo를 사용하여 불필요한 연산 방지
+  const hasChanges = useCallback(() => {
+    if (mode !== 'add') return false;
+
+    const isBasicInfoChanged =
+      JSON.stringify(basicInfo) !== JSON.stringify(DEFAULT_BASIC_INFO);
+    const hasChapters = chapters.length > 0;
+    const hasMissions = missions.length > 0;
+
+    return isBasicInfoChanged || hasChapters || hasMissions;
+  }, [mode, basicInfo, chapters, missions]);
+
+  // 실제 닫기 및 초기화 함수
+  const resetAndClose = useCallback(() => {
     setCurrentStep(1);
-    setBasicInfo({
-      title: '',
-      description: '',
-      category_type: 'frontend',
-      course_type: 'vod',
-      difficulty: 'beginner',
-      price_type: 'paid',
-      price: 50000,
-      thumbnail_url: '',
-      instructor_name: '',
-      instructor_bio: '',
-      instructor_description: '',
-      instructor_image: '',
-      // 수강 관련
-      access_duration_days: 365,
-      max_students: 100,
-      recruitment_start_date: '',
-      recruitment_end_date: '',
-      course_start_date: '',
-      course_end_date: '',
-      // 기타
-      student_reviews: '[]',
-      is_published: false,
-    });
+    setIsLoading(false);
+    setShowExitConfirm(false);
+    setBasicInfo(DEFAULT_BASIC_INFO);
     setFaqs([]);
     setChapters([]);
     setOriginalChapters([]);
     setMissions([]);
     onClose();
   }, [onClose]);
+
+  // 닫기 요청 핸들러 (변경사항 체크)
+  const handleCloseRequest = useCallback(() => {
+    if (hasChanges()) {
+      setShowExitConfirm(true);
+    } else {
+      resetAndClose();
+    }
+  }, [hasChanges, resetAndClose]);
 
   // 다음 단계
   const handleNext = useCallback(() => {
@@ -369,108 +353,140 @@ const LectureFormModal: React.FC<LectureFormModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <S.Overlay onClick={handleClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <S.ModalContainer
-        ref={modalRef}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            handleClose();
-          }
-        }}
-        tabIndex={-1}
-      >
-        <S.ModalHeader>
-          <S.ModalTitle id="modal-title">{modalTitle}</S.ModalTitle>
-          <S.CloseButton
-            onClick={handleClose}
-            aria-label="모달 닫기"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleClose();
-              }
-            }}
-          >
-            ✕
-          </S.CloseButton>
-        </S.ModalHeader>
+    <>
+      <ConfirmationDialog
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={resetAndClose}
+      />
+      <S.Overlay onClick={handleCloseRequest} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <S.ModalContainer
+          ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              handleCloseRequest();
+            }
+          }}
+          tabIndex={-1}
+        >
+          <S.ModalHeader>
+            <S.ModalTitle id="modal-title">{modalTitle}</S.ModalTitle>
+            <S.CloseButton
+              onClick={handleCloseRequest}
+              aria-label="모달 닫기"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleCloseRequest();
+                }
+              }}
+            >
+              ✕
+            </S.CloseButton>
+          </S.ModalHeader>
 
-        <S.StepIndicator>
-          <S.StepItem $active={currentStep === 1} $completed={currentStep > 1}>
-            <S.StepNumber $active={currentStep === 1}>1</S.StepNumber>
-            <S.StepLabel>기본 정보</S.StepLabel>
-          </S.StepItem>
-          <S.StepDivider />
-          <S.StepItem $active={currentStep === 2} $completed={currentStep > 2}>
-            <S.StepNumber $active={currentStep === 2}>2</S.StepNumber>
-            <S.StepLabel>커리큘럼</S.StepLabel>
-          </S.StepItem>
-          <S.StepDivider />
-          <S.StepItem $active={currentStep === 3} $completed={false}>
-            <S.StepNumber $active={currentStep === 3}>3</S.StepNumber>
-            <S.StepLabel>미션</S.StepLabel>
-          </S.StepItem>
-        </S.StepIndicator>
+          <S.StepIndicator>
+            <S.StepItem $active={currentStep === 1} $completed={currentStep > 1}>
+              <S.StepNumber $active={currentStep === 1}>1</S.StepNumber>
+              <S.StepLabel>기본 정보</S.StepLabel>
+            </S.StepItem>
+            <S.StepDivider />
+            <S.StepItem $active={currentStep === 2} $completed={currentStep > 2}>
+              <S.StepNumber $active={currentStep === 2}>2</S.StepNumber>
+              <S.StepLabel>커리큘럼</S.StepLabel>
+            </S.StepItem>
+            <S.StepDivider />
+            <S.StepItem $active={currentStep === 3} $completed={false}>
+              <S.StepNumber $active={currentStep === 3}>3</S.StepNumber>
+              <S.StepLabel>미션</S.StepLabel>
+            </S.StepItem>
+          </S.StepIndicator>
 
-        <S.ModalBody>
-          {isSaving ? (
-            <S.LoadingContainer>
-              <S.LoadingText>강의를 저장하는 중입니다...</S.LoadingText>
-            </S.LoadingContainer>
-          ) : isLoading && mode === 'edit' ? (
-            <S.LoadingContainer>
-              <S.LoadingText>강의 정보를 불러오는 중...</S.LoadingText>
-            </S.LoadingContainer>
-          ) : (
-            <>
-              {currentStep === 1 && (
-                <LectureFormBasicInfo
-                  basicInfo={basicInfo}
-                  onChange={handleBasicInfoChange}
-                  faqs={faqs}
-                  setFaqs={setFaqs}
-                  disabled={false}
-                />
-              )}
-              {currentStep === 2 && (
-                <LectureFormCurriculum
-                  chapters={chapters}
-                  setChapters={setChapters}
-                  courseId={courseId}
-                  disabled={false}
-                />
-              )}
-              {currentStep === 3 && (
-                <LectureFormMission
-                  missions={missions}
-                  setMissions={setMissions}
-                  disabled={false}
-                />
-              )}
-            </>
-          )}
-        </S.ModalBody>
+          <S.ModalBody>
+            {isSaving ? (
+              <S.LoadingContainer>
+                <S.LoadingText>강의를 저장하는 중입니다...</S.LoadingText>
+              </S.LoadingContainer>
+            ) : isLoading && mode === 'edit' ? (
+              <S.LoadingContainer>
+                <S.LoadingText>강의 정보를 불러오는 중...</S.LoadingText>
+              </S.LoadingContainer>
+            ) : (
+              <>
+                {currentStep === 1 && (
+                  <LectureFormBasicInfo
+                    basicInfo={basicInfo}
+                    onChange={handleBasicInfoChange}
+                    faqs={faqs}
+                    setFaqs={setFaqs}
+                    disabled={false}
+                  />
+                )}
+                {currentStep === 2 && (
+                  <LectureFormCurriculum
+                    chapters={chapters}
+                    setChapters={setChapters}
+                    courseId={courseId}
+                    disabled={false}
+                  />
+                )}
+                {currentStep === 3 && (
+                  <LectureFormMission
+                    missions={missions}
+                    setMissions={setMissions}
+                    disabled={false}
+                  />
+                )}
+              </>
+            )}
+          </S.ModalBody>
 
-        <S.ModalFooter>
-          {currentStep > 1 && (
-            <Button variant="outline" size="md" onClick={handlePrev} disabled={isSaving}>
-              이전
-            </Button>
-          )}
-          <S.Spacer />
-          {currentStep < 3 ? (
-            <Button size="md" onClick={handleNext} disabled={isSaving}>
-              다음
-            </Button>
-          ) : (
-            <Button size="md" onClick={handleSubmit} disabled={isSaving}>
-              {isSaving ? '저장 중...' : submitButtonText}
-            </Button>
-          )}
-        </S.ModalFooter>
-      </S.ModalContainer>
-    </S.Overlay>
+          <S.ModalFooter>
+            {currentStep > 1 && (
+              <Button variant="outline" size="md" onClick={handlePrev} disabled={isSaving}>
+                이전
+              </Button>
+            )}
+            <S.Spacer />
+            {currentStep < 3 ? (
+              <Button size="md" onClick={handleNext} disabled={isSaving}>
+                다음
+              </Button>
+            ) : (
+              <Button size="md" onClick={handleSubmit} disabled={isSaving}>
+                {isSaving ? '저장 중...' : submitButtonText}
+              </Button>
+            )}
+          </S.ModalFooter>
+        </S.ModalContainer>
+      </S.Overlay>
+    </>
+  );
+};
+
+// 확인 모달 분리 (가독성을 위해)
+const ConfirmationDialog = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  return (
+    <ConfirmModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      title="작성 취소"
+      message={`작성 중인 내용이 있습니다.\n정말 나가시겠습니까?`}
+      subMessage="나가시면 작성된 내용이 모두 사라집니다."
+      confirmText="나가기"
+      cancelText="계속 작성"
+      isDestructive={true}
+    />
   );
 };
 

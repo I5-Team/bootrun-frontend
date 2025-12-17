@@ -13,7 +13,7 @@ export const StyledCardArticle = styled.article`
   }
 
   button {
-    z-index: 10;
+    z-index: ${({ theme }) => theme.zIndex.above};
   }
 `;
 

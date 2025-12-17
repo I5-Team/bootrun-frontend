@@ -124,7 +124,7 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
-    max-height: 60vh;
+    max-height: 50vh;
     overflow-y: auto;
   `,
   Section: styled.section`
@@ -184,7 +184,7 @@ const S = {
 
     &:hover {
       background: ${({ theme, $danger }) =>
-        $danger ? 'rgba(255, 52, 64, 0.05)' : theme.colors.gray100};
+      $danger ? 'rgba(255, 52, 64, 0.05)' : theme.colors.gray100};
     }
   `,
   StatusBadge: styled.span<{ $active: boolean }>`
@@ -201,7 +201,7 @@ const S = {
       height: 0.8rem;
       border-radius: 50%;
       background-color: ${({ theme, $active }) =>
-        $active ? '#22C55E' : theme.colors.gray300}; // (임시) 녹색
+      $active ? '#22C55E' : theme.colors.gray300}; // (임시) 녹색
     }
 
     color: ${({ theme, $active }) => ($active ? theme.colors.surface : theme.colors.gray300)};

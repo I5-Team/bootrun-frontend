@@ -28,7 +28,7 @@ const MobileNavDropdown: React.FC = () => {
       <S.MobileNavButton onClick={handleToggle} aria-controls={dropdownId} aria-expanded={isOpen}>
         {activeLink.label}
         <S.ArrowDown $isOpen={isOpen}>
-          <SvgArrowDown/>
+          <SvgArrowDown />
         </S.ArrowDown>
       </S.MobileNavButton>
       {isOpen && (
@@ -184,7 +184,7 @@ const S = {
     border-radius: ${({ theme }) => theme.radius.md};
     position: absolute;
     width: 100%;
-    z-index: 10;
+    z-index: ${({ theme }) => theme.zIndex.dropdown};
     box-shadow: ${({ theme }) => theme.shadows.md};
 
     /* S.NavList의 'a' 스타일을 그대로 복사 */

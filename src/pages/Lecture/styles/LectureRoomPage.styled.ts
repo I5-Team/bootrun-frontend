@@ -356,20 +356,20 @@ export const NavButton = styled.button<{ $variant?: 'outline' | 'primary' }>`
 
   &:hover:not(:disabled) {
     background-color: ${({ $variant, theme }) =>
-      $variant === 'primary' ? theme.colors.primaryDark : theme.colors.gray100};
+    $variant === 'primary' ? theme.colors.primaryDark : theme.colors.gray100};
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: ${({ $variant, theme }) =>
-      $variant === 'primary' ? theme.colors.gray300 : theme.colors.gray100};
+    $variant === 'primary' ? theme.colors.gray300 : theme.colors.gray100};
     color: ${({ $variant, theme }) =>
-      $variant === 'outline' ? theme.colors.gray400 : theme.colors.surface};
+    $variant === 'outline' ? theme.colors.gray400 : theme.colors.surface};
 
     img {
       filter: ${({ $variant }) =>
-        $variant === 'primary' ? 'brightness(0) invert(0.4)' : 'grayscale(100%)'};
+    $variant === 'primary' ? 'brightness(0) invert(0.4)' : 'grayscale(100%)'};
     }
   }
 

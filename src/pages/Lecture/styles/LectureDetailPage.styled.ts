@@ -45,7 +45,7 @@ export const StickyNavWrapper = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${({ theme }) => theme.zIndex.sticky};
+  z-index: ${({ theme }) => theme.zIndex.above};
   
   position: sticky;
   top: 7rem;

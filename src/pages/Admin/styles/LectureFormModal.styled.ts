@@ -11,7 +11,7 @@ export const LectureFormModalStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: ${({ theme }) => theme.zIndex.backdrop};
     padding: 4rem 2rem;
     overflow-y: auto;
   `,
