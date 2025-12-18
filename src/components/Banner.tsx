@@ -5,15 +5,19 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 
-import BannerImg1 from "../assets/images/banner-main-1.png";
-import BannerImg2 from "../assets/images/banner-main-2.png";
-import BannerImg3 from "../assets/images/banner-main-3.png";
+import BannerImg1 from "../assets/images/banner-main-1-desktop.webp";
+import BannerImg1Mobile from "../assets/images/banner-main-1-mobile.webp";
+import BannerImg2 from "../assets/images/banner-main-2-desktop.webp";
+import BannerImg2Mobile from "../assets/images/banner-main-2-mobile.webp";
+import BannerImg3 from "../assets/images/banner-main-3-desktop.webp";
+import BannerImg3Mobile from "../assets/images/banner-main-3-mobile.webp";
 import { Link } from "react-router-dom";
 
 // type
 interface BannerItem {
     id: number;
-    imgSrc: string;
+    imgSrc: string;      // Desktop WebP
+    mobileImgSrc: string; // Mobile WebP
     title: string;
     tag?: string;
     desc?: string;
@@ -189,6 +193,7 @@ export default function Banner() {
         {
             id: 1,
             imgSrc: BannerImg2,
+            mobileImgSrc: BannerImg2Mobile,
             tag: '부트런 사이트 오픈!',
             title: `부트런 사이트\n오픈했습니다!`,
             desc: "김규호, 김민주, 김채현, 신가람, 장민경\n다들 수고하셨습니다. 🔥",
@@ -196,6 +201,7 @@ export default function Banner() {
         {
             id: 2,
             imgSrc: BannerImg1,
+            mobileImgSrc: BannerImg1Mobile,
             tag: '부트캠프 수료',
             title: "부트캠프 수료를\n진심으로 축하드립니다",
             desc: '수료한지 오늘로부터 ',
@@ -204,6 +210,7 @@ export default function Banner() {
         {
             id: 3,
             imgSrc: BannerImg3,
+            mobileImgSrc: BannerImg3Mobile,
             tag: '생일을 축하합니다',
             title: "11월 9일은\n채현님의 생일",
             desc: "지났지만 축하드립니다 🎉",
@@ -231,8 +238,7 @@ export default function Banner() {
                 >
                     <ImageWrapper>
                         <StyledPicture>
-                            {/* 모바일 이미지 소스 (Step 2에서 실제 경로로 교체 예정) */}
-                            {/* <source media="(max-width: 768px)" srcSet={bannerItem.mobileImgSrc} /> */}
+                            <source media="(max-width: 768px)" srcSet={bannerItem.mobileImgSrc} type="image/webp" />
                             <img
                                 src={bannerItem.imgSrc}
                                 alt=""
