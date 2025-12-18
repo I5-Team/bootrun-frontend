@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -57,30 +57,61 @@ const StyledBannerSwiper = styled(Swiper)`
     }
 `;
 
-// 개별 슬라이드 스타일 (배경 이미지 및 그라데이션 적용)
-const StyledSwiperSlide = styled(SwiperSlide) <{ $bgImageSrc?: string }>`
+// 개별 슬라이드 스타일 (이미지 래퍼 및 텍스트 레이아웃)
+const StyledSwiperSlide = styled(SwiperSlide)`
     width: 100%;
     min-width: 100%;
     height: 100%;
-
-    background-color: ${({ theme }) => theme.colors.primary200};
-    background-repeat: no-repeat;
-    background-position: 100% 100%;
-    background-size: cover;
-    ${({ theme, $bgImageSrc }) => css`
-        background-image: 
-            linear-gradient(to top, ${theme.colors.primary100}20, ${theme.colors.primary100}00),
-            url(${$bgImageSrc});
-    `}
+    position: relative; // 자식 요소(이미지)의 절대 위치 기준
 
     @media ${({ theme }) => theme.devices.mobile} {
         justify-content: end;
     }
 `;
 
+// 이미지 컨테이너 (CLS 방지 및 위치 잡기)
+const ImageWrapper = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    
+    // 로딩 전 영역 확보를 위한 aspect-ratio 설정 (데스크탑 기준 예시, 필요 시 조정)
+    // 모바일/데스크탑 비율이 다르다면 media query로 분기 필요
+    // aspect-ratio: 16 / 9; 
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, ${({ theme }) => theme.colors.primary100}20, ${({ theme }) => theme.colors.primary100}00);
+        z-index: ${({ theme }) => theme.zIndex.base};
+    }
+`;
+
+const StyledPicture = styled.picture`
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 100% 100%;
+    }
+`;
+
 const StyledLink = styled(Link)`
     width: 100%;
     height: 100%;
+    position: relative;
+    z-index: ${({ theme }) => theme.zIndex.above}; // 이미지 위에 텍스트 표시
 
     display: flex;
     justify-content: start;
@@ -193,12 +224,23 @@ export default function Banner() {
             wrapperTag="ul"
             aria-label="메인 배너"
         >
-            {bannerDatas.map((bannerItem) => (
+            {bannerDatas.map((bannerItem, index) => (
                 <StyledSwiperSlide
                     key={bannerItem.id}
-                    $bgImageSrc={bannerItem.imgSrc}
                     tag="li"
                 >
+                    <ImageWrapper>
+                        <StyledPicture>
+                            {/* 모바일 이미지 소스 (Step 2에서 실제 경로로 교체 예정) */}
+                            {/* <source media="(max-width: 768px)" srcSet={bannerItem.mobileImgSrc} /> */}
+                            <img
+                                src={bannerItem.imgSrc}
+                                alt=""
+                                fetchPriority={index === 0 ? "high" : "auto"}
+                                loading={index === 0 ? "eager" : "lazy"}
+                            />
+                        </StyledPicture>
+                    </ImageWrapper>
                     <StyledLink to={bannerItem.linkTo ? bannerItem.linkTo : '#'}>
                         {bannerItem.tag && <StyledTag>{bannerItem.tag}</StyledTag>}
 
