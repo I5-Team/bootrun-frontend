@@ -24,7 +24,7 @@ export default function AboutTeamPage() {
       '_blank',
       'noopener,noreferrer'
     );
-    alert('이 페이지를 개발한 개발자의 플레이리스트를 재생! 이스터에그를 다시 찾아보세요!');
+    alert('이 페이지를 제작한 개발자의 플레이리스트를 재생! 이스터에그를 다시 찾아보세요!');
   };
 
   const handleSpaghettiClick = () => {
@@ -37,7 +37,6 @@ export default function AboutTeamPage() {
   };
 
   const handleKirbyClick = () => {
-    window.open('https://www.youtube.com/watch?v=v9fzKdI3K_s', '_blank', 'noopener,noreferrer');
     alert('귀여운 커비 보고 힘내세요! 이스터에그를 다시 찾아보세요!');
   };
 

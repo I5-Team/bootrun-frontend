@@ -34,8 +34,8 @@ export const developers: Developer[] = [
     description:
       '강의실 페이지, 학습 관리(진행률) 기능, 관리자(대시보드, 강의관리, 결제관리, 사용자관리) 페이지, 토스 결제 연동',
     github: 'https://github.com/chdev-kr',
-    story: '1) 제가 작업하면서 가장 많이 들은 노래는 어반자카파의 [Stay]입니다.',
-    story2: '2) 최근엔 메가커피 메가미숫커피에 빠졌습니다. 그리고 저는 오른손잡이입니다.',
+    story: '1) 부트런을 개발하며 주황색이 좋아졌습니다.',
+    story2: '2) 이스터에그 그림을 그렸습니다. 그리고 저는 오른손잡이입니다.',
     emojiImage: kirbyImage,
   },
   {
@@ -55,7 +55,7 @@ export const developers: Developer[] = [
     description:
       '환경 설정(env/config), 결제/관리자(사용자·결제·대시보드) API 개발, 로컬 서버 구축',
     github: 'https://github.com/hanbam03',
-    story: '1) 프로젝트 중간에 독감을 이겨냈습니다.',
+    story: '1) 프로젝트 중간에 몸살을 이겨냈습니다.',
     story2: '2) 팀원 5명 중에서 가장 밝은 에너지가 있는 사람입니다.',
     emojiImage: catImage,
   },
