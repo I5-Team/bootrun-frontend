@@ -44,7 +44,7 @@ export default function HeroSection({
       )}
       <S.Title>
         <S.TitleText>
-          TEAM <S.ClickableI5>I5</S.ClickableI5>
+          TEAM&nbsp;<S.ClickableI5> I5</S.ClickableI5>
           <TooltipI5 show={showI5Tooltip} onToggle={() => setShowI5Tooltip(!showI5Tooltip)} />
         </S.TitleText>{' '}
         개발자 소개
