@@ -19,7 +19,7 @@ export function useTypingGame(onSuccess: () => void) {
     setCurrentKey('B');
     setStartTime(Date.now());
     setGameMessage(
-      '프로젝트명을 입력하면 숨겨진 개발자들의 TMI가 나옵니다.(힌트: 부트런을 영어로 하면?)'
+      '프로젝트명을 입력하면 숨겨진 개발자들의 이야기가 나옵니다.(힌트: 부트런을 영어로 하면?)'
     );
   }, []);
 

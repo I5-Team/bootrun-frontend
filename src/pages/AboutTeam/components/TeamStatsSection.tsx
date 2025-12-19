@@ -1,9 +1,9 @@
 import S from '../styles/TeamStatsSection.styled';
 
 const stats = [
-  { value: '700+', label: '총 커밋 수', delay: 0.1 },
-  { value: '3개월', label: '개발 기간', delay: 0.2 },
-  { value: '124,000+', label: '코드 라인', delay: 0.3 },
+  { value: '800+', label: '총 커밋 수', delay: 0.1 },
+  { value: '2개월', label: '개발 기간', delay: 0.2 },
+  { value: '41,000+', label: '서비스 코드 라인 수', delay: 0.3 },
   { value: '1,000번+', label: '칭찬 횟수', delay: 0.4 },
 ];
 
