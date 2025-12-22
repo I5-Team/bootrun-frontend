@@ -7,21 +7,40 @@
   <title>부트런 - ICT 교육 플랫폼</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Pretendard Font Optimization -->
-  <link rel="stylesheet" as="style" crossOrigin="anonymous"
-    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css" />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <!-- LCP Image Preload (Responsive) -->
+  <link rel="preload" as="image" href="/bootrun-frontend/images/banner-main-2-desktop.webp"
+    imagesrcset="/bootrun-frontend/images/banner-main-2-mobile.webp 400w, /bootrun-frontend/images/banner-main-2-desktop.webp 1200w"
+    imagesizes="(max-width: 480px) 100vw, 100vw" />
 
   <style>
-    /* 폰트 로딩 중 텍스트가 안 보이는 현상 방지 (FOIT 방지) */
+    /* Pretendard (Local) */
     @font-face {
       font-family: 'Pretendard';
+      font-weight: 400;
       font-display: swap;
-      src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css');
+      src: local('Pretendard Regular'), url('/bootrun-frontend/fonts/Pretendard-Regular.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Pretendard';
+      font-weight: 700;
+      font-display: swap;
+      src: local('Pretendard Bold'), url('/bootrun-frontend/fonts/Pretendard-Bold.woff2') format('woff2');
+    }
+
+    /* Fira Code (Local) */
+    @font-face {
+      font-family: 'Fira Code';
+      font-weight: 400;
+      font-display: swap;
+      src: url('/bootrun-frontend/fonts/FiraCode-Regular.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Fira Code';
+      font-weight: 700;
+      font-display: swap;
+      src: url('/bootrun-frontend/fonts/FiraCode-Bold.woff2') format('woff2');
     }
   </style>
 </head>

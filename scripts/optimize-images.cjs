@@ -28,12 +28,12 @@ const processImages = async () => {
                 .toFile(path.join(inputDir, `${filename}-desktop.webp`));
             console.log(`Generated: ${filename}-desktop.webp`);
 
-            // 2. Mobile WebP (Width 768px, Quality 80)
+            // 2. Mobile WebP (Width 400px for better LCP, Quality 80)
             await sharp(inputPath)
-                .resize({ width: 768 })
+                .resize({ width: 400 })
                 .webp({ quality: 80 })
                 .toFile(path.join(inputDir, `${filename}-mobile.webp`));
-            console.log(`Generated: ${filename}-mobile.webp`);
+            console.log(`✅ Generated: ${filename}-mobile.webp`);
 
         } catch (error) {
             console.error(`Error processing ${file}:`, error);
