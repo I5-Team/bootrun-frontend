@@ -168,6 +168,7 @@ export const SkeletonNavigation = styled.div`
   border-radius: ${({ theme }) => theme.radius.md};
 `;
 
+
 export function SkeletonLectureRoom() {
   return (
     <div style={{ padding: '2rem' }}>
@@ -180,4 +181,43 @@ export function SkeletonLectureRoom() {
       </div>
     </div>
   );
+}
+
+// MainPage CLS 방지용 스켈레톤
+export const SkeletonProfileCard = styled.div`
+  ${skeletonShimmer}
+  width: clamp(25rem, 24vw, 29rem);
+  min-width: 25rem;
+  height: 33rem; 
+  border-radius: ${({ theme }) => theme.radius.md};
+`;
+
+const StyledSkeletonGrid = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+    row-gap: 4rem;
+
+    @media ${({ theme }) => theme.devices.laptop} {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media ${({ theme }) => theme.devices.tablet} {
+        grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+    }
+
+    @media ${({ theme }) => theme.devices.mobile} {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+`;
+
+export function SkeletonCourseList({ count = 4 }: { count?: number }) {
+  return (
+    <StyledSkeletonGrid>
+      {Array(count).fill(0).map((_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </StyledSkeletonGrid>
+  )
 }
