@@ -76,12 +76,9 @@ const ImageWrapper = styled.div`
     height: 100%;
     z-index: 0;
     
-    // 로딩 전 영역 확보를 위한 aspect-ratio 설정
-    aspect-ratio: 8 / 3; 
-
-    @media ${({ theme }) => theme.devices.mobile} {
-        aspect-ratio: 1.8 / 1;
-    }
+    // 로딩 전 영역 확보를 위한 aspect-ratio 설정 (데스크탑 기준 예시, 필요 시 조정)
+    // 모바일/데스크탑 비율이 다르다면 media query로 분기 필요
+    // aspect-ratio: 16 / 9; 
 
     &::after {
         content: '';
