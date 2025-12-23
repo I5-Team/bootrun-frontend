@@ -10,17 +10,21 @@ import SvgMore from "../assets/icons/icon-category-more.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../router/RouteConfig";
 import { StyledCategoryBtn, StyledCategoryIcon, StyledSection, StyledSectionHead, StyledShowMore, StyledCategoryList, StyledHeroWrapper } from "./MainPage.styled";
-import { FilterCourseList } from "../components/CourseList";
-import { ProfileCard } from "../components/ProfileCard";
+// import { FilterCourseList } from "../components/CourseList"; // Below the fold
+// import { ProfileCard } from "../components/ProfileCard"; // Non-critical for LCP
 import Banner from "../components/Banner";
 import useMediaQuery from "../hooks/useMediaQuery";
-import ScrollToTopButton from "../components/ScrollToTopButton";
+// import ScrollToTopButton from "../components/ScrollToTopButton";
 import type { CourseType } from "../types/CourseType";
-import { useRef, useState } from "react";
+import { useRef, useState, lazy, Suspense } from "react"; // Added lazy, Suspense
 import { usePageMeta } from "../hooks/usePageMeta";
 import { Heading2 } from "@/components/Typography";
 import { useButtonClickAnimation } from "@/animations/ButtonAnimation";
 
+// Lazy Loaded Components
+const FilterCourseList = lazy(() => import("../components/CourseList").then(module => ({ default: module.FilterCourseList })));
+const ProfileCard = lazy(() => import("../components/ProfileCard").then(module => ({ default: module.ProfileCard })));
+const ScrollToTopButton = lazy(() => import("../components/ScrollToTopButton"));
 
 const CategoryBtn = ({ icon, title, onClick }: {
     icon: React.ReactNode,
@@ -29,7 +33,7 @@ const CategoryBtn = ({ icon, title, onClick }: {
 }) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
     useButtonClickAnimation(buttonRef);
-    
+
     return (
         <StyledCategoryBtn type="button" onClick={onClick} ref={buttonRef}>
             <StyledCategoryIcon>
@@ -70,11 +74,13 @@ const SectionByType = ({ courseType }: { courseType: CourseType }) => {
     return (
         <StyledSection $isVisible={resultCount > 0 ? true : false}>
             <SectionHead courseType={courseType} />
-            <FilterCourseList
-                courseTypeOpt={courseType}
-                cardCount={cardCount}
-                onCountChange={setResultCount}
-            />
+            <Suspense fallback={null}>
+                <FilterCourseList
+                    courseTypeOpt={courseType}
+                    cardCount={cardCount}
+                    onCountChange={setResultCount}
+                />
+            </Suspense>
         </StyledSection>
     )
 }
@@ -100,7 +106,11 @@ export default function MainPage() {
 
             <StyledHeroWrapper>
                 <Banner />
-                {!isTablet && <ProfileCard />}
+                {!isTablet && (
+                    <Suspense fallback={null}>
+                        <ProfileCard />
+                    </Suspense>
+                )}
             </StyledHeroWrapper>
 
             <StyledCategoryList role="group" aria-label="카테고리별 강의 보러가기:">
@@ -138,7 +148,9 @@ export default function MainPage() {
             <SectionByType courseType="vod" />
             <SectionByType courseType="kdc" />
 
-            <ScrollToTopButton />
+            <Suspense fallback={null}>
+                <ScrollToTopButton />
+            </Suspense>
         </>
     );
 }

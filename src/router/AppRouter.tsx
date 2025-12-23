@@ -6,9 +6,13 @@ import PublicOnly from './PublicOnly';
 import RequireAuth from './RequierAuth';
 import RequireAdmin from './RequireAdmin';
 
-const MainLayout = lazy(() => import('../layouts/MainLayout'));
+// 초기 로딩에 필수적인 페이지는 Static Import로 변경하여 LCP 최적화
+import MainLayout from '../layouts/MainLayout';
+import AuthLayout from '../layouts/AuthLayout';
+import IntroPage from '../pages/Intro/IntroPage';
+import MainPage from '../pages/MainPage';
+
 const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
-const AuthLayout = lazy(() => import('../layouts/AuthLayout'));
 const LectureDetailLayout = lazy(() => import('../layouts/LectureDetailLayout'));
 const LectureRoomLayout = lazy(() => import('../layouts/LectureRoomLayout'));
 const MyPageLayout = lazy(() => import('../layouts/MypageLayout'));
@@ -30,8 +34,7 @@ const PaymentResultPage = lazy(() => import('../pages/Lecture/pages/PaymentResul
 const MyLecturePage = lazy(() => import('../pages/Lecture/pages/MyLecturePage'));
 const LectureRoomPage = lazy(() => import('../pages/Lecture/pages/LectureRoomPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFound/NotFoundPage'));
-const MainPage = lazy(() => import('../pages/MainPage'));
-const IntroPage = lazy(() => import('../pages/Intro/IntroPage'));
+
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const AboutTeamPage = lazy(() => import('../pages/AboutTeam/pages/AboutTeamPage'));
 const OrderHistorySection = lazy(() => import('../pages/MyPage/components/OrderHistorySection'));

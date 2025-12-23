@@ -12,8 +12,8 @@ export const useButtonClickAnimation = (
             gsap.to(el, {
                 y: 2,
                 duration: 0.25,
-                ease: 'power3.out',
-                overwrite: 'auto',
+                ease: "power3.out",
+                overwrite: 'auto'
             });
         };
 
@@ -21,10 +21,11 @@ export const useButtonClickAnimation = (
             gsap.to(el, {
                 y: 0,
                 duration: 0.25,
-                ease: 'power3.out',
-                overwrite: 'auto',            
+                ease: "power3.out",
+                overwrite: 'auto'
             });
         };
+
         el.addEventListener('mousedown', handleDown);
         el.addEventListener('mouseup', handleUp);
 
