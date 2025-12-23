@@ -26,8 +26,6 @@ const FilterCourseList = lazy(() => import("../components/CourseList").then(modu
 const ProfileCard = lazy(() => import("../components/ProfileCard").then(module => ({ default: module.ProfileCard })));
 const ScrollToTopButton = lazy(() => import("../components/ScrollToTopButton"));
 
-import { SkeletonCourseList, SkeletonProfileCard } from "../components/Skeleton";
-
 const CategoryBtn = ({ icon, title, onClick }: {
     icon: React.ReactNode,
     title: string,
@@ -76,7 +74,7 @@ const SectionByType = ({ courseType }: { courseType: CourseType }) => {
     return (
         <StyledSection $isVisible={resultCount > 0 ? true : false}>
             <SectionHead courseType={courseType} />
-            <Suspense fallback={<SkeletonCourseList count={cardCount} />}>
+            <Suspense fallback={null}>
                 <FilterCourseList
                     courseTypeOpt={courseType}
                     cardCount={cardCount}
@@ -109,7 +107,7 @@ export default function MainPage() {
             <StyledHeroWrapper>
                 <Banner />
                 {!isTablet && (
-                    <Suspense fallback={<SkeletonProfileCard />}>
+                    <Suspense fallback={null}>
                         <ProfileCard />
                     </Suspense>
                 )}
